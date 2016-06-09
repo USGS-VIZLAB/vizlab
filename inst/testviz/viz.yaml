@@ -1,0 +1,112 @@
+vizlab: "0.1"
+info:
+  id: testviz
+  name: Example visualization project directory
+  date: 2016-06-09
+  publish-date: 2016-07-09
+  path: /notsure
+  description: >-
+    Bare-bones example visualization project directory for testing vizlab
+pages:
+  -
+    id: index
+    template: layout/templates/index.mustache
+    sections: [header, intro, relativeAbundance, environmentalEffects, landUse, footer]
+    context: siteTextData
+sections:
+  -
+    id: header
+    template: layout/templates/header.mustache
+    context: siteTextData
+  -
+    id: intro
+    template: layout/templates/intro.mustache
+    context: siteTextData
+  -
+    id: environmentalEffects
+    template: layout/templates/figure2.mustache
+    context: siteTextData
+    depends: environmentalEffectsFig
+  -
+    id: environmentalHazards
+    template: layout/templates/envHazards.mustache
+    context: siteTextData
+  -
+    id: beadBan
+    template: layout/templates/beadBan.mustache
+    context: siteTextData
+  -
+    id: relativeAbundance
+    template: layout/templates/figure1.mustache
+    context: siteTextData
+    depends: relativeAbundanceFig
+  -
+    id: landUse
+    template: layout/templates/figure3.mustache
+    context: siteTextData
+    depends: landUseFig
+  -
+    id: conclusion
+    template: layout/templates/conclusion.mustache
+    context: siteTextData
+  -
+    id: reference
+    template: layout/templates/reference.mustache
+    context: siteTextData
+  -
+    id: footer
+    template: layout/templates/footer.mustache
+    context: siteTextData
+data:
+  -
+    id: siteTextData
+    location: data/siteText.yaml
+    mimeType: text/yaml
+  -
+    id: All_dataData
+    itemId: 570eaf6be4b0ef3b7ca2565e
+    filename: All_data_for_data_release.csv
+    fetcher: sciencebase
+    reader: myReadDataFun
+    mimeType: text/csv
+  -
+    id: SI_Table1Data
+    itemId: 570eaf6be4b0ef3b7ca2565e
+    filename: "SI_Table 1_site_characteristics_for_PUB_2.xlsx"
+    handler: sciencebase
+    mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  -
+    id: envEffectsData
+    location: data/envEffectsData.csv
+    mimeType: text/csv
+figures:
+  -
+    id: relativeAbundanceFig
+    input:
+      -
+        filename: cache/mungedRelativeAbundance.tsv
+        mimeType: text/tab-separated-values
+    buildfile: scripts/3_visualize/relativeAbundance.R
+    type: R
+    tags: [mobile, desktop, ie]
+  -
+    id: environmentalEffectsFig
+    input: 
+    buildfile: scripts/3_visualize/environmentalEffects.R
+    type: html
+    tags: [mobile, desktop, ie]
+  -
+    id: landUseFig
+    input:
+      -
+        filename: cache/munged_LandUse_geomConc.tsv
+        mimeType: text/tab-separated-values
+      -
+        filename: cache/munged_LandUse_geomPct.tsv
+        mimeType: text/tab-separated-values
+      -
+        filename: cache/munged_LandUse_site.tsv
+        mimeType: text/tab-separated-values
+    buildfile: scripts/3_visualize/landUse.R
+    type: R
+    tags: [mobile, desktop, ie]
