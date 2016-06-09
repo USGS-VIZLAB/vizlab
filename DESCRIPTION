@@ -1,0 +1,19 @@
+Package: vizlab
+Type: Package
+Title: Utilities for building online data visualizations
+Version: 0.1.0
+Date: 2016-06-09
+Author: Jordan Walker, Jordan Read, Alison Appling
+Maintainer: Jordan Walker <jiwalker@usgs.gov>
+Description: Provides utility functions to organize, develop, and publish
+    web-based data visualizations
+License: file LICENSE
+Copyright: This software is in the public domain because it contains materials
+    that originally came from the United States Geological Survey, an agency of
+    the United States Department of Interior. For more information, see the
+    official USGS copyright policy at
+    http://www.usgs.gov/visual-id/credit_usgs.html#copyright
+VignetteBuilder: knitr
+Depends:
+    R (>= 3.0)
+RoxygenNote: 5.0.1
