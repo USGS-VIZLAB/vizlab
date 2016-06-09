@@ -7,12 +7,24 @@ info:
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
+js:
+  -
+    id: app
+    location: layout/js/app.js
+css:
+  - 
+    id: main
+    location: layout/css/main.css
+  -
+    id: normalize
+    location: layout/css/normalize.css
 pages:
   -
     id: index
     template: layout/templates/index.mustache
     sections: [header, intro, relativeAbundance, environmentalEffects, landUse, footer]
-    context: siteTextData
+    js: app
+    css: main
 sections:
   -
     id: header
@@ -21,15 +33,6 @@ sections:
   -
     id: intro
     template: layout/templates/intro.mustache
-    context: siteTextData
-  -
-    id: environmentalEffects
-    template: layout/templates/figure2.mustache
-    context: siteTextData
-    depends: environmentalEffectsFig
-  -
-    id: environmentalHazards
-    template: layout/templates/envHazards.mustache
     context: siteTextData
   -
     id: beadBan
@@ -57,56 +60,52 @@ sections:
     id: footer
     template: layout/templates/footer.mustache
     context: siteTextData
-data:
+fetch:
   -
     id: siteTextData
     location: data/siteText.yaml
     mimeType: text/yaml
   -
     id: All_dataData
-    itemId: 570eaf6be4b0ef3b7ca2565e
-    filename: All_data_for_data_release.csv
+    location: AllData.csv
     fetcher: sciencebase
-    reader: myReadDataFun
+    remoteItemId: 570eaf6be4b0ef3b7ca2565e
+    remoteFilename: All_data_for_data_release.csv
+    customReader: myReadDataFun
     mimeType: text/csv
+    export: true
   -
     id: SI_Table1Data
-    itemId: 570eaf6be4b0ef3b7ca2565e
-    filename: "SI_Table 1_site_characteristics_for_PUB_2.xlsx"
-    handler: sciencebase
+    fetcher: sciencebase
+    remoteItemId: 570eaf6be4b0ef3b7ca2565e
+    remoteFilename: "SI_Table 1_site_characteristics_for_PUB_2.xlsx"
     mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   -
     id: envEffectsData
     location: data/envEffectsData.csv
     mimeType: text/csv
-figures:
+process:
+  - 
+    id: mungedRelativeAbundance
+    location: cache/mungedRelativeAbundance.tsv
+    customReader: myreader
+    mimeType: text/tab-separated-values
+    depends: [SI_Table1Data]
+    args:
+    - version: 1
+    processor: mungeRelativeAbundance
+visualize:
   -
     id: relativeAbundanceFig
-    input:
-      -
-        filename: cache/mungedRelativeAbundance.tsv
-        mimeType: text/tab-separated-values
-    buildfile: scripts/3_visualize/relativeAbundance.R
-    type: R
-    tags: [mobile, desktop, ie]
+    location: relativeAbundanceFig.svg
+    depends: mungedRelativeAbundance
+    visualizer: visualizeRelativeAbundance
+    mimeType: image/svg+xml
+    export: false
+images:
   -
-    id: environmentalEffectsFig
-    input: 
-    buildfile: scripts/3_visualize/environmentalEffects.R
-    type: html
-    tags: [mobile, desktop, ie]
-  -
-    id: landUseFig
-    input:
-      -
-        filename: cache/munged_LandUse_geomConc.tsv
-        mimeType: text/tab-separated-values
-      -
-        filename: cache/munged_LandUse_geomPct.tsv
-        mimeType: text/tab-separated-values
-      -
-        filename: cache/munged_LandUse_site.tsv
-        mimeType: text/tab-separated-values
-    buildfile: scripts/3_visualize/landUse.R
-    type: R
-    tags: [mobile, desktop, ie]
+    id: bead3
+    location: images/bead3.jpg
+    mimetype: image/jpeg
+    altTextTag: Shaving cream
+    export: false
