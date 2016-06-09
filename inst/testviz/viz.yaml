@@ -104,8 +104,8 @@ visualize:
     export: false
 images:
   -
-    id:
-    location:
-    mimetype:
-    altTextTag:
+    id: bead3
+    location: images/bead3.jpg
+    mimetype: image/jpeg
+    altTextTag: Shaving cream
     export: false
