@@ -60,6 +60,13 @@ sections:
     id: footer
     template: layout/templates/footer.mustache
     context: siteTextData
+images:
+  -
+    id: bead3
+    location: images/bead3.jpg
+    mimetype: image/jpeg
+    altTextTag: Shaving cream
+    export: false
 fetch:
   -
     id: siteTextData
@@ -67,23 +74,17 @@ fetch:
     mimeType: text/yaml
   -
     id: All_dataData
-    location: AllData.csv
+    location: cache/fetch/AllData.csv
     fetcher: sciencebase
-    remoteItemId: 570eaf6be4b0ef3b7ca2565e
-    remoteFilename: All_data_for_data_release.csv
+    remoteItemId: 559c1bc8e4b0b94a6401792e
+    remoteFilename: meta_basic.tsv.gz
     customReader: myReadDataFun
     mimeType: text/csv
-    export: true
-  -
-    id: SI_Table1Data
-    fetcher: sciencebase
-    remoteItemId: 570eaf6be4b0ef3b7ca2565e
-    remoteFilename: "SI_Table 1_site_characteristics_for_PUB_2.xlsx"
-    mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
   -
     id: envEffectsData
     location: data/envEffectsData.csv
     mimeType: text/csv
+    export: true
 process:
   - 
     id: mungedRelativeAbundance
@@ -97,15 +98,8 @@ process:
 visualize:
   -
     id: relativeAbundanceFig
-    location: relativeAbundanceFig.svg
+    location: figures/relativeAbundanceFig.svg
     depends: mungedRelativeAbundance
     visualizer: visualizeRelativeAbundance
     mimeType: image/svg+xml
-    export: false
-images:
-  -
-    id: bead3
-    location: images/bead3.jpg
-    mimetype: image/jpeg
-    altTextTag: Shaving cream
     export: false
