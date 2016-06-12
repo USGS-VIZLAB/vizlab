@@ -44,30 +44,12 @@ fetchData.file <- function(viz.id, ...) {
 #' @rdname fetchData
 #' @export
 fetchData.sciencebase <- function(viz.id, data.info) {
-  # if this function has been called directly/without pre-prepared arguments, 
-  # reroute through fetchTimestamp.default
-  args.for.default <- c(class(viz.id) == 'character', missing(data.info))
-  if(any(args.for.default)) {
-    if(!all(args.for.default)) stop("unexpected arg format. try calling from the generic, fetchData()")
-    invisible(fetchData(unclass(viz.id)))
-  }
-  
-  # confirm that the class of viz.id matches the function name and other args are as expected
-  args.for.specific <- c(class(viz.id) == 'sciencebase')
-  if(!all(args.for.specific)) stop("unexpected arg format. try calling from the generic, fetchData()")
-
   # check for properly formatted data.info values
   if(!(exists('remoteFilename', data.info)) || length(data.info$remoteFilename) != 1)
     stop('expecting exactly 1 remoteFilename per data item')
   
-  # use the user's script to log on to SB. this script should simply call
-  # authenticate_sb() with valid credentials
-  auth.script <- "scripts/1_fetch/auth.R"
-  if(file.exists(auth.script)) {
-    source(auth.script)
-  } else {
-    message('requesting data from ScienceBase without authentication because ', auth.script, ' does not exist')
-  }
+  # authenticate
+  authRemote('sciencebase')
   
   # download the file, overwriting if it already exists (this can be simple
   # because caching is handled by the makefiles, and the yaml requires exactly

@@ -54,9 +54,11 @@ fetchTimestamp.file <- function(viz.id, ...) {
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timestamp.file) {
+  
   # try to get the timestamp from sciencebase. if we can't get it, give a
   # warning and leave the timestamp.file as it was
   new.timestamp <- tryCatch({
+    authRemote('sciencebase')
     sb.info <- item_get(data.info$remoteItemId)
     files.info <- sb.info$files
     file.info <- files.info[[which(sapply(files.info, function(fileinf) { fileinf$name == data.info$remoteFilename }))]]
