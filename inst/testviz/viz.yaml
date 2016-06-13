@@ -87,14 +87,14 @@ fetch:
     export: true
 process:
   - 
-    id: mungedRelativeAbundance
-    location: cache/mungedRelativeAbundance.tsv
+    id: CuyahogaShort
+    location: cache/process/CuyahogaShort.tsv
     customReader: myreadertype
     mimeType: text/tab-separated-values
-    depends: [SI_Table1Data]
+    depends: [Cuyahoga]
     args:
     - version: 1
-    processor: mungeRelativeAbundance
+    processor: cuyahoga
 visualize:
   -
     id: relativeAbundanceFig
