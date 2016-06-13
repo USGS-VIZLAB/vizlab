@@ -1,6 +1,6 @@
 readData <- function(x) UseMethod("readData")
 
-readData.default <- function(identifier) {
+readData.default <- function(identifier, ...) {
   data <- getData(identifier)
   return(readData(data))
 }

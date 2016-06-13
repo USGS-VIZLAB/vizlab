@@ -60,52 +60,46 @@ sections:
     id: footer
     template: layout/templates/footer.mustache
     context: siteTextData
-fetch:
-  -
-    id: siteTextData
-    location: data/siteText.yaml
-    mimeType: text/yaml
-  -
-    id: All_dataData
-    location: AllData.csv
-    fetcher: sciencebase
-    remoteItemId: 570eaf6be4b0ef3b7ca2565e
-    remoteFilename: All_data_for_data_release.csv
-    customReader: myReadDataFun
-    mimeType: text/csv
-    export: true
-  -
-    id: SI_Table1Data
-    fetcher: sciencebase
-    remoteItemId: 570eaf6be4b0ef3b7ca2565e
-    remoteFilename: "SI_Table 1_site_characteristics_for_PUB_2.xlsx"
-    mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-  -
-    id: envEffectsData
-    location: data/envEffectsData.csv
-    mimeType: text/csv
-process:
-  - 
-    id: mungedRelativeAbundance
-    location: cache/mungedRelativeAbundance.tsv
-    customReader: myreader
-    mimeType: text/tab-separated-values
-    depends: [SI_Table1Data]
-    args:
-    - version: 1
-    processor: mungeRelativeAbundance
-visualize:
-  -
-    id: relativeAbundanceFig
-    location: relativeAbundanceFig.svg
-    depends: mungedRelativeAbundance
-    visualizer: visualizeRelativeAbundance
-    mimeType: image/svg+xml
-    export: false
 images:
   -
     id: bead3
     location: images/bead3.jpg
     mimetype: image/jpeg
     altTextTag: Shaving cream
+    export: false
+fetch:
+  -
+    id: siteTextData
+    location: data/siteText.yaml
+    mimeType: text/yaml
+  -
+    id: Cuyahoga
+    location: cache/fetch/CuyahogaTDS.csv
+    fetcher: sciencebase
+    remoteItemId: 575d839ee4b04f417c2a03fe
+    remoteFilename: CuyahogaTDS.csv
+    mimeType: text/csv
+  -
+    id: MayflyNymph
+    location: data/MayflyNymph.csv
+    customReader: myReadDataType
+    mimeType: text/csv
+    export: true
+process:
+  - 
+    id: CuyahogaShort
+    location: cache/process/CuyahogaShort.tsv
+    customReader: myreadertype
+    mimeType: text/tab-separated-values
+    depends: [Cuyahoga]
+    args:
+    - version: 1
+    processor: cuyahoga
+visualize:
+  -
+    id: relativeAbundanceFig
+    location: figures/relativeAbundanceFig.svg
+    depends: mungedRelativeAbundance
+    visualizer: visualizeRelativeAbundance
+    mimeType: image/svg+xml
     export: false
