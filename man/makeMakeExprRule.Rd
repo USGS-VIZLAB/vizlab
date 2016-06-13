@@ -16,4 +16,5 @@ makeMakeExprRule(target, depends = c(), expr)
 \description{
 The R expression will be called by R.exe -e
 }
+\keyword{internal}
 

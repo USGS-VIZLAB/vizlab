@@ -144,6 +144,30 @@ makeMakeItem.fetch <- function(item.info) {
   paste(unlist(unname(rules)), collapse='\n')
 }
 
+#' \code{makeMakeItem.process}: Make makefile rules for an item in the
+#' process block of viz.yaml
+#' 
+#' @export
+makeMakeItem.process <- function(item.info) {
+  
+  rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
+  
+  # data args
+  data.file <- item.info$location
+  if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
+  rules$phony.data <- makeMakeEmptyRule(
+    target=item.info$id,
+    depends=data.file)
+  rules$file.data <- makeMakeBatchRule(
+    target=data.file,
+    depends=if(needs.timestamp) timestamp.file else c(),
+    fun='fetchData',
+    funargs=c(viz.id=item.info$id),
+    logfile=paste0('fetch/', item.info$id, '.Rout'))
+  
+  # return
+  paste(unlist(unname(rules)), collapse='\n')
+}
 
 #### General makefile-writing functions ####
 
@@ -154,7 +178,7 @@ makeMakeItem.fetch <- function(item.info) {
 #' 
 #' @param target character: the target name
 #' @param depends character vector: the dependencies
-#' @export
+#' @keywords internal
 makeMakeEmptyRule <- function(target, depends=c()) {
   depends_chr <- paste(depends, collapse=' ')
   sprintf('%s: %s', target, depends_chr)
@@ -177,7 +201,7 @@ makeMakeEmptyRule <- function(target, depends=c()) {
 #' @param logfile character: the filename where the R CMD BATCH logfile should 
 #'   be saved. omit 'vizlab/make/log' because this will be automatically 
 #'   prepended
-#' @export
+#' @keywords internal
 makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c(), logfile) {
   # R CMD BATCH works fine, but note for future dev: Rscript and littlr can do
   # everything R CMD BATCH can do and are preferred by Dirk Eddelbuettel. See 
@@ -209,7 +233,7 @@ makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c()
 #' 
 #' @inheritParams makeMakeEmptyRule
 #' @param expr character vector of one or more R commands
-#' @export
+#' @keywords internal
 makeMakeExprRule <- function(target, depends=c(), expr) {
   # produce the final character string
   paste(c(
