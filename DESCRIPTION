@@ -16,4 +16,11 @@ Copyright: This software is in the public domain because it contains materials
 VignetteBuilder: knitr
 Depends:
     R (>= 3.0)
+Imports:
+    jsonlite,
+    whisker,
+    yaml
+Suggests:
+    testthat,
+    knitr
 RoxygenNote: 5.0.1
