@@ -21,6 +21,7 @@ Imports:
     whisker,
     yaml
 Suggests:
-    testthat,
-    knitr
+    knitr,
+    sbtools,
+    testthat
 RoxygenNote: 5.0.1

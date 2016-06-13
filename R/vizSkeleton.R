@@ -1,4 +1,4 @@
-#' vizlab viz.skelton
+#' vizlab vizSkelton
 #'
 #' Create a skeleton for a new visualization
 #'
@@ -6,11 +6,11 @@
 #' @param path character vector of path to create skeleton
 #' @examples
 #' path <- file.path(tempdir(), "test")
-#' viz.skeleton(name="test", path=path)
+#' vizSkeleton(name="test", path=path)
 #' file.remove(path) # cleanup
 #'
 #' @export
-viz.skeleton <- function (name = "cool-viz", path = ".") {
+vizSkeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create <- function(path) {
     if (!dir.exists(path) && !dir.create(path))
       stop(gettextf("cannot create directory '%s'", path),
@@ -25,9 +25,9 @@ viz.skeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create(file.path(layout_dir, "js"))
   safe.dir.create(file.path(layout_dir, "templates"))
   safe.dir.create(script_dir <- file.path(path, "scripts"))
-  safe.dir.create(file.path(script_dir, "1_fetch"))
-  safe.dir.create(file.path(script_dir, "2_process"))
-  safe.dir.create(file.path(script_dir, "3_visualize"))
+  safe.dir.create(file.path(script_dir, "fetch"))
+  safe.dir.create(file.path(script_dir, "process"))
+  safe.dir.create(file.path(script_dir, "visualize"))
   safe.dir.create(file.path(script_dir, "read"))
 
   message("Creating viz.yaml ...", domain = NA)
@@ -45,8 +45,9 @@ viz.skeleton <- function (name = "cool-viz", path = ".") {
       "js:\n",
       "css:\n",
       "sections:\n",
-      "data:\n",
-      "figures:\n",
+      "fetch:\n",
+      "process:\n",
+      "visualize:\n",
       file = viz.yaml, sep = "")
   close(viz.yaml)
 
