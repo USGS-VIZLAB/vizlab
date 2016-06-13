@@ -18,9 +18,9 @@ fetchData(viz.id, ...)
 \item{data.info}{content information for this viz.id from the viz.yaml}
 }
 \description{
-This function should be called from the generic, \code{fetchData()}. Fetch 
-data from remote locations and/or identify a copy on the local file system. 
-These functions assume that downloading must be attempted if the raw data 
+This function should be called from the generic, \code{fetchData()}. Fetch
+data from remote locations and/or identify a copy on the local file system.
+These functions assume that downloading must be attempted if the raw data
 file is remote; the makefile is where caching occurs if possible.
 
 \code{fetchData.file} currently does nothing. It exists to communicate that
