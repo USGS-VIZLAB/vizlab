@@ -9,7 +9,6 @@
 #' @param no.match what to do if the viz.id is not found: either 'stop' (throw
 #'   error) or 'NA' (return NA)
 #' @seealso getContentInfos
-#' @import yaml
 #' @export
 getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize'), no.match='stop') {
   if(length(viz.id) != 1) stop("viz.id must have length 1; see getContentInfos for alternatives")
@@ -44,6 +43,15 @@ getContentInfos <- function(viz.id, block=c('images','fetch','process','visualiz
   content.list <- lapply(setNames(nm=block), function(bl) {
     lapply(content.yaml[[bl]], function(item) { item$block <- bl; item })
   })
+  
+  # add defaults
+  if('fetch' %in% block) {
+    content.list$fetch <- lapply(content.list$fetch, function(item) {
+      if(!exists('fetcher', item)) item$fetcher <- 'file'
+      return(item)
+    })
+  }
+  
   # flatten the list of lists into a list
   content.info <- unlist(unname(content.list), recursive=FALSE)
   names(content.info) <- sapply(content.info, function(ci) paste0(ci$block, '/', ci$id))

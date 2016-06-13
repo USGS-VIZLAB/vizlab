@@ -31,12 +31,12 @@ makeMakeMacros <- function() {
   
   # write the macros
   macros <- c(
-    #paste0(c('R_ARGS=--no-save --no-restore --slave', libs), collapse=' '),
-    paste0('RLIBSUSER=', profile$R_LIBS_USER),
-    paste0('R_ARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',userlib,'"
-    paste0('RBATCH="', profile$R, '" --no-timing ${R_ARGS} CMD BATCH'),
-    paste0('REXPR="', profile$R, '" $(R_ARGS) -e'),
-    paste0('RSCRIPT="', profile$RSCRIPT, '" $(R_ARGS)'))
+    #paste0(c('RARGS=--no-save --no-restore --slave', libs), collapse=' '),
+    paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) paste0('"', profile$R_LIBS_USER, '"') else '$(R_LIBS_USER)'),
+    paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
+    paste0('RBATCH="', profile$R, '" CMD BATCH --no-timing $(RARGS)'),
+    paste0('REXPR="', profile$R, '" $(RARGS) -e'),
+    paste0('RSCRIPT="', profile$RSCRIPT, '" $(RARGS)'))
   
   # combine into a single string
   paste0('# Macros\n\n', paste(macros, collapse='\n'))
@@ -135,7 +135,7 @@ makeMakeItem.fetch <- function(item.info) {
     depends=data.file)
   rules$file.data <- makeMakeBatchRule(
     target=data.file,
-    depends=if(needs.timestamp) timestamp.id else c(),
+    depends=if(needs.timestamp) timestamp.file else c(),
     fun='fetchData',
     funargs=c(viz.id=item.info$id),
     logfile=paste0('fetch/', item.info$id, '.Rout'))
@@ -188,7 +188,7 @@ makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c()
   
   # modify the arguments to fill in some details
   scripts <- if(length(scripts) > 0) paste0("scripts/", scripts) else c()
-  depends <- c(depends, scripts, 'vizlab/make/callFunction.R')
+  depends <- c(depends, scripts)
   
   # convert complex arguments into character strings
   scripts_chr <- paste0("c(", if(length(scripts) > 0) paste0("'", scripts, "'", collapse=', '), ")")
@@ -198,7 +198,7 @@ makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c()
   paste(c(
     makeMakeEmptyRule(target, depends),
     sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
-    sprintf('\t${RBATCH} "--args fun=%s funargs=%s scripts=%s rlibsuser=$(RLIBSUSER)" \\', fun, funargs_chr, scripts_chr),#  rlibsuser=%s "'${RLIBSUSER}'"), 
+    sprintf('\t${RBATCH} "--args fun=%s funargs=%s scripts=%s" \\', fun, funargs_chr, scripts_chr),#  rlibsuser=%s "'${RLIBSUSER}'"), 
     sprintf('\tvizlab/make/callFunction.R vizlab/make/log/%s', logfile)),
     collapse='\n')
 }

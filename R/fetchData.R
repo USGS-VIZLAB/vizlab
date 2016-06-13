@@ -14,7 +14,6 @@ fetchData <- function(viz.id, ...) UseMethod("fetchData")
 fetchData.default <- function(viz.id, ...) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch', no.match='NA')
-  if(!exists('fetcher', data.info)) data.info$fetcher <- 'file'
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchData
   
   # if this id type doesn't need to be fetched, run the empty fetcher now
@@ -54,13 +53,11 @@ fetchData.sciencebase <- function(viz.id, data.info) {
   # download the file, overwriting if it already exists (this can be simple
   # because caching is handled by the makefiles, and the yaml requires exactly
   # one file per data item)
-  if(any(!fexists)){
-    item_file_download(
-      sb_id=data.info$remoteItemId, 
-      names=data.info$remoteFilename, 
-      destinations=data.info$location,
-      overwrite_file=TRUE)
-  }
+  item_file_download(
+    sb_id=data.info$remoteItemId, 
+    names=data.info$remoteFilename, 
+    destinations=data.info$location,
+    overwrite_file=TRUE)
   
   invisible()
 }

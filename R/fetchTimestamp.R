@@ -15,7 +15,6 @@ fetchTimestamp <- function(viz.id, ...) UseMethod("fetchTimestamp")
 fetchTimestamp.default <- function(viz.id, ...) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch')
-  if(!exists('fetcher', data.info)) data.info$fetcher <- 'file'
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchTimestamp
   
   # if this id type doesn't need a timestamp file, exit now
@@ -70,7 +69,7 @@ fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timesta
   })
   
   # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || new.timestamp != old.timestamp)) {
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, timestamp.file)
   } 
   

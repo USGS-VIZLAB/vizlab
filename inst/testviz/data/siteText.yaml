@@ -1,0 +1,154 @@
+## GLOBAL ##
+title: Microplastics in our waterways
+
+## Intro ##
+welcome: Microplastics in our waterways
+welcome-subnote1: >-
+  Microbeads have been banned, but the fight against microplastics pollution is only just beginning.
+welcome-subnote2: Brought to you by USGS-VIZLAB
+welcome-p1: >-
+  Tiny plastic fragments fall off of our decomposing bottles and bags and are 
+  intentionally manufactured into some toothpastes and lotions. Scientists have found
+  microplastics nearly everywhere and especially in lakes, rivers, and aquatic animals.
+
+## Environmental Effects ##
+envEffects-title: Where are in our waterways are microplastics found?
+
+## Environmental Effects Facts## 
+envEffects-globalProd1: ">617,000,000,000"
+envEffects-globalProd2: "pounds of plastic produced worldwide in 2012"
+
+envEffects-fish1: Particles found in
+envEffects-fish2: 12%
+envEffects-fish3: "of <strong>freshwater fish</strong><sup><a href='#ref1'>1</a></sup>"
+
+envEffects-oysters1: 50
+envEffects-oysters2: particles per serving of commercially-cultured <strong>oysters</strong>
+envEffects-oysters3: 90
+envEffects-oysters4: "particles per serving of commercially-cultured <strong>mussels</strong><sup><a href='#ref2'>2</a></sup>"
+
+envEffects-stream1: Up to 
+envEffects-stream2: 32
+envEffects-stream3: particles per cubic meter of Great Lakes tributary <strong>water</strong>
+envEffects-stream4: ">13,800"
+envEffects-stream5: "particles per square meter of <strong>river sediment</strong><sup><a href='#ref3'>3</a></sup>"
+
+envEffects-lake1: "43,000" 
+envEffects-lake2: "particles per square kilometer of <strong>Great Lakes water</strong><sup><a href='#ref4'>4</a></sup>"
+
+
+## Environmental Hazards ##
+envHazards-title: What are the known risks of microplastic pollution?
+envHazards-p1: >-
+  Microplastics can harm humans, wildlife, and fish through:
+envHazards-p2: >-
+  The physical hazards of ingesting plastic particles 
+  (fish, birds, and other animals can experience digestive obstruction, oxidative stress, 
+  impaired reproduction, and death)
+envHazards-p3: >-
+  Unhealthy additives in the plastic 
+  (phthalates, brominated flame retardants, nonylphenol, and antimicrobials are 
+  sometimes added to plastic and have been associated with cancer and endocrine disruption)
+envHazards-p4: >-
+  Pollutants that accumulate on the plastic particles 
+  (polychlorinated biphenyls, polycyclic aromatic hydrocarbons, organochlorine pesticides, 
+  trace metals, and even pathogens have been found at high concentrations on microplastics)
+
+## Microbead Ban ##
+beadBan-title: Can we kick the microplastics habit? 
+beadBan-p1: >-
+  We’re trying. In 2015, the United States Congress passed 
+  <a href='https://www.congress.gov/bill/114th-congress/house-bill/1321' target='_blank'>Public Law 114-114</a> 
+  to ban the sale of cosmetics containing microbeads. The ban takes effect in 2018.
+beadBan-p2: >-
+  The ban addresses microbeads alone, in part because early studies indicated that 
+  microbeads are the most common type of microplastic in aquatic ecosystems.
+  However, those early studies all took place in lakes. Is the same true in rivers?
+
+## Relative Abundance ##
+relAbundance-intro1: >-
+  USGS scientists sampled rivers flowing into the Great Lakes<sup><a href='#ref3'>3</a></sup> 
+  to find out which kinds of microplastics are most common in rivers, 
+  and which rivers are the most polluted with microplastics.
+
+relAbundance-p1: >-
+  They found that rivers carry many kinds of microplastics, of which microbeads are a surprisingly small fraction.
+relAbundance-p2: >-
+  Instead, fibers averaged 71% of the total number of microplastics particles in these river water samples.
+
+relAbundance-title: Microplastics in rivers
+  
+relAbundance-beads-label: Beads and Pellets
+relAbundance-beads-id: beads-table
+relAbundance-beads: ["soaps, scrubs, toothpaste","deodorant, sunscreen, lipstick, eye shadow, shaving cream","drug delivery","production pellets and powders","bead blasting (engine parts and boat hulls)"]
+
+relAbundance-fiberlines-label: Fiber and Lines
+relAbundance-fiberlines-id: fiberlines-table
+relAbundance-fiberlines: ["synthetic clothes and textiles","diapers, wipes, tampons","cigarette butts","nets","insulation"]
+
+relAbundance-films-label: Films 
+relAbundance-films-id: films-table 
+relAbundance-films: ["bags and wrappers"]
+
+relAbundance-fragments-label: Fragments
+relAbundance-fragments-id: fragments-table
+relAbundance-fragments: ["degraded pieces of plastic litter, such as plastic bottles"]
+
+relAbundance-foams-label: Foams
+relAbundance-foams-id: foams-table
+relAbundance-foams: ["styrofoam"]
+
+## Land Use Correlation ##
+landUse-title: How are plastics getting into our rivers?
+
+landUse-p1: >-
+  That turns out to be a tricky question, and at first there seemed to be few patterns.
+
+landUse-p2: >-
+  Though the relationship is modest, it seems that urban watersheds tend to produce the most plastic-rich rivers. 
+  This is especially true for fragments, films, and foams.
+
+## Conclusion ##
+conclusion-title: What's next?
+conclusion-p1: >-
+ While the ban on microbeads has raised public awareness, the microplastics story is large and complex. 
+ Studies like this one are bringing us toward a better understanding of the many forms and fates of microplastics.
+
+## Footer ##
+footerURL1: U.S. Department of the Interior
+footerURL2: U.S. Geological Survey
+footerSiteURL: http://vizzy.awesome.com
+footerContact: owi.webmaster@usgs.gov
+
+
+## Supplemental Information ##
+
+ref1: >- 
+  Sanchez W, Bender C, Porcher JM. 
+  Wild gudgeons (Gobio gobio) from French rivers are contaminated by microplastics: preliminary study and first evidence. 
+  Environmental research. 2014 Jan 31;128:98-100
+  <a href='http://dx.doi.org/10.1186/s12302-014-0012-7' target='_blank'>10.1186/s12302-014-0012-7</a>
+
+ref2: >- 
+  Van Cauwenberghe L, Janssen CR. 
+  Microplastics in bivalves cultured for human consumption. 
+  Environmental Pollution. 2014 Oct 31;193:65-70
+  <a href='http://dx.doi.org/10.1016/j.envpol.2014.06.010' target='_blank'>10.1016/j.envpol.2014.06.010</a>
+
+ref3: >-
+  Baldwin, A.; Corsi, S.; Mason, S. 
+  Microplastics in 29 Great Lakes tributaries: Relations to watershed attributes and hydrology. 2016.
+
+ref4: >- 
+  Eriksen, M.; Mason, S.; Wilson, S.; Box, C.; Zellers, A.; Edwards, W.; Farley, H.; Amato, S. 
+  Microplastic pollution in the surface waters of the Laurentian Great Lakes. 
+  Mar. Pollut. Bull. 2013, 77 (1-2)
+  <a href='http://dx.doi.org/10.1016/j.marpolbul.2016.03.041' target='_blank'>10.1016/j.marpolbul.2016.03.041</a>
+
+ref5: >-
+  Rochman, C.M., Browne, M.A., Halpern, B.S., Hentschel, B.T., Hoh, E., Karapanagioti, H.K., Rios-Mendoza, L.M., Takada, H., Teh, S. and Thompson, R.C., 2013. 
+  Policy: Classify plastic waste as hazardous. 
+  <a href='http://dx.doi.org/10.1038/494169a' target='_blank'>10.1038/494169a</a>
+  
+
+  

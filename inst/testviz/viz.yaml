@@ -73,23 +73,23 @@ fetch:
     location: data/siteText.yaml
     mimeType: text/yaml
   -
-    id: All_dataData
-    location: cache/fetch/AllData.csv
+    id: Cuyahoga
+    location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
-    remoteItemId: 559c1bc8e4b0b94a6401792e
-    remoteFilename: meta_basic.tsv.gz
-    customReader: myReadDataFun
+    remoteItemId: 575d839ee4b04f417c2a03fe
+    remoteFilename: CuyahogaTDS.csv
     mimeType: text/csv
   -
-    id: envEffectsData
-    location: data/envEffectsData.csv
+    id: MayflyNymph
+    location: data/MayflyNymph.csv
+    customReader: myReadDataType
     mimeType: text/csv
     export: true
 process:
   - 
     id: mungedRelativeAbundance
     location: cache/mungedRelativeAbundance.tsv
-    customReader: myreader
+    customReader: myreadertype
     mimeType: text/tab-separated-values
     depends: [SI_Table1Data]
     args:
