@@ -1,6 +1,7 @@
 # vizlab
 Package with utilities for building vizlab pages
-
+[![Build Status](https://travis-ci.org/USGS-VIZLAB/vizlab.svg)](https://travis-ci.org/USGS-VIZLAB/vizlab)
+[![Coverage Status](https://coveralls.io/repos/github/USGS-VIZLAB/vizlab/badge.svg?branch=master)](https://coveralls.io/github/USGS-VIZLAB/vizlab?branch=master)
 
 ## Installation
 
@@ -19,6 +20,8 @@ The most cutting edge version of the package can be installed if you have the `d
 ```r
 devtools::install_github("USGS-VIZLAB/vizlab")
 ```
+
+Some packages are only suggested and will need to be installed manually to open up that functionality.  One example is sbtools which can be used if project data is stored on sciencebase.
 
 ## Disclaimer
 
