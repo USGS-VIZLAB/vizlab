@@ -4,6 +4,7 @@
 \alias{fetchData}
 \alias{fetchData.file}
 \alias{fetchData.sciencebase}
+\alias{fetchData.url}
 \title{Ensure data is on the local file system}
 \usage{
 fetchData(viz.id, ...)
@@ -11,8 +12,14 @@ fetchData(viz.id, ...)
 \method{fetchData}{file}(viz.id, ...)
 
 \method{fetchData}{sciencebase}(viz.id, data.info)
+
+\method{fetchData}{url}(viz.id, data.info)
 }
 \arguments{
+\item{viz.id}{the identifier for this data item in viz.yaml}
+
+\item{data.info}{content information for this viz.id from the viz.yaml}
+
 \item{viz.id}{the identifier for this data item in viz.yaml}
 
 \item{data.info}{content information for this viz.id from the viz.yaml}
@@ -27,5 +34,7 @@ file is remote; the makefile is where caching occurs if possible.
 the .file type is an option for data items.
 
 \code{fetchData.sciencebase} downloads a file from ScienceBase.
+
+\code{fetchData.url} downloads a file from the specified URL
 }
 
