@@ -62,3 +62,21 @@ fetchData.sciencebase <- function(viz.id, data.info) {
 
   invisible()
 }
+
+#' \code{fetchData.url} downloads a file from the specified URL
+#' 
+#' @param viz.id the identifier for this data item in viz.yaml
+#' @param data.info content information for this viz.id from the viz.yaml
+#' @rdname fetchData
+#' @export
+fetchData.url <- function(viz.id, data.info){
+  
+  #check that we have one URL
+  if(!(exists('remoteURL', data.info)) || length(data.info$remoteURL) != 1)
+    stop('expecting exactly 1 remoteURL per data item')
+  
+  httr::GET(data.info$remoteURL, 
+            httr::write_disk(data.info$location, overwrite=TRUE))
+  
+  invisible()
+}
