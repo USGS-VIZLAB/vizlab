@@ -2,13 +2,10 @@
 % Please edit documentation in R/fetchTimestamp.R
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
-\alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
 \title{Update timestamp file if needed}
 \usage{
 fetchTimestamp(viz.id, ...)
-
-\method{fetchTimestamp}{file}(viz.id, ...)
 
 \method{fetchTimestamp}{sciencebase}(viz.id, data.info, old.timestamp,
   timestamp.file)
@@ -23,9 +20,6 @@ This function should be called from the generic, \code{fetchTimestamp()}.
 Update timestamp file if the local copy of a file is out of date relative to 
 a remote copy. The need for a timestamp file, and the method for finding the 
 timestamp, will be determined by the metadata in viz.yaml for the item.
-
-\code{fetchTimestamp.file} currently does nothing. It exists to communicate 
-that the .file type is an option for data items.
 
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 }

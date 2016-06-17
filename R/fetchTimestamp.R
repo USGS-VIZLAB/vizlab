@@ -39,15 +39,6 @@ fetchTimestamp.default <- function(viz.id, ...) {
   invisible(fetchTimestamp(viz.id, data.info, old.timestamp=old.timestamp, timestamp.file=timestamp.file))
 }
 
-#' \code{fetchTimestamp.file} currently does nothing. It exists to communicate 
-#' that the .file type is an option for data items.
-#' 
-#' @rdname fetchTimestamp
-#' @export
-fetchTimestamp.file <- function(viz.id, ...) {
-  invisible()
-}
-
 #' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 #' 
 #' @rdname fetchTimestamp

@@ -112,8 +112,12 @@ makeMakeItem.fetch <- function(item.info, ...) {
   
   rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
   
-  # timestamp args
-  needs.timestamp <- item.info$fetcher %in% c('sciencebase')
+  # timestamp rules
+  needs.timestamp <- {
+    lapply(item.info$scripts, source);
+    timestamp.methods <- sapply(strsplit(c(methods('fetchTimestamp')), '\\.'), `[`, 2)
+    item.info$fetcher %in% timestamp.methods
+  }
   if(needs.timestamp) {
     timestamp.id <- paste0(item.info$id, '_timestamp')
     timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id, '.txt')
@@ -152,7 +156,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
 #' @export
 makeMakeItem.process <- function(item.info) {
   
-  rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
+  rules <- list()
   
   # data args
   data.file <- item.info$location
@@ -162,7 +166,7 @@ makeMakeItem.process <- function(item.info) {
     depends=data.file)
   rules$file.data <- makeMakeBatchRule(
     target=data.file,
-    depends=if(needs.timestamp) timestamp.file else c(),
+    depends=c(),
     fun='fetchData',
     funargs=c(viz.id=item.info$id),
     logfile=paste0('fetch/', item.info$id, '.Rout'))
