@@ -45,9 +45,14 @@ getContentInfos <- function(viz.id, block=c('images','fetch','process','visualiz
   })
   
   # add defaults
-  if('fetch' %in% block) {
-    content.list$fetch <- lapply(content.list$fetch, function(item) {
-      if(!exists('fetcher', item)) item$fetcher <- 'file'
+  viz.defaults <- yaml.load_file(system.file('viz.defaults.yaml', package='vizlab'))
+  relevant.blocks <- intersect(names(viz.defaults), block)
+  for(bl in relevant.blocks) {
+    default.item <- viz.defaults[[bl]][[1]] # this assumes exactly 1 item per block in viz.default.yaml
+    content.list[[bl]] <- lapply(content.list[[bl]], function(item) {
+      for(field in names(default.item)) {
+        if(!exists(field, item)) item[[field]] <- default.item[[field]]
+      }
       return(item)
     })
   }

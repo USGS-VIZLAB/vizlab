@@ -66,7 +66,6 @@ images:
     location: images/bead3.jpg
     mimetype: image/jpeg
     altTextTag: Shaving cream
-    export: false
 fetch:
   -
     id: siteTextData
@@ -82,7 +81,8 @@ fetch:
   -
     id: MayflyNymph
     location: data/MayflyNymph.csv
-    customReader: myReadDataType
+    scripts: scripts/fetch/readData.myCsvReader.R
+    customReader: myCsvReader
     mimeType: text/csv
     export: true
 process:
