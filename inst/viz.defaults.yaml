@@ -4,7 +4,7 @@ images:
 fetch:
   -
     fetcher: file
-    scripts: NA
+    scripts: 
     export: false
 process:
   -

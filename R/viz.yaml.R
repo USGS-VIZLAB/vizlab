@@ -5,9 +5,9 @@
 #' 
 #' @section fetch:
 #'   
-#'   The fetch section takes a list of items. Each item is a raw data file.
-#'   Items always have a \code{id} field. They also always have information,
-#'   either explicit or implicit, about how to (1) fetch and (2) read the data
+#'   The fetch section takes a list of items. Each item is a raw data file. 
+#'   Items always have a \code{id} field. They also always have information, 
+#'   either explicit or implicit, about how to (1) fetch and (2) read the data 
 #'   file.
 #'   
 #'   Fields describing (1) fetch include \code{fetcher}, which can take the 
@@ -35,6 +35,9 @@
 #'   munged. but can be set for any of those classes of items. Any item for 
 #'   which export=true will be copied to the target directory when the full 
 #'   visualization is built.
+#'   
+#'   If the customReader argument is ever given, the code will automatically
+#'   source all files in scripts/read before trying to run the customReader.
 #'   
 #' @name viz.yaml
 NULL

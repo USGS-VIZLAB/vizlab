@@ -108,7 +108,7 @@ makeMakeItem.default <- function(item.info, ...) {
 #' of viz.yaml
 #' 
 #' @export
-makeMakeItem.fetch <- function(item.info) {
+makeMakeItem.fetch <- function(item.info, ...) {
   
   rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
   
@@ -124,10 +124,11 @@ makeMakeItem.fetch <- function(item.info) {
       target=timestamp.id,
       fun='fetchTimestamp',
       funargs=c(viz.id=item.info$id),
+      scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
   }
-  
-  # data args
+ 
+  # data rules
   data.file <- item.info$location
   if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
   rules$phony.data <- makeMakeEmptyRule(
@@ -138,6 +139,7 @@ makeMakeItem.fetch <- function(item.info) {
     depends=if(needs.timestamp) timestamp.file else c(),
     fun='fetchData',
     funargs=c(viz.id=item.info$id),
+    scripts=item.info$scripts,
     logfile=paste0('fetch/', item.info$id, '.Rout'))
   
   # return
@@ -211,7 +213,7 @@ makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c()
   # RScript --no-save --no-restore --verbose myRfile.R > outputFile.Rout 2>&1"
   
   # modify the arguments to fill in some details
-  scripts <- if(length(scripts) > 0) paste0("scripts/", scripts) else c()
+  scripts <- if(length(scripts) > 0) scripts else c()
   depends <- c(depends, scripts)
   
   # convert complex arguments into character strings

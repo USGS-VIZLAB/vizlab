@@ -5,7 +5,7 @@
 \title{\code{makeMakeItem.fetch}: Make makefile rules for an item in the fetch block
 of viz.yaml}
 \usage{
-\method{makeMakeItem}{fetch}(item.info)
+\method{makeMakeItem}{fetch}(item.info, ...)
 }
 \description{
 \code{makeMakeItem.fetch}: Make makefile rules for an item in the fetch block

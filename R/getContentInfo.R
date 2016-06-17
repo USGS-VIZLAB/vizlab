@@ -51,7 +51,8 @@ getContentInfos <- function(viz.id, block=c('images','fetch','process','visualiz
     default.item <- viz.defaults[[bl]][[1]] # this assumes exactly 1 item per block in viz.default.yaml
     content.list[[bl]] <- lapply(content.list[[bl]], function(item) {
       for(field in names(default.item)) {
-        if(!exists(field, item)) item[[field]] <- default.item[[field]]
+        # add defaults, including field=NULL when the default is NULL
+        if(!exists(field, item)) item <- c(item, setNames(list(default.item[[field]]), field))
       }
       return(item)
     })

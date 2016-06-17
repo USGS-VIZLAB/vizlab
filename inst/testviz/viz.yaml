@@ -81,7 +81,8 @@ fetch:
   -
     id: MayflyNymph
     location: data/MayflyNymph.csv
-    scripts: scripts/fetch/readData.myCsvReader.R
+    fetcher: mayflyNymph
+    scripts: scripts/fetch/mayflyNymph.R
     customReader: myCsvReader
     mimeType: text/csv
     export: true

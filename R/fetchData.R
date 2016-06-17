@@ -12,6 +12,10 @@ fetchData <- function(viz.id, ...) UseMethod("fetchData")
 
 #' @export
 fetchData.default <- function(viz.id, ...) {
+  # explain the problem if we're headed for infinite recursion
+  if(class(viz.id) != 'character') 
+    stop('could not find fetchData method for viz.id=', viz.id, ', fetcher=', class(viz.id))
+  
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch', no.match='NA')
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchData
