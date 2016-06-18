@@ -2,27 +2,29 @@
 % Please edit documentation in R/authRemote.R
 \name{authRemote}
 \alias{authRemote}
-\alias{authRemote.file}
+\alias{authRemote.default}
 \alias{authRemote.sciencebase}
 \title{Log on to a remote file service}
 \usage{
 authRemote(fetcher, ...)
 
-\method{authRemote}{file}(fetcher, user)
+\method{authRemote}{default}(fetcher, user = "local", ...)
 
-\method{authRemote}{sciencebase}(fetcher, user)
+\method{authRemote}{sciencebase}(fetcher, user, ...)
 }
 \arguments{
 \item{fetcher}{the name of the fetcher for which to authenticate, e.g., 
 'sciencebase'}
+
+\item{...}{other arguments passed to authRemote methods}
+
+\item{user}{not yet well thought out, but the idea is to accept 'local' or 
+'docker' and use the corresponding user profile to authenticate}
 }
 \description{
 Uses authentication information in the user directory to log onto a remote 
 file service such as ScienceBase. This function is primarily for internal use
 but can be called directly to check credentials.
-
-\code{authRemote.file} currently does nothing. It exists to communicate that 
-the .file type is an option for data items.
 
 \code{authRemote.sciencebase} calls the user's script at 
 user/local/auth.sciencebase.R. That script should contain the R commands and
@@ -35,12 +37,14 @@ To add credentials, create an R script called "auth.fetcher.R" where
 e.g., "auth.sciencebase.R". Place this script in the user/local or 
 user/docker folder (depending on whether you will be building the 
 visualization directly or via docker) (BUT docker-specific authentication 
-isn't yet implemented. stay tuned). This script should log on to the service
-with valid credentials. Take care to never commit the user directory to an
+isn't yet implemented. stay tuned). This script should log on to the service 
+with valid credentials. Take care to never commit the user directory to an 
 unsecured repository.
 }
 \examples{
+\dontrun{
 # An example 1-line user/local/auth.sciencebase.R (fill in the credentials):
 sbtools::authenticate_sb(myusername, mypassword)
+}
 }
 
