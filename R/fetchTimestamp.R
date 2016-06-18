@@ -6,13 +6,18 @@
 #' timestamp, will be determined by the metadata in viz.yaml for the item.
 #' 
 #' @param viz.id the identifier for this data item in viz.yaml
-#' @param data.info content information for this viz.id from the viz.yaml
+#' @param ... other args passed to fetchTimestamp methods
 #'   
 #' @export
 fetchTimestamp <- function(viz.id, ...) UseMethod("fetchTimestamp")
 
+#' @param data.info content information for this viz.id from the viz.yaml
+#' @param old.timestamp the current timestamp, or NA if unavailable
+#' @param timestamp.file the filename where the new timestamp should be saved
+#'   
+#' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.default <- function(viz.id, ...) {
+fetchTimestamp.default <- function(viz.id, data.info, old.timestamp, timestamp.file, ...) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch')
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchTimestamp
@@ -39,26 +44,19 @@ fetchTimestamp.default <- function(viz.id, ...) {
   invisible(fetchTimestamp(viz.id, data.info, old.timestamp=old.timestamp, timestamp.file=timestamp.file))
 }
 
-#' \code{fetchTimestamp.file} currently does nothing. It exists to communicate 
-#' that the .file type is an option for data items.
-#' 
-#' @rdname fetchTimestamp
-#' @export
-fetchTimestamp.file <- function(viz.id, ...) {
-  invisible()
-}
-
 #' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 #' 
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timestamp.file) {
+fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timestamp.file, ...) {
+  # require sbtools package
+  if(!requireNamespace('sbtools', quietly = TRUE)) stop("package sbtools is required for fetchTimestamp.sciencebase")
   
   # try to get the timestamp from sciencebase. if we can't get it, give a
   # warning and leave the timestamp.file as it was
   new.timestamp <- tryCatch({
     authRemote('sciencebase')
-    sb.info <- item_get(data.info$remoteItemId)
+    sb.info <- sbtools::item_get(data.info$remoteItemId)
     files.info <- sb.info$files
     file.info <- files.info[[which(sapply(files.info, function(fileinf) { fileinf$name == data.info$remoteFilename }))]]
     as.POSIXct(file.info$dateUploaded, format='%Y-%m-%dT%H:%M:%SZ')
@@ -80,8 +78,11 @@ fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timesta
 #' Write a timestamp file with the conventions used by fetchTimestamp
 #' 
 #' Should only be used outside the vizlab package if the developer is writing a 
-#' new data fetcher
+#' new data + timestamp fetcher
 #' 
+#' @param new.timestamp the new timestamp to write to file
+#' @param timestamp.file the filename where the new timestamp should be saved
+#'   
 #' @export
 writeTimestamp <- function(new.timestamp, timestamp.file) {
   writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), timestamp.file)

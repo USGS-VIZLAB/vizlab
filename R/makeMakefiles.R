@@ -1,8 +1,11 @@
 #' Create fetch.make, etc. from the information in viz.yaml
 #' 
-#' Uses information in the corresponding block of viz.yaml to create the
+#' Uses information in the corresponding block of viz.yaml to create the 
 #' makefiles
 #' 
+#' @param blocks character vector of names of blocks in the viz.yaml for which
+#'   to make makefiles
+#'   
 #' @export
 makeMakefiles <- function(blocks=c('fetch','process','visualize')) {
   makefiles <- lapply(blocks, function(block) {
@@ -19,6 +22,10 @@ makeMakefiles <- function(blocks=c('fetch','process','visualize')) {
   invisible(makefiles)
 }
 
+#' Create the macros section
+#' 
+#' Create a character string defining the macros to include in every makefile
+#' 
 #' @export
 makeMakeMacros <- function() {
   # read user settings from profile.yaml
@@ -54,13 +61,13 @@ makeMakeDirs <- function(makefile) {
   if(!dir.exists('vizlab/make')) dir.create('vizlab/make', recursive=TRUE)
   
   # make log directories if specified
-  logdirs <- unique(dirname(grep('vizlab/make/log', strsplit(makefile, '[[:space:]]')[[1]], value=TRUE)))
+  logdirs <- unique(dirname(grep('^vizlab/make/log', strsplit(makefile, '[[:space:]]')[[1]], value=TRUE)))
   if(length(logdirs) > 0) sapply(logdirs, function(logdir) {
     if(!dir.exists(logdir)) dir.create(logdir, recursive=TRUE)
   })
   
   # make cache directories if specified
-  cachedirs <- unique(dirname(grep('cache/', strsplit(makefile, '[[:space:]]')[[1]], value=TRUE)))
+  cachedirs <- unique(dirname(grep('^cache/', strsplit(makefile, '[[:space:]]')[[1]], value=TRUE)))
   if(length(cachedirs) > 0) sapply(cachedirs, function(cachedir) {
     if(!dir.exists(cachedir)) dir.create(cachedir, recursive=TRUE)
   })
@@ -73,8 +80,17 @@ makeMakeDirs <- function(makefile) {
   }  
 }
 
+#' Create the make rules for a block of the viz.yaml
+#' 
+#' Create the 'all' and specific targets for a makefile for a block of the 
+#' viz.yaml
+#' 
+#' @param block character name of the block for which to create the make rules
+#'   
 #' @export
-makeMakeRules <- function(block='fetch') {
+makeMakeRules <- function(block=c('fetch','process','visualize')) {
+  block <- match.arg(block)
+  
   # read information about this block from viz.yaml
   content.info <- getContentInfos(block=block)
   
@@ -95,9 +111,12 @@ makeMakeRules <- function(block='fetch') {
 #' Make a collection of makefile rules appropriate to a data/figure item
 #' 
 #' @param item.info viz.yaml item info as from \code{getContentInfo}
+#' @param ... other args passed to makeMakeItem methods
+#' 
 #' @export
 makeMakeItem <- function(item.info, ...) UseMethod("makeMakeItem")
 
+#' @rdname makeMakeItem
 #' @export
 makeMakeItem.default <- function(item.info, ...) {
   class(item.info) <- item.info$block
@@ -107,13 +126,19 @@ makeMakeItem.default <- function(item.info, ...) {
 #' \code{makeMakeItem.fetch}: Make makefile rules for an item in the fetch block
 #' of viz.yaml
 #' 
+#' @rdname makeMakeItem
+#' @importFrom utils methods
 #' @export
-makeMakeItem.fetch <- function(item.info) {
+makeMakeItem.fetch <- function(item.info, ...) {
   
   rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
   
-  # timestamp args
-  needs.timestamp <- item.info$fetcher %in% c('sciencebase')
+  # timestamp rules
+  needs.timestamp <- {
+    lapply(item.info$scripts, source);
+    timestamp.methods <- sapply(strsplit(c(methods('fetchTimestamp')), '\\.'), `[`, 2)
+    item.info$fetcher %in% timestamp.methods
+  }
   if(needs.timestamp) {
     timestamp.id <- paste0(item.info$id, '_timestamp')
     timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id, '.txt')
@@ -123,11 +148,12 @@ makeMakeItem.fetch <- function(item.info) {
     rules$phony.timestamp <- makeMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
-      funargs=c(viz.id=item.info$id),
+      funargs=c(viz.id=paste0("'", item.info$id, "'")),
+      scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
   }
-  
-  # data args
+ 
+  # data rules
   data.file <- item.info$location
   if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
   rules$phony.data <- makeMakeEmptyRule(
@@ -137,7 +163,8 @@ makeMakeItem.fetch <- function(item.info) {
     target=data.file,
     depends=if(needs.timestamp) timestamp.file else c(),
     fun='fetchData',
-    funargs=c(viz.id=item.info$id),
+    funargs=c(viz.id=paste0("'", item.info$id, "'")),
+    scripts=item.info$scripts,
     logfile=paste0('fetch/', item.info$id, '.Rout'))
   
   # return
@@ -147,23 +174,28 @@ makeMakeItem.fetch <- function(item.info) {
 #' \code{makeMakeItem.process}: Make makefile rules for an item in the
 #' process block of viz.yaml
 #' 
+#' @rdname makeMakeItem
 #' @export
-makeMakeItem.process <- function(item.info) {
+makeMakeItem.process <- function(item.info, ...) {
   
-  rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
-  
-  # data args
+  # arg prep
   data.file <- item.info$location
   if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
+  dep.files <- sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+  dep.args <- sapply(item.info$depends, function(dep) paste0("readData('", dep, "')" ))
+  
+  # data args
+  rules <- list()
   rules$phony.data <- makeMakeEmptyRule(
     target=item.info$id,
     depends=data.file)
   rules$file.data <- makeMakeBatchRule(
     target=data.file,
-    depends=if(needs.timestamp) timestamp.file else c(),
-    fun='fetchData',
-    funargs=c(viz.id=item.info$id),
-    logfile=paste0('fetch/', item.info$id, '.Rout'))
+    depends=dep.files,
+    fun='processData',
+    funargs=c(viz.id=paste0("'", item.info$id, "'"), dep.args, outfile=paste0("'", item.info$location, "'")),
+    scripts=item.info$scripts,
+    logfile=paste0('process/', item.info$id, '.Rout'))
   
   # return
   paste(unlist(unname(rules)), collapse='\n')
@@ -211,12 +243,12 @@ makeMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c()
   # RScript --no-save --no-restore --verbose myRfile.R > outputFile.Rout 2>&1"
   
   # modify the arguments to fill in some details
-  scripts <- if(length(scripts) > 0) paste0("scripts/", scripts) else c()
+  scripts <- if(length(scripts) > 0) scripts else c()
   depends <- c(depends, scripts)
   
   # convert complex arguments into character strings
   scripts_chr <- paste0("c(", if(length(scripts) > 0) paste0("'", scripts, "'", collapse=', '), ")")
-  funargs_chr <- paste0("list(", if(length(funargs) > 0) paste0(names(funargs), "='", funargs, "'", collapse=", "), ")")
+  funargs_chr <- paste0("\\\"list(", if(length(funargs) > 0) paste0(names(funargs), "=", funargs, collapse=", "), "\\\")")
   
   # produce the final character string
   paste(c(

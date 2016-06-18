@@ -1,14 +1,16 @@
 #' vizlab vizSkelton
-#'
+#' 
 #' Create a skeleton for a new visualization
-#'
+#' 
 #' @param name character vector containing viz name
 #' @param path character vector of path to create skeleton
 #' @examples
 #' path <- file.path(tempdir(), "test")
 #' vizSkeleton(name="test", path=path)
 #' file.remove(path) # cleanup
-#'
+#' 
+#' @importFrom methods getPackageName
+#' @importFrom utils packageVersion
 #' @export
 vizSkeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create <- function(path) {

@@ -18,11 +18,14 @@ Depends:
     R (>= 3.0)
 Imports:
     jsonlite,
+    methods,
     whisker,
     yaml
 Suggests:
+    data.table,
     knitr,
     sbtools,
     httr,
+    readxl,
     testthat
 RoxygenNote: 5.0.1

@@ -6,8 +6,13 @@
 \usage{
 writeTimestamp(new.timestamp, timestamp.file)
 }
+\arguments{
+\item{new.timestamp}{the new timestamp to write to file}
+
+\item{timestamp.file}{the filename where the new timestamp should be saved}
+}
 \description{
 Should only be used outside the vizlab package if the developer is writing a 
-new data fetcher
+new data + timestamp fetcher
 }
 

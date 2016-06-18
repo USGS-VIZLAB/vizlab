@@ -13,7 +13,9 @@ getProfileInfo <- function(user='local') {
     message(profile.path, ' does not exist; using defaults')
     profile.yaml <- list()
   } else {
-    profile.yaml <- yaml.load_file(profile.path)
+    profile.yaml <- yaml.load_file(profile.path, handlers=list(
+      eval=function(x) eval(parse(text=x))
+    ))
   }
   
   # fill in missing values with defaults

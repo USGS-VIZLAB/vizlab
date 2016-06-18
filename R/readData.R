@@ -1,37 +1,68 @@
-readData <- function(x) UseMethod("readData")
+#' Ensure data is on the local file system
+#' 
+#' This function should be called from the generic, \code{readData()}. Reads
+#' data from a file into R format.
+#' 
+#' @param viz.id the identifier for this data item in viz.yaml
+#' @param ... other arguments passed to readData methods
+#' 
+#' @export
+readData <- function(viz.id, ...) UseMethod("readData")
 
-readData.default <- function(identifier, ...) {
-  data <- getData(identifier)
-  return(readData(data))
+#' @param data.info content information for this viz.id from the viz.yaml
+#' 
+#' @rdname readData
+#' @export
+readData.default <- function(viz.id, data.info, ...) {
+  # explain the problem if we're headed for infinite recursion
+  if(class(viz.id) != 'character') 
+    stop('could not find readData method for viz.id=', viz.id, ', reader=', class(viz.id))
+  
+  # get the reading information for this data ID from viz.yaml
+  data.info <- getContentInfo(viz.id, no.match='NA')
+  
+  # routes subsequent calls to a specific readData method
+  if(exists('customReader', data.info)) {
+    sapply(file.path('scripts/read', dir('scripts/read')), source)
+    class(viz.id) <- data.info$customReader
+  } else {
+    class(viz.id) <- switch(
+      data.info$mimeType,
+      "text/csv" = "csv",
+      "text/tab-seperated-values" = "csv",
+      "text/yaml" = "yaml",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
+      "custom")
+  }
+  
+  # call the readData method applicable to this fetcher
+  readData(viz.id, data.info, ...)
 }
 
-readData.fileItem <- function(file.item) {
-  mimeType <- file.item[["mimeType"]]
-  class <- switch(mimeType,
-                  "text/csv" = "csv",
-                  "text/tab-seperated-values" = "csv",
-                  "text/yaml" = "yaml",
-                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-                  "none")
-  class(file.item) <- class
-  return(readData(file.item))
+#' \code{readData.csv} reads a csv file.
+#'
+#' @rdname readData
+#' @export
+readData.csv <- function(viz.id, data.info, ...) {
+  if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.csv")
+  x <- data.table::setDF(data.table::fread(data.info$location))
+  x # assign to x first so it returns visibly
 }
 
-readData.csv <- function(data) {
-  raw.data <- fread(data$location)
-  raw.data <- setDF(raw.data)
-  raw.data
+#' \code{readData.yaml} reads a yaml file.
+#'
+#' @rdname readData
+#' @import yaml
+#' @export
+readData.yaml <- function(viz.id, data.info, ...) {
+  yaml.load_file(data.info$location)
 }
 
-readData.yaml <- function(data) {
-  yaml.load_file(data$location)
-}
-
-readData.excel <- function(data) {
-  # The only thing coming in is location and mime type,....would like to read in more parameters
-  read_excel(data$location, skip=2)
-}
-
-readData.none <- function(data) {
-  throw("Could not read file of this type")
+#' \code{readData.excel} reads the first spreadsheet of an Excel file.
+#'
+#' @rdname readData
+#' @export
+readData.excel <- function(viz.id, data.info, ...) {
+  if(!requireNamespace('readxl', quietly = TRUE)) stop("package readxl is required for readData.excel")
+  readxl::read_excel(data.info$location)
 }

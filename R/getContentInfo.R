@@ -34,6 +34,7 @@ getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize
 #'   included in the query
 #' @seealso getContentInfo
 #' @import yaml
+#' @importFrom stats setNames
 #' @export
 getContentInfos <- function(viz.id, block=c('images','fetch','process','visualize')) {
   # read viz.yaml and isolate the data block
@@ -45,9 +46,15 @@ getContentInfos <- function(viz.id, block=c('images','fetch','process','visualiz
   })
   
   # add defaults
-  if('fetch' %in% block) {
-    content.list$fetch <- lapply(content.list$fetch, function(item) {
-      if(!exists('fetcher', item)) item$fetcher <- 'file'
+  viz.defaults <- yaml.load_file(system.file('viz.defaults.yaml', package='vizlab'))
+  relevant.blocks <- intersect(names(viz.defaults), block)
+  for(bl in relevant.blocks) {
+    default.item <- viz.defaults[[bl]][[1]] # this assumes exactly 1 item per block in viz.default.yaml
+    content.list[[bl]] <- lapply(content.list[[bl]], function(item) {
+      for(field in names(default.item)) {
+        # add defaults, including field=NULL when the default is NULL
+        if(!exists(field, item)) item <- c(item, setNames(list(default.item[[field]]), field))
+      }
       return(item)
     })
   }
