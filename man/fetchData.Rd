@@ -2,6 +2,7 @@
 % Please edit documentation in R/fetchData.R
 \name{fetchData}
 \alias{fetchData}
+\alias{fetchData.default}
 \alias{fetchData.file}
 \alias{fetchData.sciencebase}
 \alias{fetchData.url}
@@ -9,18 +10,18 @@
 \usage{
 fetchData(viz.id, ...)
 
-\method{fetchData}{file}(viz.id, ...)
+\method{fetchData}{default}(viz.id, data.info, ...)
 
-\method{fetchData}{sciencebase}(viz.id, data.info)
+\method{fetchData}{file}(viz.id, data.info, ...)
 
-\method{fetchData}{url}(viz.id, data.info)
+\method{fetchData}{sciencebase}(viz.id, data.info, ...)
+
+\method{fetchData}{url}(viz.id, data.info, ...)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
 
-\item{data.info}{content information for this viz.id from the viz.yaml}
-
-\item{viz.id}{the identifier for this data item in viz.yaml}
+\item{...}{other arguments passed to fetchData methods}
 
 \item{data.info}{content information for this viz.id from the viz.yaml}
 }
@@ -35,6 +36,6 @@ the .file type is an option for data items.
 
 \code{fetchData.sciencebase} downloads a file from ScienceBase.
 
-\code{fetchData.url} downloads a file from the specified URL
+\code{fetchData.url} downloads a file from the specified URL.
 }
 
