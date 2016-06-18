@@ -90,11 +90,9 @@ process:
   - 
     id: CuyahogaShort
     location: cache/process/CuyahogaShort.tsv
-    customReader: myreadertype
     mimeType: text/tab-separated-values
+    scripts: scripts/process/cuyahoga.R
     depends: [Cuyahoga]
-    args:
-    - version: 1
     processor: cuyahoga
 visualize:
   -
