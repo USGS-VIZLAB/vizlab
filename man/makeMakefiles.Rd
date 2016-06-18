@@ -6,8 +6,12 @@
 \usage{
 makeMakefiles(blocks = c("fetch", "process", "visualize"))
 }
+\arguments{
+\item{blocks}{character vector of names of blocks in the viz.yaml for which
+to make makefiles}
+}
 \description{
-Uses information in the corresponding block of viz.yaml to create the
+Uses information in the corresponding block of viz.yaml to create the 
 makefiles
 }
 

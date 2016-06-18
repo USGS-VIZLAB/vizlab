@@ -6,12 +6,16 @@
 #' file is remote; the makefile is where caching occurs if possible.
 #'
 #' @param viz.id the identifier for this data item in viz.yaml
-#'
+#' @param ... other arguments passed to fetchData methods
+#' 
 #' @export
 fetchData <- function(viz.id, ...) UseMethod("fetchData")
 
+#' @param data.info content information for this viz.id from the viz.yaml
+#' 
+#' @rdname fetchData
 #' @export
-fetchData.default <- function(viz.id, ...) {
+fetchData.default <- function(viz.id, data.info, ...) {
   # explain the problem if we're headed for infinite recursion
   if(class(viz.id) != 'character') 
     stop('could not find fetchData method for viz.id=', viz.id, ', fetcher=', class(viz.id))
@@ -21,14 +25,14 @@ fetchData.default <- function(viz.id, ...) {
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchData
 
   # if this id type doesn't need to be fetched, run the empty fetcher now
-  if(data.info$fetcher %in% c('file')) invisible(fetchData(viz.id, data.info))
+  if(data.info$fetcher %in% c('file')) invisible(fetchData(viz.id, data.info, ...))
 
   # create the file directory if it does not yet exist
   fetched.dir <- dirname(data.info$location)
   if(!dir.exists(fetched.dir)) dir.create(fetched.dir, recursive=TRUE)
 
   # call the fetchData method applicable to this fetcher
-  invisible(fetchData(viz.id, data.info))
+  invisible(fetchData(viz.id, data.info, ...))
 }
 
 #' \code{fetchData.file} currently does nothing. It exists to communicate that
@@ -36,20 +40,22 @@ fetchData.default <- function(viz.id, ...) {
 #'
 #' @rdname fetchData
 #' @export
-fetchData.file <- function(viz.id, ...) {
+fetchData.file <- function(viz.id, data.info, ...) {
   invisible()
 }
 
 #' \code{fetchData.sciencebase} downloads a file from ScienceBase.
 #'
-#' @param data.info content information for this viz.id from the viz.yaml
 #' @rdname fetchData
 #' @export
-fetchData.sciencebase <- function(viz.id, data.info) {
+fetchData.sciencebase <- function(viz.id, data.info, ...) {
   # check for properly formatted data.info values
   if(!(exists('remoteFilename', data.info)) || length(data.info$remoteFilename) != 1)
     stop('expecting exactly 1 remoteFilename per data item')
 
+  # require sbtools package
+  if(!requireNamespace('sbtools', quietly = TRUE)) stop("package sbtools is required for fetchTimestamp.sciencebase")
+  
   # authenticate
   authRemote('sciencebase')
 
@@ -67,13 +73,11 @@ fetchData.sciencebase <- function(viz.id, data.info) {
   invisible()
 }
 
-#' \code{fetchData.url} downloads a file from the specified URL
+#' \code{fetchData.url} downloads a file from the specified URL.
 #' 
-#' @param viz.id the identifier for this data item in viz.yaml
-#' @param data.info content information for this viz.id from the viz.yaml
 #' @rdname fetchData
 #' @export
-fetchData.url <- function(viz.id, data.info){
+fetchData.url <- function(viz.id, data.info, ...) {
   
   #check that we have one URL
   if(!(exists('remoteURL', data.info)) || length(data.info$remoteURL) != 1)

@@ -1,8 +1,11 @@
 #' Create fetch.make, etc. from the information in viz.yaml
 #' 
-#' Uses information in the corresponding block of viz.yaml to create the
+#' Uses information in the corresponding block of viz.yaml to create the 
 #' makefiles
 #' 
+#' @param blocks character vector of names of blocks in the viz.yaml for which
+#'   to make makefiles
+#'   
 #' @export
 makeMakefiles <- function(blocks=c('fetch','process','visualize')) {
   makefiles <- lapply(blocks, function(block) {
@@ -19,6 +22,10 @@ makeMakefiles <- function(blocks=c('fetch','process','visualize')) {
   invisible(makefiles)
 }
 
+#' Create the macros section
+#' 
+#' Create a character string defining the macros to include in every makefile
+#' 
 #' @export
 makeMakeMacros <- function() {
   # read user settings from profile.yaml
@@ -73,6 +80,13 @@ makeMakeDirs <- function(makefile) {
   }  
 }
 
+#' Create the make rules for a block of the viz.yaml
+#' 
+#' Create the 'all' and specific targets for a makefile for a block of the 
+#' viz.yaml
+#' 
+#' @param block character name of the block for which to create the make rules
+#'   
 #' @export
 makeMakeRules <- function(block='fetch') {
   # read information about this block from viz.yaml
@@ -95,9 +109,12 @@ makeMakeRules <- function(block='fetch') {
 #' Make a collection of makefile rules appropriate to a data/figure item
 #' 
 #' @param item.info viz.yaml item info as from \code{getContentInfo}
+#' @param ... other args passed to makeMakeItem methods
+#' 
 #' @export
 makeMakeItem <- function(item.info, ...) UseMethod("makeMakeItem")
 
+#' @rdname makeMakeItem
 #' @export
 makeMakeItem.default <- function(item.info, ...) {
   class(item.info) <- item.info$block
@@ -107,6 +124,8 @@ makeMakeItem.default <- function(item.info, ...) {
 #' \code{makeMakeItem.fetch}: Make makefile rules for an item in the fetch block
 #' of viz.yaml
 #' 
+#' @rdname makeMakeItem
+#' @importFrom utils methods
 #' @export
 makeMakeItem.fetch <- function(item.info, ...) {
   
@@ -153,8 +172,9 @@ makeMakeItem.fetch <- function(item.info, ...) {
 #' \code{makeMakeItem.process}: Make makefile rules for an item in the
 #' process block of viz.yaml
 #' 
+#' @rdname makeMakeItem
 #' @export
-makeMakeItem.process <- function(item.info) {
+makeMakeItem.process <- function(item.info, ...) {
   
   rules <- list()
   

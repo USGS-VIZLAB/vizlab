@@ -1,6 +1,6 @@
 #' How to write a viz.yaml
 #' 
-#' See \link[testviz]{testviz} for an example, and see below for a detailed 
+#' See the testviz directory for an example, and see below for a detailed 
 #' description.
 #' 
 #' @section fetch:
@@ -36,7 +36,7 @@
 #'   which export=true will be copied to the target directory when the full 
 #'   visualization is built.
 #'   
-#'   If the customReader argument is ever given, the code will automatically
+#'   If the customReader argument is ever given, the code will automatically 
 #'   source all files in scripts/read before trying to run the customReader.
 #'   
 #' @name viz.yaml

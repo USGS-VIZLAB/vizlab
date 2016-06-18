@@ -34,6 +34,7 @@ getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize
 #'   included in the query
 #' @seealso getContentInfo
 #' @import yaml
+#' @importFrom stats setNames
 #' @export
 getContentInfos <- function(viz.id, block=c('images','fetch','process','visualize')) {
   # read viz.yaml and isolate the data block
