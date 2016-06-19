@@ -10,14 +10,16 @@
 #'   error) or 'NA' (return NA)
 #' @seealso getContentInfos
 #' @export
-getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize'), no.match='stop') {
+getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize'), no.match=c('stop','NA')) {
   if(length(viz.id) != 1) stop("viz.id must have length 1; see getContentInfos for alternatives")
   infos <- getContentInfos(viz.id, block=block)
   if(length(infos) == 0) {
+    if(is.na(no.match)) no.match <- 'NA'
+    no.match <- match.arg(no.match)
     switch(
       no.match,
-      'stop'=stop("no matches for viz.id ", paste0(viz.id, collapse=", "), " in block[s] ", paste0(block, collapse=", ")),
-      'NA'=return(NA))
+      'stop' = stop("no matches for viz.id ", paste0(viz.id, collapse=", "), " in block[s] ", paste0(block, collapse=", ")),
+      'NA' = return(NA))
   }
   if(length(infos) > 1) stop("multiple matches for viz.id ", paste0(viz.id, collapse=", "), " in block[s] ", paste0(block, collapse=", "), ":\n", paste0("  ", names(infos), collapse="\n"))
   infos[[1]]
@@ -38,6 +40,7 @@ getContentInfo <- function(viz.id, block=c('images','fetch','process','visualize
 #' @export
 getContentInfos <- function(viz.id, block=c('images','fetch','process','visualize')) {
   # read viz.yaml and isolate the data block
+  if(!file.exists('viz.yaml')) stop("viz.yaml does not exist in this working directory (", getwd(), ")")
   viz.yaml <- yaml.load_file('viz.yaml')
   content.yaml <- viz.yaml[block[block %in% names(viz.yaml)]]
   # add the block name to the info for each element
