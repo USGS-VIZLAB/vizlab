@@ -72,6 +72,12 @@ makeMakeDirs <- function(makefile) {
     if(!dir.exists(cachedir)) dir.create(cachedir, recursive=TRUE)
   })
   
+  # create the timestamp file directory if specified
+  timestampdir <- unique(dirname(grep('^vizlab/make/timestamps', strsplit(makefile, '[[:space:]|\\|=|:]')[[1]], value=TRUE)))
+  if(length(timestampdir) > 0) {
+    if(!dir.exists(timestampdir)) dir.create(timestampdir)
+  }
+  
   # if any rules use callFunction.R, copy that script into the vizlab/make 
   # directory. this script allows us to call a single function via R CMD BATCH
   if(any(grepl('callFunction.R', makefile))) {
@@ -119,6 +125,9 @@ makeMakeItem <- function(item.info, ...) UseMethod("makeMakeItem")
 #' @rdname makeMakeItem
 #' @export
 makeMakeItem.default <- function(item.info, ...) {
+  if(class(item.info) != 'list') 
+    stop('could not find makeMakeItem method for item type =', class(item.info))
+  
   class(item.info) <- item.info$block
   makeMakeItem(item.info, ...)
 }
@@ -131,8 +140,8 @@ makeMakeItem.default <- function(item.info, ...) {
 #' @export
 makeMakeItem.fetch <- function(item.info, ...) {
   
-  rules <- list(phony.data=NA, file.data=NA) # data rules will come first but require info on timestamp
-  
+  rules <- list()
+
   # timestamp rules
   needs.timestamp <- {
     lapply(item.info$scripts, source);
@@ -155,18 +164,8 @@ makeMakeItem.fetch <- function(item.info, ...) {
   }
  
   # data rules
-  data.file <- item.info$location
-  if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
-  rules$phony.data <- makeMakeEmptyRule(
-    target=item.info$id,
-    depends=data.file)
-  rules$file.data <- makeMakeBatchRule(
-    target=data.file,
-    depends=if(needs.timestamp) timestamp.file else c(),
-    fun='fetchData',
-    funargs=c(viz.id=paste0("'", item.info$id, "'")),
-    scripts=item.info$scripts,
-    logfile=paste0('fetch/', item.info$id, '.Rout'))
+  item.info$depfiles <- if(needs.timestamp) timestamp.file else c()
+  rules <- c(makeMakeRulePair(item.info, block='fetch', concat=FALSE), rules)
   
   # return
   paste(unlist(unname(rules)), collapse='\n')
@@ -178,11 +177,44 @@ makeMakeItem.fetch <- function(item.info, ...) {
 #' @rdname makeMakeItem
 #' @export
 makeMakeItem.process <- function(item.info, ...) {
+  makeMakeRulePair(item.info, block='process', concat=TRUE)
+}
+
+#' \code{makeMakeItem.visualize}: Make makefile rules for an item in the 
+#' visualize block of viz.yaml
+#' 
+#' @rdname makeMakeItem
+#' @export
+makeMakeItem.visualize <- function(item.info, ...) {
+  makeMakeRulePair(item.info, block='visualize', concat=TRUE)
+}
+
+#### General makefile-writing functions ####
+
+#' Make the common rule pair relating IDs to files to commands
+#' 
+#' Make the common rule pair where the item ID is a symbolic target that depends
+#' on the file, and the file depends on the scripts, args, dependencies, etc. 
+#' listed in item.info
+#' 
+#' @param item.info viz.yaml item info as from \code{getContentInfo}
+#' @param block length 1 character designating the block for which to make the
+#'   rule pair
+#' @param concat logical. Should the rules be concatenated into a single string
+#'   (TRUE) or left as a list of two rules (FALSE)?
+#'   
+#' @export
+makeMakeRulePair <- function(item.info, block, concat=TRUE) {
   
   # arg prep
+  sQuote <- function(x) paste0("'", x, "'")
+  dQuote <- function(x) paste0('"', x, '"')
   data.file <- item.info$location
-  if(grepl(" ", data.file)) data.file <- paste0('"', data.file, '"')
-  dep.files <- sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+  if(grepl(" ", data.file)) data.file <- dQuote(data.file)
+  dep.files <- c(
+    item.info$depfiles, # depfiles get listed as dependencies but not read in or passed to the function
+    sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+  )
   dep.args <- sapply(item.info$depends, function(dep) paste0("readData('", dep, "')" ))
   
   # data args
@@ -193,16 +225,19 @@ makeMakeItem.process <- function(item.info, ...) {
   rules$file.data <- makeMakeBatchRule(
     target=data.file,
     depends=dep.files,
-    fun='processData',
-    funargs=c(viz.id=paste0("'", item.info$id, "'"), dep.args, outfile=paste0("'", item.info$location, "'")),
+    fun=paste0(block, 'Data'),
+    funargs=c(viz.id=sQuote(item.info$id), dep.args, outfile=sQuote(item.info$location)),
     scripts=item.info$scripts,
-    logfile=paste0('process/', item.info$id, '.Rout'))
-  
+    logfile=paste0(block, '/', item.info$id, '.Rout'))
+
   # return
-  paste(unlist(unname(rules)), collapse='\n')
+  if(concat) {
+    paste(unlist(unname(rules)), collapse='\n')
+  } else {
+    rules
+  }
 }
 
-#### General makefile-writing functions ####
 
 #' Create text for a make rule that has no commands
 #' 

@@ -92,13 +92,14 @@ process:
     location: cache/process/CuyahogaShort.tsv
     mimeType: text/tab-separated-values
     scripts: scripts/process/cuyahoga.R
-    depends: [Cuyahoga]
+    depends: 
+      - Cuyahoga
     processor: cuyahoga
 visualize:
   -
     id: relativeAbundanceFig
     location: figures/relativeAbundanceFig.svg
-    depends: mungedRelativeAbundance
-    visualizer: visualizeRelativeAbundance
+    depends: [CuyahogaShort, MayflyNymph]
+    visualizer: relativeAbundance
     mimeType: image/svg+xml
     export: false
