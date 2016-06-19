@@ -36,7 +36,7 @@ readData.default <- function(viz.id, data.info, ...) {
   }
   
   # call the readData method applicable to this fetcher
-  readData(viz.id, data.info, ...)
+  readData(viz.id=viz.id, data.info=data.info, ...)
 }
 
 #' \code{readData.csv} reads a csv file.
