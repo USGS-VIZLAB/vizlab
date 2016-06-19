@@ -4,7 +4,7 @@
 \alias{makeMakefiles}
 \title{Create fetch.make, etc. from the information in viz.yaml}
 \usage{
-makeMakefiles(blocks = c("fetch", "process", "visualize"))
+makeMakefiles(blocks = c("fetch", "process", "visualize"), display = FALSE)
 }
 \arguments{
 \item{blocks}{character vector of names of blocks in the viz.yaml for which
