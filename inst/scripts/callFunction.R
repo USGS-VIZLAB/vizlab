@@ -11,22 +11,20 @@ sessionInfo()
 args.text <- commandArgs(TRUE)
 message(paste(c("Arguments:", args.text), collapse='\n'))
 readArg <- function(arg.text, cmd.args) {
-  lhs <- strsplit(arg.text, '=')[[1]][1]
-  rhs <- substring(arg.text, nchar(lhs)+2)
-  cmd.args[[lhs]] <- eval(parse(text=rhs))
+  if(length(arg.text) > 0) {
+    lhs <- strsplit(arg.text, '=')[[1]][1]
+    rhs <- substring(arg.text, nchar(lhs)+2)
+    cmd.args[[lhs]] <- eval(parse(text=rhs))
+  }
   cmd.args
 }
 # read just the scripts argument to start with, so we can build an environment
 # for evaluating other arguments
 cmd.args <- readArg(grep('^scripts=', args.text, value=TRUE), cmd.args=list())
 
-# Load package dependencies...actually, don't. these should be loaded with
-# library() calls within the script dependencies.
-# if(exists('pkgs', cmdargs)) {
-#   message("Loading libraries:\n", paste("  ", cmdargs$pkgs, collapse="\n"))
-#   sapply(cmdargs$pkgs, library, character.only=TRUE, logical.return=TRUE)
-# }
-library(vizlab) # vizlab will always be available
+# Load vizlab. Package dependencies besides vizlab should be loaded with library() calls
+# within the script dependencies
+library(vizlab)
 
 # Load script dependencies
 if(exists('scripts', cmd.args)) {
@@ -53,4 +51,4 @@ if(length(missingargs <- setdiff(expected, names(cmd.args))) > 0)
 
 # Call function
 message("Running function")
-do.call(cmd.args$fun, cmd.args$funargs)
+do.call(cmd.args$fun, if(is.null(cmd.args$funargs)) list() else cmd.args$funargs)
