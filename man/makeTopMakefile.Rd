@@ -6,6 +6,9 @@
 \usage{
 makeTopMakefile(outfile = "makefile")
 }
+\arguments{
+\item{outfile}{filename where the makefile should be written}
+}
 \description{
 Declares the dependency of the other makefiles on the viz.yaml
 }
