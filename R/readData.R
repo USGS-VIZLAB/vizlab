@@ -29,7 +29,7 @@ readData.default <- function(viz.id, data.info, ...) {
     class(viz.id) <- switch(
       data.info$mimeType,
       "text/csv" = "csv",
-      "text/tab-seperated-values" = "csv",
+      "text/tab-separated-values" = "csv",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
       "custom")
