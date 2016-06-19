@@ -4,12 +4,12 @@
 \alias{writeTimestamp}
 \title{Write a timestamp file with the conventions used by fetchTimestamp}
 \usage{
-writeTimestamp(new.timestamp, timestamp.file)
+writeTimestamp(new.timestamp, outfile)
 }
 \arguments{
 \item{new.timestamp}{the new timestamp to write to file}
 
-\item{timestamp.file}{the filename where the new timestamp should be saved}
+\item{outfile}{the filename where the new timestamp should be saved}
 }
 \description{
 Should only be used outside the vizlab package if the developer is writing a 

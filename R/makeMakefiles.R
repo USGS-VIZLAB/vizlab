@@ -140,6 +140,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
     item.info$fetcher %in% timestamp.methods
   }
   if(needs.timestamp) {
+    sQuote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
     timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id, '.txt')
     rules$file.timestamp <- makeMakeEmptyRule(
@@ -148,7 +149,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
     rules$phony.timestamp <- makeMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
-      funargs=c(viz.id=paste0("'", item.info$id, "'")),
+      funargs=c(viz.id=sQuote(item.info$id), outdir=timestamp.file),
       scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
   }

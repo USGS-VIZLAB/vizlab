@@ -9,51 +9,43 @@
 #' @param ... other args passed to fetchTimestamp methods
 #'   
 #' @export
-fetchTimestamp <- function(viz.id, ...) UseMethod("fetchTimestamp")
+fetchTimestamp <- function(viz.id, ..., outfile) UseMethod("fetchTimestamp")
 
 #' @param data.info content information for this viz.id from the viz.yaml
 #' @param old.timestamp the current timestamp, or NA if unavailable
-#' @param timestamp.file the filename where the new timestamp should be saved
+#' @param outfile the filename where the new timestamp should be saved
 #'   
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.default <- function(viz.id, data.info, old.timestamp, timestamp.file, ...) {
+fetchTimestamp.default <- function(viz.id, data.info, old.timestamp, ..., outfile) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch')
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchTimestamp
   
-  # if this id type doesn't need a timestamp file, exit now
-  if(data.info$fetcher %in% c('file')) invisible(fetchTimestamp(viz.id, data.info))
-  
   # get the locally stored timestamp if it exists
-  timestamp.dir <- paste0('vizlab/make/timestamps')
-  timestamp.file <- paste0(timestamp.dir, '/', viz.id, '.txt')
-  old.timestamp <- if(file.exists(timestamp.file)) {
+  old.timestamp <- if(file.exists(outfile)) {
     tryCatch({
-      old.timestamp.chr <- readLines(timestamp.file)
+      old.timestamp.chr <- readLines(outfile)
       as.POSIXct(old.timestamp.chr)
     }, error=function(e) NA, warning=function(w) NA)
   } else {
     NA
   }
   
-  # create the timestamp file directory if it does not yet exist
-  if(!dir.exists(timestamp.dir)) dir.create(timestamp.dir)
-  
   # call the fetchTimestamp method applicable to this fetcher
-  invisible(fetchTimestamp(viz.id, data.info, old.timestamp=old.timestamp, timestamp.file=timestamp.file))
+  invisible(fetchTimestamp(viz.id=viz.id, data.info=data.info, old.timestamp=old.timestamp, ..., outfile=outfile))
 }
 
 #' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 #' 
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timestamp.file, ...) {
+fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, ..., outfile) {
   # require sbtools package
   if(!requireNamespace('sbtools', quietly = TRUE)) stop("package sbtools is required for fetchTimestamp.sciencebase")
   
   # try to get the timestamp from sciencebase. if we can't get it, give a
-  # warning and leave the timestamp.file as it was
+  # warning and leave the outfile as it was
   new.timestamp <- tryCatch({
     authRemote('sciencebase')
     sb.info <- sbtools::item_get(data.info$remoteItemId)
@@ -68,7 +60,7 @@ fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timesta
   
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
-    writeTimestamp(new.timestamp, timestamp.file)
+    writeTimestamp(new.timestamp, outfile)
   } 
   
   invisible()
@@ -81,9 +73,9 @@ fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, timesta
 #' new data + timestamp fetcher
 #' 
 #' @param new.timestamp the new timestamp to write to file
-#' @param timestamp.file the filename where the new timestamp should be saved
+#' @param outfile the filename where the new timestamp should be saved
 #'   
 #' @export
-writeTimestamp <- function(new.timestamp, timestamp.file) {
-  writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), timestamp.file)
+writeTimestamp <- function(new.timestamp, outfile) {
+  writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), outfile)
 }

@@ -8,27 +8,30 @@
 \alias{fetchData.url}
 \title{Ensure data is on the local file system}
 \usage{
-fetchData(viz.id, ...)
+fetchData(viz.id, ..., outfile)
 
-\method{fetchData}{default}(viz.id, data.info, ...)
+\method{fetchData}{default}(viz.id, data.info, ..., outfile)
 
-\method{fetchData}{file}(viz.id, data.info, ...)
+\method{fetchData}{file}(viz.id, data.info, ..., outfile)
 
-\method{fetchData}{sciencebase}(viz.id, data.info, ...)
+\method{fetchData}{sciencebase}(viz.id, data.info, ..., outfile)
 
-\method{fetchData}{url}(viz.id, data.info, ...)
+\method{fetchData}{url}(viz.id, data.info, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
 
 \item{...}{other arguments passed to fetchData methods}
 
+\item{outfile}{the filename to which the fetched data should be written, if
+applicable}
+
 \item{data.info}{content information for this viz.id from the viz.yaml}
 }
 \description{
-This function should be called from the generic, \code{fetchData()}. Fetch
-data from remote locations and/or identify a copy on the local file system.
-These functions assume that downloading must be attempted if the raw data
+This function should be called from the generic, \code{fetchData()}. Fetch 
+data from remote locations and/or identify a copy on the local file system. 
+These functions assume that downloading must be attempted if the raw data 
 file is remote; the makefile is where caching occurs if possible.
 
 \code{fetchData.file} currently does nothing. It exists to communicate that
