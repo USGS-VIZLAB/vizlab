@@ -37,6 +37,10 @@ fetchTimestamp.default <- function(viz.id, old.timestamp, ..., outfile) {
 
 #' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 #' 
+#' @param remoteItemId the ScienceBase hexadecimal ID of the item
+#' @param remoteFilename the name of the file, as it is named on ScienceBase, 
+#'   whose timestamp we want
+#'   
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.sciencebase <- function(viz.id, old.timestamp, remoteItemId, remoteFilename, ..., outfile) {

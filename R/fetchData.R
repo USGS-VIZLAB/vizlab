@@ -38,11 +38,15 @@ fetchData.file <- function(viz.id, ..., outfile) {
 }
 
 #' \code{fetchData.sciencebase} downloads a file from ScienceBase.
-#'
+#' 
+#' @param remoteItemId the ScienceBase hexadecimal ID of the item
+#' @param remoteFilename the name of the file to download, as it is named on 
+#'   ScienceBase
+#'   
 #' @rdname fetchData
 #' @export
 fetchData.sciencebase <- function(viz.id, remoteItemId, remoteFilename, ..., outfile) {
-  # check for properly formatted data.info values
+  # check for properly formatted args
   if(missing('remoteFilename') || length(remoteFilename) != 1)
     stop('expecting exactly 1 remoteFilename per data item')
 
@@ -67,16 +71,17 @@ fetchData.sciencebase <- function(viz.id, remoteItemId, remoteFilename, ..., out
 
 #' \code{fetchData.url} downloads a file from the specified URL.
 #' 
+#' @param remoteURL the URL from which to download the file
+#'   
 #' @rdname fetchData
 #' @export
 fetchData.url <- function(viz.id, remoteURL, ..., outfile) {
   
   #check that we have one URL
-  if(!(exists('remoteURL', data.info)) || length(data.info$remoteURL) != 1)
+  if(missing('remoteURL') || length(remoteURL) != 1)
     stop('expecting exactly 1 remoteURL per data item')
   
-  httr::GET(remoteURL, 
-            httr::write_disk(outfile, overwrite=TRUE))
+  httr::GET(remoteURL, httr::write_disk(outfile, overwrite=TRUE))
   
   invisible()
 }

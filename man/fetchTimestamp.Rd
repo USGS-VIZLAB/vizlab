@@ -21,6 +21,11 @@ fetchTimestamp(viz.id, ..., outfile)
 \item{outfile}{the filename where the new timestamp should be saved}
 
 \item{old.timestamp}{the current timestamp, or NA if unavailable}
+
+\item{remoteItemId}{the ScienceBase hexadecimal ID of the item}
+
+\item{remoteFilename}{the name of the file, as it is named on ScienceBase, 
+whose timestamp we want}
 }
 \description{
 This function should be called from the generic, \code{fetchTimestamp()}.
