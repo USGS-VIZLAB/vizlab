@@ -38,6 +38,7 @@ makeTopMakefile <- function(outfile='makefile') {
     makeCleanRule(),
     sep='\n\n')
   writeLines(makefile, con=outfile)
+  if(!dir.exists('vizlab/make/log/make')) dir.create('vizlab/make/log/make')
   invisible(makefile)
 }
 
