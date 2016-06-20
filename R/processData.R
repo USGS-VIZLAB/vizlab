@@ -14,9 +14,11 @@
 #' @export
 processData <- function(viz.id, ..., outfile) UseMethod("processData")
 
+#' @param data.info content information for this viz.id from the viz.yaml
+#' 
 #' @rdname processData
 #' @export
-processData.default <- function(viz.id, ..., outfile) {
+processData.default <- function(viz.id, data.info, ..., outfile) {
   # explain the problem if we're headed for infinite recursion
   if(class(viz.id) != 'character') 
     stop('could not find processData method for viz.id=', viz.id, ', processor=', class(viz.id))
@@ -28,5 +30,5 @@ processData.default <- function(viz.id, ..., outfile) {
   class(viz.id) <- data.info$processor
   
   # call the processData method applicable to this fetcher
-  processData(viz.id, ..., outfile)
+  processData(viz.id=viz.id, data.info=data.info, ..., outfile=outfile)
 }

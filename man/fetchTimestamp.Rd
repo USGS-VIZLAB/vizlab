@@ -6,24 +6,23 @@
 \alias{fetchTimestamp.sciencebase}
 \title{Update timestamp file if needed}
 \usage{
-fetchTimestamp(viz.id, ...)
+fetchTimestamp(viz.id, ..., outfile)
 
-\method{fetchTimestamp}{default}(viz.id, data.info, old.timestamp,
-  timestamp.file, ...)
+\method{fetchTimestamp}{default}(viz.id, data.info, old.timestamp, ..., outfile)
 
-\method{fetchTimestamp}{sciencebase}(viz.id, data.info, old.timestamp,
-  timestamp.file, ...)
+\method{fetchTimestamp}{sciencebase}(viz.id, data.info, old.timestamp, ...,
+  outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
 
 \item{...}{other args passed to fetchTimestamp methods}
 
+\item{outfile}{the filename where the new timestamp should be saved}
+
 \item{data.info}{content information for this viz.id from the viz.yaml}
 
 \item{old.timestamp}{the current timestamp, or NA if unavailable}
-
-\item{timestamp.file}{the filename where the new timestamp should be saved}
 }
 \description{
 This function should be called from the generic, \code{fetchTimestamp()}.

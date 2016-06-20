@@ -29,14 +29,14 @@ readData.default <- function(viz.id, data.info, ...) {
     class(viz.id) <- switch(
       data.info$mimeType,
       "text/csv" = "csv",
-      "text/tab-seperated-values" = "csv",
+      "text/tab-separated-values" = "csv",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
       "custom")
   }
   
   # call the readData method applicable to this fetcher
-  readData(viz.id, data.info, ...)
+  readData(viz.id=viz.id, data.info=data.info, ...)
 }
 
 #' \code{readData.csv} reads a csv file.
