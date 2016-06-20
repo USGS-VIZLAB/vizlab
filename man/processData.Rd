@@ -8,7 +8,7 @@ products}
 \usage{
 processData(viz.id, ..., outfile)
 
-\method{processData}{default}(viz.id, data.info, ..., outfile)
+\method{processData}{default}(viz.id, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -18,8 +18,6 @@ include any data dependencies, named according to the viz.id of those data
 items}
 
 \item{outfile}{the filename to which the processed data should be written}
-
-\item{data.info}{content information for this viz.id from the viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{processData()}. 

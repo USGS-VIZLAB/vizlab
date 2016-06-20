@@ -11,13 +11,12 @@
 #' @export
 fetchTimestamp <- function(viz.id, ..., outfile) UseMethod("fetchTimestamp")
 
-#' @param data.info content information for this viz.id from the viz.yaml
 #' @param old.timestamp the current timestamp, or NA if unavailable
 #' @param outfile the filename where the new timestamp should be saved
 #'   
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.default <- function(viz.id, data.info, old.timestamp, ..., outfile) {
+fetchTimestamp.default <- function(viz.id, old.timestamp, ..., outfile) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch')
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchTimestamp
@@ -33,14 +32,14 @@ fetchTimestamp.default <- function(viz.id, data.info, old.timestamp, ..., outfil
   }
   
   # call the fetchTimestamp method applicable to this fetcher
-  invisible(fetchTimestamp(viz.id=viz.id, data.info=data.info, old.timestamp=old.timestamp, ..., outfile=outfile))
+  invisible(fetchTimestamp(viz.id=viz.id, old.timestamp=old.timestamp, ..., outfile=outfile))
 }
 
 #' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 #' 
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, ..., outfile) {
+fetchTimestamp.sciencebase <- function(viz.id, old.timestamp, remoteItemId, remoteFilename, ..., outfile) {
   # require sbtools package
   if(!requireNamespace('sbtools', quietly = TRUE)) stop("package sbtools is required for fetchTimestamp.sciencebase")
   
@@ -48,9 +47,9 @@ fetchTimestamp.sciencebase <- function(viz.id, data.info, old.timestamp, ..., ou
   # warning and leave the outfile as it was
   new.timestamp <- tryCatch({
     authRemote('sciencebase')
-    sb.info <- sbtools::item_get(data.info$remoteItemId)
+    sb.info <- sbtools::item_get(remoteItemId)
     files.info <- sb.info$files
-    file.info <- files.info[[which(sapply(files.info, function(fileinf) { fileinf$name == data.info$remoteFilename }))]]
+    file.info <- files.info[[which(sapply(files.info, function(fileinf) { fileinf$name == remoteFilename }))]]
     as.POSIXct(file.info$dateUploaded, format='%Y-%m-%dT%H:%M:%SZ')
   }, error=function(e) {
     warning(e$message, call.=FALSE)

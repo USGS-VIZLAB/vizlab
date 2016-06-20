@@ -8,7 +8,7 @@ products}
 \usage{
 visualizeData(viz.id, ..., outfile)
 
-\method{visualizeData}{default}(viz.id, data.info, ..., outfile)
+\method{visualizeData}{default}(viz.id, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -18,8 +18,6 @@ include any data dependencies, named according to the viz.id of those data
 items}
 
 \item{outfile}{the filename to which the visualized data should be written}
-
-\item{data.info}{content information for this viz.id from the viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{visualizeData()}. 

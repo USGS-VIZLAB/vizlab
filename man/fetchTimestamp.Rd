@@ -8,10 +8,10 @@
 \usage{
 fetchTimestamp(viz.id, ..., outfile)
 
-\method{fetchTimestamp}{default}(viz.id, data.info, old.timestamp, ..., outfile)
+\method{fetchTimestamp}{default}(viz.id, old.timestamp, ..., outfile)
 
-\method{fetchTimestamp}{sciencebase}(viz.id, data.info, old.timestamp, ...,
-  outfile)
+\method{fetchTimestamp}{sciencebase}(viz.id, old.timestamp, remoteItemId,
+  remoteFilename, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -19,8 +19,6 @@ fetchTimestamp(viz.id, ..., outfile)
 \item{...}{other args passed to fetchTimestamp methods}
 
 \item{outfile}{the filename where the new timestamp should be saved}
-
-\item{data.info}{content information for this viz.id from the viz.yaml}
 
 \item{old.timestamp}{the current timestamp, or NA if unavailable}
 }

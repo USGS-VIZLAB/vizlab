@@ -253,7 +253,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
     rules$phony.timestamp <- makeMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
-      funargs=c(viz.id=squote(item.info$id), outfile=squote(timestamp.file)),
+      funargs=c(viz.id=squote(item.info$id), sapply(unlist(item.info$args), squote), outfile=squote(timestamp.file)),
       scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
   }
@@ -343,7 +343,7 @@ makeMakeRulePair <- function(item.info, block, concat=TRUE) {
     target=data.file,
     depends=dep.files,
     fun=paste0(block, 'Data'),
-    funargs=c(viz.id=squote(item.info$id), dep.args, outfile=squote(item.info$location)),
+    funargs=c(viz.id=squote(item.info$id), dep.args, sapply(unlist(item.info$args), squote), outfile=squote(item.info$location)),
     scripts=item.info$scripts,
     logfile=paste0(block, '/', item.info$id, '.Rout'))
 

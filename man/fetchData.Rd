@@ -10,13 +10,14 @@
 \usage{
 fetchData(viz.id, ..., outfile)
 
-\method{fetchData}{default}(viz.id, data.info, ..., outfile)
+\method{fetchData}{default}(viz.id, ..., outfile)
 
-\method{fetchData}{file}(viz.id, data.info, ..., outfile)
+\method{fetchData}{file}(viz.id, ..., outfile)
 
-\method{fetchData}{sciencebase}(viz.id, data.info, ..., outfile)
+\method{fetchData}{sciencebase}(viz.id, remoteItemId, remoteFilename, ...,
+  outfile)
 
-\method{fetchData}{url}(viz.id, data.info, ..., outfile)
+\method{fetchData}{url}(viz.id, remoteURL, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -25,8 +26,6 @@ fetchData(viz.id, ..., outfile)
 
 \item{outfile}{the filename to which the fetched data should be written, if
 applicable}
-
-\item{data.info}{content information for this viz.id from the viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{fetchData()}. Fetch 

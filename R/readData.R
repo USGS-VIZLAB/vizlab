@@ -9,11 +9,11 @@
 #' @export
 readData <- function(viz.id, ...) UseMethod("readData")
 
-#' @param data.info content information for this viz.id from the viz.yaml
+#' @param location path and filename of the file to read
 #' 
 #' @rdname readData
 #' @export
-readData.default <- function(viz.id, data.info, ...) {
+readData.default <- function(viz.id, location, ...) {
   # explain the problem if we're headed for infinite recursion
   if(class(viz.id) != 'character') 
     stop('could not find readData method for viz.id=', viz.id, ', reader=', class(viz.id))
@@ -37,16 +37,16 @@ readData.default <- function(viz.id, data.info, ...) {
   }
   
   # call the readData method applicable to this fetcher
-  readData(viz.id=viz.id, data.info=data.info, ...)
+  readData(viz.id=viz.id, location=data.info$location, ...)
 }
 
 #' \code{readData.csv} reads a csv file.
 #'
 #' @rdname readData
 #' @export
-readData.csv <- function(viz.id, data.info, ...) {
+readData.csv <- function(viz.id, location, ...) {
   if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.csv")
-  x <- data.table::setDF(data.table::fread(data.info$location))
+  x <- data.table::setDF(data.table::fread(location))
   x # assign to x first so it returns visibly
 }
 
@@ -55,23 +55,23 @@ readData.csv <- function(viz.id, data.info, ...) {
 #' @rdname readData
 #' @import yaml
 #' @export
-readData.yaml <- function(viz.id, data.info, ...) {
-  yaml.load_file(data.info$location)
+readData.yaml <- function(viz.id, location, ...) {
+  yaml.load_file(location)
 }
 
 #' \code{readData.excel} reads the first spreadsheet of an Excel file.
 #'
 #' @rdname readData
 #' @export
-readData.excel <- function(viz.id, data.info, ...) {
+readData.excel <- function(viz.id, location, ...) {
   if(!requireNamespace('readxl', quietly = TRUE)) stop("package readxl is required for readData.excel")
-  readxl::read_excel(data.info$location)
+  readxl::read_excel(location)
 }
 
 #' \code{readData.RDS} reads an R object saved as an RDS.
 #'
 #' @rdname readData
 #' @export
-readData.RDS <- function(viz.id, data.info, ...){
-  readRDS(data.info$location)
+readData.RDS <- function(viz.id, location, ...){
+  readRDS(location)
 }
