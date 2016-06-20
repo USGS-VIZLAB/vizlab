@@ -123,14 +123,10 @@ makeMakeMacros <- function() {
   # read user settings from profile.yaml
   profile <- getProfileInfo()
   userlib <- profile$R_LIBS_USER
-  # libs <- if(!is.null(userlib)) {
-  #   usequotes <- TRUE# grepl(' ', userlib)
-  #   paste0('RLIBSUSER=', if(usequotes) '"', userlib, if(usequotes) '"') 
-  # } else c()
   
   # write the macros
   macros <- c(
-    #paste0(c('RARGS=--no-save --no-restore --slave', libs), collapse=' '),
+    if(!is.null(profile$SHELL)) paste0('SHELL=', profile$SHELL),
     paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) paste0('"', profile$R_LIBS_USER, '"') else '$(R_LIBS_USER)'),
     paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
     paste0('RBATCH="', profile$R, '" CMD BATCH --no-timing $(RARGS)'),

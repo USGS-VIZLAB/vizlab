@@ -20,6 +20,7 @@ getProfileInfo <- function(user='local') {
   
   # fill in missing values with defaults
   defaults <- list(
+    SHELL=NULL,
     R='R',
     RSCRIPT='Rscript',
     R_LIBS_USER=NULL)
