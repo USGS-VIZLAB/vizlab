@@ -32,6 +32,7 @@ readData.default <- function(viz.id, data.info, ...) {
       "text/tab-separated-values" = "csv",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
+      "object/RDS" = "RDS",
       "custom")
   }
   
@@ -65,4 +66,12 @@ readData.yaml <- function(viz.id, data.info, ...) {
 readData.excel <- function(viz.id, data.info, ...) {
   if(!requireNamespace('readxl', quietly = TRUE)) stop("package readxl is required for readData.excel")
   readxl::read_excel(data.info$location)
+}
+
+#' \code{readData.RDS} reads an R object saved as an RDS.
+#'
+#' @rdname readData
+#' @export
+readData.RDS <- function(viz.id, data.info, ...){
+  readRDS(data.info$location)
 }
