@@ -17,6 +17,7 @@ readData(viz.id, ...)
 \method{readData}{yaml}(viz.id, data.info, ...)
 
 \method{readData}{excel}(viz.id, data.info, ...)
+\method{readData}{RDS}(viz.id, location, ...)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -34,5 +35,7 @@ data from a file into R format.
 \code{readData.yaml} reads a yaml file.
 
 \code{readData.excel} reads the first spreadsheet of an Excel file.
+
+\code{readData.RDS} reads an R object saved as an RDS.
 }
 
