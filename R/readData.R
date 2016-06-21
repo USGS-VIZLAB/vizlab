@@ -32,7 +32,9 @@ readData.default <- function(viz.id, location, ...) {
       "text/tab-separated-values" = "csv",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      "object/RDS" = "RDS",
+      "RDS" = "RDS",
+      "folder" = "folder",
+      "application/zip" = "zip",
       "custom")
   }
   
@@ -74,4 +76,20 @@ readData.excel <- function(viz.id, location, ...) {
 #' @export
 readData.RDS <- function(viz.id, location, ...){
   readRDS(location)
+}
+
+#' \code{readData.zip} returns zip file locations
+#'
+#' @rdname readData
+#' @export
+readData.zip <- function(viz.id, location, ...){
+  location
+}
+
+#' \code{readData.folder} returns names of files inside a folder
+#'
+#' @rdname readData
+#' @export
+readData.folder <- function(viz.id, location, ...){
+  file.path(location, list.files(location))
 }
