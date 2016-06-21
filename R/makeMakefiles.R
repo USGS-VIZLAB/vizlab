@@ -38,6 +38,7 @@ makeTopMakefile <- function(outfile='makefile') {
     makeCleanRule(),
     sep='\n\n')
   writeLines(makefile, con=outfile)
+  if(!dir.exists('vizlab/make/log/make')) dir.create('vizlab/make/log/make')
   invisible(makefile)
 }
 
@@ -123,14 +124,10 @@ makeMakeMacros <- function() {
   # read user settings from profile.yaml
   profile <- getProfileInfo()
   userlib <- profile$R_LIBS_USER
-  # libs <- if(!is.null(userlib)) {
-  #   usequotes <- TRUE# grepl(' ', userlib)
-  #   paste0('RLIBSUSER=', if(usequotes) '"', userlib, if(usequotes) '"') 
-  # } else c()
   
   # write the macros
   macros <- c(
-    #paste0(c('RARGS=--no-save --no-restore --slave', libs), collapse=' '),
+    if(!is.null(profile$SHELL)) paste0('SHELL=', profile$SHELL),
     paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) paste0('"', profile$R_LIBS_USER, '"') else '$(R_LIBS_USER)'),
     paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
     paste0('RBATCH="', profile$R, '" CMD BATCH --no-timing $(RARGS)'),
@@ -256,7 +253,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
     rules$phony.timestamp <- makeMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
-      funargs=c(viz.id=squote(item.info$id), outfile=squote(timestamp.file)),
+      funargs=c(viz.id=squote(item.info$id), sapply(unlist(item.info$args), squote), outfile=squote(timestamp.file)),
       scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
   }
@@ -346,7 +343,7 @@ makeMakeRulePair <- function(item.info, block, concat=TRUE) {
     target=data.file,
     depends=dep.files,
     fun=paste0(block, 'Data'),
-    funargs=c(viz.id=squote(item.info$id), dep.args, outfile=squote(item.info$location)),
+    funargs=c(viz.id=squote(item.info$id), dep.args, sapply(unlist(item.info$args), squote), outfile=squote(item.info$location)),
     scripts=item.info$scripts,
     logfile=paste0(block, '/', item.info$id, '.Rout'))
 

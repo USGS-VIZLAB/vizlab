@@ -13,11 +13,9 @@
 #' @export
 fetchData <- function(viz.id, ..., outfile) UseMethod("fetchData")
 
-#' @param data.info content information for this viz.id from the viz.yaml
-#' 
 #' @rdname fetchData
 #' @export
-fetchData.default <- function(viz.id, data.info, ..., outfile) {
+fetchData.default <- function(viz.id, ..., outfile) {
   # explain the problem if we're headed for infinite recursion
   if(class(viz.id) != 'character') 
     stop('could not find fetchData method for viz.id=', viz.id, ', fetcher=', class(viz.id))
@@ -27,7 +25,7 @@ fetchData.default <- function(viz.id, data.info, ..., outfile) {
   class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchData
 
   # call the fetchData method applicable to this fetcher
-  invisible(fetchData(viz.id=viz.id, data.info=data.info, ..., outfile=outfile))
+  invisible(fetchData(viz.id=viz.id, ..., outfile=outfile))
 }
 
 #' \code{fetchData.file} currently does nothing. It exists to communicate that
@@ -35,17 +33,21 @@ fetchData.default <- function(viz.id, data.info, ..., outfile) {
 #'
 #' @rdname fetchData
 #' @export
-fetchData.file <- function(viz.id, data.info, ..., outfile) {
+fetchData.file <- function(viz.id, ..., outfile) {
   invisible()
 }
 
 #' \code{fetchData.sciencebase} downloads a file from ScienceBase.
-#'
+#' 
+#' @param remoteItemId the ScienceBase hexadecimal ID of the item
+#' @param remoteFilename the name of the file to download, as it is named on 
+#'   ScienceBase
+#'   
 #' @rdname fetchData
 #' @export
-fetchData.sciencebase <- function(viz.id, data.info, ..., outfile) {
-  # check for properly formatted data.info values
-  if(!(exists('remoteFilename', data.info)) || length(data.info$remoteFilename) != 1)
+fetchData.sciencebase <- function(viz.id, remoteItemId, remoteFilename, ..., outfile) {
+  # check for properly formatted args
+  if(missing('remoteFilename') || length(remoteFilename) != 1)
     stop('expecting exactly 1 remoteFilename per data item')
 
   # require sbtools package
@@ -59,8 +61,8 @@ fetchData.sciencebase <- function(viz.id, data.info, ..., outfile) {
   # one file per data item). this is using the :: operator as suggested by 
   # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Suggested-packages
   sbtools::item_file_download(
-    sb_id=data.info$remoteItemId,
-    names=data.info$remoteFilename,
+    sb_id=remoteItemId,
+    names=remoteFilename,
     destinations=outfile,
     overwrite_file=TRUE)
 
@@ -69,16 +71,17 @@ fetchData.sciencebase <- function(viz.id, data.info, ..., outfile) {
 
 #' \code{fetchData.url} downloads a file from the specified URL.
 #' 
+#' @param remoteURL the URL from which to download the file
+#'   
 #' @rdname fetchData
 #' @export
-fetchData.url <- function(viz.id, data.info, ..., outfile) {
+fetchData.url <- function(viz.id, remoteURL, ..., outfile) {
   
   #check that we have one URL
-  if(!(exists('remoteURL', data.info)) || length(data.info$remoteURL) != 1)
+  if(missing('remoteURL') || length(remoteURL) != 1)
     stop('expecting exactly 1 remoteURL per data item')
   
-  httr::GET(data.info$remoteURL, 
-            httr::write_disk(outfile, overwrite=TRUE))
+  httr::GET(remoteURL, httr::write_disk(outfile, overwrite=TRUE))
   
   invisible()
 }

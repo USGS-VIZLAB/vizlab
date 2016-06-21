@@ -6,6 +6,7 @@
 #' @examples 
 #' \dontrun{
 #' # Example file for Windows user[s]:
+#' SHELL: /usr/bin/sh
 #' R: C:/Program Files/R/R-3.3.0/bin/x64/R.exe
 #' RSCRIPT: C:/Program Files/R/R-3.3.0/bin/x64/Rscript.exe
 #' R_LIBS_USER: !eval >

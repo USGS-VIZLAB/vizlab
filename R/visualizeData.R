@@ -14,11 +14,9 @@
 #' @export
 visualizeData <- function(viz.id, ..., outfile) UseMethod("visualizeData")
 
-#' @param data.info content information for this viz.id from the viz.yaml
-#' 
 #' @rdname visualizeData
 #' @export
-visualizeData.default <- function(viz.id, data.info, ..., outfile) {
+visualizeData.default <- function(viz.id, ..., outfile) {
   # explain the problem if we're headed for infinite recursion
   if(class(viz.id) != 'character') 
     stop('could not find visualizeData method for viz.id=', viz.id, ', visualizer=', class(viz.id))
@@ -30,5 +28,5 @@ visualizeData.default <- function(viz.id, data.info, ..., outfile) {
   class(viz.id) <- data.info$visualizer
   
   # call the visualizeData method applicable to this fetcher
-  visualizeData(viz.id=viz.id, data.info=data.info, ..., outfile=outfile)
+  visualizeData(viz.id=viz.id, ..., outfile=outfile)
 }
