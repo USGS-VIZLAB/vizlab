@@ -30,3 +30,13 @@ processData.default <- function(viz.id, ..., outfile) {
   # call the processData method applicable to this fetcher
   processData(viz.id=viz.id, ..., outfile=outfile)
 }
+
+#' \code{processData.unzip} unzip a zip file
+#'
+#' @rdname processData
+#' @export
+processData.unzip <- function(viz.id, ..., outfile) {
+  args <- list(...)
+  sapply(args, unzip, exdir = outfile)
+  return()
+}
