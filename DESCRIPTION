@@ -3,7 +3,7 @@ Type: Package
 Title: Utilities for building online data visualizations
 Version: 0.1.2
 Date: 2016-06-20
-Author: Jordan Walker, Jordan Read, Alison Appling
+Author: Jordan Walker, Alison Appling, Lindsay Carr, Luke Winslow, Jordan Read
 Maintainer: Jordan Walker <jiwalker@usgs.gov>
 Description: Provides utility functions to organize, develop, and publish
     web-based data visualizations
@@ -24,7 +24,7 @@ Imports:
 Suggests:
     data.table,
     knitr,
-    sbtools,
+    sbtools (>= 0.19.3),
     httr,
     readxl,
     testthat
