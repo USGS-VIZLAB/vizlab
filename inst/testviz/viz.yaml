@@ -76,6 +76,7 @@ fetch:
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
+    fetchTimestamp: false
     args:
       remoteItemId: 575d839ee4b04f417c2a03fe
       remoteFilename: CuyahogaTDS.csv
