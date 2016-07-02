@@ -3,15 +3,17 @@
 \name{readData}
 \alias{readData}
 \alias{readData.RDS}
+\alias{readData.character}
 \alias{readData.csv}
-\alias{readData.default}
 \alias{readData.excel}
+\alias{readData.filepath}
+\alias{readData.folder}
 \alias{readData.yaml}
 \title{Ensure data is on the local file system}
 \usage{
 readData(viz.id, ...)
 
-\method{readData}{default}(viz.id, location, ...)
+\method{readData}{character}(viz.id, location, ...)
 
 \method{readData}{csv}(viz.id, location, ...)
 
@@ -20,6 +22,10 @@ readData(viz.id, ...)
 \method{readData}{excel}(viz.id, location, ...)
 
 \method{readData}{RDS}(viz.id, location, ...)
+
+\method{readData}{filepath}(viz.id, location, ...)
+
+\method{readData}{folder}(viz.id, location, ...)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -29,8 +35,12 @@ readData(viz.id, ...)
 \item{location}{path and filename of the file to read}
 }
 \description{
-This function should be called from the generic, \code{readData()}. Reads
-data from a file into R format.
+This function should be called from the generic, \code{readData()}. Reads 
+data from a file into R format. If you just want the filepath so you can do
+it yourself, specify "customReader: filepath" in the viz.yaml
+
+\code{readData.character} is the standard entry point; from here, viz.id gets
+assigned a class to route it to a more specific reader
 
 \code{readData.csv} reads a csv file.
 
@@ -39,5 +49,9 @@ data from a file into R format.
 \code{readData.excel} reads the first spreadsheet of an Excel file.
 
 \code{readData.RDS} reads an R object saved as an RDS.
+
+\code{readData.filepath} returns the file path
+
+\code{readData.folder} returns names of files inside a folder
 }
 

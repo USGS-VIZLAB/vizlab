@@ -239,7 +239,7 @@ makeMakeItem.fetch <- function(item.info, ...) {
 
   # timestamp rules
   needs.timestamp <- {
-    lapply(item.info$scripts, source);
+    sourceScripts(item.info$scripts, verbose=FALSE)
     timestamp.methods <- sapply(strsplit(c(methods('fetchTimestamp')), '\\.'), `[`, 2)
     item.info$fetcher %in% timestamp.methods
   }

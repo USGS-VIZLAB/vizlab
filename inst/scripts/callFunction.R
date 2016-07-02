@@ -28,14 +28,7 @@ library(vizlab)
 
 # Load script dependencies
 if(exists('scripts', cmd.args)) {
-  scripts <- do.call(c, lapply(cmd.args$scripts, function(script) {
-    if(dir.exists(script)) 
-      file.path(script, dir(script))
-    else
-      script
-  }))
-  message("Sourcing scripts:\n", paste("  ", scripts, collapse="\n"))
-  sapply(scripts, source)
+  sourceScripts(cmd.args$scripts, verbose=TRUE)
 }
 
 # Read in the rest of the arguments

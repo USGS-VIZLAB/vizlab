@@ -15,17 +15,23 @@ fetchData <- function(viz.id, ..., outfile) UseMethod("fetchData")
 
 #' @rdname fetchData
 #' @export
-fetchData.default <- function(viz.id, ..., outfile) {
-  # explain the problem if we're headed for infinite recursion
-  if(class(viz.id) != 'character') 
-    stop('could not find fetchData method for viz.id=', viz.id, ', fetcher=', class(viz.id))
-  
+fetchData.character <- function(viz.id, ..., outfile) {
   # get the fetching information for this data ID from viz.yaml
   data.info <- getContentInfo(viz.id, block='fetch', no.match='NA')
-  class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchData
+  
+  # collect the user args and autopopulate if appropriate
+  user.args <- list(...)
+  if(missing(outfile) || (length(user.args) == 0 && length(data.info$args) > 0)) {
+    all.args <- getAutoargs(data.info, fun='write')
+  } else {
+    all.args <- c(list(viz.id=viz.id), user.args, list(outfile=outfile))
+  }
+  
+  # route subsequent calls to fetchData
+  class(all.args$viz.id) <- data.info$fetcher
 
   # call the fetchData method applicable to this fetcher
-  invisible(fetchData(viz.id=viz.id, ..., outfile=outfile))
+  invisible(do.call(fetchData, all.args))
 }
 
 #' \code{fetchData.file} currently does nothing. It exists to communicate that

@@ -2,13 +2,13 @@
 % Please edit documentation in R/visualizeData.R
 \name{visualizeData}
 \alias{visualizeData}
-\alias{visualizeData.default}
+\alias{visualizeData.character}
 \title{Visualize raw or intermediate data products into intermediate or final data 
 products}
 \usage{
 visualizeData(viz.id, ..., outfile)
 
-\method{visualizeData}{default}(viz.id, ..., outfile)
+\method{visualizeData}{character}(viz.id, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}

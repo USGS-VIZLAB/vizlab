@@ -2,13 +2,16 @@
 % Please edit documentation in R/processData.R
 \name{processData}
 \alias{processData}
-\alias{processData.default}
+\alias{processData.character}
+\alias{processData.unzip}
 \title{Process raw or intermediate data products into intermediate or final data 
 products}
 \usage{
 processData(viz.id, ..., outfile)
 
-\method{processData}{default}(viz.id, ..., outfile)
+\method{processData}{character}(viz.id, ..., outfile)
+
+\method{processData}{unzip}(viz.id, ..., outfile)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
@@ -23,5 +26,7 @@ items}
 This function should be called from the generic, \code{processData()}. 
 Process raw or intermediate data products into intermediate or final data 
 products
+
+\code{processData.unzip} unzip a zip file
 }
 

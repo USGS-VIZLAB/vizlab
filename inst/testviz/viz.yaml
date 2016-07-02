@@ -64,7 +64,8 @@ images:
   -
     id: bead3
     location: images/bead3.jpg
-    mimetype: image/jpeg
+    mimeType: image/jpeg
+    customReader: filepath
     altTextTag: Shaving cream
 fetch:
   -
