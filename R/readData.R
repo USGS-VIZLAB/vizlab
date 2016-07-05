@@ -1,32 +1,41 @@
 #' Ensure data is on the local file system
 #' 
-#' This function should be called from the generic, \code{readData()}. Reads
-#' data from a file into R format.
+#' This function should be called from the generic, \code{readData()}. Reads 
+#' data from a file into R format. If you just want the filepath so you can do
+#' it yourself, specify "customReader: filepath" in the viz.yaml
 #' 
 #' @param viz.id the identifier for this data item in viz.yaml
 #' @param ... other arguments passed to readData methods
-#' 
+#'   
 #' @export
 readData <- function(viz.id, ...) UseMethod("readData")
 
-#' @param location path and filename of the file to read
+#' \code{readData.character} is the standard entry point; from here, viz.id gets
+#' assigned a class to route it to a more specific reader
 #' 
+#' @param location path and filename of the file to read
+#'   
 #' @rdname readData
 #' @export
-readData.default <- function(viz.id, location, ...) {
-  # explain the problem if we're headed for infinite recursion
-  if(class(viz.id) != 'character') 
-    stop('could not find readData method for viz.id=', viz.id, ', reader=', class(viz.id))
-  
+readData.character <- function(viz.id, location, ...) {
   # get the reading information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, no.match='NA')
+  data.info <- getContentInfo(viz.id, no.match='stop')
   
-  # routes subsequent calls to a specific readData method
+  # collect the user args. we'd consider autopopulating, but it's currently
+  # never appropriate
+  user.args <- list(...)
+  # if(no.args.and.expected.otherwise) {
+  #   all.args <- getAutoargs(data.info, fun='read')
+  # } else {
+  all.args <- c(list(viz.id=viz.id, location=data.info$location), user.args)
+  # }
+  
+  # route subsequent calls to a specific readData method
   if(exists('customReader', data.info)) {
-    sapply(file.path('scripts/read', dir('scripts/read')), source)
-    class(viz.id) <- data.info$customReader
+    sourceScripts('scripts/read')
+    reader <- data.info$customReader
   } else {
-    class(viz.id) <- switch(
+    reader <- switch(
       data.info$mimeType,
       "text/csv" = "csv",
       "text/tab-separated-values" = "csv",
@@ -34,12 +43,18 @@ readData.default <- function(viz.id, location, ...) {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
       "RDS" = "RDS",
       "folder" = "folder",
-      "application/zip" = "zip",
-      "custom")
+      "application/zip" = "filepath",
+      {
+        warning(
+          'could not find specific readData method for viz.id=', all.args$viz.id, 
+          ', mimeType=', data.info$mimeType, '; returning filepath')
+        "filepath"
+      })
   }
+  class(all.args$viz.id) <- reader
   
-  # call the readData method applicable to this fetcher
-  readData(viz.id=viz.id, location=data.info$location, ...)
+  # call the readData method applicable to this item
+  do.call(readData, all.args)
 }
 
 #' \code{readData.csv} reads a csv file.
@@ -78,11 +93,11 @@ readData.RDS <- function(viz.id, location, ...){
   readRDS(location)
 }
 
-#' \code{readData.zip} returns zip file locations
+#' \code{readData.filepath} returns the file path
 #'
 #' @rdname readData
 #' @export
-readData.zip <- function(viz.id, location, ...){
+readData.filepath <- function(viz.id, location, ...){
   location
 }
 
@@ -91,5 +106,5 @@ readData.zip <- function(viz.id, location, ...){
 #' @rdname readData
 #' @export
 readData.folder <- function(viz.id, location, ...){
-  file.path(location, list.files(location))
+  dir(location, full.names=TRUE)
 }

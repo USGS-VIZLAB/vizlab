@@ -2,7 +2,7 @@
 % Please edit documentation in R/fetchData.R
 \name{fetchData}
 \alias{fetchData}
-\alias{fetchData.default}
+\alias{fetchData.character}
 \alias{fetchData.file}
 \alias{fetchData.sciencebase}
 \alias{fetchData.url}
@@ -10,7 +10,7 @@
 \usage{
 fetchData(viz.id, ..., outfile)
 
-\method{fetchData}{default}(viz.id, ..., outfile)
+\method{fetchData}{character}(viz.id, ..., outfile)
 
 \method{fetchData}{file}(viz.id, ..., outfile)
 

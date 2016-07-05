@@ -16,24 +16,31 @@ processData <- function(viz.id, ..., outfile) UseMethod("processData")
 
 #' @rdname processData
 #' @export
-processData.default <- function(viz.id, ..., outfile) {
-  # explain the problem if we're headed for infinite recursion
-  if(class(viz.id) != 'character') 
-    stop('could not find processData method for viz.id=', viz.id, ', processor=', class(viz.id))
-  
+processData.character <- function(viz.id, ..., outfile) {
   # get the reading information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, no.match='NA')
+  data.info <- getContentInfo(viz.id, block='process', no.match='stop')
   
-  # routes subsequent calls to a specific processData method
-  class(viz.id) <- data.info$processor
+  # collect the user args and autopopulate if appropriate
+  user.args <- list(...)
+  if(missing(outfile) || (length(user.args) == 0 && length(data.info$args) > 0)) {
+    all.args <- getAutoargs(data.info, fun='write')
+  } else {
+    all.args <- c(list(viz.id=viz.id), user.args, list(outfile=outfile))
+  }
+
+  # route subsequent calls to a specific processData method
+  if(!exists('processor', data.info)) 
+    stop("please specify a processor for viz.id '", viz.id, "' in viz.yaml")
+  class(all.args$viz.id) <- data.info$processor
   
   # call the processData method applicable to this fetcher
-  processData(viz.id=viz.id, ..., outfile=outfile)
+  invisible(do.call(processData, all.args))
 }
 
 #' \code{processData.unzip} unzip a zip file
 #'
 #' @rdname processData
+#' @importFrom utils unzip
 #' @export
 processData.unzip <- function(viz.id, ..., outfile) {
   args <- list(...)

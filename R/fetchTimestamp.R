@@ -16,11 +16,10 @@ fetchTimestamp <- function(viz.id, ..., outfile) UseMethod("fetchTimestamp")
 #'   
 #' @rdname fetchTimestamp
 #' @export
-fetchTimestamp.default <- function(viz.id, old.timestamp, ..., outfile) {
+fetchTimestamp.character <- function(viz.id, old.timestamp, ..., outfile) {
   # get the fetching information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, block='fetch')
-  class(viz.id) <- data.info$fetcher # routes subsequent calls to fetchTimestamp
-  
+  data.info <- getContentInfo(viz.id, block='fetch', no.match='stop')
+
   # get the locally stored timestamp if it exists
   old.timestamp <- if(file.exists(outfile)) {
     tryCatch({
@@ -30,6 +29,11 @@ fetchTimestamp.default <- function(viz.id, old.timestamp, ..., outfile) {
   } else {
     NA
   }
+  
+  # route subsequent calls to fetchData
+  if(!exists('fetcher', data.info)) 
+    stop("please specify a fetcher for viz.id '", viz.id, "' in viz.yaml")
+  class(viz.id) <- data.info$fetcher
   
   # call the fetchTimestamp method applicable to this fetcher
   invisible(fetchTimestamp(viz.id=viz.id, old.timestamp=old.timestamp, ..., outfile=outfile))

@@ -1,12 +1,12 @@
 Package: vizlab
 Type: Package
 Title: Utilities for building online data visualizations
-Version: 0.1.2
-Date: 2016-06-20
+Version: 0.1.4
+Date: 2016-07-05
 Author: Jordan Walker, Alison Appling, Lindsay Carr, Luke Winslow, Jordan Read
 Maintainer: Jordan Walker <jiwalker@usgs.gov>
 Description: Provides utility functions to organize, develop, and publish
-    web-based data visualizations
+    web-based data visualizations.
 License: file LICENSE
 Copyright: This software is in the public domain because it contains materials
     that originally came from the United States Geological Survey, an agency of

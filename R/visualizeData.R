@@ -16,17 +16,23 @@ visualizeData <- function(viz.id, ..., outfile) UseMethod("visualizeData")
 
 #' @rdname visualizeData
 #' @export
-visualizeData.default <- function(viz.id, ..., outfile) {
-  # explain the problem if we're headed for infinite recursion
-  if(class(viz.id) != 'character') 
-    stop('could not find visualizeData method for viz.id=', viz.id, ', visualizer=', class(viz.id))
-  
+visualizeData.character <- function(viz.id, ..., outfile) {
   # get the reading information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, no.match='NA')
+  data.info <- getContentInfo(viz.id, block='visualize', no.match='stop')
   
-  # routes subsequent calls to a specific visualizeData method
-  class(viz.id) <- data.info$visualizer
+  # collect the user args and autopopulate if appropriate
+  user.args <- list(...)
+  if(missing(outfile) || (length(user.args) == 0 && length(data.info$args) > 0)) {
+    all.args <- getAutoargs(data.info, fun='write')
+  } else {
+    all.args <- c(list(viz.id=viz.id), user.args, list(outfile=outfile))
+  }
+
+  # route subsequent calls to a specific visualizeData method
+  if(!exists('visualizer', data.info)) 
+    stop("please specify a visualizer for viz.id '", viz.id, "' in viz.yaml")
+  class(all.args$viz.id) <- data.info$visualizer
   
   # call the visualizeData method applicable to this fetcher
-  visualizeData(viz.id=viz.id, ..., outfile=outfile)
+  invisible(do.call(visualizeData, all.args))
 }
