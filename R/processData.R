@@ -18,7 +18,7 @@ processData <- function(viz.id, ..., outfile) UseMethod("processData")
 #' @export
 processData.character <- function(viz.id, ..., outfile) {
   # get the reading information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, no.match='NA')
+  data.info <- getContentInfo(viz.id, block='process', no.match='stop')
   
   # collect the user args and autopopulate if appropriate
   user.args <- list(...)
@@ -29,6 +29,8 @@ processData.character <- function(viz.id, ..., outfile) {
   }
 
   # route subsequent calls to a specific processData method
+  if(!exists('processor', data.info)) 
+    stop("please specify a processor for viz.id '", viz.id, "' in viz.yaml")
   class(all.args$viz.id) <- data.info$processor
   
   # call the processData method applicable to this fetcher

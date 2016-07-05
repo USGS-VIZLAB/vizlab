@@ -17,7 +17,7 @@ fetchData <- function(viz.id, ..., outfile) UseMethod("fetchData")
 #' @export
 fetchData.character <- function(viz.id, ..., outfile) {
   # get the fetching information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, block='fetch', no.match='NA')
+  data.info <- getContentInfo(viz.id, block='fetch', no.match='stop')
   
   # collect the user args and autopopulate if appropriate
   user.args <- list(...)
@@ -28,6 +28,8 @@ fetchData.character <- function(viz.id, ..., outfile) {
   }
   
   # route subsequent calls to fetchData
+  if(!exists('fetcher', data.info)) 
+    stop("please specify a fetcher for viz.id '", viz.id, "' in viz.yaml")
   class(all.args$viz.id) <- data.info$fetcher
 
   # call the fetchData method applicable to this fetcher

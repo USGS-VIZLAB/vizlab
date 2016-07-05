@@ -2,13 +2,13 @@
 % Please edit documentation in R/fetchTimestamp.R
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
-\alias{fetchTimestamp.default}
+\alias{fetchTimestamp.character}
 \alias{fetchTimestamp.sciencebase}
 \title{Update timestamp file if needed}
 \usage{
 fetchTimestamp(viz.id, ..., outfile)
 
-\method{fetchTimestamp}{default}(viz.id, old.timestamp, ..., outfile)
+\method{fetchTimestamp}{character}(viz.id, old.timestamp, ..., outfile)
 
 \method{fetchTimestamp}{sciencebase}(viz.id, old.timestamp, remoteItemId,
   remoteFilename, ..., outfile)
