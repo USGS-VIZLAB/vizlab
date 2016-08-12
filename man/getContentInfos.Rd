@@ -4,13 +4,13 @@
 \alias{getContentInfos}
 \title{Get information on one or more content items from the viz.yaml}
 \usage{
-getContentInfos(viz.id, block = c("images", "fetch", "process", "visualize"))
+getContentInfos(viz.id, block = c("fetch", "process", "visualize", "publish"))
 }
 \arguments{
 \item{viz.id}{character[s] giving specific IDs of items to return, or missing
 to return all content items}
 
-\item{block}{the name or names of content blocks whose items should be 
+\item{block}{the name or names of content blocks whose items should be
 included in the query}
 }
 \description{

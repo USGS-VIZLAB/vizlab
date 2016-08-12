@@ -4,13 +4,13 @@
 \alias{makeMakeBlockRules}
 \title{Create the make rules for a block of the viz.yaml}
 \usage{
-makeMakeBlockRules(block = c("fetch", "process", "visualize"))
+makeMakeBlockRules(block = c("fetch", "process", "visualize", "publish"))
 }
 \arguments{
 \item{block}{character name of the block for which to create the make rules}
 }
 \description{
-Create the 'all' and specific targets for a makefile for a block of the 
+Create the 'all' and specific targets for a makefile for a block of the
 viz.yaml
 }
 

@@ -10,23 +10,23 @@ makeMakeBatchRule(target, depends = c(), fun, funargs = c(),
 \arguments{
 \item{target}{character: the target name}
 
-\item{depends}{character vector: the dependencies (omit callFunction.R and 
+\item{depends}{character vector: the dependencies (omit callFunction.R and
 scripts; these will be automatically added)}
 
-\item{fun}{character: the function name, to be ultimately evaluated in an 
-environment where the scripts have been sourced and library(vizlab) has 
+\item{fun}{character: the function name, to be ultimately evaluated in an
+environment where the scripts have been sourced and library(vizlab) has
 been called. if fun is missing, the command section of the make target
 declaration will be omitted}
 
-\item{scripts}{character vector: the scripts or script directories to load. 
+\item{scripts}{character vector: the scripts or script directories to load.
 omit 'scripts' because this will be automatically preprended}
 
-\item{logfile}{character: the filename where the R CMD BATCH logfile should 
-be saved. omit 'vizlab/make/log' because this will be automatically 
+\item{logfile}{character: the filename where the R CMD BATCH logfile should
+be saved. omit 'vizlab/make/log' because this will be automatically
 prepended}
 }
 \description{
-Create the text for a gnu make target that runs a function using R CMD BATCH 
+Create the text for a gnu make target that runs a function using R CMD BATCH
 and callFunction.R
 }
 \keyword{internal}

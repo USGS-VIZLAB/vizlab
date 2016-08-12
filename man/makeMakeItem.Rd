@@ -6,6 +6,7 @@
 \alias{makeMakeItem.fetch}
 \alias{makeMakeItem.makefile}
 \alias{makeMakeItem.process}
+\alias{makeMakeItem.publish}
 \alias{makeMakeItem.visualize}
 \title{Make a collection of makefile rules appropriate to a data/figure item}
 \usage{
@@ -18,6 +19,8 @@ makeMakeItem(item.info, ...)
 \method{makeMakeItem}{process}(item.info, ...)
 
 \method{makeMakeItem}{visualize}(item.info, ...)
+
+\method{makeMakeItem}{publish}(item.info, ...)
 
 \method{makeMakeItem}{makefile}(item.info, ...)
 }
@@ -35,10 +38,13 @@ of viz.yaml
 \code{makeMakeItem.process}: Make makefile rules for an item in the
 process block of viz.yaml
 
-\code{makeMakeItem.visualize}: Make makefile rules for an item in the 
+\code{makeMakeItem.visualize}: Make makefile rules for an item in the
 visualize block of viz.yaml
 
-\code{makeMakeItem.visualize}: Make makefile rules for an item in the 
+\code{makeMakeItem.publish}: Make makefile rules for an item in the
+publish block of viz.yaml
+
+\code{makeMakeItem.visualize}: Make makefile rules for an item in the
 visualize block of viz.yaml
 }
 

@@ -4,14 +4,14 @@
 \alias{getContentInfo}
 \title{Get information on a content item from the viz.yaml}
 \usage{
-getContentInfo(viz.id, block = c("images", "fetch", "process", "visualize"),
+getContentInfo(viz.id, block = c("fetch", "process", "visualize", "publish"),
   no.match = c("stop", "NA"))
 }
 \arguments{
-\item{viz.id}{a length-1 character string giving the ID for a single content 
+\item{viz.id}{a length-1 character string giving the ID for a single content
 item to return}
 
-\item{block}{the name or names of content blocks whose items should be 
+\item{block}{the name or names of content blocks whose items should be
 included in the query}
 
 \item{no.match}{what to do if the viz.id is not found: either 'stop' (throw
