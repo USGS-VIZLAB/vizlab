@@ -1,0 +1,48 @@
+### Utility functions for use in vizlab ###
+
+#' Check required fields
+#'
+#' @param x object to check for fields
+#' @param required list of fields required
+#' @export
+checkRequired <- function(x, required) {
+  hasAll <- all(required %in% names(x))
+  if (!hasAll) {
+    stop(x[['id']], " missing at least one of ", paste(required, collapse = ", "))
+  }
+}
+
+#' Get webapp path
+#'
+#' @param file path to file being exported
+#' @return character vector describing relative path
+#' @export
+relativePath <- function(file) {
+  exportAndPath <- sub(exportLocation(), "", file)
+  return(exportAndPath)
+}
+
+#' Build context for templating
+#'
+#' @param viz vizlab object
+#' @param dependencies
+#' @return
+buildContext <- function(viz, dependencies) {
+  # allow for context to be inline
+  data <- viz[["context"]]
+  if (is.null(data)) {
+    data <- list()
+  }
+  else if (is.character(data)) {
+    data <- readData(data)
+  }
+  # replace dependencies with contents
+  data <- rapply(data, function(x) {
+    if (x %in% names(dependencies)) {
+      return(dependencies[[x]])
+    } else {
+      return(x)
+    }
+  }, how = "replace", classes = "character")
+  return(data)
+}

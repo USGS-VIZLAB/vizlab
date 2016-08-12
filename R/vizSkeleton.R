@@ -1,14 +1,14 @@
 #' vizlab vizSkelton
-#' 
+#'
 #' Create a skeleton for a new visualization
-#' 
+#'
 #' @param name character vector containing viz name
 #' @param path character vector of path to create skeleton
 #' @examples
 #' path <- file.path(tempdir(), "test")
 #' vizSkeleton(name="test", path=path)
 #' file.remove(path) # cleanup
-#' 
+#'
 #' @importFrom methods getPackageName
 #' @importFrom utils packageVersion
 #' @export
@@ -18,6 +18,8 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
       stop(gettextf("cannot create directory '%s'", path),
            domain = NA)
   }
+
+  # Create directory structure
   message("Creating directories ...", domain = NA)
   safe.dir.create(path)
   safe.dir.create(file.path(path, "data"))
@@ -33,7 +35,8 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create(file.path(script_dir, "visualize"))
   safe.dir.create(file.path(script_dir, "read"))
 
-  if(file.exists('viz.yaml')) {
+  # Write viz.yaml
+  if(file.exists(file.path(path, 'viz.yaml'))) {
     message("viz.yaml already exists; leaving as-is")
   } else {
     message("Creating viz.yaml ...", domain = NA)
@@ -45,18 +48,33 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
         "  date: ", format(Sys.Date(), "%Y-%m-%d"), "\n",
         "  publish-date: ", format(Sys.Date() + 14, "%Y-%m-%d"), "\n",
         "  path: ", "/", name, "\n",
+        "  analytics-id: ", "UA-78530187-1", "\n",
         "  description: >-\n",
         "    Describe project here\n",
-        "pages:\n",
-        "js:\n",
-        "css:\n",
-        "sections:\n",
         "fetch:\n",
         "process:\n",
         "visualize:\n",
+        "publish:\n",
         file = viz.yaml, sep = "")
     close(viz.yaml)
   }
-  
+
+  # Write .gitignore file
+  if (file.exists(file.path(path, '.gitignore'))) {
+    message(".gitignore already exists, leaving as-is")
+  } else {
+    message("creating .gitignore")
+    gitignore <- file(file.path(path, ".gitignore"))
+    cat(
+        "cache/\n",
+        "target/\n",
+        "user/\n",
+        "figures/\n",
+        "vizlab/\n",
+        "makefile\n",
+        file = gitignore, sep = "")
+    close(gitignore)
+  }
+
   # Read-and-delete-me type file would be good to describe next steps
 }
