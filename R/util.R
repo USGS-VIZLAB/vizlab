@@ -38,11 +38,11 @@ buildContext <- function(viz, dependencies) {
   }
   # replace dependencies with contents
   data <- rapply(data, function(x) {
-    if (x %in% names(dependencies)) {
-      return(dependencies[[x]])
-    } else {
+      dep.ids <- x %in% names(dependencies)
+      if (any(dep.ids)) {
+        x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
+      }
       return(x)
-    }
   }, how = "replace", classes = "character")
   return(data)
 }

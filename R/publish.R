@@ -130,7 +130,7 @@ publish.css <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<link href="%s" rel="stylesheet" type="text/css">', viz[['relpath']])
+  output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
   return(output)
 }
 
