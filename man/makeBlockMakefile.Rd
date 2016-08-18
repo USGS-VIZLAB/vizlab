@@ -4,16 +4,17 @@
 \alias{makeBlockMakefile}
 \title{Create a single makefile from the information in viz.yaml}
 \usage{
-makeBlockMakefile(block = c("fetch", "process", "visualize"), outfile)
+makeBlockMakefile(block = c("fetch", "process", "visualize", "publish"),
+  outfile)
 }
 \arguments{
-\item{block}{character name of the block in the viz.yaml for which to make a 
+\item{block}{character name of the block in the viz.yaml for which to make a
 makefile}
 
 \item{outfile}{filename where the makefile should be written}
 }
 \description{
-Uses information in the corresponding block of viz.yaml to create the 
+Uses information in the corresponding block of viz.yaml to create the
 makefiles
 }
 

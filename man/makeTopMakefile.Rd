@@ -4,7 +4,7 @@
 \alias{makeTopMakefile}
 \title{Create the top-level makefile, which runs/makes/updates the other makefiles}
 \usage{
-makeTopMakefile(outfile = "makefile")
+makeTopMakefile(outfile = "Makefile")
 }
 \arguments{
 \item{outfile}{filename where the makefile should be written}

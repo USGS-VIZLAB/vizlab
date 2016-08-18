@@ -2,40 +2,36 @@
 % Please edit documentation in R/readData.R
 \name{readData}
 \alias{readData}
-\alias{readData.RDS}
 \alias{readData.character}
 \alias{readData.csv}
 \alias{readData.excel}
 \alias{readData.filepath}
 \alias{readData.folder}
+\alias{readData.rds}
 \alias{readData.yaml}
 \title{Ensure data is on the local file system}
 \usage{
-readData(viz.id, ...)
+readData(viz)
 
-\method{readData}{character}(viz.id, location, ...)
+\method{readData}{character}(viz)
 
-\method{readData}{csv}(viz.id, location, ...)
+\method{readData}{csv}(viz)
 
-\method{readData}{yaml}(viz.id, location, ...)
+\method{readData}{yaml}(viz)
 
-\method{readData}{excel}(viz.id, location, ...)
+\method{readData}{excel}(viz)
 
-\method{readData}{RDS}(viz.id, location, ...)
+\method{readData}{rds}(viz)
 
-\method{readData}{filepath}(viz.id, location, ...)
+\method{readData}{filepath}(viz)
 
-\method{readData}{folder}(viz.id, location, ...)
+\method{readData}{folder}(viz)
 }
 \arguments{
 \item{viz.id}{the identifier for this data item in viz.yaml}
-
-\item{...}{other arguments passed to readData methods}
-
-\item{location}{path and filename of the file to read}
 }
 \description{
-This function should be called from the generic, \code{readData()}. Reads 
+This function should be called from the generic, \code{readData()}. Reads
 data from a file into R format. If you just want the filepath so you can do
 it yourself, specify "customReader: filepath" in the viz.yaml
 

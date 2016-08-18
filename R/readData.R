@@ -1,69 +1,35 @@
 #' Ensure data is on the local file system
-#' 
-#' This function should be called from the generic, \code{readData()}. Reads 
+#'
+#' This function should be called from the generic, \code{readData()}. Reads
 #' data from a file into R format. If you just want the filepath so you can do
 #' it yourself, specify "customReader: filepath" in the viz.yaml
-#' 
+#'
 #' @param viz.id the identifier for this data item in viz.yaml
-#' @param ... other arguments passed to readData methods
-#'   
+#'
 #' @export
-readData <- function(viz.id, ...) UseMethod("readData")
+readData <- function(viz) UseMethod("readData")
 
 #' \code{readData.character} is the standard entry point; from here, viz.id gets
 #' assigned a class to route it to a more specific reader
-#' 
-#' @param location path and filename of the file to read
-#'   
+#'
 #' @rdname readData
+#'
 #' @export
-readData.character <- function(viz.id, location, ...) {
-  # get the reading information for this data ID from viz.yaml
-  data.info <- getContentInfo(viz.id, no.match='stop')
-  
-  # collect the user args. we'd consider autopopulating, but it's currently
-  # never appropriate
-  user.args <- list(...)
-  # if(no.args.and.expected.otherwise) {
-  #   all.args <- getAutoargs(data.info, fun='read')
-  # } else {
-  all.args <- c(list(viz.id=viz.id, location=data.info$location), user.args)
-  # }
-  
-  # route subsequent calls to a specific readData method
-  if(exists('customReader', data.info)) {
-    sourceScripts('scripts/read')
-    reader <- data.info$customReader
-  } else {
-    reader <- switch(
-      data.info$mimeType,
-      "text/csv" = "csv",
-      "text/tab-separated-values" = "csv",
-      "text/yaml" = "yaml",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      "RDS" = "RDS",
-      "folder" = "folder",
-      "application/zip" = "filepath",
-      {
-        warning(
-          'could not find specific readData method for viz.id=', all.args$viz.id, 
-          ', mimeType=', data.info$mimeType, '; returning filepath')
-        "filepath"
-      })
-  }
-  class(all.args$viz.id) <- reader
-  
+readData.character <- function(viz) {
+  viz <- as.viz(viz)
+  viz <- as.reader(viz)
+  sourceScripts('scripts/read')
   # call the readData method applicable to this item
-  do.call(readData, all.args)
+  readData(viz)
 }
 
 #' \code{readData.csv} reads a csv file.
 #'
 #' @rdname readData
 #' @export
-readData.csv <- function(viz.id, location, ...) {
+readData.csv <- function(viz) {
   if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.csv")
-  x <- data.table::setDF(data.table::fread(location))
+  x <- data.table::setDF(data.table::fread(viz[['location']]))
   x # assign to x first so it returns visibly
 }
 
@@ -72,39 +38,75 @@ readData.csv <- function(viz.id, location, ...) {
 #' @rdname readData
 #' @import yaml
 #' @export
-readData.yaml <- function(viz.id, location, ...) {
-  yaml.load_file(location)
+readData.yaml <- function(viz) {
+  yaml.load_file(viz[['location']])
 }
 
 #' \code{readData.excel} reads the first spreadsheet of an Excel file.
 #'
 #' @rdname readData
 #' @export
-readData.excel <- function(viz.id, location, ...) {
+readData.excel <- function(viz) {
   if(!requireNamespace('readxl', quietly = TRUE)) stop("package readxl is required for readData.excel")
-  readxl::read_excel(location)
+  readxl::read_excel(viz[['location']])
 }
 
 #' \code{readData.RDS} reads an R object saved as an RDS.
 #'
 #' @rdname readData
 #' @export
-readData.RDS <- function(viz.id, location, ...){
-  readRDS(location)
+readData.rds <- function(viz){
+  readRDS(viz[['location']])
 }
 
 #' \code{readData.filepath} returns the file path
 #'
 #' @rdname readData
 #' @export
-readData.filepath <- function(viz.id, location, ...){
-  location
+readData.filepath <- function(viz){
+  viz[['location']]
 }
 
 #' \code{readData.folder} returns names of files inside a folder
 #'
 #' @rdname readData
 #' @export
-readData.folder <- function(viz.id, location, ...){
-  dir(location, full.names=TRUE)
+readData.folder <- function(viz){
+  dir(viz[['location']], full.names=TRUE)
+}
+
+### Set up the reader class
+
+#' Treat viz object as a reader
+#' Doesn't need to be generic at this point (ever?)
+#'
+#' @param viz object to coerce to reader
+#' @param ... does nothing, following pattern
+#' @export
+as.reader <- function(viz, ...) {
+  id <- viz[['id']]
+  location <- viz[['location']]
+  if (is.null(location)) {
+    stop("Readers require 'location' property")
+  }
+  reader <- viz[['reader']]
+  if (is.null(reader)) {
+    mimetype <- viz[['mimetype']]
+    reader <- switch(
+      mimetype,
+      "text/csv" = "csv",
+      "text/tab-separated-values" = "csv",
+      "text/yaml" = "yaml",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
+      "application/zip" = "filepath",
+      {
+        warning(
+          'Could not find specific readData method for viz.id=', id,
+          ', mimeType=', mimetype, '; returning filepath.',
+          ' Specify reader to override.')
+        "filepath"
+      })
+  }
+  class(viz) <- c(reader, "reader", class(viz))
+  return(viz)
 }

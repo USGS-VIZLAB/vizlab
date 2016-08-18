@@ -10,7 +10,7 @@ makeMakeDirs(makefile)
 \item{makefile}{character string containing the makefile}
 }
 \description{
-Seeks specific directories that are expected to appear in some or all 
+Seeks specific directories that are expected to appear in some or all
 visualization projects. Creates those for which the makefile indicates a need
 }
 

@@ -7,8 +7,8 @@
 sourceScripts(scripts, verbose = TRUE)
 }
 \arguments{
-\item{scripts}{character or character vectory. If an element of scripts is a 
-directory, sources the contents of that directory. Otherwise sources the 
+\item{scripts}{character or character vectory. If an element of scripts is a
+directory, sources the contents of that directory. Otherwise sources the
 script.}
 
 \item{verbose}{logical. Declare which scripts are being sourced via messages?}
