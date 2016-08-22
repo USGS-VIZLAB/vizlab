@@ -31,17 +31,7 @@ publish(viz)
 \method{publish}{svg}(viz)
 }
 \arguments{
-\item{viz}{identifier to publish}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
+\item{viz}{vizlab object or identifier}
 }
 \description{
 Determine the type and dispatch to that method to produce

@@ -21,6 +21,9 @@ readTemplate <- function(x) {
 }
 
 #' Internal function to get shared templates
+#'
+#' @param x character vector template name
+#' @return character vector template contents
 getTemplateFromLibrary <- function(x) {
   template <- rep(NA_character_, length(x))
   template.dir <- system.file("templates", package="vizlab")

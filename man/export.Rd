@@ -23,16 +23,6 @@ export(viz)
 }
 \arguments{
 \item{viz}{object to export}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
-
-\item{viz}{vizlab object}
 }
 \description{
 Determine the type and dispatch to that method to produce

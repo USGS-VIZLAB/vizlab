@@ -20,13 +20,6 @@ fetch(viz)
 }
 \arguments{
 \item{viz}{the identifier for this data item in viz.yaml}
-
-\item{remoteItemId}{the ScienceBase hexadecimal ID of the item}
-
-\item{remoteFilename}{the name of the file to download, as it is named on
-ScienceBase}
-
-\item{remoteURL}{the URL from which to download the file}
 }
 \description{
 This function should be called from the generic, \code{fetch()}. Fetch

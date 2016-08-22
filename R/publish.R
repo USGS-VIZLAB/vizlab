@@ -5,7 +5,7 @@
 #'
 #' I've been thinking maybe switching 'x' to 'viz' would be more clear
 #'
-#' @param viz identifier to publish
+#' @param viz vizlab object or identifier
 #' @export
 publish <- function(viz) UseMethod("publish")
 
@@ -77,7 +77,6 @@ publish.section <- function(viz) {
 #'
 #' Also, templating the resources that make sense would be useful
 #'
-#' @param viz vizlab object
 #' @rdname publish
 #' @export
 publish.resource <- function(viz) {
@@ -92,7 +91,6 @@ publish.resource <- function(viz) {
 
 #' Image publishing
 #'
-#' @param viz vizlab object
 #' @rdname publish
 #' @export
 publish.img <- function(viz) {
@@ -108,7 +106,6 @@ publish.img <- function(viz) {
 #' javascript publishing
 #' TODO allow for cdn js
 #'
-#' @param viz vizlab object
 #' @rdname publish
 #' @export
 publish.js <- function(viz) {
@@ -122,7 +119,6 @@ publish.js <- function(viz) {
 
 #' css publishing
 #'
-#' @param viz vizlab object
 #' @rdname publish
 #' @export
 publish.css <- function(viz) {
@@ -136,7 +132,6 @@ publish.css <- function(viz) {
 
 #' svg publishing
 #'
-#' @param viz vizlab object
 #' @rdname publish
 #' @export
 publish.svg <- function(viz) {
@@ -165,7 +160,7 @@ as.publisher <- function(viz, ...) {
 
 #' coerce to resource
 #' @param viz vizlab object
-#' @param .. not used
+#' @param ... not used, following convention
 #' @export
 as.resource <- function(viz, ...) {
   required <- c("mimetype")

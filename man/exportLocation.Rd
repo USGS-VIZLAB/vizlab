@@ -6,6 +6,9 @@
 \usage{
 exportLocation()
 }
+\value{
+character export location path
+}
 \description{
 Currently not configurable
 }

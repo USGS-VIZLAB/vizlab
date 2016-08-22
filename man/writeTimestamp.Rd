@@ -12,7 +12,7 @@ writeTimestamp(new.timestamp, outfile)
 \item{outfile}{the filename where the new timestamp should be saved}
 }
 \description{
-Should only be used outside the vizlab package if the developer is writing a 
+Should only be used outside the vizlab package if the developer is writing a
 new data + timestamp fetcher
 }
 

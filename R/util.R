@@ -25,8 +25,8 @@ relativePath <- function(file) {
 #' Build context for templating
 #'
 #' @param viz vizlab object
-#' @param dependencies
-#' @return
+#' @param dependencies list of dependency ids
+#' @return list of context with dependencies injected
 buildContext <- function(viz, dependencies) {
   # allow for context to be inline
   data <- viz[["context"]]
