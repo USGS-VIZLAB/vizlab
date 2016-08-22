@@ -11,13 +11,7 @@ visualize(viz)
 \method{visualize}{character}(viz)
 }
 \arguments{
-\item{viz.id}{the identifier for this data item in viz.yaml}
-
-\item{...}{other arguments passed to visualize methods. These should
-include any data dependencies, named according to the viz.id of those data
-items}
-
-\item{outfile}{the filename to which the visualized data should be written}
+\item{viz}{vizlab object described in viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{visualize()}.

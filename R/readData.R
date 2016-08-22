@@ -4,7 +4,7 @@
 #' data from a file into R format. If you just want the filepath so you can do
 #' it yourself, specify "customReader: filepath" in the viz.yaml
 #'
-#' @param viz.id the identifier for this data item in viz.yaml
+#' @param viz vizlab object or identifier
 #'
 #' @export
 readData <- function(viz) UseMethod("readData")
@@ -13,7 +13,6 @@ readData <- function(viz) UseMethod("readData")
 #' assigned a class to route it to a more specific reader
 #'
 #' @rdname readData
-#'
 #' @export
 readData.character <- function(viz) {
   viz <- as.viz(viz)

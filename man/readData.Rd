@@ -28,7 +28,7 @@ readData(viz)
 \method{readData}{folder}(viz)
 }
 \arguments{
-\item{viz.id}{the identifier for this data item in viz.yaml}
+\item{viz}{vizlab object or identifier}
 }
 \description{
 This function should be called from the generic, \code{readData()}. Reads

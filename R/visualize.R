@@ -5,12 +5,7 @@
 #' Visualize raw or intermediate data products into intermediate or final data
 #' products
 #'
-#' @param viz.id the identifier for this data item in viz.yaml
-#' @param ... other arguments passed to visualize methods. These should
-#'   include any data dependencies, named according to the viz.id of those data
-#'   items
-#' @param outfile the filename to which the visualized data should be written
-#'
+#' @param viz vizlab object described in viz.yaml
 #' @export
 visualize <- function(viz) UseMethod("visualize")
 
@@ -33,8 +28,12 @@ visualize.character <- function(viz) {
   visualize(viz)
 }
 
-## viz object creation
-
+#' Coerce to a visualizer
+#'
+#' @param viz vizlab object
+#' @param ... not used, follows convention
+#' @return visualizer object
+#' @export
 as.visualizer <- function(viz, ...) {
   if(!exists('visualizer', viz)) {
     stop("please specify a visualizer for '", viz[['id']], "' in viz.yaml")

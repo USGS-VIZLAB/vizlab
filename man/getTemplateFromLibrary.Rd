@@ -6,6 +6,12 @@
 \usage{
 getTemplateFromLibrary(x)
 }
+\arguments{
+\item{x}{character vector template name}
+}
+\value{
+character vector template contents
+}
 \description{
 Internal function to get shared templates
 }

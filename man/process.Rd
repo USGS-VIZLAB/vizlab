@@ -11,16 +11,10 @@ process(viz)
 
 \method{process}{character}(viz)
 
-\method{process}{unzip}(viz.id, ..., outfile)
+\method{process}{unzip}(viz)
 }
 \arguments{
-\item{viz.id}{the identifier for this data item in viz.yaml}
-
-\item{...}{other arguments passed to process methods. These should
-include any data dependencies, named according to the viz.id of those data
-items}
-
-\item{outfile}{the filename to which the processed data should be written}
+\item{viz}{vizlab object described in viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{process()}.

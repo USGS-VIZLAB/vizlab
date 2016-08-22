@@ -3,36 +3,29 @@
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
 \alias{fetchTimestamp.character}
+\alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
 \title{Update timestamp file if needed}
 \usage{
-fetchTimestamp(viz.id, ..., outfile)
+fetchTimestamp(viz)
 
-\method{fetchTimestamp}{character}(viz.id, old.timestamp, ..., outfile)
+\method{fetchTimestamp}{character}(viz)
 
-\method{fetchTimestamp}{sciencebase}(viz.id, old.timestamp, remoteItemId,
-  remoteFilename, ..., outfile)
+\method{fetchTimestamp}{sciencebase}(viz)
+
+\method{fetchTimestamp}{file}(viz)
 }
 \arguments{
-\item{viz.id}{the identifier for this data item in viz.yaml}
-
-\item{...}{other args passed to fetchTimestamp methods}
-
-\item{outfile}{the filename where the new timestamp should be saved}
-
-\item{old.timestamp}{the current timestamp, or NA if unavailable}
-
-\item{remoteItemId}{the ScienceBase hexadecimal ID of the item}
-
-\item{remoteFilename}{the name of the file, as it is named on ScienceBase, 
-whose timestamp we want}
+\item{viz}{the identifier for this data item in viz.yaml}
 }
 \description{
 This function should be called from the generic, \code{fetchTimestamp()}.
-Update timestamp file if the local copy of a file is out of date relative to 
-a remote copy. The need for a timestamp file, and the method for finding the 
+Update timestamp file if the local copy of a file is out of date relative to
+a remote copy. The need for a timestamp file, and the method for finding the
 timestamp, will be determined by the metadata in viz.yaml for the item.
 
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
+
+Has a file changed
 }
 

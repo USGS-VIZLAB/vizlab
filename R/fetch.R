@@ -36,10 +36,6 @@ fetch.file <- function(viz) {
 
 #' \code{fetch.sciencebase} downloads a file from ScienceBase.
 #'
-#' @param remoteItemId the ScienceBase hexadecimal ID of the item
-#' @param remoteFilename the name of the file to download, as it is named on
-#'   ScienceBase
-#'
 #' @rdname fetch
 #' @export
 fetch.sciencebase <- function(viz) {
@@ -71,8 +67,6 @@ fetch.sciencebase <- function(viz) {
 
 #' \code{fetch.url} downloads a file from the specified URL.
 #'
-#' @param remoteURL the URL from which to download the file
-#'
 #' @rdname fetch
 #' @export
 fetch.url <- function(viz) {
@@ -91,7 +85,14 @@ fetch.url <- function(viz) {
 }
 
 ### Set up fetcher class
-as.fetcher <- function(viz) {
+
+#' Coerce vizlab object to a fetcher type
+#'
+#' @param viz vizlab object
+#' @param ... not used, following convention
+#' @return vizlab fetcher object
+#' @export
+as.fetcher <- function(viz, ...) {
   fetcher <- viz[['fetcher']]
   if (is.null(fetcher)) {
     # default to file

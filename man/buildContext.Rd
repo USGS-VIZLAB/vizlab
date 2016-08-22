@@ -8,6 +8,11 @@ buildContext(viz, dependencies)
 }
 \arguments{
 \item{viz}{vizlab object}
+
+\item{dependencies}{list of dependency ids}
+}
+\value{
+list of context with dependencies injected
 }
 \description{
 Build context for templating

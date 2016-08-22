@@ -17,7 +17,6 @@ export <- function(viz) UseMethod("export")
 #' a list of pages named according to different formats
 #' (tags, media type, language, etc.)
 #'
-#' @param viz vizlab object
 #' @rdname export
 #' @export
 export.page <- function(viz) {
@@ -34,7 +33,6 @@ export.page <- function(viz) {
   return(file)
 }
 
-#' @param viz vizlab object
 #' @rdname export
 #' @export
 export.img <- function(viz) {
@@ -46,7 +44,6 @@ export.img <- function(viz) {
   return(file)
 }
 
-#' @param viz vizlab object
 #' @rdname export
 #' @export
 export.svg <- function(viz) {
@@ -54,7 +51,6 @@ export.svg <- function(viz) {
   return(export.img(viz))
 }
 
-#' @param viz vizlab object
 #' @rdname export
 #' @export
 export.js <- function(viz) {
@@ -66,7 +62,6 @@ export.js <- function(viz) {
   return(file)
 }
 
-#' @param viz vizlab object
 #' @rdname export
 #' @export
 export.css <- function(viz) {
@@ -83,13 +78,19 @@ export.css <- function(viz) {
 #' Set where exports should be placed
 #'
 #' Currently not configurable
-#'
+#' @return character export location path
 #' @export
 exportLocation <- function() {
   return("target/")
 }
 
 ### Private functions used to help in exporting
+
+#' Should export be performed
+#'
+#'@param viz vizlab object
+#'@param default logical for default export if not specified
+#'@return logical should this object be exported
 doExport <- function(viz, default){
   do.export <- default
   if ("export" %in% names(viz)) {

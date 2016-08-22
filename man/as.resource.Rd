@@ -9,7 +9,7 @@ as.resource(viz, ...)
 \arguments{
 \item{viz}{vizlab object}
 
-\item{..}{not used}
+\item{...}{not used, following convention}
 }
 \description{
 coerce to resource
