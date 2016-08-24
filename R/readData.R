@@ -22,11 +22,11 @@ readData.character <- function(viz) {
   readData(viz)
 }
 
-#' \code{readData.csv} reads a csv file.
+#' \code{readData.txt} reads a text file.
 #'
 #' @rdname readData
 #' @export
-readData.csv <- function(viz) {
+readData.txt <- function(viz) {
   if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.csv")
   x <- data.table::setDF(data.table::fread(viz[['location']]))
   x # assign to x first so it returns visibly
@@ -93,8 +93,8 @@ as.reader <- function(viz, ...) {
     mimetype <- viz[['mimetype']]
     reader <- switch(
       mimetype,
-      "text/csv" = "csv",
-      "text/tab-separated-values" = "csv",
+      "text/csv" = "txt",
+      "text/tab-separated-values" = "txt",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
       "application/zip" = "filepath",
