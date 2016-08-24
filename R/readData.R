@@ -97,7 +97,6 @@ as.reader <- function(viz, ...) {
       "text/tab-separated-values" = "txt",
       "text/yaml" = "yaml",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      "application/zip" = "filepath",
       {
         warning(
           'Could not find specific readData method for viz.id=', id,
