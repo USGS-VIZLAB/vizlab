@@ -39,9 +39,9 @@ fetch.file <- function(viz) {
 #' @rdname fetch
 #' @export
 fetch.sciencebase <- function(viz) {
-  if (all(c("location", "remoteItemId", "remoteFilename") %in% names(viz))) {
-    stop('must specify location, remoteItemId, and remoteFilename for', viz[['id']])
-  }
+  required <- c("location", "remoteItemId", "remoteFilename")
+  checkRequired(viz, required)
+
   outfile <- viz[['location']]
   remoteItemId <- viz[['remoteItemId']]
   remoteFilename <- viz[['remoteFilename']]

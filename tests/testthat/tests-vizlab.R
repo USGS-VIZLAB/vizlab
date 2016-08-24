@@ -31,4 +31,21 @@ test_that("mimetype switch selects correct reader", {
   expect_is(object = viz, class = "yaml")
 })
 
+context("sciencebase")
+test_that("sciencebase item has fields", {
+  viz <- as.fetcher(as.viz("Cuyahoga"))
+  expect_equal(viz[['remoteItemId']], "575d839ee4b04f417c2a03fe")
+  expect_equal(viz[['remoteFilename']], "CuyahogaTDS.csv")
+})
+
+test_that("sciencebase validator works", {
+  viz <- as.fetcher(list(
+    id = "badsb",
+    location = "cache/fetch/badsb.csv",
+    fetcher = "sciencebase",
+    mimetype = "text/csv"
+  ))
+  expect_error(fetch(viz), "missing")
+})
+
 cleanup(oldwd, testtmp)
