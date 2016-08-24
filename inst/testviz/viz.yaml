@@ -7,95 +7,34 @@ info:
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
-js:
-  -
-    id: app
-    location: layout/js/app.js
-css:
-  - 
-    id: main
-    location: layout/css/main.css
-  -
-    id: normalize
-    location: layout/css/normalize.css
-pages:
-  -
-    id: index
-    template: layout/templates/index.mustache
-    sections: [header, intro, relativeAbundance, environmentalEffects, landUse, footer]
-    js: app
-    css: main
-sections:
-  -
-    id: header
-    template: layout/templates/header.mustache
-    context: siteTextData
-  -
-    id: intro
-    template: layout/templates/intro.mustache
-    context: siteTextData
-  -
-    id: beadBan
-    template: layout/templates/beadBan.mustache
-    context: siteTextData
-  -
-    id: relativeAbundance
-    template: layout/templates/figure1.mustache
-    context: siteTextData
-    depends: relativeAbundanceFig
-  -
-    id: landUse
-    template: layout/templates/figure3.mustache
-    context: siteTextData
-    depends: landUseFig
-  -
-    id: conclusion
-    template: layout/templates/conclusion.mustache
-    context: siteTextData
-  -
-    id: reference
-    template: layout/templates/reference.mustache
-    context: siteTextData
-  -
-    id: footer
-    template: layout/templates/footer.mustache
-    context: siteTextData
-images:
-  -
-    id: bead3
-    location: images/bead3.jpg
-    mimeType: image/jpeg
-    customReader: filepath
-    altTextTag: Shaving cream
 fetch:
   -
     id: siteTextData
     location: data/siteText.yaml
-    mimeType: text/yaml
+    mimetype: text/yaml
   -
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
     fetchTimestamp: false
-    args:
-      remoteItemId: 575d839ee4b04f417c2a03fe
-      remoteFilename: CuyahogaTDS.csv
-    mimeType: text/csv
+    remoteItemId: 575d839ee4b04f417c2a03fe
+    remoteFilename: CuyahogaTDS.csv
+    mimetype: text/csv
   -
     id: MayflyNymph
     location: data/MayflyNymph.csv
     fetcher: mayflyNymph
     scripts: scripts/fetch/mayflyNymph.R
-    customReader: myCsvReader
-    mimeType: text/csv
+    reader: myCsvReader
+    mimetype: text/csv
     export: true
 process:
-  - 
+  -
     id: CuyahogaShort
     location: cache/process/CuyahogaShort.tsv
-    mimeType: text/tab-separated-values
+    mimetype: text/tab-separated-values
     scripts: scripts/process/cuyahoga.R
-    depends: 
+    depends:
       - Cuyahoga
     processor: cuyahoga
 visualize:
@@ -104,5 +43,46 @@ visualize:
     location: figures/relativeAbundanceFig.svg
     depends: [CuyahogaShort, MayflyNymph]
     visualizer: relativeAbundance
-    mimeType: image/svg+xml
+    mimetype: image/svg+xml
     export: false
+publish:
+  -
+    id: appJS
+    location: layout/js/app.js
+    mimetype: application/javascript
+  -
+    id: mainCSS
+    location: layout/css/main.css
+    mimetype: text/css
+  -
+    id: normalizeCSS
+    location: layout/css/normalize.css
+    mimetype: text/css
+  -
+    id: index
+    template: layout/templates/index.mustache
+    context: siteTextData
+    sections: [ header, intro, relativeAbundance, footer ]
+    depends: [ appJS, mainCSS, normalizeCSS ]
+    publisher: page
+  -
+    id: header
+    template: layout/templates/header.mustache
+    context: siteTextData
+    publisher: section
+  -
+    id: intro
+    template: layout/templates/intro.mustache
+    context: siteTextData
+    publisher: section
+  -
+    id: relativeAbundance
+    template: layout/templates/figure1.mustache
+    context: siteTextData
+    depends: relativeAbundanceFig
+    publisher: section
+  -
+    id: footer
+    template: layout/templates/footer.mustache
+    context: siteTextData
+    publisher: section
