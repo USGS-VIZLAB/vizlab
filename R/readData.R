@@ -104,7 +104,7 @@ as.reader <- function(viz, ...) {
       "text/csv" = "tabular",
       "text/tab-separated-values" = "tabular",
       "text/yaml" = "yaml",
-      "text/paragraph" = "txt",
+      "text/plain" = "txt",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
       {
         warning(
