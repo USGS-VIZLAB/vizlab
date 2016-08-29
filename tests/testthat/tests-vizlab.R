@@ -48,4 +48,26 @@ test_that("sciencebase validator works", {
   expect_error(fetch(viz), "missing")
 })
 
+context("templates")
+test_that("getting template from library works", {
+  viz <- as.viz(list(
+    id = "test_section",
+    template = "list",
+    publisher = "section",
+    context = list(
+      listItems = list(
+        "foo",
+        "bar",
+        "baz"
+      )
+    )
+  ))
+  viz <- as.publisher(viz)
+
+  fragment <- publish(viz)
+  expect_match(fragment, "<li>foo</li>")
+  expect_match(fragment, "<li>bar</li>")
+  expect_match(fragment, "<li>baz</li>")
+})
+
 cleanup(oldwd, testtmp)
