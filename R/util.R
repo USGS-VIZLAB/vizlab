@@ -42,6 +42,7 @@ buildContext <- function(viz, dependencies) {
       if (any(dep.ids)) {
         x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
       }
+      # TODO run smartypants on x before returning
       return(x)
   }, how = "replace", classes = "character")
   return(data)
