@@ -19,12 +19,12 @@ Depends:
 Imports:
     methods,
     whisker,
-    yaml
+    yaml,
+    httr
 Suggests:
     data.table,
     knitr,
     sbtools (>= 0.19.3),
-    httr,
     readxl,
     testthat
 RoxygenNote: 5.0.1

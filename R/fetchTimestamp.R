@@ -6,7 +6,8 @@
 #' timestamp, will be determined by the metadata in viz.yaml for the item.
 #'
 #' @param viz the identifier for this data item in viz.yaml
-#'
+#' @importFrom httr HEAD
+#' @importFrom httr headers
 #' @export
 fetchTimestamp <- function(viz) UseMethod("fetchTimestamp")
 
@@ -70,17 +71,16 @@ fetchTimestamp.file <- function(viz) {
   return(time)
 }
 
+#' 
 #' check a URL for timestamp
 #' 
-#'  @rdname fetchTimestamp
-#'  @importFrom httr HEAD
-#'  @importFrom httr headers
-#'  @export
+#' @rdname fetchTimestamp
+#' @export
 fetchTimestamp.url <- function(viz) {
   
   #How will a url be recognized?  Specified in yaml
   url <- viz$location
-  tag <- headers(HEAD(url))$`last-modified`
+  tag <- headers(HEAD(url))[['last-modified']]
   #tag will be NULL if the last-modified tag doesn't exist
   if(is.null(tag)){
     tag <- Sys.time()
