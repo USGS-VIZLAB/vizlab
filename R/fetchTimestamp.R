@@ -63,8 +63,29 @@ fetchTimestamp.sciencebase <- function(viz) {
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-  # TODO this may need to be implemented
+  #get file name(s?) from viz object
+  fileLoc <- viz$location
+  #get date file timestamp
+  time <- file.info(fileLoc)$mtime
+  return(time)
 }
+
+#' check a URL for timestamp
+#' 
+#'  @rdname fetchTimestamp
+#'  @export
+fetchTimestamp.url <- function(viz) {
+  
+  #How will a url be recognized?  Specified in yaml
+  url <- viz$location
+  tag <- headers(HEAD(url))$`last-modified`
+  #tag will be NULL if the last-modified tag doesn't exist
+  if(is.null(tag)){
+    tag <- Sys.time()
+  }
+  return(modTag)
+} 
+
 
 #' Write a timestamp file with the conventions used by fetchTimestamp
 #'
