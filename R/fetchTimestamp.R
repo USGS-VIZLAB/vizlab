@@ -73,6 +73,8 @@ fetchTimestamp.file <- function(viz) {
 #' check a URL for timestamp
 #' 
 #'  @rdname fetchTimestamp
+#'  @importFrom httr HEAD
+#'  @importFrom httr headers
 #'  @export
 fetchTimestamp.url <- function(viz) {
   
@@ -83,7 +85,7 @@ fetchTimestamp.url <- function(viz) {
   if(is.null(tag)){
     tag <- Sys.time()
   }
-  return(modTag)
+  return(tag)
 } 
 
 
