@@ -3,11 +3,12 @@
 \name{readData}
 \alias{readData}
 \alias{readData.character}
-\alias{readData.csv}
 \alias{readData.excel}
 \alias{readData.filepath}
 \alias{readData.folder}
 \alias{readData.rds}
+\alias{readData.tabular}
+\alias{readData.txt}
 \alias{readData.yaml}
 \title{Ensure data is on the local file system}
 \usage{
@@ -15,7 +16,7 @@ readData(viz)
 
 \method{readData}{character}(viz)
 
-\method{readData}{csv}(viz)
+\method{readData}{tabular}(viz)
 
 \method{readData}{yaml}(viz)
 
@@ -26,6 +27,8 @@ readData(viz)
 \method{readData}{filepath}(viz)
 
 \method{readData}{folder}(viz)
+
+\method{readData}{txt}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -38,7 +41,7 @@ it yourself, specify "customReader: filepath" in the viz.yaml
 \code{readData.character} is the standard entry point; from here, viz.id gets
 assigned a class to route it to a more specific reader
 
-\code{readData.csv} reads a csv file.
+\code{readData.tabular} reads a text file.
 
 \code{readData.yaml} reads a yaml file.
 
@@ -49,5 +52,7 @@ assigned a class to route it to a more specific reader
 \code{readData.filepath} returns the file path
 
 \code{readData.folder} returns names of files inside a folder
+
+\code{readData.txt} returns names of files inside a folder
 }
 

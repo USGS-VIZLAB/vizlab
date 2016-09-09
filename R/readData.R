@@ -22,12 +22,12 @@ readData.character <- function(viz) {
   readData(viz)
 }
 
-#' \code{readData.csv} reads a csv file.
+#' \code{readData.tabular} reads a text file.
 #'
 #' @rdname readData
 #' @export
-readData.csv <- function(viz) {
-  if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.csv")
+readData.tabular <- function(viz) {
+  if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.tabular")
   x <- data.table::setDF(data.table::fread(viz[['location']]))
   x # assign to x first so it returns visibly
 }
@@ -74,6 +74,14 @@ readData.folder <- function(viz){
   dir(viz[['location']], full.names=TRUE)
 }
 
+#' \code{readData.txt} returns names of files inside a folder
+#'
+#' @rdname readData
+#' @export
+readData.txt <- function(viz){
+  scan(viz[['location']], what="character", sep="\n")
+}
+
 ### Set up the reader class
 
 #' Treat viz object as a reader
@@ -93,11 +101,11 @@ as.reader <- function(viz, ...) {
     mimetype <- viz[['mimetype']]
     reader <- switch(
       mimetype,
-      "text/csv" = "csv",
-      "text/tab-separated-values" = "csv",
+      "text/csv" = "tabular",
+      "text/tab-separated-values" = "tabular",
       "text/yaml" = "yaml",
+      "text/plain" = "txt",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      "application/zip" = "filepath",
       {
         warning(
           'Could not find specific readData method for viz.id=', id,
