@@ -66,9 +66,17 @@ fetchTimestamp.sciencebase <- function(viz) {
 fetchTimestamp.file <- function(viz) {
   #get file name(s?) from viz object
   fileLoc <- viz$location
+  
   #get date file timestamp
-  time <- file.info(fileLoc)$mtime
-  return(time)
+  new.timestamp <- file.info(fileLoc)[['mtime']]
+  old.timestamp <- readOldTimestamp(viz)
+  
+  # write the new timestamp to the file
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
+    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+  }
+  
+  invisible(new.timestamp)
 }
 
 #' 
@@ -78,14 +86,24 @@ fetchTimestamp.file <- function(viz) {
 #' @export
 fetchTimestamp.url <- function(viz) {
   
-  #How will a url be recognized?  Specified in yaml
+  #URL will be specified in viz.yaml
   url <- viz$location
-  tag <- headers(HEAD(url))[['last-modified']]
+  new.timestamp <- headers(HEAD(url))[['last-modified']]
+  #TODO: parse this to POSIXct
+  old.timestamp <- readOldTimestamp(viz)
   #tag will be NULL if the last-modified tag doesn't exist
-  if(is.null(tag)){
-    tag <- Sys.time()
+  if(is.null(new.timestamp)){
+    new.timestamp <- Sys.time()
+  }else{
+    new.timestamp <- parse_http_date(new.timestamp)
   }
-  return(tag)
+  
+  # write the new timestamp to the file
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
+    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+  }
+  
+  invisible(new.timestamp)
 } 
 
 
@@ -108,6 +126,9 @@ writeTimestamp <- function(new.timestamp, outfile) {
 #' @return character vector location of timestamp file
 locateTimestampFile <- function(id) {
   # TODO standardize timestamp file location
+  #vizlab/make/timestamps?
+  #account for if no timestamp exists
+  
 }
 
 #' Read an old timestamp for viz
