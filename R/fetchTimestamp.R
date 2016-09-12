@@ -8,6 +8,7 @@
 #' @param viz the identifier for this data item in viz.yaml
 #' @importFrom httr HEAD
 #' @importFrom httr headers
+#' @importFrom httr parse_http_date
 #' @export
 fetchTimestamp <- function(viz) UseMethod("fetchTimestamp")
 
@@ -89,7 +90,6 @@ fetchTimestamp.url <- function(viz) {
   #URL will be specified in viz.yaml
   url <- viz$location
   new.timestamp <- headers(HEAD(url))[['last-modified']]
-  #TODO: parse this to POSIXct
   old.timestamp <- readOldTimestamp(viz)
   #tag will be NULL if the last-modified tag doesn't exist
   if(is.null(new.timestamp)){
@@ -127,8 +127,9 @@ writeTimestamp <- function(new.timestamp, outfile) {
 locateTimestampFile <- function(id) {
   # TODO standardize timestamp file location
   #vizlab/make/timestamps?
-  #account for if no timestamp exists
-  
+  timestampDir <- "./vizlab/make/timestamps"
+  timestampDir <- paste(timestampDir, id, sep="/")
+  return(timestampDir)
 }
 
 #' Read an old timestamp for viz
