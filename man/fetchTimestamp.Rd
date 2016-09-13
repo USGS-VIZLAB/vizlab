@@ -3,6 +3,7 @@
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
 \alias{fetchTimestamp.character}
+\alias{fetchTimestamp.fetcher}
 \alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
 \alias{fetchTimestamp.url}
@@ -17,6 +18,8 @@ fetchTimestamp(viz)
 \method{fetchTimestamp}{file}(viz)
 
 \method{fetchTimestamp}{url}(viz)
+
+\method{fetchTimestamp}{fetcher}(viz)
 }
 \arguments{
 \item{viz}{the identifier for this data item in viz.yaml}

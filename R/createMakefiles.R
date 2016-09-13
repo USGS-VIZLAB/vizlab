@@ -238,11 +238,7 @@ createMakeItem.fetch <- function(item.info, ...) {
   rules <- list()
 
   # timestamp rules
-  needs.timestamp <- {
-    sourceScripts(item.info$scripts, verbose=FALSE)
-    timestamp.methods <- sapply(strsplit(c(methods('fetchTimestamp')), '\\.'), `[`, 2)
-    (item.info$fetcher %in% timestamp.methods) && item.info$fetchTimestamp
-  }
+  needs.timestamp <- item.info$fetchTimestamp
   if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')

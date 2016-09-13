@@ -20,6 +20,12 @@ fetch.character <- function(viz) {
   # all.args <- getAutoargs(data.info, fun='write')
 
   viz <- as.fetcher(viz)
+  # #check timestamp
+  # if(!viz$fetchTimestamp || !fetchTimestamp(viz)){
+  #   #don't fetch raw files, use already processed
+  #   #or no updated file to fetch
+  #   return()
+  # }
 
   # call the fetch method applicable to this fetcher
   fetch(viz)

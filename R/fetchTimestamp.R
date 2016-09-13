@@ -55,9 +55,10 @@ fetchTimestamp.sciencebase <- function(viz) {
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    return(TRUE)
+  }else{
+    return(FALSE)
   }
-
-  invisible()
 }
 
 #' Has a file changed
@@ -65,7 +66,7 @@ fetchTimestamp.sciencebase <- function(viz) {
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-  #get file name(s?) from viz object
+   #get file name(s?) from viz object
   fileLoc <- viz$location
   
   #get date file timestamp
@@ -75,9 +76,10 @@ fetchTimestamp.file <- function(viz) {
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    return(TRUE) 
+  }else{
+    return(FALSE)
   }
-  
-  invisible(new.timestamp)
 }
 
 #' 
@@ -101,10 +103,19 @@ fetchTimestamp.url <- function(viz) {
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    return(TRUE)
+  }else{
+    return(TRUE)
   }
-  
-  invisible(new.timestamp)
 } 
+
+#'
+#' @rdname fetchTimestamp
+#' @export
+fetchTimestamp.fetcher <- function(viz){
+  warning(paste("fetchTimestamp.fetcher needs to be implemented for", viz$fetcher))
+  return(TRUE)
+}
 
 
 #' Write a timestamp file with the conventions used by fetchTimestamp
