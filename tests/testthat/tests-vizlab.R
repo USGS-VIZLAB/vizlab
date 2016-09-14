@@ -111,4 +111,9 @@ test_that(".url works", {
   expect_true(fetchTimestamp.url(viz))
 })
 
+test_that("sciencebase works",{
+  #with no existing timestamp
+  expect_true(fetchTimestamp('Cuyahoga'))
+})
+
 cleanup(oldwd, testtmp)
