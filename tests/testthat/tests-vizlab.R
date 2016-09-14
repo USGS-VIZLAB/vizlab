@@ -5,7 +5,13 @@ setup <- function() {
   dir.create(testtmp)
   setwd(testtmp)
   # need to copy any other files needed for testing
-  file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+  #just copy everything? should need it eventually for more tests?
+  #file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+ file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
+           testtmp, recursive = TRUE)
+  #create timestamp folder
+  dir.create('vizlab/make/timestamps', recursive = TRUE)
+  
   return(testtmp)
 }
 
@@ -83,6 +89,26 @@ test_that("getting template from library works", {
   expect_match(fragment, "<li>foo</li>")
   expect_match(fragment, "<li>bar</li>")
   expect_match(fragment, "<li>baz</li>")
+})
+
+context("fetchTimestamps working")
+test_that(".file works", {
+  #with no timestamp
+  check <- fetchTimestamp('siteTextData')
+  expect_true(check)
+  #with matching timestamp
+  ts <- file.info('data/siteText.yaml')[['mtime']]
+  writeTimestamp(ts, 'vizlab/make/timestamps/siteTextData')
+  expect_false(fetchTimestamp('siteTextData'))
+  #with a different timestamp
+  writeTimestamp(as.POSIXct("1991-10-21 12:00:00"), 'vizlab/make/timestamps/siteTextData')
+  expect_true(fetchTimestamp('siteTextData'))
+})
+
+test_that(".url works", {
+  #a site with no modified tag
+  viz <- list(id="foo", url="www.google.com")
+  expect_true(fetchTimestamp.url(viz))
 })
 
 cleanup(oldwd, testtmp)

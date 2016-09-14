@@ -89,8 +89,8 @@ fetchTimestamp.file <- function(viz) {
 #' @export
 fetchTimestamp.url <- function(viz) {
   
-  #URL will be specified in viz.yaml
-  url <- viz$location
+  #URL will be specified in viz.yaml: will the attribute be called url?
+  url <- viz$url
   new.timestamp <- headers(HEAD(url))[['last-modified']]
   old.timestamp <- readOldTimestamp(viz)
   #tag will be NULL if the last-modified tag doesn't exist
@@ -105,7 +105,7 @@ fetchTimestamp.url <- function(viz) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
     return(TRUE)
   }else{
-    return(TRUE)
+    return(FALSE)
   }
 } 
 
@@ -148,7 +148,7 @@ locateTimestampFile <- function(id) {
 #' @param viz vizlab object
 #' @return POSIXct timestamp for vizlab object
 readOldTimestamp <- function(viz) {
-  timestamp.file <- locateTimestampFile(viz)
+  timestamp.file <- locateTimestampFile(viz$id)
   # get the locally stored timestamp if it exists
   old.timestamp <- if(file.exists(timestamp.file)) {
     tryCatch({

@@ -242,7 +242,7 @@ createMakeItem.fetch <- function(item.info, ...) {
   if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
-    timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id, '.txt')
+    timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id)
     rules$file.timestamp <- createMakeEmptyRule(
       target=timestamp.file,
       depends=timestamp.id)
