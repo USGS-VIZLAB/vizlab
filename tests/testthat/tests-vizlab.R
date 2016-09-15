@@ -24,6 +24,10 @@ cleanup <- function(oldwd, testtmp) {
 oldwd <- getwd()
 testtmp <- setup()
 
+test_that('timestamp folder actually created', {
+  expect_true(file.exists('vizlab/make/timestamps'))
+})
+
 test_that("coercion to vizlab object works", {
   viz <- as.viz(list(
     id = "test1",
@@ -107,8 +111,9 @@ test_that(".file works", {
 
 test_that(".url works", {
   #a site with no modified tag
-  viz <- list(id="foo", url="www.google.com")
-  expect_true(fetchTimestamp.url(viz))
+  viz <- list(id="foo", remoteURL="www.google.com")
+  attr(viz , 'class') <- "url"
+  expect_true(fetchTimestamp(viz))
 })
 
 test_that("sciencebase works",{

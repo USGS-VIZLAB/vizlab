@@ -24,6 +24,10 @@ fetchTimestamp(viz)
 \arguments{
 \item{viz}{the identifier for this data item in viz.yaml}
 }
+\value{
+logical \code{TRUE} if a timestamp does not exist or has changed,
+\code{FALSE} if the timestamps are identical.
+}
 \description{
 This function should be called from the generic, \code{fetchTimestamp()}.
 Update timestamp file if the local copy of a file is out of date relative to
