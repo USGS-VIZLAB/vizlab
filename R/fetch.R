@@ -24,8 +24,8 @@ fetch.character <- function(viz) {
   #if(viz$fetchTimestamp){
     #fetch raw files, use already processed
     #or no updated file to fetch
-    # call the fetch method applicable to this fetcher
-  #fetch(viz)
+  # call the fetch method applicable to this fetcher
+  fetch(viz)
   #}
 }
 
