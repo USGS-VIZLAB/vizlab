@@ -101,11 +101,12 @@ test_that(".file works", {
   check <- fetchTimestamp('siteTextData')
   expect_true(check)
   #with matching timestamp
-  ts <- file.info('data/siteText.yaml')[['mtime']]
+  ts <- file.info(file.path(testtmp,'data/siteText.yaml'))[['mtime']]
   writeTimestamp(ts, 'vizlab/make/timestamps/siteTextData')
   expect_false(fetchTimestamp('siteTextData'))
   #with a different timestamp
   writeTimestamp(as.POSIXct("1991-10-21 12:00:00"), 'vizlab/make/timestamps/siteTextData')
+  expect_false(is.na(ts))
   expect_true(fetchTimestamp('siteTextData'))
 })
 
