@@ -1,11 +1,21 @@
 (function() {
   var vizlab = {};
 
+  if (typeof $ === "undefined") {
+    console.err("jQuery required");
+    return;
+  }
+
   vizlab.analytics = {};
 
   vizlab.analytics.init = function() {
-    var addClickHandler = document.getElementsByClass("vizClick");
+    var addClickHandler = $('.vizClick');
+    $.each(addClickHandler, function(index, value) {
+      value.on("click", vizlab.analytics.click);
+    });
+
     vizlab.analytics.chapters = $('.vizScroll').map(function(){return "#" + this.id});
+    $(window).scroll(vizlab.analytics.scrollwatch);
   };
 
   vizlab.analytics.inview = function (el) {
