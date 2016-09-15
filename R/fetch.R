@@ -21,12 +21,12 @@ fetch.character <- function(viz) {
 
   viz <- as.fetcher(viz)
   #check timestamp
-  if(viz$fetchTimestamp){
+  #if(viz$fetchTimestamp){
     #fetch raw files, use already processed
     #or no updated file to fetch
     # call the fetch method applicable to this fetcher
-  fetch(viz)
-  }
+  #fetch(viz)
+  #}
 }
 
 #' \code{fetch.file} currently does nothing. It exists to communicate that
