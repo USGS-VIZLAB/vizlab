@@ -1,0 +1,9 @@
+tabular:
+  - "text/csv"
+  - "text/tab-separated-values"
+yaml:
+  - "text/yaml"
+txt:
+  - "text/plain"
+excel:
+  - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

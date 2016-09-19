@@ -8,7 +8,7 @@
 #'
 #' @export
 readData <- function(viz) UseMethod("readData")
-
+  
 #' \code{readData.character} is the standard entry point; from here, viz.id gets
 #' assigned a class to route it to a more specific reader
 #'
@@ -99,20 +99,20 @@ as.reader <- function(viz, ...) {
   reader <- viz[['reader']]
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
-    reader <- switch(
-      mimetype,
-      "text/csv" = "tabular",
-      "text/tab-separated-values" = "tabular",
-      "text/yaml" = "yaml",
-      "text/plain" = "txt",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      {
-        warning(
-          'Could not find specific readData method for viz.id=', id,
-          ', mimeType=', mimetype, '; returning filepath.',
-          ' Specify reader to override.')
-        "filepath"
-      })
+
+    mimetype_list <- yaml.load_file('inst/data.types.yaml')
+    reader_match <- which(unlist(lapply(mimetype_list, 
+                                        FUN=function(mimetype_list, mimetype){
+                                          mimetype %in% mimetype_list}, 
+                                        mimetype=mimetype)))
+    reader <- names(reader_match)
+    
+    if(length(reader_match) == 0){
+      warning('Could not find specific readData method for viz.id=', id,
+              ', mimeType=', mimetype, '; returning filepath.',
+              ' Specify reader to override.')
+      reader <- "filepath"
+    }
   }
   class(viz) <- c(reader, "reader", class(viz))
   return(viz)
