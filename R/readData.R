@@ -99,15 +99,9 @@ as.reader <- function(viz, ...) {
   reader <- viz[['reader']]
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
-
-    mimetype_list <- yaml.load_file(system.file('data.types.yaml', package="vizlab"))
-    reader_match <- which(unlist(lapply(mimetype_list, 
-                                        FUN=function(mimetype_list, mimetype){
-                                          mimetype %in% mimetype_list}, 
-                                        mimetype=mimetype)))
-    reader <- names(reader_match)
+    reader <- lookupMimetype(mimetype)
     
-    if(length(reader_match) == 0){
+    if(length(reader) == 0){
       warning('Could not find specific readData method for viz.id=', id,
               ', mimeType=', mimetype, '; returning filepath.',
               ' Specify reader to override.')

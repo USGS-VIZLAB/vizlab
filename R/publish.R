@@ -167,16 +167,11 @@ as.resource <- function(viz, ...) {
   checkRequired(viz, required)
 
   mimetype <- viz[['mimetype']]
-  # move this to config file?
-  resource <- switch(mimetype,
-               "image/svg" = "svg",
-               "image/svg+xml" = "svg",
-               "image/png" = "img",
-               "image/jpg" = "img",
-               "application/javascript" = "js",
-               "text/javascript" = "js",
-               "text/css" = "css",
-               stop(mimetype, " not supported: ", viz[['id']]))
+  resource <- lookupMimetype(mimetype)
+  if(length(resource) == 0){
+    stop(mimetype, " not supported: ", viz[['id']])
+  }
+  
   class(viz) <- c(resource, class(viz))
   return(viz)
 }
