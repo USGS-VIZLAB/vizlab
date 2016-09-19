@@ -55,7 +55,7 @@ fetchTimestamp.sciencebase <- function(viz) {
   })
 
   # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp > old.timestamp))) {
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp = old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
     return(TRUE)
   }else{
@@ -63,25 +63,12 @@ fetchTimestamp.sciencebase <- function(viz) {
   }
 }
 
-#' Has a file changed
+#' Does nothing - \code{make} already checks timestamps of local files
 #'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-   #get file name(s?) from viz object
-  fileLoc <- viz$location
-  
-  #get date file timestamp
-  new.timestamp <- file.info(fileLoc)[['mtime']]
-  old.timestamp <- readOldTimestamp(viz)
-  
-  # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp > old.timestamp))) {
-    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
-    return(TRUE) 
-  }else{
-    return(FALSE)
-  }
+  invisible()
 }
 
 #' 
@@ -103,7 +90,7 @@ fetchTimestamp.url <- function(viz) {
   }
   
   # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp > old.timestamp))) {
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp = old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
     return(TRUE)
   }else{

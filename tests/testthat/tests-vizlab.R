@@ -96,19 +96,6 @@ test_that("getting template from library works", {
 })
 
 context("fetchTimestamps working")
-test_that(".file works", {
-  #with no timestamp
-  check <- fetchTimestamp('siteTextData')
-  expect_true(check)
-  #with matching timestamp
-  ts <- file.info(file.path(testtmp,'data/siteText.yaml'))[['mtime']]
-  expect_false(is.na(ts))
-  writeTimestamp(ts, 'vizlab/make/timestamps/siteTextData')
-  expect_false(fetchTimestamp('siteTextData'))
-  #with a different timestamp
-  writeTimestamp(as.POSIXct("1991-10-21 12:00:00"), 'vizlab/make/timestamps/siteTextData')
-  expect_true(fetchTimestamp('siteTextData'))
-})
 
 test_that(".url works", {
   #a site with no modified tag

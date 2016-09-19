@@ -36,7 +36,7 @@ timestamp, will be determined by the metadata in viz.yaml for the item.
 
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 
-Has a file changed
+Does nothing - \code{make} already checks timestamps of local files
 
 check a URL for timestamp
 }
