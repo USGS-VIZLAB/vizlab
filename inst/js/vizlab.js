@@ -1,9 +1,13 @@
+if (typeof $ === "undefined") {
+  console.err("jQuery required");
+}
+
 (function() {
   var vizlab = {};
 
-  if (typeof $ === "undefined") {
-    console.err("jQuery required");
-    return;
+  /* Call this on page ready to initialize the viz */
+  vizlab.init = function() {
+    vizlab.analytics.init();
   }
 
   vizlab.analytics = {};
@@ -55,3 +59,5 @@
 
   window.vizlab = vizlab;
 })();
+
+$.ready(vizlab.init);
