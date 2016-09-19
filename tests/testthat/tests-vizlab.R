@@ -6,6 +6,7 @@ setup <- function() {
   setwd(testtmp)
   # need to copy any other files needed for testing
   file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+  file.copy(system.file('testviz/moreMimetypes.yaml', package='vizlab'), testtmp)
   return(testtmp)
 }
 
@@ -39,11 +40,24 @@ test_that("file fetcher has correct components", {
 
 })
 
-test_that("mimetype selects correct reader from yaml", {
+test_that("mimetype selects correct reader from default yaml", {
   viz <- as.viz("siteTextData")
   viz <- as.fetcher(viz)
   viz <- as.reader(viz)
   expect_is(object = viz, class = "yaml")
+})
+
+test_that("mimetype selects correct resource from default yaml", {
+  viz <- as.viz("mainCSS")
+  viz <- as.fetcher(viz)
+  viz <- as.reader(viz)
+  viz <- as.resource(viz)
+  expect_is(object = viz, class = "css")
+})
+
+test_that("mimetype can select reader from user yaml", {
+  reader <- lookupMimetype(mimetype = "text/fake")
+  expect_true(reader == "fakeReader")
 })
 
 context("sciencebase")
