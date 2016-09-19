@@ -5,6 +5,7 @@
 \alias{fetchTimestamp.character}
 \alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
+\alias{fetchTimestamp.url}
 \title{Update timestamp file if needed}
 \usage{
 fetchTimestamp(viz)
@@ -14,6 +15,8 @@ fetchTimestamp(viz)
 \method{fetchTimestamp}{sciencebase}(viz)
 
 \method{fetchTimestamp}{file}(viz)
+
+\method{fetchTimestamp}{url}(viz)
 }
 \arguments{
 \item{viz}{the identifier for this data item in viz.yaml}
@@ -27,5 +30,7 @@ timestamp, will be determined by the metadata in viz.yaml for the item.
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 
 Has a file changed
+
+check a URL for timestamp
 }
 
