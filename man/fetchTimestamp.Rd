@@ -3,6 +3,7 @@
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
 \alias{fetchTimestamp.character}
+\alias{fetchTimestamp.fetcher}
 \alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
 \alias{fetchTimestamp.url}
@@ -17,9 +18,15 @@ fetchTimestamp(viz)
 \method{fetchTimestamp}{file}(viz)
 
 \method{fetchTimestamp}{url}(viz)
+
+\method{fetchTimestamp}{fetcher}(viz)
 }
 \arguments{
 \item{viz}{the identifier for this data item in viz.yaml}
+}
+\value{
+logical \code{TRUE} if a timestamp does not exist or has changed,
+\code{FALSE} if the timestamps are identical.
 }
 \description{
 This function should be called from the generic, \code{fetchTimestamp()}.
@@ -29,7 +36,7 @@ timestamp, will be determined by the metadata in viz.yaml for the item.
 
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 
-Has a file changed
+Does nothing - \code{make} already checks timestamps of local files
 
 check a URL for timestamp
 }

@@ -5,7 +5,13 @@ setup <- function() {
   dir.create(testtmp)
   setwd(testtmp)
   # need to copy any other files needed for testing
-  file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+  #just copy everything? should need it eventually for more tests?
+  #file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+ file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
+           testtmp, recursive = TRUE)
+  #create timestamp folder
+  dir.create('vizlab/make/timestamps', recursive = TRUE)
+  
   return(testtmp)
 }
 
@@ -17,6 +23,10 @@ cleanup <- function(oldwd, testtmp) {
 
 oldwd <- getwd()
 testtmp <- setup()
+
+test_that('timestamp folder actually created', {
+  expect_true(file.exists('vizlab/make/timestamps'))
+})
 
 test_that("coercion to vizlab object works", {
   viz <- as.viz(list(
@@ -83,6 +93,20 @@ test_that("getting template from library works", {
   expect_match(fragment, "<li>foo</li>")
   expect_match(fragment, "<li>bar</li>")
   expect_match(fragment, "<li>baz</li>")
+})
+
+context("fetchTimestamps working")
+
+test_that(".url works", {
+  #a site with no modified tag
+  viz <- list(id="foo", remoteURL="www.google.com")
+  attr(viz , 'class') <- "url"
+  expect_true(fetchTimestamp(viz))
+})
+
+test_that("sciencebase works",{
+  #with no existing timestamp
+  expect_true(fetchTimestamp('Cuyahoga'))
 })
 
 cleanup(oldwd, testtmp)
