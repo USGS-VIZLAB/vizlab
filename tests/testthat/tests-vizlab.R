@@ -39,7 +39,7 @@ test_that("file fetcher has correct components", {
 
 })
 
-test_that("mimetype switch selects correct reader", {
+test_that("mimetype selects correct reader from yaml", {
   viz <- as.viz("siteTextData")
   viz <- as.fetcher(viz)
   viz <- as.reader(viz)
