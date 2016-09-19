@@ -100,7 +100,7 @@ as.reader <- function(viz, ...) {
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
 
-    mimetype_list <- yaml.load_file('inst/data.types.yaml')
+    mimetype_list <- yaml.load_file(system.file('data.types.yaml', package="vizlab"))
     reader_match <- which(unlist(lapply(mimetype_list, 
                                         FUN=function(mimetype_list, mimetype){
                                           mimetype %in% mimetype_list}, 
