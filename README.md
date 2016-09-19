@@ -27,6 +27,9 @@ Some packages are only suggested and will need to be installed manually to open 
 
 To setup the make file for a new project, use the `makeMakefiles()` function. This only needs to happen once. Then you can use `make` at the command line to run the whole process.
 
+## Adding your own mimetypes
+To specify your own mimetypes (or override defaults), create a `.yaml` to specify the mimetype and it's corresponding reader, publisher, or resource (see inst/mimetypes.default.yaml for example structure). Then add the filename to your `viz.yaml` file under info with the name `mimetypeDictionary`.
+
 ## Disclaimer
 
 This software is in the public domain because it contains materials that originally came from the U.S. Geological Survey, an agency of the United States Department of Interior. For more information, see the official USGS copyright policy at [http://www.usgs.gov/visual-id/credit_usgs.html#copyright](http://www.usgs.gov/visual-id/credit_usgs.html#copyright)
