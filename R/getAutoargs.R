@@ -1,5 +1,5 @@
-#' Prepare the arguments to pass to a fetchData, readData, processData, or
-#' visualizeData
+#' Prepare the arguments to pass to a fetch, read, process, or
+#' visualize
 #' 
 #' @param data.info character viz.id or list as in getContentInfo(vizid)
 #' @param fun data mode: read or write? write is the default

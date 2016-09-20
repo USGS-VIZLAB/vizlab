@@ -20,8 +20,7 @@ fetch.character <- function(viz) {
   # all.args <- getAutoargs(data.info, fun='write')
 
   viz <- as.fetcher(viz)
-
-  # call the fetch method applicable to this fetcher
+  
   fetch(viz)
 }
 

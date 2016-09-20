@@ -4,8 +4,8 @@
 \alias{getAutoargs}
 \alias{getAutoargs.character}
 \alias{getAutoargs.list}
-\title{Prepare the arguments to pass to a fetchData, readData, processData, or
-visualizeData}
+\title{Prepare the arguments to pass to a fetch, read, process, or
+visualize}
 \usage{
 getAutoargs(data.info, fun = c("write", "read"), verbose = TRUE)
 
@@ -24,7 +24,7 @@ getAutoargs(data.info, fun = c("write", "read"), verbose = TRUE)
 \item{...}{args passed on to other getAutoargs methods}
 }
 \description{
-Prepare the arguments to pass to a fetchData, readData, processData, or
-visualizeData
+Prepare the arguments to pass to a fetch, read, process, or
+visualize
 }
 
