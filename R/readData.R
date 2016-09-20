@@ -71,7 +71,22 @@ readData.filepath <- function(viz){
 #' @rdname readData
 #' @export
 readData.folder <- function(viz){
-  dir(viz[['location']], full.names=TRUE)
+  # present: all files need to be the same mimetype, no mimetype = filepath
+  #          you need to specify "reader: folder" and the shared mimetype in "viz.yaml"
+  # to do: make this recursive to get into subdirs (add to viz object)
+  # to do: add pattern so that it only reads in files that meet some pattern (e.g ".csv")
+  filepaths <- dir(viz[['location']], full.names=TRUE)
+  
+  #create new vizlab object (one list element for each file)
+  viz_lists <- lapply(filepaths, function(fp, id, m){
+    list(id=id, location=fp, mimetype=m)
+  }, id=viz[['id']], m=viz[['mimetype']])
+
+  lt2 <- lapply(viz_lists, function(v){
+    v <- as.reader(v)
+    readData(v)
+  })
+  
 }
 
 #' \code{readData.txt} returns names of files inside a folder
@@ -103,7 +118,7 @@ as.reader <- function(viz, ...) {
     
     if(length(reader) == 0){
       warning('Could not find specific readData method for viz.id=', id,
-              ', mimeType=', mimetype, '; returning filepath.',
+              ', mimetype=', mimetype, '; returning filepath.',
               ' Specify reader to override.')
       reader <- "filepath"
     }
