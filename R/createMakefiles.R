@@ -238,7 +238,7 @@ createMakeItem.fetch <- function(item.info, ...) {
   rules <- list()
 
   # timestamp rules
-  needs.timestamp <- item.info$fetchTimestamp
+  needs.timestamp <- item.info$refetch
   if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
