@@ -55,7 +55,7 @@ fetchTimestamp.sciencebase <- function(viz) {
   })
 
   # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp = old.timestamp))) {
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
     return(TRUE)
   }else{
@@ -90,7 +90,7 @@ fetchTimestamp.url <- function(viz) {
   }
   
   # write the new timestamp to the file
-  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp = old.timestamp))) {
+  if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
     return(TRUE)
   }else{
