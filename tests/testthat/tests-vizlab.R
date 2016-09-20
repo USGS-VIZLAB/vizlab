@@ -60,6 +60,13 @@ test_that("mimetype can select reader from user yaml", {
   expect_true(reader == "fakeReader")
 })
 
+test_that("directories can be read", {
+  viz <- as.viz("carData")
+  viz <- as.fetcher(viz)
+  viz <- as.reader(viz)
+  viz_data <- readData(viz)
+})
+
 context("sciencebase")
 test_that("sciencebase item has fields", {
   viz <- as.fetcher(as.viz("Cuyahoga"))
