@@ -29,6 +29,11 @@ fetch:
     reader: myCsvReader
     mimetype: text/csv
     export: true
+  - 
+    id: carData
+    location: data/car_info
+    mimetype: text/csv
+    reader: folder
 process:
   -
     id: CuyahogaShort
