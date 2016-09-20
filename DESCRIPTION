@@ -17,10 +17,10 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.0)
 Imports:
-    htmltools,
     httr,
     methods,
     whisker,
+    xml2,
     yaml
 Suggests:
     data.table,
