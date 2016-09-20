@@ -1,0 +1,63 @@
+{
+	"vizzies":[
+		{
+			"id": "great-lakes-microplastics",
+			"name": "Microplastics in the Great Lakes",
+			"date": "2016-05-12", 
+			"publish-date": "2016-05-19",
+			"path": "https://owi.usgs.gov/vizlab/microplastics/",
+			"thumbnail": "img/microplasticsThumbnail.jpg"
+		},
+		{
+			"id": "climate-fish-habitat",
+			"name": "Climate Change and Freshwater Fish",
+			"date": "2016-05-12", 
+			"publish-date": "2016-07-13",
+			"path": "https://owi.usgs.gov/vizlab/climate-change-walleye-bass/",
+			"thumbnail": "img/climateFishThumbnail.jpg"
+		},
+		{
+			"id": "co-drought",
+			"name": "Colorado River Drought",
+			"date": "2016-05-12", 
+			"publish-date": "2016-07-13",
+			"path": "https://www.doi.gov/water/owdi.cr.drought/en/",
+			"thumbnail": "img/coDroughtThumbnail.jpg"
+		},
+		{
+			"id": "ca-drought",
+			"name": "California Drought",
+			"date": "2016-05-12", 
+			"publish-date": "2016-07-13",
+			"path": "http://cida.usgs.gov/ca_drought/",
+			"thumbnail": "img/caDroughtThumbnail.jpg"
+		}
+	],
+	
+	"tags":[
+		{
+			"tag": "R",
+			"path": "https://owi.usgs.gov/blog/tags/r/"	
+		},
+		{
+			"tag": "EGRET",
+			"path": "https://owi.usgs.gov/blog/tags/egret/"	
+		},
+		{
+			"tag": "dataRetrieval",
+			"path": "https://owi.usgs.gov/blog/tags/dataretrieval/"	
+		},
+		{
+			"tag": "geoknife",
+			"path": "https://owi.usgs.gov/blog/tags/geoknife/"	
+		},
+		{
+			"tag": "Agile",
+			"path": "https://owi.usgs.gov/blog/tags/agile/"	
+		},
+		{
+			"tag": "Geo Data Portal",
+			"path": "https://owi.usgs.gov/blog/tags/geo-data-portal/"	
+		}
+	]
+}

@@ -84,7 +84,7 @@ publish.resource <- function(viz) {
   # going to start out with simple images
   file <- export(viz)
   dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
-  file.copy(viz[['location']], file)
+  file.copy(viz[['location']], file, overwrite = TRUE)
   viz[['relpath']] <- relativePath(file)
   return(viz)
 }
