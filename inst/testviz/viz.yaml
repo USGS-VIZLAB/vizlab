@@ -7,6 +7,7 @@ info:
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
+  mimetypeDictionary: moreMimetypes.yaml
 fetch:
   -
     id: siteTextData
@@ -16,7 +17,7 @@ fetch:
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
-    fetchTimestamp: false
+    refetch: false
     remoteItemId: 575d839ee4b04f417c2a03fe
     remoteFilename: CuyahogaTDS.csv
     mimetype: text/csv
@@ -28,6 +29,11 @@ fetch:
     reader: myCsvReader
     mimetype: text/csv
     export: true
+  - 
+    id: carData
+    location: data/car_info
+    mimetype: text/csv
+    reader: folder
 process:
   -
     id: CuyahogaShort

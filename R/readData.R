@@ -8,7 +8,7 @@
 #'
 #' @export
 readData <- function(viz) UseMethod("readData")
-
+  
 #' \code{readData.character} is the standard entry point; from here, viz.id gets
 #' assigned a class to route it to a more specific reader
 #'
@@ -71,7 +71,23 @@ readData.filepath <- function(viz){
 #' @rdname readData
 #' @export
 readData.folder <- function(viz){
-  dir(viz[['location']], full.names=TRUE)
+  # present: all files need to be the same mimetype, no mimetype = filepath
+  #          you need to specify "reader: folder" and the shared mimetype in "viz.yaml"
+  # to do: make this recursive to get into subdirs (add to viz object)
+  # to do: add pattern so that it only reads in files that meet some pattern (e.g ".csv")
+  filepaths <- dir(viz[['location']], full.names=TRUE)
+  
+  #create new vizlab object (one list element for each file)
+  viz_lists <- lapply(filepaths, function(fp, id, mimetype){
+    v <- list(id=id, location=fp, mimetype=mimetype)
+    v <- as.viz(v)
+    v <- as.reader(v)
+    return(v)
+  }, id=viz[['id']], mimetype=viz[['mimetype']])
+
+  data_list <- lapply(viz_lists, readData)
+  
+  return(data_list)
 }
 
 #' \code{readData.txt} returns names of files inside a folder
@@ -99,20 +115,14 @@ as.reader <- function(viz, ...) {
   reader <- viz[['reader']]
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
-    reader <- switch(
-      mimetype,
-      "text/csv" = "tabular",
-      "text/tab-separated-values" = "tabular",
-      "text/yaml" = "yaml",
-      "text/plain" = "txt",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "excel",
-      {
-        warning(
-          'Could not find specific readData method for viz.id=', id,
-          ', mimeType=', mimetype, '; returning filepath.',
-          ' Specify reader to override.')
-        "filepath"
-      })
+    reader <- lookupMimetype(mimetype)
+    
+    if(length(reader) == 0){
+      warning('Could not find specific readData method for viz.id=', id,
+              ', mimetype=', mimetype, '; returning filepath.',
+              ' Specify reader to override.')
+      reader <- "filepath"
+    }
   }
   class(viz) <- c(reader, "reader", class(viz))
   return(viz)

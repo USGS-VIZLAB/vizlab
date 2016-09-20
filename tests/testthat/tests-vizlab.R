@@ -11,7 +11,6 @@ setup <- function() {
            testtmp, recursive = TRUE)
   #create timestamp folder
   dir.create('vizlab/make/timestamps', recursive = TRUE)
-  
   return(testtmp)
 }
 
@@ -49,11 +48,31 @@ test_that("file fetcher has correct components", {
 
 })
 
-test_that("mimetype switch selects correct reader", {
+test_that("mimetype selects correct reader from default yaml", {
   viz <- as.viz("siteTextData")
   viz <- as.fetcher(viz)
   viz <- as.reader(viz)
   expect_is(object = viz, class = "yaml")
+})
+
+test_that("mimetype selects correct resource from default yaml", {
+  viz <- as.viz("mainCSS")
+  viz <- as.fetcher(viz)
+  viz <- as.reader(viz)
+  viz <- as.resource(viz)
+  expect_is(object = viz, class = "css")
+})
+
+test_that("mimetype can select reader from user yaml", {
+  reader <- lookupMimetype(mimetype = "text/fake")
+  expect_true(reader == "fakeReader")
+})
+
+test_that("directories can be read", {
+  viz <- as.viz("carData")
+  viz <- as.fetcher(viz)
+  viz <- as.reader(viz)
+  viz_data <- readData(viz)
 })
 
 context("sciencebase")
