@@ -4,7 +4,7 @@ images:
 fetch:
   -
     fetcher: file
-    fetchTimestamp: true
+    refetch: true
     scripts: scripts/fetch
     export: false
 process:
