@@ -94,13 +94,14 @@ publish.resource <- function(viz) {
 #' @rdname publish
 #' @export
 publish.img <- function(viz) {
-  required <- c("alttext", "relpath")
+  required <- c("alttext", "relpath", "title")
   viz <- NextMethod()
   checkRequired(viz, required)
 
   alt.text <- viz[['alttext']]
   relative.path <- viz[['relpath']]
-  return(sprintf('<img src="%s" alt="%s" />', relative.path, alt.text))
+  title.text <- viz[['title']]
+  return(sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text))
 }
 
 #' javascript publishing
@@ -135,12 +136,12 @@ publish.css <- function(viz) {
 #' @rdname publish
 #' @export
 publish.svg <- function(viz) {
-  required <- c("relpath")
+  required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s"></object>',
-                    viz[['id']], viz[['relpath']])
+  output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
+                    viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
   return(output)
 }
 
