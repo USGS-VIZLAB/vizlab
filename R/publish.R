@@ -63,8 +63,11 @@ publish.section <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  output <- whisker.render(template = template, data = context)
-  return(output)
+  viz[['output']] <- whisker.render(template = template, data = context)
+  if (!is.null(viz[['analytics']])) {
+    viz <- analytics(viz)
+  }
+  return(viz[['output']])
 }
 
 #' publish a resource

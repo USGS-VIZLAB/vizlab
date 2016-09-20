@@ -17,14 +17,15 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.0)
 Imports:
+    htmltools,
+    httr,
     methods,
     whisker,
-    yaml,
-    httr
+    yaml
 Suggests:
     data.table,
     knitr,
-    sbtools (>= 0.19.3),
     readxl,
+    sbtools (>= 0.19.3),
     testthat
 RoxygenNote: 5.0.1
