@@ -107,6 +107,16 @@ test_that(".url works", {
 test_that("sciencebase works",{
   #with no existing timestamp
   expect_true(fetchTimestamp('Cuyahoga'))
+  
+  #write the timestamp for the Cuyahoga file
+  writeTimestamp(as.POSIXct("2016-06-12 15:50:15 CDT"), "vizlab/make/timestamps/Cuyahoga")
+  expect_false(fetchTimestamp('Cuyahoga'))
+})
+
+test_that("custom fetcher hits timestamp.fetcher", {
+  viz <- list()
+  attr(viz, "class") <- c("cars", "fetcher", "viz")
+  expect_warning(fetchTimestamp(viz))
 })
 
 cleanup(oldwd, testtmp)
