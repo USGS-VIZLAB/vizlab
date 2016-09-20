@@ -78,15 +78,16 @@ readData.folder <- function(viz){
   filepaths <- dir(viz[['location']], full.names=TRUE)
   
   #create new vizlab object (one list element for each file)
-  viz_lists <- lapply(filepaths, function(fp, id, m){
-    list(id=id, location=fp, mimetype=m)
-  }, id=viz[['id']], m=viz[['mimetype']])
-
-  lt2 <- lapply(viz_lists, function(v){
+  viz_lists <- lapply(filepaths, function(fp, id, mimetype){
+    v <- list(id=id, location=fp, mimetype=mimetype)
+    v <- as.viz(v)
     v <- as.reader(v)
-    readData(v)
-  })
+    return(v)
+  }, id=viz[['id']], mimetype=viz[['mimetype']])
+
+  data_list <- lapply(viz_lists, readData)
   
+  return(data_list)
 }
 
 #' \code{readData.txt} returns names of files inside a folder
