@@ -63,7 +63,7 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   if (file.exists(file.path(path, '.gitignore'))) {
     message(".gitignore already exists, leaving as-is")
   } else {
-    message("creating .gitignore")
+    message("Creating .gitignore")
     gitignore <- file(file.path(path, ".gitignore"))
     cat(
         "cache/\n",
@@ -75,6 +75,15 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
         file = gitignore, sep = "")
     close(gitignore)
   }
-
+  
+  # Copy LICENSE file
+  if (file.exists(file.path(path, 'LICENSE'))) {
+    message("LICENSE already exists, leaving as-is")
+  } else {
+    message("Copying LICENSE")
+    license <- file.copy(from=system.file('LICENSE', package="vizlab"),
+                         to=file.path(path, 'LICENSE'))
+  }
+  
   # Read-and-delete-me type file would be good to describe next steps
 }
