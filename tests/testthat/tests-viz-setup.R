@@ -7,9 +7,9 @@ cleanup <- function(oldwd, setuptmp) {
 }
 
 oldwd <- getwd()
-testtmp <- file.path(tempdir(), "testtmp")
-dir.create(testtmp)
-setwd(testtmp)
+setuptmp <- file.path(tempdir(), "setuptmp")
+dir.create(setuptmp)
+setwd(setuptmp)
 
 vizSkeleton(name="my viz")
 
