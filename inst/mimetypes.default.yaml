@@ -1,0 +1,22 @@
+tabular:
+  - "text/csv"
+  - "text/tab-separated-values"
+yaml:
+  - "text/yaml"
+txt:
+  - "text/plain"
+excel:
+  - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+filepath:
+  - "application/zip"
+svg:
+  - "image/svg"
+  - "image/svg+xml"
+img:
+  - "image/png"
+  - "image/jpg"
+js:
+  - "application/javascript"
+  - "text/javascript"
+css:
+  - "text/css"
