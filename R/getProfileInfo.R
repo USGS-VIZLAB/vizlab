@@ -35,7 +35,7 @@ getProfileInfo <- function(user='local') {
 #' 
 findProfileYaml <- function(){
   home_dir <- '~/.vizlab/profile.yaml'
-  relative_dir <- './.vizlab/profile.yaml'
+  relative_dir <- './vizlab/profile.yaml'
   if(file.exists(home_dir)){
     filepath <- home_dir
   } else if(file.exists(relative_dir)){

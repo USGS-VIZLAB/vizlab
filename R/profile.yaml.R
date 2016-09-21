@@ -23,7 +23,7 @@ createProfile <- function(directory = "home"){
   if(directory=="home"){
     file_dir <- file.path('~', '.vizlab')
   } else if(directory=="relative"){
-    file_dir <- file.path('.', '.vizlab')
+    file_dir <- file.path('.', 'vizlab')
   } else {
     stop("Unsupported directory specified")
   }

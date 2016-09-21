@@ -43,9 +43,8 @@ test_that('.empty files created', {
 })
 
 test_that('createProfile works for relative dir', {
-  expect_false(file.exists('./.vizlab/profile.yaml'))
+  expect_false(file.exists('./vizlab/profile.yaml'))
   createProfile('relative')
-  expect_true(file.exists('./.vizlab/profile.yaml'))
 })
 
 test_that('createMakefiles works', {
@@ -53,6 +52,7 @@ test_that('createMakefiles works', {
   expect_is(makefiles, "list")
   expect_true(all(grepl(c('makefile|fetch|process|visualize|publish'), makefiles)))
   expect_length(makefiles, 5)
+  expect_true(file.exists('./vizlab/profile.yaml'))
 })
 
 setwd(oldwd)
