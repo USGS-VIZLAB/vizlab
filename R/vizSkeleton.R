@@ -13,10 +13,21 @@
 #' @importFrom utils packageVersion
 #' @export
 vizSkeleton <- function (name = "cool-viz", path = ".") {
-  safe.dir.create <- function(path) {
-    if (!dir.exists(path) && !dir.create(path))
+  create.empty.file <- function(path){
+    emptypath <- file.path(path, ".empty")
+    if(!file.exists(emptypath)){
+      gitignore <- file(emptypath)
+      cat(file=emptypath)
+      close(gitignore)
+    }
+  }
+  
+  safe.dir.create <- function(path, createEmpty=TRUE) {
+    if (!dir.exists(path) && !dir.create(path)){
       stop(gettextf("cannot create directory '%s'", path),
            domain = NA)
+    }
+    if(createEmpty) create.empty.file(path)
   }
 
   # Create directory structure
@@ -25,11 +36,11 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create(file.path(path, "data"))
   safe.dir.create(file.path(path, "images"))
   safe.dir.create(file.path(path, "figures"))
-  safe.dir.create(layout_dir <- file.path(path, "layout"))
+  safe.dir.create(layout_dir <- file.path(path, "layout"), createEmpty=FALSE)
   safe.dir.create(file.path(layout_dir, "css"))
   safe.dir.create(file.path(layout_dir, "js"))
   safe.dir.create(file.path(layout_dir, "templates"))
-  safe.dir.create(script_dir <- file.path(path, "scripts"))
+  safe.dir.create(script_dir <- file.path(path, "scripts"), createEmpty=FALSE)
   safe.dir.create(file.path(script_dir, "fetch"))
   safe.dir.create(file.path(script_dir, "process"))
   safe.dir.create(file.path(script_dir, "visualize"))
