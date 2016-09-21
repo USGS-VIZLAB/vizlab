@@ -5,8 +5,7 @@ $(document).ready(function(){
 	).then(function(json){
 		var sections = [
 			{file:'js/templates/header.handlebars', div: '#header', context: {}},
-			{file:'js/templates/vizzies.handlebars', div: '#visualizationsContainer', context: json},
-			{file:'js/templates/tags.handlebars', div: '#tagsContainer', context: json}
+			{file:'js/templates/vizzies.handlebars', div: '#visualizationsContainer', context: json}
 		];
 		
 		$.each(sections, function(index, value){
