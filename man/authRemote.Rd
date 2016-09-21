@@ -41,10 +41,4 @@ isn't yet implemented. stay tuned). This script should log on to the service
 with valid credentials. Take care to never commit the user directory to an 
 unsecured repository.
 }
-\examples{
-\dontrun{
-# An example 1-line user/local/auth.sciencebase.R (fill in the credentials):
-sbtools::authenticate_sb(myusername, mypassword)
-}
-}
 
