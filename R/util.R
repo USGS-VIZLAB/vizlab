@@ -54,7 +54,7 @@ buildContext <- function(viz, dependencies) {
 getVizlabJS <- function() {
   vizlab.js <- list(
     id = "_vizlabJS",
-    location = "js/app.js",
+    location = "js/vizlab.js",
     packaging = "vizlab",
     publisher = "resource",
     mimetype = "application/javascript",

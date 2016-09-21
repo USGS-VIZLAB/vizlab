@@ -28,12 +28,18 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- lapply(viz[['depends']], publish)
+  dependencies <- as.list(viz[['depends']])
   names(dependencies) <- viz[['depends']]
-  # add this resource
+  # add automatic dependencies
   dependencies[['_vizlabJS']] <- getVizlabJS()
 
+  # publish all dependencies
+  dependencies <- lapply(dependencies, publish)
+
   context <- buildContext(viz, dependencies)
+
+  #also manually put resources into context
+  context[['resources']] <- append(context[['resources']], dependencies[['_vizlabJS']])
 
   viz.info <- getBlocks("info")
 
@@ -88,7 +94,7 @@ publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
   # going to start out with simple images
   destFile <- export(viz)
-  dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
+  dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
   srcFile = viz[['location']]
   if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
     srcFile = system.file(srcFile, package = "vizlab")
@@ -181,7 +187,7 @@ as.resource <- function(viz, ...) {
   if(length(resource) == 0){
     stop(mimetype, " not supported: ", viz[['id']])
   }
-  
+
   class(viz) <- c(resource, class(viz))
   return(viz)
 }
