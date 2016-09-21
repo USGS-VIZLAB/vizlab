@@ -22,7 +22,7 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
     }
   }
   
-  safe.dir.create <- function(path, createEmpty=TRUE) {
+  safe.dir.create <- function(path, createEmpty=FALSE) {
     if (!dir.exists(path) && !dir.create(path)){
       stop(gettextf("cannot create directory '%s'", path),
            domain = NA)
@@ -33,18 +33,18 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   # Create directory structure
   message("Creating directories ...", domain = NA)
   safe.dir.create(path)
-  safe.dir.create(file.path(path, "data"))
-  safe.dir.create(file.path(path, "images"))
-  safe.dir.create(file.path(path, "figures"))
-  safe.dir.create(layout_dir <- file.path(path, "layout"), createEmpty=FALSE)
-  safe.dir.create(file.path(layout_dir, "css"))
-  safe.dir.create(file.path(layout_dir, "js"))
-  safe.dir.create(file.path(layout_dir, "templates"))
-  safe.dir.create(script_dir <- file.path(path, "scripts"), createEmpty=FALSE)
-  safe.dir.create(file.path(script_dir, "fetch"))
-  safe.dir.create(file.path(script_dir, "process"))
-  safe.dir.create(file.path(script_dir, "visualize"))
-  safe.dir.create(file.path(script_dir, "read"))
+  safe.dir.create(file.path(path, "data"), createEmpty=TRUE)
+  safe.dir.create(file.path(path, "images"), createEmpty=TRUE)
+  safe.dir.create(file.path(path, "figures"), createEmpty=TRUE)
+  safe.dir.create(layout_dir <- file.path(path, "layout"))
+  safe.dir.create(file.path(layout_dir, "css"), createEmpty=TRUE)
+  safe.dir.create(file.path(layout_dir, "js"), createEmpty=TRUE)
+  safe.dir.create(file.path(layout_dir, "templates"), createEmpty=TRUE)
+  safe.dir.create(script_dir <- file.path(path, "scripts"))
+  safe.dir.create(file.path(script_dir, "fetch"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "process"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "visualize"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "read"), createEmpty=TRUE)
 
   # Write viz.yaml
   if(file.exists(file.path(path, 'viz.yaml'))) {
