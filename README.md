@@ -25,7 +25,14 @@ Some packages are only suggested and will need to be installed manually to open 
 
 ## Using this package
 
-To setup the make file for a new project, use the `makeMakefiles()` function. This only needs to happen once. Then you can use `make` at the command line to run the whole process.
+To setup a new project, use the following functions. `vizSkeleton` creates the necessary directories, `createProfile` creates a `profile.yaml` which is necessary to run make, and `createMakefiles` will setup all the makefiles. `createProfile` only needs to happen once (the file should not be stored in your project directory, but in some home directory instead). `createMakefiles` only needs to happen once per project. Then you can use `make` at the command line to run the whole process.
+
+```r
+library(vizlab)
+vizSkeleton(name="my awesome viz")
+createProfile(directory = "./.vizlab") #optional, profile.yaml only needs to exist in one place on your computer
+createMakefiles(profilepath="./.vizlab/profile.yaml") #must specify the profile.yaml location here
+```
 
 ## Adding your own mimetypes
 To specify your own mimetypes (or override defaults), create a `.yaml` to specify the mimetype and it's corresponding reader, publisher, or resource (see inst/mimetypes.default.yaml for example structure). Then add the filename to your `viz.yaml` file under info with the name `mimetypeDictionary`.
