@@ -1,5 +1,11 @@
 context("viz-setup")
 
+cleanup <- function(oldwd, setuptmp) {
+  setwd(oldwd)
+  unlink(setuptmp, recursive = TRUE)
+  invisible()
+}
+
 oldwd <- getwd()
 testtmp <- file.path(tempdir(), "testtmp")
 dir.create(testtmp)
@@ -48,4 +54,4 @@ test_that('createProfile works for relative dir', {
   expect_true(file.exists('./vizlab/profile.yaml'))
 })
 
-setwd(oldwd)
+cleanup(oldwd, setuptmp)
