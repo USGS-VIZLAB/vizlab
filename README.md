@@ -31,11 +31,11 @@ To setup a new project, use the following functions. `createProfile` creates a `
 library(vizlab)
 
 #optional, profile.yaml only needs to exist in one place on your computer
-createProfile(directory = "./.vizlab") 
+createProfile() 
 
 # to setup each project
 vizSkeleton(name="my awesome viz")
-createMakefiles(profilepath="./.vizlab/profile.yaml") #must specify the profile.yaml location here
+createMakefiles() 
 ```
 
 ## Adding your own mimetypes

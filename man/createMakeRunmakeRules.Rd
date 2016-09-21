@@ -4,10 +4,7 @@
 \alias{createMakeRunmakeRules}
 \title{Create the rules to run/make/update the non-top makefiles}
 \usage{
-createMakeRunmakeRules(profilepath)
-}
-\arguments{
-\item{profilepath}{filepath for profile.yaml}
+createMakeRunmakeRules()
 }
 \description{
 Each makefile gets a rule to run it and a rule to create the makefile

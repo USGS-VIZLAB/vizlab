@@ -5,13 +5,11 @@
 \title{Create fetch.make, etc. from the information in viz.yaml}
 \usage{
 createMakefiles(blocks = c("fetch", "process", "visualize", "publish"),
-  profilepath = ".", display = FALSE)
+  display = FALSE)
 }
 \arguments{
 \item{blocks}{character vector of names of blocks in the viz.yaml for which
 to make makefiles}
-
-\item{profilepath}{filepath for profile.yaml}
 
 \item{display}{logical. [also] print the makefiles to the console?}
 }

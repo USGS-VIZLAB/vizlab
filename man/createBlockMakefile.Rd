@@ -5,15 +5,13 @@
 \title{Create a single makefile from the information in viz.yaml}
 \usage{
 createBlockMakefile(block = c("fetch", "process", "visualize", "publish"),
-  outfile, profilepath)
+  outfile)
 }
 \arguments{
 \item{block}{character name of the block in the viz.yaml for which to create a
 makefile}
 
 \item{outfile}{filename where the makefile should be written}
-
-\item{profilepath}{filepath for profile.yaml}
 }
 \description{
 Uses information in the corresponding block of viz.yaml to create the
