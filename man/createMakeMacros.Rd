@@ -4,7 +4,10 @@
 \alias{createMakeMacros}
 \title{Create the macros section}
 \usage{
-createMakeMacros()
+createMakeMacros(profilepath)
+}
+\arguments{
+\item{profilepath}{filepath for profile.yaml}
 }
 \description{
 Create a character string defining the macros to include in every makefile

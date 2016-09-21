@@ -4,10 +4,12 @@
 \alias{createTopMakefile}
 \title{Create the top-level makefile, which runs/makes/updates the other makefiles}
 \usage{
-createTopMakefile(outfile = "Makefile")
+createTopMakefile(outfile = "Makefile", profilepath)
 }
 \arguments{
 \item{outfile}{filename where the makefile should be written}
+
+\item{profilepath}{filepath for profile.yaml}
 }
 \description{
 Declares the dependency of the other makefiles on the viz.yaml

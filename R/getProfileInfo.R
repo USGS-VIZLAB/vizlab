@@ -4,9 +4,10 @@
 #' 
 #' @param user username, probably either 'local' or 'docker', whose profile to
 #'   retrieve
+#' @param profilepath filepath for profile.yaml
 #' @import yaml
 #' @export
-getProfileInfo <- function(user='local') {
+getProfileInfo <- function(user='local', profilepath) {
   # get profile information from profile.yaml
   profile.path <- file.path('user', user, 'profile.yaml')
   if(!file.exists(profile.path)) {
