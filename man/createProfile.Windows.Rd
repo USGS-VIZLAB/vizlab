@@ -4,10 +4,10 @@
 \alias{createProfile.Windows}
 \title{Create user profile yaml file for Windows operating systems}
 \usage{
-createProfile.Windows(directory)
+createProfile.Windows(file_dir)
 }
 \arguments{
-\item{directory}{existing file directory for where to save the profile.yaml file}
+\item{file_dir}{existing file directory for where to save the profile.yaml file}
 }
 \description{
 Create user profile yaml file for Windows operating systems

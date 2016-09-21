@@ -3,7 +3,7 @@
 #' This creates a file that describes where necessary executables are located in order to run make.
 #' This sets up a template, it is necessary to fill in the missing information
 #' 
-#' @param directory existing file directory for where to save the profile.yaml file
+#' @param directory location to save the profile.yaml file. There are currently 2 options: "home" or "relative"
 #' @export
 #' @examples 
 #' \dontrun{
@@ -19,11 +19,21 @@
 #'       normalizePath(file.path(Sys.getenv("R_USER"), 'Documents'), winslash='/'), 
 #'     "/R/win-library/3.3")
 #' }
-createProfile <- function(directory){
+createProfile <- function(directory = "home"){
+  if(directory=="home"){
+    file_dir <- file.path('~', '.vizlab')
+  } else if(directory=="relative"){
+    file_dir <- file.path('.', '.vizlab')
+  } else {
+    stop("Unsupported directory specified")
+  }
+  
+  if(!dir.exists(file_dir)) dir.create(file_dir)
+  
   if(Sys.info()[['sysname']] == "Windows"){
-    createProfile.Windows(directory)
+    createProfile.Windows(file_dir)
   } else if(Sys.info()[['sysname']] == "Darwin"){
-    createProfile.Mac(directory)
+    createProfile.Mac(file_dir)
   } else {
     stop("Unrecognized operating system. You'll need to create 'profile.yaml' on your own.")
   }
@@ -31,14 +41,14 @@ createProfile <- function(directory){
 
 #' Create user profile yaml file for Windows operating systems
 #' 
-#' @param directory existing file directory for where to save the profile.yaml file
+#' @param file_dir existing file directory for where to save the profile.yaml file
 #' @keywords internal
-createProfile.Windows <- function(directory){
-  if(file.exists(file.path(directory, 'profile.yaml'))) {
+createProfile.Windows <- function(file_dir){
+  if(file.exists(file.path(file_dir, 'profile.yaml'))) {
     message("profile.yaml already exists; leaving as-is")
   } else {
     message("Creating profile.yaml ...", domain = NA)
-    profile.yaml <- file(file.path(directory, "profile.yaml"))
+    profile.yaml <- file(file.path(file_dir, "profile.yaml"))
     cat('SHELL: > path to shell.exe\n',
         'R: > path to R.exe\n',
         'RSCRIPT: > path to Rscript.exe\n',
@@ -56,10 +66,10 @@ createProfile.Windows <- function(directory){
 
 #' Create user profile yaml file for Mac operating systems
 #' 
-#' @param directory existing file directory for where to save the profile.yaml file
+#' @param file_dir existing file directory for where to save the profile.yaml file
 #' @keywords internal
-createProfile.Mac <- function(directory){
-  if(file.exists(file.path(directory, 'profile.yaml'))) {
+createProfile.Mac <- function(file_dir){
+  if(file.exists(file.path(file_dir, 'profile.yaml'))) {
     message("profile.yaml already exists; leaving as-is")
   } else {
     stop("createProfile.Mac is not supported yet")

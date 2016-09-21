@@ -4,10 +4,10 @@
 \alias{createProfile.Mac}
 \title{Create user profile yaml file for Mac operating systems}
 \usage{
-createProfile.Mac(directory)
+createProfile.Mac(file_dir)
 }
 \arguments{
-\item{directory}{existing file directory for where to save the profile.yaml file}
+\item{file_dir}{existing file directory for where to save the profile.yaml file}
 }
 \description{
 Create user profile yaml file for Mac operating systems

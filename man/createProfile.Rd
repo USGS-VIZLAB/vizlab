@@ -4,10 +4,10 @@
 \alias{createProfile}
 \title{Define user profile information}
 \usage{
-createProfile(directory)
+createProfile(directory = "home")
 }
 \arguments{
-\item{directory}{existing file directory for where to save the profile.yaml file}
+\item{directory}{location to save the profile.yaml file. There are currently 2 options: "home" or "relative"}
 }
 \description{
 This creates a file that describes where necessary executables are located in order to run make.
