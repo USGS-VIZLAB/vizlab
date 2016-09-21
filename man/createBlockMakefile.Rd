@@ -12,6 +12,8 @@ createBlockMakefile(block = c("fetch", "process", "visualize", "publish"),
 makefile}
 
 \item{outfile}{filename where the makefile should be written}
+
+\item{profilepath}{filepath for profile.yaml}
 }
 \description{
 Uses information in the corresponding block of viz.yaml to create the

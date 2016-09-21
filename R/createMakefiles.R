@@ -104,6 +104,7 @@ createMakeRunmakeRules <- function(profilepath) {
 #'
 #' @param block character name of the block in the viz.yaml for which to create a
 #'   makefile
+#' @param profilepath filepath for profile.yaml
 #' @param outfile filename where the makefile should be written
 #'
 #' @export
