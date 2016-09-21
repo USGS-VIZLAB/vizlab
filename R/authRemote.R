@@ -44,11 +44,11 @@ authRemote.default <- function(fetcher, user='local', ...) {
 authRemote.sciencebase <- function(fetcher, user, ...) {
   #change to home directory for storage
   home <- path.expand('~')
-  sbCred1 <- paste0(home, "/.vizlab/sbCred1")
-  sbCred2 <- paste0(home, "/.vizlab/sbCred2")
-  if(file.exists(sbCred1) && file.exists(sbCred2)) {
-    un <- rawToChar(readRDS(sbCred1))
-    pw <- rawToChar(readRDS(sbCred2))
+  sbCred <- file.path(home, ".vizlab/sbCred")
+  if(file.exists(sbCred)) {
+    credList <- readRDS(sbCred)
+    un <- rawToChar(credList$username)
+    pw <- rawToChar(credList$password)
     sbtools::authenticate_sb(un, pw)
   } else {
     message('requesting data from ScienceBase without authentication because   
@@ -58,20 +58,20 @@ authRemote.sciencebase <- function(fetcher, user, ...) {
   invisible()
 }
 
-#' Store password for sciencebase
+#' Login and if desired, store, credentials for sciencebase
 #' @export
 #' 
 sbAuthenticate<- function(){
-  dotVizlab <- paste(path.expand("~"),".vizlab", sep="/")
+  dotVizlab <- file.path(path.expand("~"),".vizlab")
   if(!dir.exists(dotVizlab)){
     dir.create(dotVizlab)
   }
-  sbCred1 <- readline(prompt = "Enter username: ")
-  sbCred2 <- readline(prompt = "Enter password: ")
-  sbtools::authenticate_sb(sbCred1, sbCred2)
+  un <- readline(prompt = "Enter username: ")
+  pw <- readline(prompt = "Enter password: ")
+  sbtools::authenticate_sb(un, pw)
   storeCreds <- readline(prompt = "Store credentials? (T/F): ")
   if(storeCreds){
-    saveRDS(charToRaw(sbCred1), paste0(dotVizlab, "/cred1"))
-    saveRDS(charToRaw(sbCred2), paste0(dotVizlab, "/cred2"))
+    sbCreds <- list(username=charToRaw(un),password=charToRaw(pw))
+    saveRDS(sbCreds, file.path(dotVizlab, "sbcreds"))
   }
 }

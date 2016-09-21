@@ -2,11 +2,11 @@
 % Please edit documentation in R/authRemote.R
 \name{sbAuthenticate}
 \alias{sbAuthenticate}
-\title{Store password for sciencebase}
+\title{Login and if desired, store, credentials for sciencebase}
 \usage{
 sbAuthenticate()
 }
 \description{
-Store password for sciencebase
+Login and if desired, store, credentials for sciencebase
 }
 
