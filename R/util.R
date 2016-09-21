@@ -47,3 +47,20 @@ buildContext <- function(viz, dependencies) {
   }, how = "replace", classes = "character")
   return(data)
 }
+
+#' Get vizlab js as a resource
+#'
+#' @return vizlab object describing vizlab.js
+getVizlabJS <- function() {
+  vizlab.js <- list(
+    id = "_vizlabJS",
+    location = "js/app.js",
+    packaging = "vizlab",
+    publisher = "resource",
+    mimetype = "application/javascript",
+    export = TRUE
+  )
+  vizlab.js <- as.viz(vizlab.js)
+  vizlab.js <- as.publisher(vizlab.js)
+  return(vizlab.js)
+}
