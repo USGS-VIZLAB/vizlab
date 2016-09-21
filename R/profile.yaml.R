@@ -49,16 +49,10 @@ createProfile.Windows <- function(file_dir){
   } else {
     message("Creating profile.yaml ...", domain = NA)
     profile.yaml <- file(file.path(file_dir, "profile.yaml"))
-    cat('SHELL: > path to shell.exe\n',
-        'R: > path to R.exe\n',
-        'RSCRIPT: > path to Rscript.exe\n',
-        'R_LIBS_USER: !eval >\n',
-        '          paste0(\n',
-        '            if(basename(Sys.getenv("R_USER"))=="Documents"")\n',
-        '              Sys.getenv("R_USER")\n',
-        '            else\n',
-        '              normalizePath(file.path(Sys.getenv("R_USER"), "Documents"), winslash="/"),\n',
-        '            "/R/win-library/3.3")\n',
+    cat(sprintf('SHELL: %s\n', Sys.which('sh.exe')),
+        sprintf('R: %s\n', Sys.which('R.exe')),
+        sprintf('RSCRIPT: %s\n', Sys.which('Rscript.exe')),
+        sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
         file = profile.yaml, sep = "")
     close(profile.yaml)
   }
