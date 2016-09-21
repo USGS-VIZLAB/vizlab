@@ -25,12 +25,16 @@ Some packages are only suggested and will need to be installed manually to open 
 
 ## Using this package
 
-To setup a new project, use the following functions. `vizSkeleton` creates the necessary directories, `createProfile` creates a `profile.yaml` which is necessary to run make, and `createMakefiles` will setup all the makefiles. `createProfile` only needs to happen once (the file should not be stored in your project directory, but in some home directory instead). `createMakefiles` only needs to happen once per project. Then you can use `make` at the command line to run the whole process.
+To setup a new project, use the following functions. `createProfile` creates a `profile.yaml` which is necessary to run make, `vizSkeleton` creates the necessary directories for this project, and `createMakefiles` will setup all the makefiles. `createProfile` only needs to happen once (the file should not be stored in your project directory, but in some home directory instead). `createMakefiles` only needs to happen once per project. Then you can use `make` at the command line to run the whole process.
 
 ```r
 library(vizlab)
+
+#optional, profile.yaml only needs to exist in one place on your computer
+createProfile(directory = "./.vizlab") 
+
+# to setup each project
 vizSkeleton(name="my awesome viz")
-createProfile(directory = "./.vizlab") #optional, profile.yaml only needs to exist in one place on your computer
 createMakefiles(profilepath="./.vizlab/profile.yaml") #must specify the profile.yaml location here
 ```
 
