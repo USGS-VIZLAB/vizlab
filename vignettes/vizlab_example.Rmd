@@ -1,0 +1,51 @@
+---
+title: "Vizlab Example"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+  The \code{vizlab} package was created to facilitate the rapid assembly of web-ready visualizations.  It provides a framework for common steps that go into most/all visualizations, namely fetching, processing, and visualizing data, and finally publishing it in a format such as HTML. Other features such as Google Analytics are integrated as well.  The package itself consists of R functions and scripts that carry out two distinct tasks. First they create a series of \code{make} files, which in turn execute other pieces of R code (and others?) that carry out the fetch, process, visualize, and publish steps.  Code for each step can be supplied by the user, and seamlessly integrated into the visualization through a central \code{YAML} control file (\code{viz.yaml})There are default methods for some common variants of these steps included as well, such as for retrieving data from USGS ScienceBase. Ultimately, this package aims to eliminate the technical tasks common to the construction of most vizualizations, and allow time to be focused on content creation and other creative tasks.     
+  
+  This vignette will outline all the steps necessary to use the package, utilizing an example visualization that can be found on github at \url{https://github.com/USGS-VIZLAB/example}.  
+  
+
+## Getting Started
+
+### Installation
+
+Vizlab can be downloaded from github via \code{devtools}:
+```{ r setup, include=FALSE, knitr::opts_chunk$set(echo = TRUE)}
+devtools::install.github('USGS-VIZLAB/vizlab')
+```
+
+The example visualization is located at \url{https://github.com/USGS-VIZLAB/example} and should be cloned (would there be actual releases?) into a separate directory.  
+
+## Viz design: the viz.yaml
+  The `viz.yaml
+
+### Setup
+
+Three functions are run to to start a viz from scratch.  The first two have already been done for the example viz, so are not required here. 
+
+1. *Create the skeleton*: First the visualization directory structure should be created, using the `vizSkeleton` function.  This is unnecessary for the example viz, since the directories are already set up in the repo.  You can run this function in a dummy directory to see what happens.
+
+2. *Create and fill the viz.yaml*:  
+
+3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  It will be filled in automatically, unless your operating system is unrecognized.
+
+4. *Create the Makefiles*: Finally, create the 
+  
+
+## viz.yaml
+
+TODO: createMakefiles
+  Once the `viz.yaml` is filled out, the makefiles can be created, using the `createMakeFiles` function.
+
+## make
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
