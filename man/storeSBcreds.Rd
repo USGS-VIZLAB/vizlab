@@ -2,11 +2,13 @@
 % Please edit documentation in R/authRemote.R
 \name{storeSBcreds}
 \alias{storeSBcreds}
-\title{Store and verify credentials for sciencebase}
+\title{Store and verify credentials for ScienceBase.  User is prompted for credentials.
+Using a ScienceBase account tied to an AD account is not recommended for password security.}
 \usage{
 storeSBcreds()
 }
 \description{
-Store and verify credentials for sciencebase
+Store and verify credentials for ScienceBase.  User is prompted for credentials.
+Using a ScienceBase account tied to an AD account is not recommended for password security.
 }
 

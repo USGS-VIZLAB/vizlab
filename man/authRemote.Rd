@@ -22,25 +22,15 @@ authRemote(fetcher, ...)
 'docker' and use the corresponding user profile to authenticate}
 }
 \description{
-TODO: update documentation
-
-\code{authRemote.sciencebase} calls the user's script at 
-user/local/auth.sciencebase.R. That script should contain the R commands and
-credentials to log on to ScienceBase with read (and possibly write)
-permissions.
-}
-\details{
-Uses authentication information in the user directory to log onto a remote 
+Uses authentication information in the ~/.vizlab driectory to log onto a remote 
 file service such as ScienceBase. This function is primarily for internal use
 but can be called directly to check credentials.
 
-To add credentials, create an R script called "auth.fetcher.R" where 
-"fetcher" is replaced by the specific fetcher as designated in viz.yaml, 
-e.g., "auth.sciencebase.R". Place this script in the user/local or 
-user/docker folder (depending on whether you will be building the 
-visualization directly or via docker) (BUT docker-specific authentication 
-isn't yet implemented. stay tuned). This script should log on to the service 
-with valid credentials. Take care to never commit the user directory to an 
-unsecured repository.
+\code{authRemote.sciencebase} Uses the credentials stored in ~/.vizlab to log in to 
+ScienceBase.  Use the storeSBcreds function to verify and store credentials.  Since vizlab
+starts its own R session, an existing ScienceBase session cannot be used.
+}
+\details{
+To add ScienceBase credentials, run the \code{storeSBcreds} function.
 }
 
