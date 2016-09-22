@@ -1,5 +1,7 @@
 #' Log on to a remote file service
 #' 
+#' TODO: update documentation
+#' 
 #' Uses authentication information in the user directory to log onto a remote 
 #' file service such as ScienceBase. This function is primarily for internal use
 #' but can be called directly to check credentials.
@@ -44,24 +46,29 @@ authRemote.default <- function(fetcher, user='local', ...) {
 authRemote.sciencebase <- function(fetcher, user, ...) {
   #change to home directory for storage
   home <- path.expand('~')
-  sbCred <- file.path(home, ".vizlab/sbCred")
-  if(file.exists(sbCred)) {
-    credList <- readRDS(sbCred)
+  sbCreds <- file.path(home, ".vizlab/sbCreds")
+  
+  #check if already logged in 
+  if(sbtools::is_logged_in()){
+    message("Using existing sciencebase session")
+  } else if(file.exists(sbCreds)) {
+    credList <- readRDS(sbCreds)
     un <- rawToChar(credList$username)
     pw <- rawToChar(credList$password)
     sbtools::authenticate_sb(un, pw)
+    message("Logging into sciencebase with stored credentials")
   } else {
     message('requesting data from ScienceBase without authentication because   
-            no credentials exist. Use the storeSB function to enter your sciencebase credentials')
+            no credentials exist.  Use the storeSBcreds() function to add credentials.')
   } 
   
   invisible()
 }
 
-#' Login and if desired, store, credentials for sciencebase
+#' Store and verify credentials for sciencebase
 #' @export
 #' 
-sbAuthenticate<- function(){
+storeSBcreds<- function(){
   dotVizlab <- file.path(path.expand("~"),".vizlab")
   if(!dir.exists(dotVizlab)){
     dir.create(dotVizlab)
@@ -69,9 +76,7 @@ sbAuthenticate<- function(){
   un <- readline(prompt = "Enter username: ")
   pw <- readline(prompt = "Enter password: ")
   sbtools::authenticate_sb(un, pw)
-  storeCreds <- readline(prompt = "Store credentials? (T/F): ")
-  if(storeCreds){
-    sbCreds <- list(username=charToRaw(un),password=charToRaw(pw))
-    saveRDS(sbCreds, file.path(dotVizlab, "sbcreds"))
-  }
+  session_logout()
+  sbCreds <- list(username=charToRaw(un),password=charToRaw(pw))
+  saveRDS(sbCreds, file.path(dotVizlab, "sbCreds"))
 }

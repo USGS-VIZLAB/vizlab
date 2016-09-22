@@ -22,9 +22,7 @@ authRemote(fetcher, ...)
 'docker' and use the corresponding user profile to authenticate}
 }
 \description{
-Uses authentication information in the user directory to log onto a remote 
-file service such as ScienceBase. This function is primarily for internal use
-but can be called directly to check credentials.
+TODO: update documentation
 
 \code{authRemote.sciencebase} calls the user's script at 
 user/local/auth.sciencebase.R. That script should contain the R commands and
@@ -32,6 +30,10 @@ credentials to log on to ScienceBase with read (and possibly write)
 permissions.
 }
 \details{
+Uses authentication information in the user directory to log onto a remote 
+file service such as ScienceBase. This function is primarily for internal use
+but can be called directly to check credentials.
+
 To add credentials, create an R script called "auth.fetcher.R" where 
 "fetcher" is replaced by the specific fetcher as designated in viz.yaml, 
 e.g., "auth.sciencebase.R". Place this script in the user/local or 
