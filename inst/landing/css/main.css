@@ -86,9 +86,6 @@ body {
   height: 100%;
   object-fit: cover;
 }
-#tagsContainer {
-  display: none;
-}
 @media screen and (min-width: 768px) {
   #header {
     width: 760px;
@@ -102,10 +99,6 @@ body {
     width: 760px;
     margin: 0 auto;
   }
-  #visualizationsContainer {
-    width: 85%;
-    float: left;
-  }
   #visualizationsContainer:after {
     visibility: hidden;
     display: block;
@@ -118,27 +111,6 @@ body {
     width: 48.5%;
     margin: 0 1% 1% 0;
     float: left;
-  }
-  #tagsContainer {
-    display: block;
-    width: 14%;
-    float: right;
-    min-height: 100px;
-    margin: 0 0 10px 0;
-  }
-  #tagsContainer a {
-    display: block;
-    padding: 5px;
-    margin: 10px 0 0 0;
-    border-radius: 5px;
-  }
-  #tagsContainer a:hover {
-    background: #404041;
-    color: #fff;
-  }
-  #tagsContainer p {
-    float: none;
-    margin: 0 0 0 0;
   }
 }
 @media screen and (min-width: 1025px) {
