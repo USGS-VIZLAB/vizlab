@@ -30,8 +30,10 @@ publish.page <- function(viz) {
 
   dependencies <- as.list(viz[['depends']])
   names(dependencies) <- viz[['depends']]
+
   # add automatic dependencies
-  dependencies[['_vizlabJS']] <- getVizlabJS()
+  vizlabjs <- '_vizlabJS'
+  dependencies[[vizlabjs]] <- getVizlabJS()
 
   # publish all dependencies
   dependencies <- lapply(dependencies, publish)
@@ -39,7 +41,7 @@ publish.page <- function(viz) {
   context <- buildContext(viz, dependencies)
 
   #also manually put resources into context
-  context[['resources']] <- append(context[['resources']], dependencies[['_vizlabJS']])
+  context[['resources']] <- append(context[['resources']], dependencies[[vizlabjs]])
 
   viz.info <- getBlocks("info")
 
@@ -95,9 +97,9 @@ publish.resource <- function(viz) {
   # going to start out with simple images
   destFile <- export(viz)
   dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
-  srcFile = viz[['location']]
+  srcFile <- viz[['location']]
   if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
-    srcFile = system.file(srcFile, package = "vizlab")
+    srcFile <- system.file(srcFile, package = "vizlab")
   }
   file.copy(srcFile, destFile, overwrite = TRUE)
   viz[['relpath']] <- relativePath(destFile)
