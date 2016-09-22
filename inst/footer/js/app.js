@@ -1,11 +1,9 @@
 $(document).ready(function(){
-	
 	$.when(
-		$.getJSON('json/vizzy.json')
+		$.getJSON('json/related.json')
 	).then(function(json){
 		var sections = [
-			{file:'js/templates/header.handlebars', div: '#header', context: {}},
-			{file:'js/templates/vizzies.handlebars', div: '#visualizationsContainer', context: json}
+			{file:'js/templates/footer.handlebars', div: 'footer', context: json},
 		];
 		
 		$.each(sections, function(index, value){
@@ -18,7 +16,4 @@ $(document).ready(function(){
 			});
 		});
 	});
-	
-	
-
 });

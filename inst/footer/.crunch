@@ -1,0 +1,22 @@
+{
+	"files": {
+		"css/main.less": {
+			"engines": [
+				{
+					"compiler": "less",
+					"output": "main.css",
+					"options": {
+						"compress": false,
+						"ieCompat": false,
+						"strictMath": false,
+						"strictUnits": false,
+						"javascriptEnabled": false,
+						"sourceMap": true,
+						"sourcemap": true
+					}
+				}
+			],
+			"sources": []
+		}
+	}
+}
