@@ -64,7 +64,7 @@ createCleanRule <- function() {
 #' Create the rules to run/make/update the non-top makefiles
 #'
 #' Each makefile gets a rule to run it and a rule to create the makefile
-#'
+#' 
 #' @keywords internal
 createMakeRunmakeRules <- function() {
   # create a list of info for each makefile in similar format to block info read
@@ -74,7 +74,7 @@ createMakeRunmakeRules <- function() {
     list(
       id=block,
       location=paste0('vizlab/make/', block, '.make'),
-      depfiles=c('viz.yaml', if(file.exists('user/local/profile.yaml')) 'user/local/profile.yaml'),
+      depfiles=c('viz.yaml', if(file.exists(findProfileYaml())) findProfileYaml()),
       block='makefile'
     )
   })
@@ -118,11 +118,11 @@ createBlockMakefile <- function(block=c('fetch','process','visualize','publish')
 #' Create the macros section
 #'
 #' Create a character string defining the macros to include in every makefile
-#'
+#' 
 #' @export
 createMakeMacros <- function() {
   # read user settings from profile.yaml
-  profile <- getProfileInfo()
+  profile <- getProfileInfo(findProfileYaml())
   userlib <- profile$R_LIBS_USER
 
   # write the macros

@@ -6,10 +6,6 @@
 \usage{
 getProfileInfo(user = "local")
 }
-\arguments{
-\item{user}{username, probably either 'local' or 'docker', whose profile to
-retrieve}
-}
 \description{
 Reads all values from the specified user's profile.yaml
 }

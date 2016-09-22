@@ -1,4 +1,4 @@
-context("vizlab")
+context("testviz")
 
 setup <- function() {
   testtmp <- file.path(tempdir(), "testtmp")
