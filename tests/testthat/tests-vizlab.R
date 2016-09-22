@@ -138,4 +138,12 @@ test_that("custom fetcher hits timestamp.fetcher", {
   expect_warning(fetchTimestamp(viz))
 })
 
+test_that("makeFiles created", {
+  createMakefiles()
+  expect_true(file.exists('vizlab/make/fetch.make'))
+  expect_true(file.exists('vizlab/make/process.make'))
+  expect_true(file.exists('vizlab/make/visualize.make'))
+  expect_true(file.exists('vizlab/make/publish.make'))
+})
+
 cleanup(oldwd, testtmp)
