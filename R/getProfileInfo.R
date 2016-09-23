@@ -1,10 +1,11 @@
 #' Get information on profile settings
 #' 
-#' Reads all values from the specified user's profile.yaml
+#' Reads all values from the user's profile.yaml (path found through findProfileYaml)
 #' 
+#' @seealso findProfileYaml
 #' @import yaml
 #' @export
-getProfileInfo <- function(user='local') {
+getProfileInfo <- function() {
   # get profile information from profile.yaml
   profile.path <- findProfileYaml()
   if(!file.exists(profile.path)) {
