@@ -28,10 +28,20 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- lapply(viz[['depends']], publish)
+  dependencies <- as.list(viz[['depends']])
   names(dependencies) <- viz[['depends']]
 
+  # add automatic dependencies
+  vizlabjs <- '_vizlabJS'
+  dependencies[[vizlabjs]] <- getVizlabJS()
+
+  # publish all dependencies
+  dependencies <- lapply(dependencies, publish)
+
   context <- buildContext(viz, dependencies)
+
+  #also manually put resources into context
+  context[['resources']] <- append(context[['resources']], dependencies[[vizlabjs]])
 
   viz.info <- getBlocks("info")
 
@@ -63,8 +73,11 @@ publish.section <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  output <- whisker.render(template = template, data = context)
-  return(output)
+  viz[['output']] <- whisker.render(template = template, data = context)
+  if (!is.null(viz[['analytics']])) {
+    viz <- analytics(viz)
+  }
+  return(viz[['output']])
 }
 
 #' publish a resource
@@ -82,10 +95,14 @@ publish.section <- function(viz) {
 publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
   # going to start out with simple images
-  file <- export(viz)
-  dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
-  file.copy(viz[['location']], file, overwrite = TRUE)
-  viz[['relpath']] <- relativePath(file)
+  destFile <- export(viz)
+  dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
+  srcFile <- viz[['location']]
+  if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
+    srcFile <- system.file(srcFile, package = "vizlab")
+  }
+  file.copy(srcFile, destFile, overwrite = TRUE)
+  viz[['relpath']] <- relativePath(destFile)
   return(viz)
 }
 
@@ -172,7 +189,7 @@ as.resource <- function(viz, ...) {
   if(length(resource) == 0){
     stop(mimetype, " not supported: ", viz[['id']])
   }
-  
+
   class(viz) <- c(resource, class(viz))
   return(viz)
 }

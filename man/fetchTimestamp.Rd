@@ -34,10 +34,14 @@ Update timestamp file if the local copy of a file is out of date relative to
 a remote copy. The need for a timestamp file, and the method for finding the
 timestamp, will be determined by the metadata in viz.yaml for the item.
 
+\code{fetchTimestamp.character} fetches timestamp for a given id
+
 \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
 
 Does nothing - \code{make} already checks timestamps of local files
 
 check a URL for timestamp
+
+\code{fetchTimestamp.fetcher} superclass method catches missing implementation
 }
 

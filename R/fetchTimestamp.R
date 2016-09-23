@@ -14,6 +14,7 @@
 #' @export
 fetchTimestamp <- function(viz) UseMethod("fetchTimestamp")
 
+#' \code{fetchTimestamp.character} fetches timestamp for a given id
 #'
 #' @rdname fetchTimestamp
 #' @export
@@ -71,13 +72,12 @@ fetchTimestamp.file <- function(viz) {
   invisible()
 }
 
-#' 
 #' check a URL for timestamp
-#' 
+#'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.url <- function(viz) {
-  
+
   #URL will be specified in viz.yaml as remoteURL
   url <- viz$remoteURL
   new.timestamp <- headers(HEAD(url))[['last-modified']]
@@ -88,7 +88,7 @@ fetchTimestamp.url <- function(viz) {
   }else{
     new.timestamp <- parse_http_date(new.timestamp)
   }
-  
+
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
@@ -96,8 +96,9 @@ fetchTimestamp.url <- function(viz) {
   }else{
     return(FALSE)
   }
-} 
+}
 
+#' \code{fetchTimestamp.fetcher} superclass method catches missing implementation
 #'
 #' @rdname fetchTimestamp
 #' @export
