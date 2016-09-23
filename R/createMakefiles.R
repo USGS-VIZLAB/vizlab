@@ -122,7 +122,7 @@ createBlockMakefile <- function(block=c('fetch','process','visualize','publish')
 #' @export
 createMakeMacros <- function() {
   # read user settings from profile.yaml
-  profile <- getProfileInfo(findProfileYaml())
+  profile <- getProfileInfo()
   userlib <- profile$R_LIBS_USER
 
   # write the macros
