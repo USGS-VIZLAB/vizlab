@@ -26,7 +26,7 @@ To build the example viz, your working directory should be set to the main examp
 
 ## Getting Started
 
-TODO: explain make more?  here or elsewhere
+TODO: explain make more?  here or elsewhere calls R scripts, output to log files
 
 ### Viz design: the viz.yaml
   The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  Here we will examine the `viz.yaml` included in the example viz:
@@ -94,6 +94,8 @@ process:
 ```
 `depends` references the IDs in the fetch section.  All processors must be supplied by the user.  Just as the custom fetchers are stored in `scripts/fetch`, processors are stored in `scripts/process`. The output of each processor is stored in the directory specified by the `location` field.  The `reader` specified will be used to read in the data for the visualize step.  Note the `cars` step indicates a specific .Rds reader, rather than a mimetype.  The readers included in the vizlab package are located in the `readData` S3 method.  Alternatively, a custom reader could be specified, that should be located in the `scripts/process` directory.  
 
+A processing step is not mandatory --- the `iris-data` plot uses only the raw data, so it has no section here.  
+
 ### Visualize
 ```
 visualize:
@@ -114,16 +116,15 @@ visualize:
     title: "Sepal length vs. pedal length"
     alttext: "plot of iris sepal length to pedal length"
   -
-    id: relativeAbundanceFig
-    location: figures/relativeAbundanceFig.svg
-    depends: ["CuyahogaShort"]
+    id: cuyahogaFig
+    location: figures/cuyahogaFig.svg
+    depends: "CuyahogaShort"
     visualizer: qTDS
     mimetype: image/svg+xml
     title: "Cuyahoga figure"
-    alttext: "figure displaying discharge of Cuyahoga river"
+    alttext: "figure displaying total dissovled solids vs. discharge of Cuyahoga river"
 ```
-In the visualize step, `location` specifies the location of the figure being output by each step.  
-    
+In the visualize step, `location` specifies the location of the figure being output by each step. Visualizers are R functions stored in `scripts/visualize/visualize.R`. `title` and `alttext` become part of the finished viz, as a figure title and alt text that appears when the figure is hovered over.  Note that there can be multiple dependencies --- `plot-cars` depends on both the processing step `calc-cars`, which produces a regression, and the raw `cars-data` from the fetch step, since they are both directly used in the visualizer.  Also note that `cuyahogaFig` still has an indirect dependency on its fetch step, through the dependency of the process step `CuyahogaShort`, so it will be run and the figure updated if the cached `cache/fetch/CuyahogaTDS.csv` were to change.                 
 ### Publish
 ```
 publish:
@@ -132,10 +133,10 @@ publish:
     name: index
     publisher: page
     template: fullPage
-    depends: [ "cars-section", "figure-style", "iris-section", "relativeAbundance-section"]
+    depends: [ "cars-section", "figure-style", "iris-section", "Cuyahoga-section"]
     context:
       title: Testing
-      sections: [ "cars-section", "iris-section", "relativeAbundance-section"]
+      sections: [ "cars-section", "iris-section", "Cuyahoga-section"]
       resources: [ "figure-style" ]
   -
     id: cars-section
@@ -156,13 +157,13 @@ publish:
       figure: "plot-iris"
       caption: Relationship between iris sepal length to pedal length
   -
-    id: relativeAbundance-section
+    id: Cuyahoga-section
     template: simplefigure
-    depends: relativeAbundanceFig
+    depends: cuyahogaFig
     publisher: section
     context:
-      id: relAbun-fig
-      figure: relativeAbundanceFig
+      id: cuyahoga-fig
+      figure: cuyahogaFig
       caption: Total dissolved solids vs discharge
   -
     id: figure-style
@@ -170,6 +171,8 @@ publish:
     publisher: resource
     mimetype: text/css
 ```
+TODO: explain templates
+
 
 ### Setup
 
@@ -190,4 +193,4 @@ The following steps are required to start a viz from scratch.  The first two hav
 
 ## options for future builds
 
-TODO: timestamps, Controlling refetch options, debugging?
+TODO: timestamps, Controlling refetch options, debugging via log files?
