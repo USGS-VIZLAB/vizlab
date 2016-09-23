@@ -13,27 +13,38 @@
 #' @importFrom utils packageVersion
 #' @export
 vizSkeleton <- function (name = "cool-viz", path = ".") {
-  safe.dir.create <- function(path) {
-    if (!dir.exists(path) && !dir.create(path))
+  create.empty.file <- function(path){
+    emptypath <- file.path(path, ".empty")
+    if(!file.exists(emptypath)){
+      gitignore <- file(emptypath)
+      cat(file=emptypath)
+      close(gitignore)
+    }
+  }
+  
+  safe.dir.create <- function(path, createEmpty=FALSE) {
+    if (!dir.exists(path) && !dir.create(path)){
       stop(gettextf("cannot create directory '%s'", path),
            domain = NA)
+    }
+    if(createEmpty) create.empty.file(path)
   }
 
   # Create directory structure
   message("Creating directories ...", domain = NA)
   safe.dir.create(path)
-  safe.dir.create(file.path(path, "data"))
-  safe.dir.create(file.path(path, "images"))
-  safe.dir.create(file.path(path, "figures"))
+  safe.dir.create(file.path(path, "data"), createEmpty=TRUE)
+  safe.dir.create(file.path(path, "images"), createEmpty=TRUE)
+  safe.dir.create(file.path(path, "figures"), createEmpty=TRUE)
   safe.dir.create(layout_dir <- file.path(path, "layout"))
-  safe.dir.create(file.path(layout_dir, "css"))
-  safe.dir.create(file.path(layout_dir, "js"))
-  safe.dir.create(file.path(layout_dir, "templates"))
+  safe.dir.create(file.path(layout_dir, "css"), createEmpty=TRUE)
+  safe.dir.create(file.path(layout_dir, "js"), createEmpty=TRUE)
+  safe.dir.create(file.path(layout_dir, "templates"), createEmpty=TRUE)
   safe.dir.create(script_dir <- file.path(path, "scripts"))
-  safe.dir.create(file.path(script_dir, "fetch"))
-  safe.dir.create(file.path(script_dir, "process"))
-  safe.dir.create(file.path(script_dir, "visualize"))
-  safe.dir.create(file.path(script_dir, "read"))
+  safe.dir.create(file.path(script_dir, "fetch"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "process"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "visualize"), createEmpty=TRUE)
+  safe.dir.create(file.path(script_dir, "read"), createEmpty=TRUE)
 
   # Write viz.yaml
   if(file.exists(file.path(path, 'viz.yaml'))) {
@@ -63,7 +74,7 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   if (file.exists(file.path(path, '.gitignore'))) {
     message(".gitignore already exists, leaving as-is")
   } else {
-    message("creating .gitignore")
+    message("Creating .gitignore")
     gitignore <- file(file.path(path, ".gitignore"))
     cat(
         "cache/\n",
@@ -75,6 +86,15 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
         file = gitignore, sep = "")
     close(gitignore)
   }
-
+  
+  # Copy LICENSE file
+  if (file.exists(file.path(path, 'LICENSE'))) {
+    message("LICENSE already exists, leaving as-is")
+  } else {
+    message("Copying LICENSE")
+    license <- file.copy(from=system.file('LICENSE', package="vizlab"),
+                         to=file.path(path, 'LICENSE'))
+  }
+  
   # Read-and-delete-me type file would be good to describe next steps
 }
