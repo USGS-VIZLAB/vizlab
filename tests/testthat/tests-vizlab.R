@@ -1,4 +1,4 @@
-context("vizlab")
+context("testviz")
 
 setup <- function() {
   testtmp <- file.path(tempdir(), "testtmp")
@@ -136,6 +136,15 @@ test_that("custom fetcher hits timestamp.fetcher", {
   viz <- list()
   attr(viz, "class") <- c("cars", "fetcher", "viz")
   expect_warning(fetchTimestamp(viz))
+})
+
+test_that("makeFiles created", {
+  createProfile(directory = "relative")
+  createMakefiles()
+  expect_true(file.exists('vizlab/make/fetch.make'))
+  expect_true(file.exists('vizlab/make/process.make'))
+  expect_true(file.exists('vizlab/make/visualize.make'))
+  expect_true(file.exists('vizlab/make/publish.make'))
 })
 
 cleanup(oldwd, testtmp)

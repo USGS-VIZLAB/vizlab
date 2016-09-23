@@ -4,13 +4,12 @@
 \alias{getProfileInfo}
 \title{Get information on profile settings}
 \usage{
-getProfileInfo(user = "local")
-}
-\arguments{
-\item{user}{username, probably either 'local' or 'docker', whose profile to
-retrieve}
+getProfileInfo()
 }
 \description{
-Reads all values from the specified user's profile.yaml
+Reads all values from the user's profile.yaml (path found through findProfileYaml)
+}
+\seealso{
+findProfileYaml
 }
 
