@@ -42,13 +42,32 @@ buildContext <- function(viz, dependencies) {
       if (any(dep.ids)) {
         x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
       }
+      # TODO run smartypants on x before returning
       return(x)
   }, how = "replace", classes = "character")
   return(data)
 }
 
+#' Get vizlab js as a resource
+#'
+#' @return vizlab object describing vizlab.js
+getVizlabJS <- function() {
+  vizlab.js <- list(
+    id = "_vizlabJS",
+    location = "js/vizlab.js",
+    packaging = "vizlab",
+    publisher = "resource",
+    mimetype = "application/javascript",
+    export = TRUE
+  )
+  vizlab.js <- as.viz(vizlab.js)
+  vizlab.js <- as.publisher(vizlab.js)
+  return(vizlab.js)
+}
+
 #' Use mimetype lookup to get reader
-#' 
+#'
+#' @importFrom utils modifyList
 #' @param mimetype character vector of length one with the mimetype name
 #' @return character vector describing the reader to be used
 #' @importFrom utils modifyList
@@ -56,18 +75,18 @@ buildContext <- function(viz, dependencies) {
 lookupMimetype <- function(mimetype){
   # add to and replace default mimetypes using the file specified in viz.yaml
   mimetype_list_default <- yaml.load_file(system.file('mimetypes.default.yaml', package="vizlab"))
-  mimetype_file_user <- getBlocks('info')[[1]]$mimetypeDictionary[[1]] 
+  mimetype_file_user <- getBlocks('info')[[1]]$mimetypeDictionary[[1]]
   if(length(mimetype_file_user) != 0){
     mimetype_list_user <- yaml.load_file(mimetype_file_user)
   } else {
     mimetype_list_user <- list()
   }
   mimetype_list <- modifyList(mimetype_list_default, mimetype_list_user)
-  
+
   # match the current mimetype with one in the list to get the correct reader/publisher
-  type_match <- which(unlist(lapply(mimetype_list, 
+  type_match <- which(unlist(lapply(mimetype_list,
                                     FUN=function(mimetype_list, mimetype){
-                                      mimetype %in% mimetype_list}, 
+                                      mimetype %in% mimetype_list},
                                     mimetype=mimetype)))
   type_nm <- names(type_match)
   return(type_nm)
