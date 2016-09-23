@@ -1,14 +1,13 @@
 #' Get information on profile settings
 #' 
-#' Reads all values from the specified user's profile.yaml
+#' Reads all values from the user's profile.yaml (path found through findProfileYaml)
 #' 
-#' @param user username, probably either 'local' or 'docker', whose profile to
-#'   retrieve
+#' @seealso findProfileYaml
 #' @import yaml
 #' @export
-getProfileInfo <- function(user='local') {
+getProfileInfo <- function() {
   # get profile information from profile.yaml
-  profile.path <- file.path('user', user, 'profile.yaml')
+  profile.path <- findProfileYaml()
   if(!file.exists(profile.path)) {
     message(profile.path, ' does not exist; using defaults')
     profile.yaml <- list()
@@ -29,4 +28,21 @@ getProfileInfo <- function(user='local') {
   
   # return
   profile.yaml
+}
+
+#' find where the profile.yaml file is saved. 
+#' 
+#' Only 2 directories supported at this point (home and relative).
+#' 
+findProfileYaml <- function(){
+  home_dir <- '~/.vizlab/profile.yaml'
+  relative_dir <- './vizlab/profile.yaml'
+  if(file.exists(home_dir)){
+    filepath <- home_dir
+  } else if(file.exists(relative_dir)){
+    filepath <- relative_dir
+  } else {
+    stop('profile.yaml does not exist in a supported directory. See createProfile().')
+  }
+  return(filepath)
 }
