@@ -67,6 +67,7 @@ getVizlabJS <- function() {
 
 #' Use mimetype lookup to get reader
 #'
+#' @importFrom utils modifyList
 #' @param mimetype character vector of length one with the mimetype name
 #' @return character vector describing the reader to be used
 #' @export
