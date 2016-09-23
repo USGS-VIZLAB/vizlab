@@ -51,6 +51,7 @@ buildContext <- function(viz, dependencies) {
 #' 
 #' @param mimetype character vector of length one with the mimetype name
 #' @return character vector describing the reader to be used
+#' @importFrom utils modifyList
 #' @export
 lookupMimetype <- function(mimetype){
   # add to and replace default mimetypes using the file specified in viz.yaml
