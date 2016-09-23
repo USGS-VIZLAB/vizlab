@@ -1,0 +1,196 @@
+---
+title: "Vizlab Example"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(rmarkdown)
+```
+
+## Overview
+  The `vizlab` package was created to facilitate the rapid assembly of web-ready visualizations.  It provides a framework for common steps that go into most/all visualizations, namely fetching, processing, and visualizing data, and finally publishing it in a format such as HTML. Other features such as Google Analytics are integrated as well.  The package itself consists of R functions and scripts that carry out two distinct tasks. First they create a series of [make files](https://www.gnu.org/software/make/), which in turn execute other pieces of R code (and others?) that carry out the fetch, process, visualize, and publish steps.  Code for each step can be supplied by the user, and seamlessly integrated into the visualization through a central [YAML control file](http://yaml.org/) (`viz.yaml`).  There are default methods for some common variants of these steps included as well, such as for retrieving data from USGS ScienceBase. Ultimately, this package aims to eliminate the technical tasks common to the construction of most vizualizations, and allow time to be focused on content creation and other creative tasks.     
+  
+  This vignette will outline all the steps necessary to use the package, utilizing an example visualization that can be found on github at [https://github.com/USGS-VIZLAB/example](https://github.com/USGS-VIZLAB/example).  
+ 
+## Installation
+
+Vizlab can be downloaded from github via `devtools`:
+```{r eval=FALSE}
+install.packages('devtools')
+devtools::install.github('USGS-VIZLAB/vizlab')
+```
+
+The example visualization is located at [https://github.com/USGS-VIZLAB/example](https://github.com/USGS-VIZLAB/example) and should be cloned into a separate directory.  
+
+To build the example viz, your working directory should be set to the main example directory, and the `vizlab` package should be loaded.
+
+## Getting Started
+
+TODO: explain make more?  here or elsewhere calls R scripts, output to log files
+
+### Viz design: the viz.yaml
+  The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  Here we will examine the `viz.yaml` included in the example viz:
+
+### info
+```
+vizlab: "0.1.4"
+info:
+  id: example
+  name: Simple but complete vizualization
+  date: 2016-07-19
+  publish-date: 2016-08-02
+  path: /example
+  analytics-id: UA-78530187-1
+  description: >-
+    This is meant to touch all features and act as an integration
+    test of the vizlab platform.
+```
+`analytics-id` contains the Google Analytics ID to be used.  The other fields here are self-explanatory and used to generate an index of all published visualizations to go in the footer of the finished product.
+
+TODO: how to get a new GA id
+
+### fetch
+```
+fetch:
+  -
+    id: iris-data
+    location: data/iris.csv
+    mimetype: text/csv
+    refetch: TRUE
+  -
+    id: cars-data
+    location: cache/cars.csv
+    fetcher: cars
+    mimetype: text/csv
+    refetch: TRUE
+  -
+    id: Cuyahoga
+    location: cache/fetch/CuyahogaTDS.csv
+    fetcher: sciencebase
+    refetch: TRUE
+    remoteItemId: 575d839ee4b04f417c2a03fe
+    remoteFilename: CuyahogaTDS.csv
+    mimetype: text/csv
+```
+Each individual piece in each section of the `viz.yaml` should have it's own unique ID, so they can be referenced by the suceeding sections.  Following sections will look in the `location` field to find the corresponding file.  `mimetype` specifies file type, and is a required field unless a custom `reader` is specified.  `refetch` controls whether existing cached data files are used, or newer versions are checked for.  It is discussed in more detail in section XXXX.
+
+Three possibilites for fetchers are utilized here. `iris-data` is a local file already located in the `data` folder, and so does not need to be fetched. `cars-data` is a custom fetcher, located in `scripts/fetch/cars.R`.  It will retrieve the cars data (by reading in the default cars dataset) and save it to `cache/cars.csv`.  `Cuyahoga` uses the built-in USGS ScienceBase fetcher, and will save the retrieved file to `cache/fetch/CuyahogaTDS.csv`.
+
+### Process
+```
+process:
+ -
+    id: calc-cars
+    location: cache/car-loess.rds
+    processor: cars
+    reader: rds
+    depends: [ "cars-data" ]
+  -
+    id: CuyahogaShort
+    location: cache/process/CuyahogaShort.tsv
+    mimetype: text/tab-separated-values
+    depends: Cuyahoga
+    processor: cuyahoga
+```
+`depends` references the IDs in the fetch section.  All processors must be supplied by the user.  Just as the custom fetchers are stored in `scripts/fetch`, processors are stored in `scripts/process`. The output of each processor is stored in the directory specified by the `location` field.  The `reader` specified will be used to read in the data for the visualize step.  Note the `cars` step indicates a specific .Rds reader, rather than a mimetype.  The readers included in the vizlab package are located in the `readData` S3 method.  Alternatively, a custom reader could be specified, that should be located in the `scripts/process` directory.  
+
+A processing step is not mandatory --- the `iris-data` plot uses only the raw data, so it has no section here.  
+
+### Visualize
+```
+visualize:
+  -
+    id: plot-cars
+    location: figures/cars.png
+    visualizer: cars
+    depends: [ "calc-cars", "cars-data" ]
+    mimetype: image/png
+    title: "Speed vs. Breaking Distance"
+    alttext: "plot of ratio of speed to breaking distance"
+  -
+    id: plot-iris
+    location: figures/iris.png
+    visualizer: iris
+    depends: [ "iris-data" ]
+    mimetype: image/png
+    title: "Sepal length vs. pedal length"
+    alttext: "plot of iris sepal length to pedal length"
+  -
+    id: cuyahogaFig
+    location: figures/cuyahogaFig.svg
+    depends: "CuyahogaShort"
+    visualizer: qTDS
+    mimetype: image/svg+xml
+    title: "Cuyahoga figure"
+    alttext: "figure displaying total dissovled solids vs. discharge of Cuyahoga river"
+```
+In the visualize step, `location` specifies the location of the figure being output by each step. Visualizers are R functions stored in `scripts/visualize/visualize.R`. `title` and `alttext` become part of the finished viz, as a figure title and alt text that appears when the figure is hovered over.  Note that there can be multiple dependencies --- `plot-cars` depends on both the processing step `calc-cars`, which produces a regression, and the raw `cars-data` from the fetch step, since they are both directly used in the visualizer.  Also note that `cuyahogaFig` still has an indirect dependency on its fetch step, through the dependency of the process step `CuyahogaShort`, so it will be run and the figure updated if the cached `cache/fetch/CuyahogaTDS.csv` were to change.                 
+### Publish
+```
+publish:
+  -
+    id: index
+    name: index
+    publisher: page
+    template: fullPage
+    depends: [ "cars-section", "figure-style", "iris-section", "Cuyahoga-section"]
+    context:
+      title: Testing
+      sections: [ "cars-section", "iris-section", "Cuyahoga-section"]
+      resources: [ "figure-style" ]
+  -
+    id: cars-section
+    publisher: section
+    template: simplefigure
+    depends: [ "plot-cars" ]
+    context:
+      id: carsFig
+      figure: "plot-cars"
+      caption: Relationship between speed and stopping distance on several cars
+  -
+    id: iris-section
+    publisher: section
+    template: simplefigure
+    depends: [ "plot-iris" ]
+    context:
+      id: irisFig
+      figure: "plot-iris"
+      caption: Relationship between iris sepal length to pedal length
+  -
+    id: Cuyahoga-section
+    template: simplefigure
+    depends: cuyahogaFig
+    publisher: section
+    context:
+      id: cuyahoga-fig
+      figure: cuyahogaFig
+      caption: Total dissolved solids vs discharge
+  -
+    id: figure-style
+    location: layout/css/main.css
+    publisher: resource
+    mimetype: text/css
+```
+TODO: explain templates
+
+
+### Setup
+
+The following steps are required to start a viz from scratch.  The first two have already been done for the example viz, so are not required here. These steps assume that the actual content creation phases are complete, *i.e.* there are scripts complete for data retrieval, processing, and figure creation.
+
+1. *Create the skeleton*: First the visualization directory structure should be created, using the `vizSkeleton` function.  This is unnecessary for the example viz, since the directories are already set up in the repo.  You can run this function in a dummy directory to see what happens.
+
+2. *Fill in the viz.yaml*: As described above, `viz.yaml` needs to be filled out in order to guide the creation of the various `make` files.  An empty skeleton `viz.yaml` is created by the `vizSkeleton` fuction.  The complete `viz.yaml` in the example viz repository can also be a useful reference. 
+
+3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  It will be filled in automatically, unless your operating system is unrecognized.  Once run, this step only needs to be repeated when R is updated. 
+
+4. *Create the Makefiles*: Create the `make` files using the `createMakeFiles` function.  This will create a `vizlab` directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.
+  
+5. *Authentication (if needed)*: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase.  Generally, credentials will need to be stored in the `~/.vizlab` folder so they can be accessed by scripts within the R sessions that are started by the make files.  The `sbAuthenticate` function tests and stores credentials for ScienceBase access.  The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public.    
+
+## make
+
+
+## options for future builds
+
+TODO: timestamps, Controlling refetch options, debugging via log files?
