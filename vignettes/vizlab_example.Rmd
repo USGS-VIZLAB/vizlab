@@ -26,6 +26,8 @@ To build the example viz, your working directory should be set to the main examp
 
 ## Getting Started
 
+TODO: explain make more?  here or elsewhere
+
 ### Viz design: the viz.yaml
   The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  Here we will examine the `viz.yaml` included in the example viz:
 
@@ -43,7 +45,9 @@ info:
     This is meant to touch all features and act as an integration
     test of the vizlab platform.
 ```
-`analytics-id` contains the Google Analytics ID to be used.  The other fields here are self-explanatory and used to generate metadata for the viz.
+`analytics-id` contains the Google Analytics ID to be used.  The other fields here are self-explanatory and used to generate an index of all published visualizations to go in the footer of the finished product.
+
+TODO: how to get a new GA id
 
 ### fetch
 ```
@@ -68,15 +72,104 @@ fetch:
     remoteFilename: CuyahogaTDS.csv
     mimetype: text/csv
 ```
-Each individual piece in each section of the `viz.yaml` should have it's own unique ID, so they can be referenced by the suceeding sections.  Following sections will look in the `location` field to find the corresponding file.  `mimetype` specifies file type.  `refetch` controls whether existing cached data files are used, or newer versions are checked for.  It is discussed in more detail in section XXXX.
+Each individual piece in each section of the `viz.yaml` should have it's own unique ID, so they can be referenced by the suceeding sections.  Following sections will look in the `location` field to find the corresponding file.  `mimetype` specifies file type, and is a required field unless a custom `reader` is specified.  `refetch` controls whether existing cached data files are used, or newer versions are checked for.  It is discussed in more detail in section XXXX.
 
 Three possibilites for fetchers are utilized here. `iris-data` is a local file already located in the `data` folder, and so does not need to be fetched. `cars-data` is a custom fetcher, located in `scripts/fetch/cars.R`.  It will retrieve the cars data (by reading in the default cars dataset) and save it to `cache/cars.csv`.  `Cuyahoga` uses the built-in USGS ScienceBase fetcher, and will save the retrieved file to `cache/fetch/CuyahogaTDS.csv`.
 
 ### Process
+```
+process:
+ -
+    id: calc-cars
+    location: cache/car-loess.rds
+    processor: cars
+    reader: rds
+    depends: [ "cars-data" ]
+  -
+    id: CuyahogaShort
+    location: cache/process/CuyahogaShort.tsv
+    mimetype: text/tab-separated-values
+    depends: Cuyahoga
+    processor: cuyahoga
+```
+`depends` references the IDs in the fetch section.  All processors must be supplied by the user.  Just as the custom fetchers are stored in `scripts/fetch`, processors are stored in `scripts/process`. The output of each processor is stored in the directory specified by the `location` field.  The `reader` specified will be used to read in the data for the visualize step.  Note the `cars` step indicates a specific .Rds reader, rather than a mimetype.  The readers included in the vizlab package are located in the `readData` S3 method.  Alternatively, a custom reader could be specified, that should be located in the `scripts/process` directory.  
 
 ### Visualize
-
+```
+visualize:
+  -
+    id: plot-cars
+    location: figures/cars.png
+    visualizer: cars
+    depends: [ "calc-cars", "cars-data" ]
+    mimetype: image/png
+    title: "Speed vs. Breaking Distance"
+    alttext: "plot of ratio of speed to breaking distance"
+  -
+    id: plot-iris
+    location: figures/iris.png
+    visualizer: iris
+    depends: [ "iris-data" ]
+    mimetype: image/png
+    title: "Sepal length vs. pedal length"
+    alttext: "plot of iris sepal length to pedal length"
+  -
+    id: relativeAbundanceFig
+    location: figures/relativeAbundanceFig.svg
+    depends: ["CuyahogaShort"]
+    visualizer: qTDS
+    mimetype: image/svg+xml
+    title: "Cuyahoga figure"
+    alttext: "figure displaying discharge of Cuyahoga river"
+```
+In the visualize step, `location` specifies the location of the figure being output by each step.  
+    
 ### Publish
+```
+publish:
+  -
+    id: index
+    name: index
+    publisher: page
+    template: fullPage
+    depends: [ "cars-section", "figure-style", "iris-section", "relativeAbundance-section"]
+    context:
+      title: Testing
+      sections: [ "cars-section", "iris-section", "relativeAbundance-section"]
+      resources: [ "figure-style" ]
+  -
+    id: cars-section
+    publisher: section
+    template: simplefigure
+    depends: [ "plot-cars" ]
+    context:
+      id: carsFig
+      figure: "plot-cars"
+      caption: Relationship between speed and stopping distance on several cars
+  -
+    id: iris-section
+    publisher: section
+    template: simplefigure
+    depends: [ "plot-iris" ]
+    context:
+      id: irisFig
+      figure: "plot-iris"
+      caption: Relationship between iris sepal length to pedal length
+  -
+    id: relativeAbundance-section
+    template: simplefigure
+    depends: relativeAbundanceFig
+    publisher: section
+    context:
+      id: relAbun-fig
+      figure: relativeAbundanceFig
+      caption: Total dissolved solids vs discharge
+  -
+    id: figure-style
+    location: layout/css/main.css
+    publisher: resource
+    mimetype: text/css
+```
 
 ### Setup
 
@@ -86,9 +179,9 @@ The following steps are required to start a viz from scratch.  The first two hav
 
 2. *Fill in the viz.yaml*: As described above, `viz.yaml` needs to be filled out in order to guide the creation of the various `make` files.  An empty skeleton `viz.yaml` is created by the `vizSkeleton` fuction.  The complete `viz.yaml` in the example viz repository can also be a useful reference. 
 
-3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  It will be filled in automatically, unless your operating system is unrecognized.
+3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  It will be filled in automatically, unless your operating system is unrecognized.  Once run, this step only needs to be repeated when R is updated. 
 
-4. *Create the Makefiles*: Create the `make` files using the `createMakeFiles` function.  This will create a `vizlab` directory 
+4. *Create the Makefiles*: Create the `make` files using the `createMakeFiles` function.  This will create a `vizlab` directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.
   
 5. *Authentication (if needed)*: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase.  Generally, credentials will need to be stored in the `~/.vizlab` folder so they can be accessed by scripts within the R sessions that are started by the make files.  The `sbAuthenticate` function tests and stores credentials for ScienceBase access.  The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public.    
 
@@ -97,4 +190,4 @@ The following steps are required to start a viz from scratch.  The first two hav
 
 ## options for future builds
 
-TODO: timestamps, Controlling refetch options
+TODO: timestamps, Controlling refetch options, debugging?
