@@ -91,3 +91,23 @@ lookupMimetype <- function(mimetype){
   type_nm <- names(type_match)
   return(type_nm)
 }
+
+#' Assemble whisker partials from vizlab package
+#'
+#' @importFrom tools file_path_sans_ext
+#' @return list containing partials available
+getPartialLibrary <- function() {
+  template.dir <- system.file("templates", package = "vizlab")
+  template.files <- dir(template.dir, pattern = "*.mustache")
+  template.names <- file_path_sans_ext(template.files)
+  partials <- lapply(template.files, function(x, dir) {
+    viz <- list(
+      location = file.path(dir, x),
+      reader = "txt"
+    )
+    viz <- as.reader(as.viz(viz))
+    return(readData(viz))
+  }, template.dir)
+  names(partials) <- template.names
+  return(partials)
+}
