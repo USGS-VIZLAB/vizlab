@@ -26,12 +26,10 @@ To build the example viz, your working directory should be set to the main examp
 
 ## Getting Started
 
-TODO: explain make more?  here or elsewhere calls R scripts, output to log files
-
 ### Viz design: the viz.yaml
   The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  Here we will examine the `viz.yaml` included in the example viz:
 
-### info
+### Info
 ```
 vizlab: "0.1.4"
 info:
@@ -49,7 +47,7 @@ info:
 
 TODO: how to get a new GA id
 
-### fetch
+### Fetch
 ```
 fetch:
   -
@@ -133,10 +131,10 @@ publish:
     name: index
     publisher: page
     template: fullPage
-    depends: [ "cars-section", "figure-style", "iris-section", "Cuyahoga-section"]
+    depends: [ "cars-section", "figure-style", "text-section","iris-section", "Cuyahoga-section"]
     context:
       title: Testing
-      sections: [ "cars-section", "iris-section", "Cuyahoga-section"]
+      sections: [ "cars-section", "text-section","iris-section", "Cuyahoga-section"]
       resources: [ "figure-style" ]
   -
     id: cars-section
@@ -147,6 +145,16 @@ publish:
       id: carsFig
       figure: "plot-cars"
       caption: Relationship between speed and stopping distance on several cars
+  -
+    id: text-section
+    template: printall
+    publisher: section
+    context: 
+      text: 
+        This is a text section in the viz.yaml.  Since it is only
+        text, it doesn't need be referenced anywhere outside of the publish
+        section.  Text wrapping in the viz should be handled automatically.
+        Follow YAML conventions to change formatting.  
   -
     id: iris-section
     publisher: section
@@ -171,9 +179,8 @@ publish:
     publisher: resource
     mimetype: text/css
 ```
-TODO: explain templates
-
-
+  The publish step creates the finished viz product.  The first section applies to the viz as a whole. It is dependent on all the other publish sections for each figure and the text. `name` will be the name of the finished viz HTML file. Each section with a figure depends on the corresponding visualize section. Publishers and templates are used in each section of process, and correspond to the sections's content.  Default publisher R functions are stored in `publish.R` in the `vizlab` package, and default templates inside the vizlab package in `inst/templates`.  Templates are [mustache files](https://mustache.github.io/) that define how the text or image content is displayed in the final HTML.  For the example viz, the `section` publisher is used for every individual section, and `fullPage` publishes the full viz. Each section, including `index`, has a context section that defines the actual material to be used.  For figures it includes the caption.  Note that text-only sections can be included here as well, using the `printall` template (`text-section` above).  The `figure-style` section references CSS included with the example viz package.                        
+  
 ### Setup
 
 The following steps are required to start a viz from scratch.  The first two have already been done for the example viz, so are not required here. These steps assume that the actual content creation phases are complete, *i.e.* there are scripts complete for data retrieval, processing, and figure creation.
@@ -189,8 +196,60 @@ The following steps are required to start a viz from scratch.  The first two hav
 5. *Authentication (if needed)*: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase.  Generally, credentials will need to be stored in the `~/.vizlab` folder so they can be accessed by scripts within the R sessions that are started by the make files.  The `sbAuthenticate` function tests and stores credentials for ScienceBase access.  The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public.    
 
 ## make
+  Finally, execute all the created make files by running `make` from the terminal in the main example viz directory:
+```
+wwatkins@IGSARMEWLTWDW-M:~/Documents/R/example_viz$ make
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='fetch',outfile='vizlab/make/fetch.make')" \
+	vizlab/make/callFunction.R vizlab/make/log/make/fetch.Rout
+make -f vizlab/make/fetch.make
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='cars-data') scripts=c('scripts/fetch')" \
+	vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data_timestamp.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetch funargs=list(viz='cars-data') scripts=c('scripts/fetch')" \
+	vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='Cuyahoga') scripts=c('scripts/fetch')" \
+	vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga_timestamp.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='process',outfile='vizlab/make/process.make')" \
+	vizlab/make/callFunction.R vizlab/make/log/make/process.Rout
+make -f vizlab/make/process.make
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=process funargs=list(viz='calc-cars') scripts=c('scripts/process')" \
+	vizlab/make/callFunction.R vizlab/make/log/process/calc-cars.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='visualize',outfile='vizlab/make/visualize.make')" \
+	vizlab/make/callFunction.R vizlab/make/log/make/visualize.Rout
+make -f vizlab/make/visualize.make
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=visualize funargs=list(viz='plot-cars') scripts=c('scripts/visualize')" \
+	vizlab/make/callFunction.R vizlab/make/log/visualize/plot-cars.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='publish',outfile='vizlab/make/publish.make')" \
+	vizlab/make/callFunction.R vizlab/make/log/make/publish.Rout
+make -f vizlab/make/publish.make
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='index')" \
+	vizlab/make/callFunction.R vizlab/make/log/publish/index.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='cars-section')" \
+	vizlab/make/callFunction.R vizlab/make/log/publish/cars-section.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='text-section')" \
+	vizlab/make/callFunction.R vizlab/make/log/publish/text-section.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='iris-section')" \
+	vizlab/make/callFunction.R vizlab/make/log/publish/iris-section.Rout
+export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
+	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='Cuyahoga-section')" \
+	vizlab/make/callFunction.R vizlab/make/log/publish/Cuyahoga-section.Rout
+```
+This will call the main makefile, which in turn calls the makefile for each section.  The finished HTML will be created in the `target` directory, along with its corresponding CSS and images for each figure.  
 
+### Debugging
+  Because all R commands are executed by the makefiles, the output does not print to the console, but can be viewed in the various `.Rout` files in `vizlab/make/log/` for each section.  The names are printed to the console when the makefile is executed, as seen above.
 
-## options for future builds
-
-TODO: timestamps, Controlling refetch options, debugging via log files?
+### Controlling the fetch section
+  By default, the `refetch` option is set to `TRUE` in the `viz.yaml` for each section. `vizlab` checks the timestamps of online resources to see if the file or resource has changed since it was last fetched.  If the timestamp has changed, or a timestamp cannot be obtained, the data will be fetched again.  However, this may be undesireable in some scenarios.  To force `vizlab` to use the cached versions of remote files, set `refetch` to `FALSE` in the relevant sections of the `viz.yaml`.  Conversely, to force `vizlab` to refetch the data regardless of timestamps, set `refetch` to `TRUE` and delete the timestamps for each section.  These are stored in `vizlab/make/timestamps`.    
