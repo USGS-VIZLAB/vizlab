@@ -83,7 +83,7 @@ getVizlabVersion <- function() {
 #' @param block character vector of blocks to read
 #'
 #' @export
-getBlocks <- function(block=c('vizlab', 'info', 'fetch','process','visualize', 'publish')) {
+getBlocks <- function(block=c('vizlab', 'info', 'fetch','process','visualize', 'publish'), keep.block=TRUE) {
   # read viz.yaml and isolate the data block
   if (!file.exists('viz.yaml')) {
     stop("viz.yaml does not exist in this working directory (", getwd(), ")")
@@ -94,7 +94,9 @@ getBlocks <- function(block=c('vizlab', 'info', 'fetch','process','visualize', '
   content.list <- lapply(setNames(nm=block), function(bl) {
     lapply(block.yaml[[bl]], function(item) {
       item <- as.list(item)
-      item$block <- bl
+      if (keep.block) {
+        item$block <- bl
+      }
       return(item)
     })
   })
