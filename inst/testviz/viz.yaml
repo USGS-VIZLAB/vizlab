@@ -7,7 +7,39 @@ info:
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
+  keywords: vizlab, visualizations, data, R
   mimetypeDictionary: moreMimetypes.yaml
+  twitter: "@USGS_R"
+  owner:
+    name: Jordan Walker
+    email: jiwalker@usgs.gov
+    affiliation: U.S. Geological Survey
+  contributors:
+    -
+      name: Alison Appling
+      email: aappling@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Lindsay Carr
+      email: lcarr@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Read
+      email: jread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: David Watkins
+      email: wwatkins@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Marty Wernimont
+      email: mwernimont@usgs.gov
+      affiliation: U.S. Geological Survey
+  thumbnail:
+    url: images/thumbnail.png
+    width: 250
+    height: 250
+    alt: Test for vizlab
 fetch:
   -
     id: siteTextData
@@ -29,7 +61,7 @@ fetch:
     reader: myCsvReader
     mimetype: text/csv
     export: true
-  - 
+  -
     id: carData
     location: data/car_info
     mimetype: text/csv
