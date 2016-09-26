@@ -81,7 +81,7 @@ getVizlabVersion <- function() {
 #' Read vizlab config document and return specific blocks
 #'
 #' @param block character vector of blocks to read
-#'
+#' @param keep.block logical whether to include block information in read block
 #' @export
 getBlocks <- function(block=c('vizlab', 'info', 'fetch','process','visualize', 'publish'), keep.block=TRUE) {
   # read viz.yaml and isolate the data block
