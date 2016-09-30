@@ -1,18 +1,24 @@
 <!doctype html>
-<html>
+<html prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<!-- ############### VIEWPORT META TAG ############### -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-<!-- ################################################# -->
-<!-- Need to add semantic web stuff here -->
-<title>{{ title }}</title>
-<!-- How do we want to declare the font to replace this -->
-<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
-{{#resources }}
-  {{{ . }}}
-{{/resources }}
+  {{>brandcomment}}
+
+
+  <!-- ############### VIEWPORT META TAG ############### -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+  <!-- ################################################# -->
+  {{#info}}
+    {{>semantics}}
+  {{/info}}
+  <title>{{ info.name }}</title>
+  <!-- How do we want to declare the font to replace this -->
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
+  {{#resources }}
+    {{{ . }}}
+  {{/resources }}
 </head>
 <body>
 

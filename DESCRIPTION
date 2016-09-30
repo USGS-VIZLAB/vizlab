@@ -19,6 +19,7 @@ Depends:
 Imports:
     httr,
     methods,
+    tools,
     whisker,
     xml2,
     yaml
