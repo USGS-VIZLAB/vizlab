@@ -54,6 +54,19 @@ getVizYamlUrl <- function(org, repo){
   return(viz.yaml_url)
 }
 
+#' Get the url for the viz thumbnail
+#'
+#' @param org character, name of GitHub organization in which to look for a repository
+#' @param repo character, name of the repository to find the thumbnail
+#' @importFrom github get.repository.path
+getVizThumbnail <- function(org, repo){
+  p <- get.repository.path(org, repo, "images/thumbnail.png")
+  thumbnail_url <- p$content$html_url
+  thumbnail_url <- gsub(pattern = "github.com", replacement = "raw.githubusercontent.com", thumbnail_url)
+  thumbnail_url <- gsub(pattern = "blob/", replacement = "", thumbnail_url)
+  return(thumbnail_url)
+}
+
 #' Load yamls and find if the published date has passed yet
 #' --> TO DO: handle NULL `publish-date` fields as FALSE
 #' 
@@ -72,6 +85,9 @@ getVizInfo <- function(org, repo){
   if(!is_published){
      return()
   } 
+
+  viz_info <- viz.yaml$info
+  viz_info$thumbnail <- getVizThumbnail(org, repo)
   
-  return(viz.yaml$info)
+  return(viz_info)
 }
