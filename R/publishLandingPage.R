@@ -81,10 +81,15 @@ getVizInfo <- function(org, repo){
   
   viz.yaml <- yaml.load_file(viz.yaml_url)
   
-  is_published <- as.Date(viz.yaml$info$`publish-date`) <= Sys.Date()
-  if(!is_published){
-     return()
-  } 
+  has_publish_date <- !is.null(viz.yaml$info$`publish-date`)
+  if(has_publish_date){
+    is_published <- as.Date(viz.yaml$info$`publish-date`) <= Sys.Date()  
+    if(!is_published){
+      return()
+    } 
+  } else {
+    return()
+  }
 
   viz_info <- viz.yaml$info
   viz_info$thumbnail <- getVizThumbnail(org, repo)
