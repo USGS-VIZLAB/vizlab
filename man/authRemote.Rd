@@ -13,20 +13,20 @@ authRemote(fetcher, ...)
 \method{authRemote}{sciencebase}(fetcher, user, ...)
 }
 \arguments{
-\item{fetcher}{the name of the fetcher for which to authenticate, e.g., 
+\item{fetcher}{the name of the fetcher for which to authenticate, e.g.,
 'sciencebase'}
 
 \item{...}{other arguments passed to authRemote methods}
 
-\item{user}{not yet well thought out, but the idea is to accept 'local' or 
+\item{user}{not yet well thought out, but the idea is to accept 'local' or
 'docker' and use the corresponding user profile to authenticate}
 }
 \description{
-Uses authentication information in the ~/.vizlab driectory to log onto a remote 
+Uses authentication information in the ~/.vizlab driectory to log onto a remote
 file service such as ScienceBase. This function is primarily for internal use
 but can be called directly to check credentials.
 
-\code{authRemote.sciencebase} Uses the credentials stored in ~/.vizlab to log in to 
+\code{authRemote.sciencebase} Uses the credentials stored in ~/.vizlab to log in to
 ScienceBase.  Use the storeSBcreds function to verify and store credentials.  Since vizlab
 starts its own R session, an existing ScienceBase session cannot be used.
 }

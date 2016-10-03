@@ -20,6 +20,7 @@ Imports:
     github,
     httr,
     methods,
+    tools,
     whisker,
     xml2,
     yaml

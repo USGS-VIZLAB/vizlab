@@ -1,0 +1,73 @@
+  <meta property="og:title" content="{{ name }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ url }}" />
+  <meta property="og:image:url" content="{{ thumbnail.url }}" />
+  <meta property="og:image:height" content="{{ thumbnail.height }}" />
+  <meta property="og:image:width" content="{{ thumbnail.width }}" />
+  <meta property="og:image:type" content="{{ thumbnail.type }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="{{ twitter }}" />
+  <meta name="twitter:title" content="{{ name }}" />
+  <meta name="twitter:description" content="{{ description }}" />
+  <meta name="twitter:image" content="{{ thumbnail.url }}" />
+  <meta name="twitter:image:alt" content="{{ thumbnail.alt }}" />
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": "{{ name }}",
+      "about": "{{ description }}",
+      "datePublished": "{{ publish-date }}",
+      {{#owner}}
+      "accountablePerson": {
+        "@context": "http://schema.org",
+        "@type": "Person",
+        "name": "{{ name }}",
+        "email": "{{ email }}",
+        "affiliation": {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "legalName": "{{ affiliation }}"
+        }
+      },
+      {{/owner}}
+      {{#contributors}}
+      "contributor": {
+        "@context": "http://schema.org",
+        "@type": "Person",
+        "name": "{{ name }}",
+        "email": "{{ email }}",
+        "affiliation": {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "legalName": "{{ affiliation }}"
+        }
+      },
+      {{/contributors}}
+      {{#audience}}
+      "audience": {
+        "@context": "http://schema.org",
+        "@type": "Audience",
+        "audienceType": "{{ . }}"
+      },
+      {{/audience}}
+      "publisher": {
+        "@context": "http://schema.org",
+        "@type": "Organization",
+        "legalName": "U.S. Geological Survey"
+      },
+      {{#thumbnail}}
+      "image":{
+        "@type": "ImageObject",
+        "url": "{{ url }}",
+        "width": {{ width }},
+        "height": {{ height }},
+        "caption": "{{ alt }}"
+      },
+      {{/thumbnail}}
+      "keywords": "{{ keywords }}"
+	}
+  </script>

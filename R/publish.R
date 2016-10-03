@@ -42,15 +42,11 @@ publish.page <- function(viz) {
 
   #also manually put resources into context
   context[['resources']] <- append(context[['resources']], dependencies[[vizlabjs]])
+  context[['info']] <- append(context[['info']], getBlocks("info", keep.block=F)[[1]])
 
-  viz.info <- getBlocks("info")
-
-  # TODO separate out analytics bits
-  context[["analytics-id"]] <- viz.info[['analytics-id']]
-  context[["vizlab-page-path"]] <- viz.info[['path']]
-
+  partials <- getPartialLibrary()
   file <- export(viz)
-  cat(whisker.render(template = template, data = context), file = file)
+  cat(whisker.render(template = template, data = context, partials = partials), file = file)
 }
 
 #' publish a section
