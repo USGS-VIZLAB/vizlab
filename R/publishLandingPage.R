@@ -6,6 +6,19 @@
 #' @export
 publishLandingPage <- function(org = "USGS-VIZLAB", index_loc = './output'){
   
+  # move css to same dir
+  index_loc_css <- file.path(index_loc, 'css')
+  if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
+  file.copy(from=system.file('landing/css/main.css', package="vizlab"), to=index_loc_css)
+  
+  # move vizlab thumbnail
+  index_loc_img <- file.path(index_loc, 'img')
+  if(!dir.exists(index_loc_img)) dir.create(index_loc_img, recursive=TRUE)
+  file.copy(from=system.file('landing/img/vizlab06.png', package="vizlab"), to=index_loc_img)
+  
+  
+  # create index.html
+  
   index_header <- readLines(system.file('landing/templates/header.mustache', package="vizlab"))
   
   repos <- getRepoNames(org)
