@@ -9,17 +9,17 @@ publishLandingPage <- function(org = "USGS-VIZLAB", index_loc = './output'){
   index_header <- readLines(system.file('landing/templates/header.mustache', package="vizlab"))
   
   repos <- getRepoNames(org)
+  
   viz_info <- lapply(repos, getVizInfo, org=org)
   list_viz_info <- list(vizzies=viz_info)
   index_vizzies <- getVizHTML(list_viz_info)
   
   if(!dir.exists(index_loc)) dir.create(index_loc, recursive=TRUE)
-  index <- file(file.path(index_loc, 'index.html'))
+  index <- file.path(index_loc, 'index.html')
   ### \\\ probably need an index.mustache instead of cat() here
   cat(index_header, 
       index_vizzies,
       file=index, sep="")
-  close(index)
   return(index)
 }
 
