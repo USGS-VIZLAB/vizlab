@@ -8,6 +8,8 @@ publishLandingPage(org = "USGS-VIZLAB", index_loc = "./output")
 }
 \arguments{
 \item{org}{character, name of GitHub organization in which to pull out repository names}
+
+\item{index_loc}{character, file path for where to save the index.html file}
 }
 \description{
 note for future: github package is from GitHub repo rgithub (https://github.com/cscheid/rgithub)

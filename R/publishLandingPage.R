@@ -3,6 +3,7 @@
 #' note for future: github package is from GitHub repo rgithub (https://github.com/cscheid/rgithub)
 #' there are plans to move the package to CRAN and call it grithub (https://github.com/cscheid/rgithub/issues/67)
 #' @param org character, name of GitHub organization in which to pull out repository names
+#' @param index_loc character, file path for where to save the index.html file
 #' @export
 publishLandingPage <- function(org = "USGS-VIZLAB", index_loc = './output'){
   
