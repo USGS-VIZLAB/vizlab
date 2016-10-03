@@ -14,12 +14,12 @@ publishLandingPage <- function(org = "USGS-VIZLAB", index_loc = './output'){
   index_vizzies <- getVizHTML(list_viz_info)
   
   if(!dir.exists(index_loc)) dir.create(index_loc, recursive=TRUE)
-  index <- file(file.path(index_loc, 'index.html'))
+  index <- file.path(index_loc, 'index.html')
   ### \\\ probably need an index.mustache instead of cat() here
   cat(index_header, 
       index_vizzies,
       file=index, sep="")
-  close(index)
+     
   return(index)
 }
 
