@@ -98,11 +98,14 @@ publish:
     mimetype: text/css
   -
     id: index
+    name: index
     template: layout/templates/index.mustache
     context: siteTextData
-    sections: [ header, intro, relativeAbundance, footer ]
     depends: [ appJS, mainCSS, normalizeCSS ]
     publisher: page
+    context: 
+      title: testViz
+      sections: [ header, intro, relativeAbundance, footer ]
   -
     id: header
     template: layout/templates/header.mustache
