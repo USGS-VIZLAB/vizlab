@@ -48,7 +48,7 @@ getVizHTML <- function(viz_info){
 #' Get a vector a repository names for a specific organization
 #' 
 #' @param org character, name of GitHub organization in which to pull out repository names
-#' @importFrom github get.organization.repositories
+#' @importFrom github get.organization.repositories get.github.context
 getRepoNames <- function(org){
   vizlab_repos <- get.organization.repositories(org, ctx = get.github.context())
   repo_nms <- unlist(lapply(vizlab_repos$content, function(r){ r[['name']]}))
