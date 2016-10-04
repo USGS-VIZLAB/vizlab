@@ -114,11 +114,15 @@ getPartialLibrary <- function() {
 
 #' Replace any markdown text with
 #'
-#'
+#' @param text character vector containing markdown text
 handleMarkdown <- function(text) {
   options <- c("skip_html", "skip_style", "skip_images", "escape", "smartypants", "fragment_only")
   extensions <- c("tables", "fenced_code", "strikethrough", "lax_spacing", "superscript", "latex_math")
   html <- markdownToHTML(text = text, options = options)
-
-
+  m <- regexec("^<p>(.*)</p>\\n", html, perl = TRUE)
+  if (length(regmatches(x = html, m = m))[[1]] == 0) {
+    # capture the stuff between paragraph tags (group 1, index 2)
+    html <- regmatches(x = html, m = m)[[1]][2]
+  }
+  return(html)
 }
