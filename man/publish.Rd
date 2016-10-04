@@ -35,6 +35,8 @@ publish(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
+
+\item{viz}{}
 }
 \description{
 Determine the type and dispatch to that method to produce
