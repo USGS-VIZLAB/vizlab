@@ -176,8 +176,8 @@ publish.footer <- function(viz) {
   #TODO: get thumbnail from repo, copy to images
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
-    thumbURL <- getVizThumbnail(repo=viz[[v]]$repo, org=viz[[v]]$org)
-    download.file(url=thumbURL, destfile = viz[[v]]$thumbLoc)
+    thumbURL <- getVizThumbnail(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
+    download.file(url=thumbURL, destfile = vizzies[[v]]$thumbLoc)
   }
   
   #TODO: stuff from publish.section

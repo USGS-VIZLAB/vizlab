@@ -4,6 +4,7 @@
 \alias{publish}
 \alias{publish.character}
 \alias{publish.css}
+\alias{publish.footer}
 \alias{publish.img}
 \alias{publish.js}
 \alias{publish.page}
@@ -29,9 +30,13 @@ publish(viz)
 \method{publish}{css}(viz)
 
 \method{publish}{svg}(viz)
+
+\method{publish}{footer}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
+
+\item{viz}{}
 }
 \description{
 Determine the type and dispatch to that method to produce
@@ -53,6 +58,8 @@ TODO allow for cdn js
 css publishing
 
 svg publishing
+
+Footer publishing
 }
 \details{
 I've been thinking maybe switching 'x' to 'viz' would be more clear
