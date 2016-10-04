@@ -165,12 +165,34 @@ publish.svg <- function(viz) {
 #' @export
 
 publish.footer <- function(viz) {
-  required <- c("")
+  #should also check blogs?  Or one or the other?
+  checkRequired(viz, required = "vizzies")
   
-  # move css to same dir
-  index_loc_css <- file.path(index_loc, 'css')
+  # TODO: move css to same dir
+  index_loc_css <- 'target/css'
   if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
-  file.copy(from=system.file('landing/css/main.css', package="vizlab"), to=index_loc_css)
+  file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
+  
+  #TODO: get thumbnail from repo, copy to images
+  vizzies <- viz$vizzies
+  for(v in 1:length(vizzies)){
+    thumbURL <- getVizThumbnail(repo=viz[[v]]$repo, org=viz[[v]]$org)
+    download.file(url=thumbURL, destfile = viz[[v]]$thumbLoc)
+  }
+  
+  #TODO: stuff from publish.section
+  dependencies <- lapply(viz[['depends']], publish)
+  names(dependencies) <- viz[['depends']]
+  
+  context <- buildContext(viz, dependencies)
+  
+  template <- readTemplate(viz[['template']])
+  
+  viz[['output']] <- whisker.render(template = template, data = context)
+  if (!is.null(viz[['analytics']])) {
+    viz <- analytics(viz)
+  }
+  return(viz[['output']])
 }
 
 #' coerce to a publisher
