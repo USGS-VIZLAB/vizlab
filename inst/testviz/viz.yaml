@@ -100,7 +100,6 @@ publish:
     id: index
     name: index
     template: layout/templates/index.mustache
-    context: siteTextData
     depends: [ appJS, mainCSS, normalizeCSS ]
     publisher: page
     context: 
