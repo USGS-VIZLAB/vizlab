@@ -42,7 +42,7 @@ buildContext <- function(viz, dependencies) {
       if (any(dep.ids)) {
         x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
       }
-      # TODO run smartypants on x before returning
+      x <- handleMarkdown(x)
       return(x)
   }, how = "replace", classes = "character")
   return(data)
@@ -110,4 +110,15 @@ getPartialLibrary <- function() {
   }, template.dir)
   names(partials) <- template.names
   return(partials)
+}
+
+#' Replace any markdown text with
+#'
+#'
+handleMarkdown <- function(text) {
+  options <- c("skip_html", "skip_style", "skip_images", "escape", "smartypants", "fragment_only")
+  extensions <- c("tables", "fenced_code", "strikethrough", "lax_spacing", "superscript", "latex_math")
+  html <- markdownToHTML(text = text, options = options)
+
+
 }
