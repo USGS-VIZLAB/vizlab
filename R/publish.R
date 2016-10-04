@@ -158,6 +158,21 @@ publish.svg <- function(viz) {
   return(output)
 }
 
+#' Footer publishing 
+#' @param viz
+#'
+#' @rdname publish
+#' @export
+
+publish.footer <- function(viz) {
+  required <- c("")
+  
+  # move css to same dir
+  index_loc_css <- file.path(index_loc, 'css')
+  if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
+  file.copy(from=system.file('landing/css/main.css', package="vizlab"), to=index_loc_css)
+}
+
 #' coerce to a publisher
 #' @param viz object describing publisher
 #' @param ... not used, just for consistency
