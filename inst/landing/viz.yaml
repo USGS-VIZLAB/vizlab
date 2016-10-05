@@ -37,7 +37,7 @@ info:
     url: img/vizlab06.png
     width: 250
     height: 250
-    alt: VIZLAB
+    alttext: VIZLAB
 publish:
   -
     id: thumbnail

@@ -13,7 +13,7 @@
   <meta name="twitter:title" content="{{ name }}" />
   <meta name="twitter:description" content="{{ description }}" />
   <meta name="twitter:image" content="{{ thumbnail.url }}" />
-  <meta name="twitter:image:alt" content="{{ thumbnail.alt }}" />
+  <meta name="twitter:image:alt" content="{{ thumbnail.alttext }}" />
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
@@ -65,7 +65,7 @@
         "url": "{{ url }}",
         "width": {{ width }},
         "height": {{ height }},
-        "caption": "{{ alt }}"
+        "caption": "{{ alttext }}"
       },
       {{/thumbnail}}
       "keywords": "{{ keywords }}"
