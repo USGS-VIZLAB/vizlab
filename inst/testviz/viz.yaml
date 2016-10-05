@@ -39,7 +39,7 @@ info:
     url: images/thumbnail.png
     width: 250
     height: 250
-    alt: Test for vizlab
+    alttext: Test for vizlab
 fetch:
   -
     id: siteTextData

@@ -30,3 +30,8 @@ as.viz.list <- function(x, ...) {
   class(x) <- "viz"
   return(x)
 }
+
+#' Recast viz into new vizlab object
+#' @rdname vizlab
+#' @export
+as.viz.viz <- as.viz.list

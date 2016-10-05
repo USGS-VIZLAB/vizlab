@@ -2,8 +2,7 @@
 % Please edit documentation in R/publishLandingPage.R
 \name{getVizInfo}
 \alias{getVizInfo}
-\title{Load yamls and find if the published date has passed yet
---> TO DO: handle NULL `publish-date` fields as FALSE}
+\title{Load yamls and find if the published date has passed yet}
 \usage{
 getVizInfo(org, repo)
 }
@@ -14,6 +13,5 @@ getVizInfo(org, repo)
 }
 \description{
 Load yamls and find if the published date has passed yet
---> TO DO: handle NULL `publish-date` fields as FALSE
 }
 

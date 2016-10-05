@@ -1,0 +1,65 @@
+vizlab: "0.1"
+info:
+  id: landingPage
+  name: VIZLAB landing page
+  date: 2016-10-04
+  path: /notsure
+  description: >-
+    Landing page for VIZLAB visualizations
+  keywords: vizlab, visualizations, data, R
+  twitter: "@USGS_R"
+  owner:
+    name: Jordan Walker
+    email: jiwalker@usgs.gov
+    affiliation: U.S. Geological Survey
+  contributors:
+    -
+      name: Alison Appling
+      email: aappling@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Lindsay Carr
+      email: lcarr@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Read
+      email: jread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: David Watkins
+      email: wwatkins@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Marty Wernimont
+      email: mwernimont@usgs.gov
+      affiliation: U.S. Geological Survey
+  thumbnail:
+    url: img/vizlab06.png
+    width: 250
+    height: 250
+    alttext: VIZLAB
+publish:
+  -
+    id: thumbnail
+    location: img/vizlab06.png
+    mimetype: image/png
+    alttext: VIZLAB logo
+    title: VIZLAB logo
+  -
+    id: landingCSS
+    location: css/landing.css
+    mimetype: text/css
+  - 
+    id: header
+    template: templates/header.mustache
+    publisher: section
+    depends: [thumbnail]
+    context: 
+      logo: thumbnail
+  - 
+    id: landing
+    name: index
+    template: fullPage
+    publisher: landing
+    org: USGS-VIZLAB
+    depends: [header, thumbnail, landingCSS]
