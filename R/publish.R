@@ -28,8 +28,11 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- as.list(viz[['depends']])
-  names(dependencies) <- viz[['depends']]
+  dependencies <- viz[['depends']]
+  if(class(viz[['depends']]) != "list"){
+    dependencies <- as.list(dependencies)
+    names(dependencies) <- viz[['depends']]
+  }
 
   # add automatic dependencies
   vizlabjs <- '_vizlabJS'
