@@ -4,6 +4,7 @@
 \alias{as.viz}
 \alias{as.viz.character}
 \alias{as.viz.list}
+\alias{as.viz.viz}
 \alias{vizlab}
 \title{Utilities for building online data visualizations}
 \usage{
@@ -12,6 +13,8 @@ as.viz(x, ...)
 \method{as.viz}{character}(x, ...)
 
 \method{as.viz}{list}(x, ...)
+
+\method{as.viz}{viz}(x, ...)
 }
 \arguments{
 \item{x}{object to coerce to viz.}
@@ -26,5 +29,7 @@ Coerce viz objects
 Convert character (id) to vizlab object
 
 Convert list into vizlab object
+
+Recast viz into new vizlab object
 }
 

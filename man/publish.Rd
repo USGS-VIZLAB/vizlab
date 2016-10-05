@@ -6,6 +6,7 @@
 \alias{publish.css}
 \alias{publish.img}
 \alias{publish.js}
+\alias{publish.landing}
 \alias{publish.page}
 \alias{publish.resource}
 \alias{publish.section}
@@ -29,6 +30,8 @@ publish(viz)
 \method{publish}{css}(viz)
 
 \method{publish}{svg}(viz)
+
+\method{publish}{landing}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -53,6 +56,8 @@ TODO allow for cdn js
 css publishing
 
 svg publishing
+
+publish landing page
 }
 \details{
 I've been thinking maybe switching 'x' to 'viz' would be more clear

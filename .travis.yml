@@ -11,6 +11,7 @@ repos:
 
 r_github_packages:
  - jimhester/covr
+ - cscheid/rgithub
 
 after_success:
   - Rscript -e 'covr::coveralls()'

@@ -28,8 +28,11 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- as.list(viz[['depends']])
-  names(dependencies) <- viz[['depends']]
+  dependencies <- viz[['depends']]
+  if(class(viz[['depends']]) != "list"){
+    dependencies <- as.list(dependencies)
+    names(dependencies) <- viz[['depends']]
+  }
 
   # add automatic dependencies
   vizlabjs <- '_vizlabJS'
@@ -156,6 +159,30 @@ publish.svg <- function(viz) {
   output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
                     viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
   return(output)
+}
+
+#' publish landing page
+#' 
+#' @rdname publish
+#' @export
+publish.landing <- function(viz){
+  
+  repos <- getRepoNames(viz[['org']])
+  viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
+  names(viz_info) <- repos
+  viz_info <- viz_info[!sapply(viz_info, is.null)]
+  
+  pageviz <- viz
+  names(pageviz$depends) <- pageviz$depends
+  pageviz$depends <- as.list(pageviz$depends)
+  pageviz$depends <- append(pageviz$depends, viz_info)
+  pageviz$context <- list(sections = c("header", names(viz_info)), #names of section ids
+                          resources = "landingCSS") 
+  pageviz$publisher <- "page"
+  pageviz <- as.viz(pageviz)
+  pageviz <- as.publisher(pageviz) #maybe/maybe not
+  
+  publish(pageviz)
 }
 
 #' coerce to a publisher

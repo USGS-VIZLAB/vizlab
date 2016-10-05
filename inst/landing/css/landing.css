@@ -50,11 +50,11 @@ body {
 #vizLogo img {
   width: 100%;
 }
-#container {
+.container {
   min-height: 200px;
   padding: 0 15px;
 }
-#visualizationsContainer {
+.visualizationsContainer {
   min-height: 300px;
   margin-bottom: 10px;
 }

@@ -17,6 +17,7 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.0)
 Imports:
+    github,
     httr,
     markdown,
     methods,
