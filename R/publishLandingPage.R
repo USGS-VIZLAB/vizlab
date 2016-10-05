@@ -15,15 +15,6 @@ publishLandingPage <- function(){
   publish('landing')
 }
 
-#' Populate mustache template with vizzy information
-#' 
-#' @param viz_info list with a list of viz information called "vizzies", e.g. list(vizzies=list(viz_info1, viz_info2))
-#' @importFrom whisker whisker.render
-getVizHTML <- function(viz_info){
-  template <- readLines(system.file('landing/templates/vizzies.mustache', package="vizlab"))
-  whisker.render(template, data=viz_info)
-}
-
 #' Get a vector a repository names for a specific organization
 #' 
 #' @param org character, name of GitHub organization in which to pull out repository names
