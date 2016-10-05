@@ -99,4 +99,17 @@ getVizInfo <- function(org, repo){
   return(viz_info_required)
 }
 
+#' function to keep the absolute viz path or make the path relative
+#' 
+#' @param path the path defined in the viz object
+#'
+getVizUrl <- function(path){
+  if(grepl('^/', path)){
+    path <- paste0('.', path)
+  } else if(grepl('^http', path)){
+    path <- path
+  } else {
+    path <- paste0('./', path)
+  }
+  return(path)
 }
