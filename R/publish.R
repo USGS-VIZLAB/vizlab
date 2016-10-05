@@ -159,7 +159,6 @@ publish.svg <- function(viz) {
 }
 
 #' Footer publishing 
-#' @param viz
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
