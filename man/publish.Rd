@@ -32,11 +32,9 @@ publish(viz)
 
 \method{publish}{svg}(viz)
 
-<<<<<<< HEAD
 \method{publish}{footer}(viz)
-=======
+
 \method{publish}{landing}(viz)
->>>>>>> 242dd6757a6d22e06ac613e56c782d7567a67c3d
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -62,11 +60,9 @@ css publishing
 
 svg publishing
 
-<<<<<<< HEAD
 Footer publishing
-=======
+
 publish landing page
->>>>>>> 242dd6757a6d22e06ac613e56c782d7567a67c3d
 }
 \details{
 I've been thinking maybe switching 'x' to 'viz' would be more clear
