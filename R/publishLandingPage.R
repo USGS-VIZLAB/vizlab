@@ -75,6 +75,9 @@ getVizYamlUrl <- function(org, repo){
 #' @importFrom github get.repository.path
 getVizThumbnail <- function(org, repo){
   p <- get.repository.path(org, repo, "images/thumbnail.png")
+  if(is.null(p$content$html_url)){
+    p <- get.repository.path(org, repo, "images/thumbnail.jpg")
+  }
   thumbnail_url <- p$content$html_url
   thumbnail_url <- gsub(pattern = "github.com", replacement = "raw.githubusercontent.com", thumbnail_url)
   thumbnail_url <- gsub(pattern = "blob/", replacement = "", thumbnail_url)
