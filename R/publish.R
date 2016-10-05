@@ -176,7 +176,7 @@ publish.footer <- function(viz) {
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
     thumbURL <- getVizThumbnail(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
-    download.file(url=thumbURL, destfile = vizzies[[v]]$thumbLoc)
+    download.file(url=thumbURL, destfile = file.path("target",vizzies[[v]]$thumbLoc))
   }
   
   #TODO: stuff from publish.section
@@ -184,7 +184,7 @@ publish.footer <- function(viz) {
   names(dependencies) <- viz[['depends']]
   
   context <- buildContext(viz, dependencies)
-  
+  context[['vizzies']] <- vizzies 
   template <- readTemplate(viz[['template']])
   
   viz[['output']] <- whisker.render(template = template, data = context)
