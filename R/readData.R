@@ -8,7 +8,7 @@
 #'
 #' @export
 readData <- function(viz) UseMethod("readData")
-  
+
 #' \code{readData.character} is the standard entry point; from here, viz.id gets
 #' assigned a class to route it to a more specific reader
 #'
@@ -76,7 +76,7 @@ readData.folder <- function(viz){
   # to do: make this recursive to get into subdirs (add to viz object)
   # to do: add pattern so that it only reads in files that meet some pattern (e.g ".csv")
   filepaths <- dir(viz[['location']], full.names=TRUE)
-  
+
   #create new vizlab object (one list element for each file)
   viz_lists <- lapply(filepaths, function(fp, id, mimetype){
     v <- list(id=id, location=fp, mimetype=mimetype)
@@ -86,7 +86,7 @@ readData.folder <- function(viz){
   }, id=viz[['id']], mimetype=viz[['mimetype']])
 
   data_list <- lapply(viz_lists, readData)
-  
+
   return(data_list)
 }
 
@@ -95,7 +95,7 @@ readData.folder <- function(viz){
 #' @rdname readData
 #' @export
 readData.txt <- function(viz){
-  scan(viz[['location']], what="character", sep="\n")
+  scan(viz[['location']], what = "character", sep = "\n", quiet = TRUE)
 }
 
 ### Set up the reader class
@@ -116,7 +116,7 @@ as.reader <- function(viz, ...) {
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
     reader <- lookupMimetype(mimetype)
-    
+
     if(length(reader) == 0){
       warning('Could not find specific readData method for viz.id=', id,
               ', mimetype=', mimetype, '; returning filepath.',
