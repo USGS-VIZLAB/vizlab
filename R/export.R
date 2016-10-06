@@ -6,7 +6,9 @@
 #' Currently the publish phase is responsible for exporting,
 #' but this could be separated in the future.
 #'
+#'
 #' @param viz object to export
+#' @return location to export or NULL if export shouldn't take place
 #' @export
 export <- function(viz) UseMethod("export")
 
@@ -69,6 +71,19 @@ export.css <- function(viz) {
   file <- NULL
   if (doExport(viz, TRUE)) {
     file <- paste0(exportLocation(), "css/", basename(location))
+  }
+  return(file)
+}
+
+#' Default export, defaults to not export
+#'
+#' @rdname export
+#' @export
+export.resource <- function(viz) {
+  location <- viz[['location']]
+  file <- NULL
+  if (doExport(viz, FALSE)) {
+    file <- paste0(exportLocation(), "data/", basename(location))
   }
   return(file)
 }

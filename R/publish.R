@@ -95,13 +95,17 @@ publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
   # going to start out with simple images
   destFile <- export(viz)
-  dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
-  srcFile <- viz[['location']]
-  if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
-    srcFile <- system.file(srcFile, package = "vizlab")
+  if (!is.null(destFile)) {
+    dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
+    srcFile <- viz[['location']]
+    if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
+      srcFile <- system.file(srcFile, package = "vizlab")
+    }
+    file.copy(srcFile, destFile, overwrite = TRUE)
+    viz[['relpath']] <- relativePath(destFile)
+  } else {
+    viz[['relpath']] <- NA
   }
-  file.copy(srcFile, destFile, overwrite = TRUE)
-  viz[['relpath']] <- relativePath(destFile)
   return(viz)
 }
 
@@ -114,10 +118,14 @@ publish.img <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  alt.text <- viz[['alttext']]
-  relative.path <- viz[['relpath']]
-  title.text <- viz[['title']]
-  return(sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text))
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    alt.text <- viz[['alttext']]
+    relative.path <- viz[['relpath']]
+    title.text <- viz[['title']]
+    html <- sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text)
+  }
+  return(html)
 }
 
 #' javascript publishing
@@ -130,7 +138,10 @@ publish.js <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+  output <- NULL
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+  }
   return(output)
 }
 
@@ -143,7 +154,10 @@ publish.css <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+  output <- NULL
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+  }
   return(output)
 }
 
@@ -156,32 +170,35 @@ publish.svg <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
-                    viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+  output <- NULL
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
+                      viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+  }
   return(output)
 }
 
 #' publish landing page
-#' 
+#'
 #' @rdname publish
 #' @export
 publish.landing <- function(viz){
-  
+
   repos <- getRepoNames(viz[['org']])
   viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
   names(viz_info) <- repos
   viz_info <- viz_info[!sapply(viz_info, is.null)]
-  
+
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
   pageviz$depends <- append(pageviz$depends, viz_info)
   pageviz$context <- list(sections = c("header", names(viz_info)), #names of section ids
-                          resources = "landingCSS") 
+                          resources = "landingCSS")
   pageviz$publisher <- "page"
   pageviz <- as.viz(pageviz)
   pageviz <- as.publisher(pageviz) #maybe/maybe not
-  
+
   publish(pageviz)
 }
 
