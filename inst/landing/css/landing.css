@@ -55,8 +55,8 @@ body {
   padding: 0 15px;
 }
 .visualizationsContainer {
-  min-height: 300px;
-  margin-bottom: 10px;
+  min-height: 100px;
+  margin-bottom: 20px;
 }
 .vizzy {
   height: 250px;
@@ -95,11 +95,11 @@ body {
     padding-top: 16px;
     font-size: 1.5em;
   }
-  #container {
+  .container {
     width: 760px;
     margin: 0 auto;
   }
-  #visualizationsContainer:after {
+  .visualizationsContainer:after {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -107,17 +107,12 @@ body {
     clear: both;
     height: 0;
   }
-  .vizzy {
-    width: 48.5%;
-    margin: 0 1% 1% 0;
-    float: left;
-  }
 }
 @media screen and (min-width: 1025px) {
   #header {
     width: 960px;
   }
-  #container {
+  .container {
     width: 960px;
   }
 }
