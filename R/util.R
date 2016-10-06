@@ -30,21 +30,34 @@ relativePath <- function(file) {
 buildContext <- function(viz, dependencies) {
   # allow for context to be inline
   data <- viz[["context"]]
+
   if (is.null(data)) {
     data <- list()
   }
   else if (is.character(data)) {
     data <- readData(data)
   }
+  for (name in viz[["data-depends"]]) {
+    data.dep <- readData(name)
+    if (is.list(data.dep)) {
+      dependencies <- append(dependencies, data.dep)
+    }
+  }
+
   # replace dependencies with contents
   data <- rapply(data, function(x) {
-      dep.ids <- x %in% names(dependencies)
-      if (any(dep.ids)) {
-        x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
-      } else if (is.character(x)) {
-        x <- handleMarkdown(x)
-      }
-      return(x)
+    dep.ids <- x %in% names(dependencies)
+    if (any(dep.ids)) {
+      x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
+    }
+    return(x)
+  }, how = "replace", classes = "character")
+  # after replacements occur, markdownify
+  data <- rapply(data, function(x) {
+    if (is.character(x)) {
+      x <- handleMarkdown(x)
+    }
+    return(x)
   }, how = "replace", classes = "character")
   return(data)
 }
