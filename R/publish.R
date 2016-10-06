@@ -189,8 +189,8 @@ publish.footer <- function(viz) {
     vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url, 
                                   x = info$context$thumbnail)
   }
-  
-  
+  context[['blogsInFooter']] <- viz$blogsInFooter
+  context[['blogs']] <- viz$blogs
   context[['vizzies']] <- vizzies 
   template <- readTemplate(viz[['template']])
   
