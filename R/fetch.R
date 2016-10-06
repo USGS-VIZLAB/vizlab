@@ -20,7 +20,7 @@ fetch.character <- function(viz) {
   # all.args <- getAutoargs(data.info, fun='write')
 
   viz <- as.fetcher(viz)
-  
+
   fetch(viz)
 }
 
@@ -69,9 +69,9 @@ fetch.sciencebase <- function(viz) {
 #' @rdname fetch
 #' @export
 fetch.url <- function(viz) {
-  if (all(c("remoteURL", "location") %in% names(viz))) {
-    stop('must specify remoteURL and location for', viz[['id']])
-  }
+  required <- c("remoteURL", "location")
+  checkRequired(viz, required)
+
   remoteURL <- viz[['remoteURL']]
   outfile <- viz[['location']]
   #check that we have one URL
