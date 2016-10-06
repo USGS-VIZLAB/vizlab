@@ -170,23 +170,27 @@ publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
   
-  # TODO: move css to same dir
   index_loc_css <- 'target/css'
   if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
   file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
   
-  #TODO: get thumbnail from repo, copy to images
-  vizzies <- viz$vizzies
-  for(v in 1:length(vizzies)){
-    thumbURL <- getVizThumbnail(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
-    download.file(url=thumbURL, destfile = file.path("target",vizzies[[v]]$thumbLoc))
-  }
-  
-  #TODO: stuff from publish.section
   dependencies <- lapply(viz[['depends']], publish)
   names(dependencies) <- viz[['depends']]
   
   context <- buildContext(viz, dependencies)
+  
+  
+  #add info from viz.yaml to context to inject into template
+  vizzies <- viz$vizzies
+  for(v in 1:length(vizzies)){
+    info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
+    vizzies[[v]]$name <- info$context$name
+    vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", sub(".","",info$context$path))
+    vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url, 
+                                  x = info$context$thumbnail)
+  }
+  
+  
   context[['vizzies']] <- vizzies 
   template <- readTemplate(viz[['template']])
   
