@@ -111,3 +111,12 @@ getPartialLibrary <- function() {
   names(partials) <- template.names
   return(partials)
 }
+
+#' Sets up folders so file can be written without warnings
+#'
+#' @param file file that is about to be written
+#' @export
+setupFoldersForFile <- function(file) {
+  dir <- dirname(file)
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+}
