@@ -156,32 +156,39 @@ publish.svg <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
+  output <- NULL
+  if (is.null(viz[['inline']]) || !viz[['inline']]) {
+    output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
                     viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+  } else {
+    # skip prolog
+    output <- scan(file = viz[['location']], what = "character", sep = "\n", skip = 1)
+    output <- paste(output, collapse = "\n")
+  }
   return(output)
 }
 
 #' publish landing page
-#' 
+#'
 #' @rdname publish
 #' @export
 publish.landing <- function(viz){
-  
+
   repos <- getRepoNames(viz[['org']])
   viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
   names(viz_info) <- repos
   viz_info <- viz_info[!sapply(viz_info, is.null)]
-  
+
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
   pageviz$depends <- append(pageviz$depends, viz_info)
   pageviz$context <- list(sections = c("header", names(viz_info)), #names of section ids
-                          resources = "landingCSS") 
+                          resources = "landingCSS")
   pageviz$publisher <- "page"
   pageviz <- as.viz(pageviz)
   pageviz <- as.publisher(pageviz) #maybe/maybe not
-  
+
   publish(pageviz)
 }
 
