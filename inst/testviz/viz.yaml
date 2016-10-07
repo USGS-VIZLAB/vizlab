@@ -85,44 +85,51 @@ visualize:
     export: false
 publish:
   -
-    id: appJS
-    location: layout/js/app.js
-    mimetype: application/javascript
-  -
     id: mainCSS
     location: layout/css/main.css
     mimetype: text/css
+    publisher: resource
   -
     id: normalizeCSS
     location: layout/css/normalize.css
     mimetype: text/css
+    publisher: resource
   -
     id: index
     name: index
-    template: layout/templates/index.mustache
-    depends: [ appJS, mainCSS, normalizeCSS ]
+    template: fullPage
+    depends: ["relativeAbundance"]
     publisher: page
     context: 
       title: testViz
-      sections: [ header, intro, relativeAbundance, footer ]
-  -
-    id: header
-    template: layout/templates/header.mustache
-    context: siteTextData
-    publisher: section
-  -
-    id: intro
-    template: layout/templates/intro.mustache
-    context: siteTextData
-    publisher: section
+      sections: [ "relativeAbundance" ]
+      resources: [ "mainCSS", "normalizeCSS", "footer-style"]
+      footer: [ "footer" ]
   -
     id: relativeAbundance
-    template: layout/templates/figure1.mustache
+    template: simpleFigure
     context: siteTextData
     depends: relativeAbundanceFig
     publisher: section
   -
     id: footer
-    template: layout/templates/footer.mustache
-    context: siteTextData
-    publisher: section
+    publisher: footer
+    template: footer
+    depends: footer-style
+    blogsInFooter: TRUE
+    vizzies:
+      - name: Microplastics in the Great Lakes
+        org: USGS-VIZLAB
+        repo: great-lakes-microplastics
+      - name: Climate Change and Freshwater Fish
+        org: USGS-VIZLAB
+        repo: climate-fish-habitat
+    blogs: 
+      - name: Using the dataRetrieval Stats Service
+        url: https://owi.usgs.gov/blog/stats-service-map/
+        thumbLoc: https://owi.usgs.gov/blog/images/owi-mobile.png
+  -
+    id: footer-style
+    location: layout/css/footer.css
+    publisher: resource
+    mimetype: text/css

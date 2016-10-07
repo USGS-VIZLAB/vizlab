@@ -21,7 +21,57 @@ header img{
 	margin-right:5px;
 	width:80px;
 	}
-	
+.exploreMore{
+	border:1px solid #003366;
+	padding:10px 10px 0 10px;
+	width:30%;
+	max-width:300px;
+	min-width:200px;
+	text-align:center !important;
+	margin:20px auto 20px auto !important;
+	}
+
+.exploreMore img{
+	width:100%;
+	}	
+.extraButton{
+	background:#003366;
+	color:#fff;
+	padding:5px 15px;
+	border:1px solid #003366;
+	outline:none;
+	font-size:.8em;
+	margin:-10px 0 10px 0;
+	}
+
+.extraButton:hover{
+	background:#fff;
+	color:#003366;
+	border:1px solid #003366;
+	}
+.contactScience {
+  font-size: .8em;
+}
+
+a:link {
+    color: #01b29F;
+}
+#teamFaces {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.teamFace {
+  width: 150px;
+  padding: 10px;
+  text-align: center;
+  
+}
+.teamFace img {
+  width: 100%;
+  border:1px solid white;
+}	
 .captionContainer{
   padding:15px;
   min-height:50px;
@@ -31,6 +81,7 @@ header img{
   padding:15px;
   background:rgb(200,200,200);
   background:rgba(200,200,200,.5);
+  font-size:.9em;
 }
 
 .insetPictureContainer{
@@ -41,7 +92,7 @@ header img{
 
 .insetPictureContainer img{
   width:100%;
-  max-width:300px;
+  max-width:650px;
 }
 
 /*Intro*/
@@ -49,10 +100,13 @@ header img{
 	text-align:center;
 	padding:20px;
 	}
-
-
+	
+.svgFig{
+  min-height:200px !important;
+}
+	
 .svgFig, .svgSpanner {
-	position: relative;
+  position: relative;
   left: 50%;
   -webkit-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
@@ -168,39 +222,7 @@ header img{
 	}
 
 	
-/*Footer CSS*/
-footer{
-	background:rgb(0,51,102);
-	min-height:400px;
-	border-top:5px solid rgb(210,210,210);
-	}
-	
-@media screen and (min-width:768px){
-  
-  .captionContainer{
-    width:760px;
-    margin:0 auto;
-  }
-  
-  .insetPictureContainer{
-    width:760px;
-    margin:0 auto 20px auto;
-  }
-  
-  .insetPictureContainer img{
-    max-width:500px;
-  }
-  
-  #walleyeDeclineSVGMobile{
-    display:none;
-  }
 
-  #walleyeDeclineSVG{
-    display:block;
-    overflow:hidden;
-    
-  }
-	
 	/*Header CSS*/
 	#logo{
 		width:760px;
@@ -246,9 +268,17 @@ footer{
 		width:730px;
 		margin:0 auto;
 	}
+	
+	.list li{
+	  font-size:1.5em;
+	}
 		
 }
 
+#footer p {
+  font-size:0.85em;
+  font-weight: 300;
+}
 @media screen and (min-width:1024px){
   
   .captionContainer,
@@ -265,13 +295,9 @@ footer{
 	.list{
 		width:960px;
 	}
+	
 .svgFig {
   	width: 1000px;
-	  position: relative;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
   }
   .svgSpanner {
 	  height: 720px;
