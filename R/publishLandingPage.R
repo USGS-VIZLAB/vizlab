@@ -7,7 +7,6 @@ publishLandingPage <- function(){
 
   file.copy(from=system.file('landing', package="vizlab"), to=getwd(),
             recursive = TRUE, overwrite = TRUE)
-  
   oldwd <- getwd()
   setwd('landing')
   on.exit(setwd(oldwd))
@@ -93,3 +92,4 @@ getVizUrl <- function(path){
   }
   return(path)
 }
+
