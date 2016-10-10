@@ -5,6 +5,11 @@ Package with utilities for building vizlab pages
 
 ## Installation
 
+Before installing `vizlab`, you may need to install this non-CRAN dependency:
+```r
+devtools::install_github("cscheid/rgithub")
+```
+
 The most stable+current version of this package can be installed with this R command:
 ```r
 install.packages("vizlab", dependencies=TRUE, 
