@@ -1,27 +1,27 @@
 context("testviz")
 
-setup <- function() {
-  testtmp <- file.path(tempdir(), "testtmp")
-  dir.create(testtmp)
-  setwd(testtmp)
-  # need to copy any other files needed for testing
-  #just copy everything? should need it eventually for more tests?
-  #file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
- file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
-           testtmp, recursive = TRUE)
-  #create timestamp folder
-  dir.create('vizlab/make/timestamps', recursive = TRUE)
-  return(testtmp)
-}
+# setup <- function() {
+#   testtmp <- file.path(tempdir(), "testtmp")
+#   dir.create(testtmp)
+#   setwd(testtmp)
+#   # need to copy any other files needed for testing
+#   #just copy everything? should need it eventually for more tests?
+#   #file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
+#  file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
+#            testtmp, recursive = TRUE)
+#   #create timestamp folder
+#   dir.create('vizlab/make/timestamps', recursive = TRUE)
+#   return(testtmp)
+# }
 
-cleanup <- function(oldwd, testtmp) {
-  setwd(oldwd)
-  unlink(testtmp, recursive = TRUE)
-  invisible()
-}
+# cleanup <- function(oldwd, testtmp) {
+#   setwd(oldwd)
+#   unlink(testtmp, recursive = TRUE)
+#   invisible()
+# }
 
 oldwd <- getwd()
-testtmp <- setup()
+testtmp <- setup(copyTestViz=TRUE)
 
 test_that('timestamp folder actually created', {
   expect_true(file.exists('vizlab/make/timestamps'))
