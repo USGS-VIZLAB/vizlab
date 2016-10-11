@@ -1,15 +1,5 @@
 context("viz-setup")
 #these don't need the test viz, and can be in their own temp directory
-# cleanup <- function(oldwd, setuptmp) {
-#   setwd(oldwd)
-#   unlink(setuptmp, recursive = TRUE)
-#   invisible()
-# }
-
-# oldwd <- getwd()
-# setuptmp <- file.path(tempdir(), "setuptmp")
-# dir.create(setuptmp)
-# setwd(setuptmp)
 
 oldwd <- getwd()
 setuptmp <- setup()
