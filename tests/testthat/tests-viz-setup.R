@@ -1,15 +1,8 @@
 context("viz-setup")
-
-cleanup <- function(oldwd, setuptmp) {
-  setwd(oldwd)
-  unlink(setuptmp, recursive = TRUE)
-  invisible()
-}
+#these don't need the test viz, and can be in their own temp directory
 
 oldwd <- getwd()
-setuptmp <- file.path(tempdir(), "setuptmp")
-dir.create(setuptmp)
-setwd(setuptmp)
+setuptmp <- setup()
 
 vizSkeleton(name="my viz")
 
