@@ -4,6 +4,7 @@
 \alias{publish}
 \alias{publish.character}
 \alias{publish.css}
+\alias{publish.footer}
 \alias{publish.img}
 \alias{publish.js}
 \alias{publish.landing}
@@ -31,6 +32,8 @@ publish(viz)
 
 \method{publish}{svg}(viz)
 
+\method{publish}{footer}(viz)
+
 \method{publish}{landing}(viz)
 }
 \arguments{
@@ -55,7 +58,9 @@ TODO allow for cdn js
 
 css publishing
 
-svg publishing
+svg publishing, may return NULL
+
+Footer publishing
 
 publish landing page
 }

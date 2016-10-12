@@ -161,7 +161,7 @@ publish.css <- function(viz) {
   return(output)
 }
 
-#' svg publishing
+#' svg publishing, may return NULL
 #'
 #' @rdname publish
 #' @export
@@ -171,11 +171,58 @@ publish.svg <- function(viz) {
   checkRequired(viz, required)
 
   output <- NULL
-  if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
-                      viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+  if (is.null(viz[['inline']]) || !viz[['inline']]) {
+    if (!is.na(viz[['relpath']])) {
+      output <- sprintf(
+        '<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" >%s</object>',
+        viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+    }
+  } else {
+    # skip prolog
+    output <- scan(file = viz[['location']], what = "character", sep = "\n", skip = 1)
+    output <- paste(output, collapse = "\n")
   }
   return(output)
+}
+
+#' Footer publishing
+#' @importFrom utils download.file
+#' @rdname publish
+#' @export
+
+publish.footer <- function(viz) {
+  #should also check blogs?  Or one or the other?
+  checkRequired(viz, required = "vizzies")
+
+  index_loc_css <- 'target/css'
+  if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
+  file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
+
+  dependencies <- lapply(viz[['depends']], publish)
+  names(dependencies) <- viz[['depends']]
+
+  context <- buildContext(viz, dependencies)
+
+
+  #add info from viz.yaml to context to inject into template
+  vizzies <- viz$vizzies
+  for(v in 1:length(vizzies)){
+    info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
+    vizzies[[v]]$name <- info$context$name
+    vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", sub(".","",info$context$path))
+    vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url,
+                                  x = info$context$thumbnail)
+  }
+  context[['blogsInFooter']] <- viz$blogsInFooter
+  context[['blogs']] <- viz$blogs
+  context[['vizzies']] <- vizzies
+  template <- readTemplate(viz[['template']])
+
+  viz[['output']] <- whisker.render(template = template, data = context)
+  if (!is.null(viz[['analytics']])) {
+    viz <- analytics(viz)
+  }
+  return(viz[['output']])
 }
 
 #' publish landing page

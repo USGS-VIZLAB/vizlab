@@ -1,27 +1,8 @@
 context("testviz")
 
-setup <- function() {
-  testtmp <- file.path(tempdir(), "testtmp")
-  dir.create(testtmp)
-  setwd(testtmp)
-  # need to copy any other files needed for testing
-  #just copy everything? should need it eventually for more tests?
-  #file.copy(system.file('testviz/viz.yaml', package='vizlab'), testtmp)
- file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
-           testtmp, recursive = TRUE)
-  #create timestamp folder
-  dir.create('vizlab/make/timestamps', recursive = TRUE)
-  return(testtmp)
-}
-
-cleanup <- function(oldwd, testtmp) {
-  setwd(oldwd)
-  unlink(testtmp, recursive = TRUE)
-  invisible()
-}
-
 oldwd <- getwd()
-testtmp <- setup()
+#these tests need to use the test viz
+testtmp <- setup(copyTestViz=TRUE)
 
 test_that('timestamp folder actually created', {
   expect_true(file.exists('vizlab/make/timestamps'))
@@ -145,6 +126,22 @@ test_that("makeFiles created", {
   expect_true(file.exists('vizlab/make/process.make'))
   expect_true(file.exists('vizlab/make/visualize.make'))
   expect_true(file.exists('vizlab/make/publish.make'))
+})
+
+context("publishers")
+test_that("publish footer works", {
+  output <- publish('footer')
+  expect_true(any(grepl('https://owi.usgs.gov/vizlab/microplastics', output)))
+  expect_true(any(grepl('https://owi.usgs.gov/blog/stats-service-map/', output)))
+  expect_true(any(grepl('https://owi.usgs.gov/vizlab/climate-change-walleye-bass/', output)))
+  
+  #without blogs
+  fakeViz <- list(id="footer", publisher="footer", template = "footer", blogsInFooter=FALSE,
+                  vizzies=list(list(name = "Microplastics in the Great Lakes", org="USGS-VIZLAB",
+                                    repo = "great-lakes-microplastics")))
+  output <- publish.footer(fakeViz)
+  expect_true(any(grepl('https://owi.usgs.gov/vizlab/microplastics', output)))
+  expect_false(any(grepl('blog|Blogs', output)))
 })
 
 cleanup(oldwd, testtmp)

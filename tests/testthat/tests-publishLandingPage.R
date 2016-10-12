@@ -1,10 +1,5 @@
 context("publish viz landing page")
 
-cleanup <- function() {
-  dir <- "landing"
-  unlink(dir, recursive = TRUE)
-}
-
 test_that("publishLandingPage works", {
 
   publishLandingPage()
@@ -15,5 +10,6 @@ test_that("publishLandingPage works", {
   expect_false(any(grepl('/example', index)))
   expect_false(any(grepl('href=\"./vizlab', index)))
 
-  cleanup()
 })
+
+cleanup(oldwd, setuptmp)

@@ -1,0 +1,44 @@
+<footer>
+  <div id="vizlabPromo">
+  	{{{logo}}}
+  </div>
+  
+  <div id="relatedVizzies">
+  	<h3>Related Visualizations:</h3>
+  	
+  	{{#vizzies}}
+  		<a href="{{url}}" target="_blank">
+  			<div class="relatedItem">
+  			  <div class="titleHandler">
+  				  <h4>{{name}}</h4>
+  				</div>
+  				<div class="footerThumnail">
+  					<img src="{{thumbLoc}}" alt=""/>
+  				</div>
+  			</div>
+  		</a>
+  	{{/vizzies}}
+  	
+  </div>
+  
+  {{#blogsInFooter}}
+  <div id="relatedBlogs">
+  	<h3>Related Blogs:</h3>
+  	
+  	
+  	{{#blogs}}
+  		<a href="{{url}}" target="_blank">
+  			<div class="relatedItem">
+  				<div class="titleHandler">
+  					<h4>{{name}}</h4>
+  				</div>
+  				<div class="footerThumnail blog">
+  					<img src="{{thumbLoc}}" alt=""/>
+  				</div>
+  			</div>
+  		</a>
+  	{{/blogs}}
+  	
+  </div>
+  {{/blogsInFooter}}
+</footer>
