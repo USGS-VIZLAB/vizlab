@@ -43,7 +43,10 @@ publish.page <- function(viz) {
     }
     return(expanded.dep)
   })
-  names(dependencies) <- c(viz[['depends']], vizlabjs)
+
+  if (length(names(dependencies)) != length(dependencies)) {
+    names(dependencies) <- c(viz[['depends']], vizlabjs)
+  }
   dependencies <- c(dependencies, recursive = TRUE)
 
   context <- buildContext(viz, dependencies)
