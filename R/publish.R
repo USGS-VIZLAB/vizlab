@@ -28,18 +28,23 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- viz[['depends']]
-  if(class(viz[['depends']]) != "list"){
-    dependencies <- as.list(dependencies)
-    names(dependencies) <- viz[['depends']]
-  }
-
+  dependencies <- as.list(viz[['depends']])
   # add automatic dependencies
   vizlabjs <- '_vizlabJS'
   dependencies[[vizlabjs]] <- getVizlabJS()
 
-  # publish all dependencies
-  dependencies <- lapply(dependencies, publish)
+  # TODO Watch out for cyclic depends
+  dependencies <- lapply(dependencies, function(x) {
+    expanded.dep <- NULL
+    expanded.dep <- publish(x)
+    if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+      expanded.dep <- as.reader(expanded.dep)
+      expanded.dep <- readData(expanded.dep)
+    }
+    return(expanded.dep)
+  })
+  names(dependencies) <- c(viz[['depends']], vizlabjs)
+  dependencies <- c(dependencies, recursive = TRUE)
 
   context <- buildContext(viz, dependencies)
 
@@ -65,8 +70,18 @@ publish.section <- function(viz) {
   checkRequired(viz, required)
 
   # TODO Watch out for cyclic depends
-  dependencies <- lapply(viz[['depends']], publish)
+  dependencies <- as.list(viz[['depends']])
+  dependencies <- lapply(dependencies, function(x) {
+    expanded.dep <- NULL
+    expanded.dep <- publish(x)
+    if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+      expanded.dep <- as.reader(expanded.dep)
+      expanded.dep <- readData(expanded.dep)
+    }
+    return(expanded.dep)
+  })
   names(dependencies) <- viz[['depends']]
+  dependencies <- c(dependencies, recursive = TRUE)
 
   context <- buildContext(viz, dependencies)
 

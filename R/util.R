@@ -37,12 +37,6 @@ buildContext <- function(viz, dependencies) {
   else if (is.character(data)) {
     data <- readData(data)
   }
-  for (name in viz[["data-depends"]]) {
-    data.dep <- readData(name)
-    if (is.list(data.dep)) {
-      dependencies <- append(dependencies, data.dep)
-    }
-  }
 
   # replace dependencies with contents
   data <- rapply(data, function(x) {
