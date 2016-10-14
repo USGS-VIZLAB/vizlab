@@ -52,13 +52,7 @@ buildContext <- function(viz, dependencies) {
     }
     return(x)
   }, how = "replace", classes = "character")
-  # after replacements occur, markdownify
-  data <- rapply(data, function(x) {
-    if (is.character(x)) {
-      x <- handleMarkdown(x)
-    }
-    return(x)
-  }, how = "replace", classes = "character")
+
   return(data)
 }
 
@@ -134,7 +128,7 @@ handleMarkdown <- function(text) {
   options <- c("skip_html", "skip_style", "skip_images", "escape", "smartypants", "fragment_only")
   extensions <- c("tables", "fenced_code", "strikethrough", "lax_spacing", "superscript", "latex_math")
   html <- markdownToHTML(text = text, options = options, extensions = extensions)
-  m <- regexec("^<p>(.*)</p>\\n", html, perl = TRUE)
+  m <- regexec("^<p>(.*)</p>\\n$", html, perl = TRUE)
   if (length(regmatches(x = html, m = m)[[1]]) > 0) {
     # capture the stuff between paragraph tags (group 1, index 2)
     html <- regmatches(x = html, m = m)[[1]][2]

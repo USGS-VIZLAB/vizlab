@@ -1,20 +1,22 @@
 context("markdown")
+
+oldwd <- getwd()
+testtmp <- setup(TRUE)
 test_that("markdown in context becomes proper html", {
   viz <- as.viz(list(
     id = "test_markdown",
-    template = "printall",
-    publisher = "section",
-    context = list(
-      text = "# HEADER\
-Paragraph of text with [link](https://owi.usgs.gov/ \"OWI\") followed by list\
-* list item one\
-* list item two"
-    )
+    location = "data/siteText.yaml",
+    reader = "md",
+    mimetype = "text/yaml"
   ))
-  viz <- as.publisher(viz)
+  viz <- as.reader(viz)
 
-  fragment <- publish(viz)
-  expect_match(fragment, "<h1>HEADER</h1>")
-  expect_match(fragment, ">link</a>")
-  expect_match(fragment, "<li>list item one</li>")
+  fragment <- readData(viz)
+  expect_match(fragment$header, "<h1>HEADER</h1>")
+  expect_match(fragment$link, ">link</a>")
+  expect_match(fragment$nested$keys$with$markdown, ">link</a>")
+  expect_match(fragment$list, "<li>bullets</li>")
+  expect_match(fragment$list, "<li>or numbered</li>")
+
 })
+cleanup(oldwd, testtmp)

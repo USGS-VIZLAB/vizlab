@@ -6,6 +6,7 @@
 \alias{readData.excel}
 \alias{readData.filepath}
 \alias{readData.folder}
+\alias{readData.md}
 \alias{readData.rds}
 \alias{readData.tabular}
 \alias{readData.txt}
@@ -29,6 +30,8 @@ readData(viz)
 \method{readData}{folder}(viz)
 
 \method{readData}{txt}(viz)
+
+\method{readData}{md}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -54,5 +57,8 @@ assigned a class to route it to a more specific reader
 \code{readData.folder} returns names of files inside a folder
 
 \code{readData.txt} returns names of files inside a folder
+
+Can either be a single markdown file, specified with mimetype: text/markdown
+or markdown contained in yaml with mimetype: text/yaml
 }
 

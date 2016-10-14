@@ -98,6 +98,27 @@ readData.txt <- function(viz){
   scan(viz[['location']], what = "character", sep = "\n", quiet = TRUE)
 }
 
+#' \code{readData.markdown} reads and renders markdown
+#'
+#' Can either be a single markdown file, specified with mimetype: text/markdown
+#' or markdown contained in yaml with mimetype: text/yaml
+#'
+#' @rdname readData
+#' @export
+readData.md <- function(viz) {
+  mimetype <- viz[['mimetype']]
+  html <- NULL
+  if (is.null(mimetype) || mimetype == "text/yaml") {
+    yaml <- readData.yaml(viz)
+    rapply(yaml, function(x) {
+      x <- handleMarkdown(x)
+      return(x)
+    }, how = "replace", classes = "character")
+  } else {
+    html <- handleMarkdown(viz)
+  }
+}
+
 ### Set up the reader class
 
 #' Treat viz object as a reader

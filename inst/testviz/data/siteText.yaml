@@ -5,3 +5,19 @@ title: Demo viz
 welcome: Demo viz
 welcome-subnote1: >-
   This is a demo
+
+## Markdown ##
+header: "# HEADER"
+link: this is a [link](http://reddit.com/r/dataisbeautiful "Data is Beautiful") in markdown
+list: |+
+  Can also make lists
+  * bullets
+  * like
+  * this
+  1. or numbered
+  2. like
+  3. this
+nested:
+  keys:
+    with:
+      markdown: testing [link](http://reddit.com/r/dataisbeautiful "Data is Beautiful") nested deep
