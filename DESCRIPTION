@@ -14,6 +14,7 @@ Copyright: This software is in the public domain because it contains materials
     official USGS copyright policy at
     http://www.usgs.gov/visual-id/credit_usgs.html#copyright
 VignetteBuilder: knitr
+BuildVignettes: true
 Depends:
     R (>= 3.0)
 Imports:
@@ -29,5 +30,6 @@ Suggests:
     knitr,
     readxl,
     sbtools (>= 0.19.3),
-    testthat
+    testthat,
+    rmarkdown
 RoxygenNote: 5.0.1
