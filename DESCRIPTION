@@ -30,7 +30,7 @@ Suggests:
     data.table,
     knitr,
     readxl,
+    rmarkdown,
     sbtools (>= 0.19.3),
-    testthat,
-    rmarkdown
+    testthat
 RoxygenNote: 5.0.1
