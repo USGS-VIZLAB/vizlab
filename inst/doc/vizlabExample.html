@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="David Watkins" />
+
+<meta name="date" content="2016-10-18" />
+
+<title>Vizlab Example</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Vizlab Example</h1>
+<h4 class="author"><em>David Watkins</em></h4>
+<h4 class="date"><em>2016-10-18</em></h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <code>vizlab</code> package was created to facilitate the rapid assembly of web-ready visualizations. It provides a framework for common steps that go into most/all visualizations, namely fetching, processing, and visualizing data, and finally publishing it in a format such as HTML. Other features such as Google Analytics are integrated as well. The package itself consists of R functions and scripts that carry out two distinct tasks. First they create a series of <a href="https://www.gnu.org/software/make/">make files</a>, which in turn execute other pieces of R code that carry out the fetch, process, visualize, and publish steps. Code for each step can be supplied by the user, and seamlessly integrated into the visualization through a central <a href="http://yaml.org/">YAML control file</a> (<code>viz.yaml</code>). There are default methods for some common variants of these steps included as well, such as for retrieving data from USGS ScienceBase. Ultimately, this package aims to eliminate the technical tasks common to the construction of most vizualizations, and allow time to be focused on content creation and other creative tasks.</p>
+<p>This vignette will outline all the steps necessary to use the package, utilizing an example visualization that can be found on github at <a href="https://github.com/USGS-VIZLAB/example" class="uri">https://github.com/USGS-VIZLAB/example</a>.</p>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>Vizlab can be downloaded from github via <code>devtools</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">'devtools'</span>)
+devtools::<span class="kw">install.github</span>(<span class="st">'USGS-VIZLAB/vizlab'</span>)</code></pre></div>
+<p>The example visualization (‘viz’) is located at <a href="https://github.com/USGS-VIZLAB/example" class="uri">https://github.com/USGS-VIZLAB/example</a> and should be cloned into a separate directory.</p>
+<p>To build the example viz, your working directory should be set to the main example directory, and the <code>vizlab</code> package should be loaded.</p>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<div id="viz-design-the-viz.yaml" class="section level3">
+<h3>Viz design: the viz.yaml</h3>
+<p>The <code>viz.yaml</code> file manages all the different components of the viz, and is used to generate the <code>make</code> files that build the final published product. <code>viz.yaml</code> contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz. Here we will examine the <code>viz.yaml</code> included in the example viz:</p>
+</div>
+<div id="info" class="section level3">
+<h3>Info</h3>
+<pre><code>vizlab: &quot;0.1.4&quot;
+info:
+  id: example
+  name: Simple but complete vizualization
+  date: 2016-07-19
+  publish-date: 2016-08-02
+  path: /example
+  analytics-id: UA-78530187-1
+  description: &gt;-
+    This is meant to touch all features and act as an integration
+    test of the vizlab platform.</code></pre>
+<p><code>analytics-id</code> contains the Google Analytics (GA) ID to be used. The other fields here are self-explanatory and used to generate an index of all published visualizations to go in the footer of the finished product.</p>
+<p>Each viz should have it’s own GA ID. <a href="https://support.google.com/analytics/answer/1042508">Follow these instructions to create a new ID</a>.</p>
+</div>
+<div id="fetch" class="section level3">
+<h3>Fetch</h3>
+<pre><code>fetch:
+  -
+    id: iris-data
+    location: data/iris.csv
+    mimetype: text/csv
+    refetch: TRUE
+  -
+    id: cars-data
+    location: cache/cars.csv
+    fetcher: cars
+    mimetype: text/csv
+    refetch: TRUE
+  -
+    id: Cuyahoga
+    location: cache/fetch/CuyahogaTDS.csv
+    fetcher: sciencebase
+    refetch: TRUE
+    remoteItemId: 575d839ee4b04f417c2a03fe
+    remoteFilename: CuyahogaTDS.csv
+    mimetype: text/csv</code></pre>
+<p>Each individual piece in each section of the <code>viz.yaml</code> should have it’s own unique ID, so they can be referenced by the suceeding sections. Following sections will look in the <code>location</code> field to find the corresponding file. <code>mimetype</code> specifies file type, and is a required field unless a custom <code>reader</code> is specified. <code>refetch</code> controls whether existing cached data files are used, or newer versions are checked for. It is discussed in more detail at the end of this vignette.</p>
+<p>Three possibilites for fetchers are utilized here. <code>iris-data</code> is a local file already located in the <code>data</code> folder, and so does not need to be fetched. <code>cars-data</code> is a custom fetcher, located in <code>scripts/fetch/cars.R</code>. It will retrieve the cars data (by reading in the default cars dataset) and save it to <code>cache/cars.csv</code>. <code>Cuyahoga</code> uses the built-in USGS ScienceBase fetcher, and will save the retrieved file to <code>cache/fetch/CuyahogaTDS.csv</code>.</p>
+</div>
+<div id="process" class="section level3">
+<h3>Process</h3>
+<pre><code>process:
+ -
+    id: calc-cars
+    location: cache/car-loess.rds
+    processor: cars
+    reader: rds
+    depends: [ &quot;cars-data&quot; ]
+  -
+    id: CuyahogaShort
+    location: cache/process/CuyahogaShort.tsv
+    mimetype: text/tab-separated-values
+    depends: Cuyahoga
+    processor: cuyahoga</code></pre>
+<p><code>depends</code> references the IDs in the fetch section. All processors must be supplied by the user. Just as the custom fetchers are stored in <code>scripts/fetch</code>, processors are stored in <code>scripts/process</code>. The output of each processor is stored in the directory specified by the <code>location</code> field. The <code>reader</code> specified will be used to read in the data for the visualize step. Note the <code>calc-cars</code> step indicates a specific .Rds reader, rather than a mimetype. The readers included in the vizlab package are located in the <code>readData</code> S3 method. Alternatively, a custom reader could be specified, that should be located in the <code>scripts/process</code> directory.</p>
+<p>A processing step is not mandatory — the <code>iris-data</code> plot uses only the raw data, so it has no section here.</p>
+</div>
+<div id="visualize" class="section level3">
+<h3>Visualize</h3>
+<pre><code>visualize:
+  -
+    id: plot-cars
+    location: figures/cars.png
+    visualizer: cars
+    depends: [ &quot;calc-cars&quot;, &quot;cars-data&quot; ]
+    mimetype: image/png
+    title: &quot;Speed vs. Breaking Distance&quot;
+    alttext: &quot;plot of ratio of speed to breaking distance&quot;
+  -
+    id: plot-iris
+    location: figures/iris.png
+    visualizer: iris
+    depends: [ &quot;iris-data&quot; ]
+    mimetype: image/png
+    title: &quot;Sepal length vs. pedal length&quot;
+    alttext: &quot;plot of iris sepal length to pedal length&quot;
+  -
+    id: cuyahogaFig
+    location: figures/cuyahogaFig.svg
+    depends: &quot;CuyahogaShort&quot;
+    visualizer: qTDS
+    mimetype: image/svg+xml
+    title: &quot;Cuyahoga figure&quot;
+    alttext: &quot;figure displaying total dissovled solids vs. discharge of Cuyahoga river&quot;</code></pre>
+<p>In the visualize step, <code>location</code> specifies the location of the figure being output by each step. Visualizers are R functions stored in <code>scripts/visualize/visualize.R</code>. <code>title</code> and <code>alttext</code> become part of the finished viz, as a figure title and alt text that appears when the figure is hovered over. Note that there can be multiple dependencies — <code>plot-cars</code> depends on both the processing step <code>calc-cars</code>, which produces a regression, and the raw <code>cars-data</code> from the fetch step, since they are both directly used in the visualizer. Also note that <code>cuyahogaFig</code> still has an indirect dependency on its fetch step, through the dependency of the process step <code>CuyahogaShort</code>, so it will be run and the figure updated if the cached <code>cache/fetch/CuyahogaTDS.csv</code> were to change.</p>
+</div>
+<div id="publish" class="section level3">
+<h3>Publish</h3>
+<pre><code>publish:
+  -
+    id: index
+    name: index
+    publisher: page
+    template: fullPage
+    depends: [ &quot;cars-section&quot;, &quot;figure-style&quot;, &quot;text-section&quot;,&quot;iris-section&quot;, &quot;Cuyahoga-section&quot;]
+    context:
+      title: Testing
+      sections: [ &quot;cars-section&quot;, &quot;text-section&quot;,&quot;iris-section&quot;, &quot;Cuyahoga-section&quot;]
+      resources: [ &quot;figure-style&quot; ]
+  -
+    id: cars-section
+    publisher: section
+    template: simplefigure
+    depends: [ &quot;plot-cars&quot; ]
+    context:
+      id: carsFig
+      figure: &quot;plot-cars&quot;
+      caption: Relationship between speed and stopping distance on several cars
+  -
+    id: text-section
+    template: printall
+    publisher: section
+    context: 
+      text: 
+        This is a text section in the viz.yaml.  Since it is only
+        text, it doesn't need be referenced anywhere outside of the publish
+        section.  Text wrapping in the viz should be handled automatically.
+        Follow YAML conventions to change formatting.  
+  -
+    id: iris-section
+    publisher: section
+    template: simplefigure
+    depends: [ &quot;plot-iris&quot; ]
+    context:
+      id: irisFig
+      figure: &quot;plot-iris&quot;
+      caption: Relationship between iris sepal length to pedal length
+  -
+    id: Cuyahoga-section
+    template: simplefigure
+    depends: cuyahogaFig
+    publisher: section
+    context:
+      id: cuyahoga-fig
+      figure: cuyahogaFig
+      caption: Total dissolved solids vs discharge
+  -
+    id: figure-style
+    location: layout/css/main.css
+    publisher: resource
+    mimetype: text/css</code></pre>
+<p>The publish step creates the finished viz product. The first section applies to the viz as a whole. It is dependent on all the other publish sections for each figure and the text. <code>name</code> will be the name of the finished viz HTML file. Each section with a figure depends on the corresponding visualize section. Publishers and templates are used in each section of process, and correspond to the sections’s content. Default publisher R functions are stored in <code>publish.R</code> in the <code>vizlab</code> package, and default templates inside the vizlab package in <code>inst/templates</code>. Templates are <a href="https://mustache.github.io/">mustache files</a> that define how the text or image content is displayed in the final HTML. For the example viz, the <code>section</code> publisher is used for every individual section, and <code>fullPage</code> publishes the full viz. Each section, including <code>index</code>, has a context section that defines the actual material to be used. For figures it includes the caption. Note that text-only sections can be included here as well, using the <code>printall</code> template (<code>text-section</code> above). The <code>figure-style</code> section references CSS included with the example viz package.</p>
+</div>
+<div id="setup" class="section level3">
+<h3>Setup</h3>
+<p>The following steps are required to start a viz from scratch. The first two have already been done for the example viz, so are not required here. These steps assume that the actual content creation phases are complete, <em>i.e.</em> there are scripts complete for data retrieval, processing, and figure creation.</p>
+<ol style="list-style-type: decimal">
+<li><p><em>Create the skeleton</em>: First the visualization directory structure should be created, using the <code>vizSkeleton</code> function. This is unnecessary for the example viz, since the directories are already set up in the repo. You can run this function in a dummy directory to see what happens.</p></li>
+<li><p><em>Fill in the viz.yaml</em>: As described above, <code>viz.yaml</code> needs to be filled out in order to guide the creation of the various <code>make</code> files. An empty skeleton <code>viz.yaml</code> is created by the <code>vizSkeleton</code> fuction. The complete <code>viz.yaml</code> in the example viz repository can also be a useful reference.</p></li>
+<li><p><em>Create the profile</em>: Next, run <code>createProfile()</code>. This will create a <code>profile.yaml</code> in your home directory which stores the location of your R installation and some other information. It will be filled in automatically, unless your operating system is unrecognized. Once run, this step only needs to be repeated when R is updated.</p></li>
+<li><p><em>Create the Makefiles</em>: Create the <code>make</code> files using the <code>createMakeFiles</code> function. This will create a <code>vizlab</code> directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.</p></li>
+<li><p><em>Authentication (if needed)</em>: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase. Generally, credentials will need to be stored in the <code>~/.vizlab</code> folder so they can be accessed by scripts within the R sessions that are started by the make files. The <code>sbAuthenticate</code> function tests and stores credentials for ScienceBase access. The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public. For security, it is strongly reccommended to use a ScienceBase account that does not utilize personal credentials.</p></li>
+</ol>
+</div>
+</div>
+<div id="make" class="section level2">
+<h2>make</h2>
+<p>Finally, execute all the created make files by running <code>make</code> from the terminal in the main example viz directory:</p>
+<pre><code>&lt;terminal prompt&gt;:~/Documents/R/example_viz$ make
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='fetch',outfile='vizlab/make/fetch.make')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/make/fetch.Rout
+make -f vizlab/make/fetch.make
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetchTimestamp funargs=list(viz='cars-data') scripts=c('scripts/fetch')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data_timestamp.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetch funargs=list(viz='cars-data') scripts=c('scripts/fetch')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetchTimestamp funargs=list(viz='Cuyahoga') scripts=c('scripts/fetch')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga_timestamp.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='process',outfile='vizlab/make/process.make')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/make/process.Rout
+make -f vizlab/make/process.make
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=process funargs=list(viz='calc-cars') scripts=c('scripts/process')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/process/calc-cars.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='visualize',outfile='vizlab/make/visualize.make')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/make/visualize.Rout
+make -f vizlab/make/visualize.make
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=visualize funargs=list(viz='plot-cars') scripts=c('scripts/visualize')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/visualize/plot-cars.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='publish',outfile='vizlab/make/publish.make')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/make/publish.Rout
+make -f vizlab/make/publish.make
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='index')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/publish/index.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='cars-section')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/publish/cars-section.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='text-section')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/publish/text-section.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='iris-section')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/publish/iris-section.Rout
+export R_LIBS_USER=&quot;/Users/wwatkins/Library/R/3.3/library&quot;;\
+    &quot;/usr/local/bin/R&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='Cuyahoga-section')&quot; \
+    vizlab/make/callFunction.R vizlab/make/log/publish/Cuyahoga-section.Rout</code></pre>
+<p>This will call the main makefile, which in turn calls the makefile for each section. The finished HTML will be created in the <code>target</code> directory, along with its corresponding CSS and images for each figure.</p>
+<div id="debugging" class="section level3">
+<h3>Debugging</h3>
+<p>Because all R commands are executed by the makefiles, the output does not print to the console, but can be viewed in the various <code>.Rout</code> text files in <code>vizlab/make/log/</code> for each section. The names are printed to the console when the makefile is executed, as seen above.</p>
+</div>
+<div id="controlling-the-fetch-section" class="section level3">
+<h3>Controlling the fetch section</h3>
+<p>By default, the <code>refetch</code> option is set to <code>TRUE</code> in the <code>viz.yaml</code> for each section. <code>vizlab</code> checks the timestamps of online resources to see if the file or resource has changed since it was last fetched. If the timestamp has changed, or a timestamp cannot be obtained, the data will be fetched again. However, this may be undesireable in some scenarios. To force <code>vizlab</code> to use the cached versions of remote files, set <code>refetch</code> to <code>FALSE</code> in the relevant sections of the <code>viz.yaml</code>. Conversely, to force <code>vizlab</code> to refetch the data regardless of timestamps, set <code>refetch</code> to <code>TRUE</code> and delete the timestamps for each section. These are stored in <code>vizlab/make/timestamps</code>.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
