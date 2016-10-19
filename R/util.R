@@ -50,6 +50,20 @@ buildContext <- function(viz, dependencies) {
   return(data)
 }
 
+#' Private function to expand dependencies by appropriately publishing
+#' or reading
+#'
+#' @param x item to expand
+expandDependencies <- function(x) {
+  expanded.dep <- NULL
+  expanded.dep <- publish(x)
+  if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+    expanded.dep <- as.reader(expanded.dep)
+    expanded.dep <- readData(expanded.dep)
+  }
+  return(expanded.dep)
+}
+
 #' Get vizlab js as a resource
 #'
 #' @return vizlab object describing vizlab.js

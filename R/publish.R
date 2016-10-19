@@ -34,15 +34,7 @@ publish.page <- function(viz) {
   dependencies[[vizlabjs]] <- getVizlabJS()
 
   # TODO Watch out for cyclic depends
-  dependencies <- lapply(dependencies, function(x) {
-    expanded.dep <- NULL
-    expanded.dep <- publish(x)
-    if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
-      expanded.dep <- as.reader(expanded.dep)
-      expanded.dep <- readData(expanded.dep)
-    }
-    return(expanded.dep)
-  })
+  dependencies <- lapply(dependencies, expandDependencies)
 
   if (length(names(dependencies)) != length(dependencies)) {
     names(dependencies) <- c(viz[['depends']], vizlabjs)
@@ -74,15 +66,7 @@ publish.section <- function(viz) {
 
   # TODO Watch out for cyclic depends
   dependencies <- as.list(viz[['depends']])
-  dependencies <- lapply(dependencies, function(x) {
-    expanded.dep <- NULL
-    expanded.dep <- publish(x)
-    if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
-      expanded.dep <- as.reader(expanded.dep)
-      expanded.dep <- readData(expanded.dep)
-    }
-    return(expanded.dep)
-  })
+  dependencies <- lapply(dependencies, expandDependencies)
   names(dependencies) <- viz[['depends']]
   dependencies <- c(dependencies, recursive = TRUE)
 
