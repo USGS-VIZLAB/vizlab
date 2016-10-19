@@ -30,22 +30,38 @@ relativePath <- function(file) {
 buildContext <- function(viz, dependencies) {
   # allow for context to be inline
   data <- viz[["context"]]
+
   if (is.null(data)) {
     data <- list()
   }
   else if (is.character(data)) {
     data <- readData(data)
   }
+
   # replace dependencies with contents
   data <- rapply(data, function(x) {
-      dep.ids <- x %in% names(dependencies)
-      if (any(dep.ids)) {
-        x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
-      }
-      # TODO run smartypants on x before returning
-      return(x)
+    dep.ids <- x %in% names(dependencies)
+    if (any(dep.ids)) {
+      x[which(dep.ids)] <- dependencies[x[which(dep.ids)]]
+    }
+    return(x)
   }, how = "replace", classes = "character")
+
   return(data)
+}
+
+#' Private function to expand dependencies by appropriately publishing
+#' or reading
+#'
+#' @param x item to expand
+expandDependencies <- function(x) {
+  expanded.dep <- NULL
+  expanded.dep <- publish(x)
+  if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+    expanded.dep <- as.reader(expanded.dep)
+    expanded.dep <- readData(expanded.dep)
+  }
+  return(expanded.dep)
 }
 
 #' Get vizlab js as a resource
@@ -110,6 +126,22 @@ getPartialLibrary <- function() {
   }, template.dir)
   names(partials) <- template.names
   return(partials)
+}
+
+#' Replace any markdown text with rendered html
+#'
+#' @importFrom markdown markdownToHTML
+#' @param text character vector containing markdown text
+handleMarkdown <- function(text) {
+  options <- c("skip_html", "skip_style", "skip_images", "escape", "smartypants", "fragment_only")
+  extensions <- c("tables", "fenced_code", "strikethrough", "lax_spacing", "superscript", "latex_math")
+  html <- markdownToHTML(text = text, options = options, extensions = extensions)
+  m <- regexec("^<p>(.*)</p>\\n$", html, perl = TRUE)
+  if (length(regmatches(x = html, m = m)[[1]]) > 0) {
+    # capture the stuff between paragraph tags (group 1, index 2)
+    html <- regmatches(x = html, m = m)[[1]][2]
+  }
+  return(html)
 }
 
 #' Sets up folders so file can be written without warnings

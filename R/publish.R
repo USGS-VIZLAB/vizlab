@@ -28,18 +28,18 @@ publish.page <- function(viz) {
 
   template <- readTemplate(viz[['template']])
 
-  dependencies <- viz[['depends']]
-  if(class(viz[['depends']]) != "list"){
-    dependencies <- as.list(dependencies)
-    names(dependencies) <- viz[['depends']]
-  }
-
+  dependencies <- as.list(viz[['depends']])
   # add automatic dependencies
   vizlabjs <- '_vizlabJS'
   dependencies[[vizlabjs]] <- getVizlabJS()
 
-  # publish all dependencies
-  dependencies <- lapply(dependencies, publish)
+  # TODO Watch out for cyclic depends
+  dependencies <- lapply(dependencies, expandDependencies)
+
+  if (length(names(dependencies)) != length(dependencies)) {
+    names(dependencies) <- c(viz[['depends']], vizlabjs)
+  }
+  dependencies <- c(dependencies, recursive = TRUE)
 
   context <- buildContext(viz, dependencies)
 
@@ -65,8 +65,10 @@ publish.section <- function(viz) {
   checkRequired(viz, required)
 
   # TODO Watch out for cyclic depends
-  dependencies <- lapply(viz[['depends']], publish)
+  dependencies <- as.list(viz[['depends']])
+  dependencies <- lapply(dependencies, expandDependencies)
   names(dependencies) <- viz[['depends']]
+  dependencies <- c(dependencies, recursive = TRUE)
 
   context <- buildContext(viz, dependencies)
 
@@ -95,13 +97,17 @@ publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
   # going to start out with simple images
   destFile <- export(viz)
-  dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
-  srcFile <- viz[['location']]
-  if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
-    srcFile <- system.file(srcFile, package = "vizlab")
+  if (!is.null(destFile)) {
+    dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
+    srcFile <- viz[['location']]
+    if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
+      srcFile <- system.file(srcFile, package = "vizlab")
+    }
+    file.copy(srcFile, destFile, overwrite = TRUE)
+    viz[['relpath']] <- relativePath(destFile)
+  } else {
+    viz[['relpath']] <- NA
   }
-  file.copy(srcFile, destFile, overwrite = TRUE)
-  viz[['relpath']] <- relativePath(destFile)
   return(viz)
 }
 
@@ -114,10 +120,14 @@ publish.img <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  alt.text <- viz[['alttext']]
-  relative.path <- viz[['relpath']]
-  title.text <- viz[['title']]
-  return(sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text))
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    alt.text <- viz[['alttext']]
+    relative.path <- viz[['relpath']]
+    title.text <- viz[['title']]
+    html <- sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text)
+  }
+  return(html)
 }
 
 #' javascript publishing
@@ -130,7 +140,10 @@ publish.js <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+  output <- NULL
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+  }
   return(output)
 }
 
@@ -143,11 +156,14 @@ publish.css <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+  output <- NULL
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+  }
   return(output)
 }
 
-#' svg publishing
+#' svg publishing, may return NULL
 #'
 #' @rdname publish
 #' @export
@@ -158,8 +174,11 @@ publish.svg <- function(viz) {
 
   output <- NULL
   if (is.null(viz[['inline']]) || !viz[['inline']]) {
-    output <- sprintf('<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" > %s </object>',
-                    viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+    if (!is.na(viz[['relpath']])) {
+      output <- sprintf(
+        '<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" >%s</object>',
+        viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
+    }
   } else {
     # skip prolog
     output <- scan(file = viz[['location']], what = "character", sep = "\n", skip = 1)
@@ -168,7 +187,7 @@ publish.svg <- function(viz) {
   return(output)
 }
 
-#' Footer publishing 
+#' Footer publishing
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
@@ -176,31 +195,31 @@ publish.svg <- function(viz) {
 publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
-  
+
   index_loc_css <- 'target/css'
   if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
   file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
-  
+
   dependencies <- lapply(viz[['depends']], publish)
   names(dependencies) <- viz[['depends']]
-  
+
   context <- buildContext(viz, dependencies)
-  
-  
+
+
   #add info from viz.yaml to context to inject into template
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
     info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
     vizzies[[v]]$name <- info$context$name
     vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", sub(".","",info$context$path))
-    vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url, 
+    vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url,
                                   x = info$context$thumbnail)
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
-  context[['vizzies']] <- vizzies 
+  context[['vizzies']] <- vizzies
   template <- readTemplate(viz[['template']])
-  
+
   viz[['output']] <- whisker.render(template = template, data = context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)

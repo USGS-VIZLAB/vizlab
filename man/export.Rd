@@ -6,6 +6,7 @@
 \alias{export.img}
 \alias{export.js}
 \alias{export.page}
+\alias{export.resource}
 \alias{export.svg}
 \title{Export content to target}
 \usage{
@@ -20,9 +21,14 @@ export(viz)
 \method{export}{js}(viz)
 
 \method{export}{css}(viz)
+
+\method{export}{resource}(viz)
 }
 \arguments{
 \item{viz}{object to export}
+}
+\value{
+location to export or NULL if export shouldn't take place
 }
 \description{
 Determine the type and dispatch to that method to produce
@@ -32,6 +38,8 @@ This returns the target location to write the page to, in
 its current form this is a single page, but may result in
 a list of pages named according to different formats
 (tags, media type, language, etc.)
+
+Default export, defaults to not export
 }
 \details{
 Currently the publish phase is responsible for exporting,

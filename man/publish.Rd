@@ -58,7 +58,7 @@ TODO allow for cdn js
 
 css publishing
 
-svg publishing
+svg publishing, may return NULL
 
 Footer publishing
 
