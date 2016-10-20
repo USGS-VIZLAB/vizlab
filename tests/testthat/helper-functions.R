@@ -10,11 +10,11 @@ setup <- function(copyTestViz = FALSE) {
   setwd(testtmp)
   # need to copy any other files needed for testing
   #just copy everything? should need it eventually for more tests?
-  if(copyTestViz){
+  if (copyTestViz){
     file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
               testtmp, recursive = TRUE)
     #create timestamp folder
-    dir.create('vizlab/make/timestamps', recursive = TRUE)
+    dir.create('vizlab/make/timestamps', recursive = TRUE, showWarnings = FALSE)
   }
   return(testtmp)
 }
