@@ -36,7 +36,8 @@ publish.page <- function(viz) {
   # TODO Watch out for cyclic depends
   dependencies <- lapply(dependencies, expandDependencies)
 
-  if (length(names(dependencies)) != length(dependencies)) {
+  # this is needed for unnamed depends lists
+  if (all(is.character(sapply(viz[['depends']], class)))) {
     names(dependencies) <- c(viz[['depends']], vizlabjs)
   }
   dependencies <- c(dependencies, recursive = TRUE)
@@ -67,6 +68,7 @@ publish.section <- function(viz) {
   # TODO Watch out for cyclic depends
   dependencies <- as.list(viz[['depends']])
   dependencies <- lapply(dependencies, expandDependencies)
+
   names(dependencies) <- viz[['depends']]
   dependencies <- c(dependencies, recursive = TRUE)
 
