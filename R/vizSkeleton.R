@@ -62,6 +62,7 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
         "  analytics-id: ", "UA-78530187-1", "\n",
         "  description: >-\n",
         "    Describe project here\n",
+        "  required-packages: vizlab",
         "  thumbnail:",
         "    url:",
         "    width: 250",
