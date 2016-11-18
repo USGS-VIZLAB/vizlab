@@ -7,6 +7,7 @@ info:
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
+  required-packages: vizlab
   keywords: vizlab, visualizations, data, R
   mimetypeDictionary: moreMimetypes.yaml
   twitter: "@USGS_R"
