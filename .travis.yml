@@ -10,7 +10,7 @@ repos:
   GRAN: http://owi.usgs.gov/R
 
 before_script:
-  - Rscript -e "install.packages('grithub')"
+  - Rscript -e "install.packages('grithub', repos='http://owi.usgs.gov/R')"
 
 r_github_packages:
  - jimhester/covr
