@@ -9,11 +9,9 @@ repos:
   CRAN: https://cloud.r-project.org
   GRAN: http://owi.usgs.gov/R
 
-before_script:
-  - Rscript -e "install.packages('grithub', repos='http://owi.usgs.gov/R')"
-
 r_github_packages:
  - jimhester/covr
+ - USGS-R/grithub
 
 after_success:
   - Rscript -e 'covr::coveralls()'
