@@ -7,7 +7,7 @@
 publishLandingPage()
 }
 \description{
-note for future: github package is from GitHub repo rgithub (https://github.com/cscheid/rgithub)
-there are plans to move the package to CRAN and call it grithub (https://github.com/cscheid/rgithub/issues/67)
+the github package from the GitHub repo rgithub (https://github.com/cscheid/rgithub)
+was moved to GRAN and called grithub
 }
 

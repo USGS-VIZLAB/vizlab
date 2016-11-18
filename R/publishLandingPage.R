@@ -1,7 +1,7 @@
 #' Get information about other visualizations from VIZLAB to generate the landing page
 #' 
-#' note for future: github package is from GitHub repo rgithub (https://github.com/cscheid/rgithub)
-#' there are plans to move the package to CRAN and call it grithub (https://github.com/cscheid/rgithub/issues/67)
+#' the github package from the GitHub repo rgithub (https://github.com/cscheid/rgithub)
+#' was moved to GRAN and called grithub
 #' @export
 publishLandingPage <- function(){
 
@@ -17,7 +17,7 @@ publishLandingPage <- function(){
 #' Get a vector a repository names for a specific organization
 #' 
 #' @param org character, name of GitHub organization in which to pull out repository names
-#' @importFrom github get.organization.repositories get.github.context
+#' @importFrom grithub get.organization.repositories get.github.context
 getRepoNames <- function(org){
   vizlab_repos <- get.organization.repositories(org, ctx = get.github.context())
   repo_nms <- unlist(lapply(vizlab_repos$content, function(r){ r[['name']]}))
@@ -27,7 +27,7 @@ getRepoNames <- function(org){
 #'
 #' @param org character, name of GitHub organization in which to look for a repository
 #' @param repo character, name of the repository to find the viz.yaml
-#' @importFrom github get.repository.path
+#' @importFrom grithub get.repository.path
 getVizYamlUrl <- function(org, repo){
   p <- get.repository.path(org, repo, "viz.yaml")
   viz.yaml_url <- p$content$html_url
