@@ -43,7 +43,7 @@ test_that('.empty files created', {
 
 test_that('createProfile works for relative dir', {
   expect_false(file.exists('./vizlab/profile.yaml'))
-  createProfile('relative')
+  createProfile('./vizlab')
   expect_true(file.exists('./vizlab/profile.yaml'))
 })
 
