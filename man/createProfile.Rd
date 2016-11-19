@@ -7,7 +7,10 @@
 createProfile(directory = "home")
 }
 \arguments{
-\item{directory}{location to save the profile.yaml file. There are currently 2 options: "home" or "relative"}
+\item{directory}{location to save the profile.yaml file. There are currently 3 options: "home" 
+(uses '~' to add the file to the home directory, varies by OS), "relative" (uses '.' to 
+add the profile.yaml to a location relative to the current working directory), or the user can 
+type the absolute file path of their choice.}
 }
 \description{
 This creates a file that describes where necessary executables are located in order to run make.
@@ -15,6 +18,9 @@ This sets up a template, it is necessary to fill in the missing information
 }
 \examples{
 \dontrun{
+createProfile(directory = "home")
+createProfile(directory = "C:/Users")
+
 # Example file for Windows user[s]:
 SHELL: /usr/bin/sh
 R: C:/Program Files/R/R-3.3.0/bin/x64/R.exe
