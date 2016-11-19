@@ -3,10 +3,16 @@
 #' This creates a file that describes where necessary executables are located in order to run make.
 #' This sets up a template, it is necessary to fill in the missing information
 #'
-#' @param directory location to save the profile.yaml file. There are currently 2 options: "home" or "relative"
+#' @param directory location to save the profile.yaml file. There are currently 3 options: "home" 
+#' (uses '~' to add the file to the home directory, varies by OS), "relative" (uses '.' to 
+#' add the profile.yaml to a location relative to the current working directory), or the user can 
+#' type the absolute file path of their choice.
 #' @export
 #' @examples
 #' \dontrun{
+#' createProfile(directory = "home")
+#' createProfile(directory = "C:/Users")
+#' 
 #' # Example file for Windows user[s]:
 #' SHELL: /usr/bin/sh
 #' R: C:/Program Files/R/R-3.3.0/bin/x64/R.exe
@@ -25,7 +31,7 @@ createProfile <- function(directory = "home"){
   } else if(directory=="relative"){
     file_dir <- file.path('.', 'vizlab')
   } else {
-    stop("Unsupported directory specified")
+    file_dir <- file.path(directory, 'vizlab')
   }
 
   if (!dir.exists(file_dir)) dir.create(file_dir)
@@ -57,6 +63,7 @@ createProfile.Windows <- function(file_dir){
         sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
         file = profile.yaml, sep = "")
     close(profile.yaml)
+    message(paste("profile.yaml added to", file_dir))
   }
 }
 
@@ -76,6 +83,7 @@ createProfile.Mac <- function(file_dir){
         sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
         file = profile.yaml, sep = "")
     close(profile.yaml)
+    message(paste("profile.yaml added to", file_dir))
   }
 }
 
@@ -95,5 +103,6 @@ createProfile.Linux <- function(file_dir) {
         sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
         file = profile.yaml, sep = "")
     close(profile.yaml)
+    message(paste("profile.yaml added to", file_dir))
   }
 }
