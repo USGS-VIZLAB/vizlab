@@ -12,7 +12,7 @@
 
 <meta name="author" content="David Watkins" />
 
-<meta name="date" content="2016-10-18" />
+<meta name="date" content="2016-11-19" />
 
 <title>Vizlab Example</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Vizlab Example</h1>
 <h4 class="author"><em>David Watkins</em></h4>
-<h4 class="date"><em>2016-10-18</em></h4>
+<h4 class="date"><em>2016-11-19</em></h4>
 
 
 
@@ -244,7 +244,7 @@ info:
 <ol style="list-style-type: decimal">
 <li><p><em>Create the skeleton</em>: First the visualization directory structure should be created, using the <code>vizSkeleton</code> function. This is unnecessary for the example viz, since the directories are already set up in the repo. You can run this function in a dummy directory to see what happens.</p></li>
 <li><p><em>Fill in the viz.yaml</em>: As described above, <code>viz.yaml</code> needs to be filled out in order to guide the creation of the various <code>make</code> files. An empty skeleton <code>viz.yaml</code> is created by the <code>vizSkeleton</code> fuction. The complete <code>viz.yaml</code> in the example viz repository can also be a useful reference.</p></li>
-<li><p><em>Create the profile</em>: Next, run <code>createProfile()</code>. This will create a <code>profile.yaml</code> in your home directory which stores the location of your R installation and some other information. It will be filled in automatically, unless your operating system is unrecognized. Once run, this step only needs to be repeated when R is updated.</p></li>
+<li><p><em>Create the profile</em>: Next, run <code>createProfile()</code>. This will create a <code>profile.yaml</code> in your home directory which stores the location of your R installation and some other information. See <code>?createProfile</code> for options and special instructions by operating system. The profile will be filled in automatically, unless your operating system is unrecognized. Once run, this step only needs to be repeated when R is updated.</p></li>
 <li><p><em>Create the Makefiles</em>: Create the <code>make</code> files using the <code>createMakeFiles</code> function. This will create a <code>vizlab</code> directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.</p></li>
 <li><p><em>Authentication (if needed)</em>: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase. Generally, credentials will need to be stored in the <code>~/.vizlab</code> folder so they can be accessed by scripts within the R sessions that are started by the make files. The <code>sbAuthenticate</code> function tests and stores credentials for ScienceBase access. The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public. For security, it is strongly reccommended to use a ScienceBase account that does not utilize personal credentials.</p></li>
 </ol>

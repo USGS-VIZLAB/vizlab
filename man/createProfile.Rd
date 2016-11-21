@@ -4,28 +4,38 @@
 \alias{createProfile}
 \title{Define user profile information}
 \usage{
-createProfile(directory = "home")
+createProfile(directory = "~/.vizlab", overwrite = FALSE)
 }
 \arguments{
-\item{directory}{location to save the profile.yaml file. There are currently 2 options: "home" or "relative"}
+\item{directory}{location to save the profile.yaml file. Though 
+\code{directory} accepts any directory path, the only useful values are 
+those that point to \code{~/.vizlab} or code{./vizlab} at runtime. The 
+default is recommended except when the system variable \code{HOME} differs 
+between the current R session (try \code{Sys.getenv('HOME')}) and the bash 
+session from which \code{make} will be run (open bash and try \code{echo 
+$HOME}). This parameter should match the bash version at a minimum; it 
+might also be useful to run \code{createProfile()} once for each possible 
+value of \code{HOME} (see examples). Another option is "./vizlab" within
+the project directory for this particular visualization.}
+
+\item{overwrite}{logical. If the file exists, should it be overwritten?}
 }
 \description{
-This creates a file that describes where necessary executables are located in order to run make.
-This sets up a template, it is necessary to fill in the missing information
+This creates a file that describes where necessary executables are located in
+order to run make. This sets up a template, it is necessary to fill in the 
+missing information
 }
 \examples{
 \dontrun{
+# The two calls commonly useful for Windows:
+createProfile()
+createProfile("~/../.vizlab")
+
 # Example file for Windows user[s]:
-SHELL: /usr/bin/sh
-R: C:/Program Files/R/R-3.3.0/bin/x64/R.exe
-RSCRIPT: C:/Program Files/R/R-3.3.0/bin/x64/Rscript.exe
-R_LIBS_USER: !eval >
-  paste0(
-    if(basename(Sys.getenv("R_USER"))=='Documents')
-      Sys.getenv("R_USER")
-    else
-      normalizePath(file.path(Sys.getenv("R_USER"), 'Documents'), winslash='/'),
-    "/R/win-library/3.3")
+SHELL: c:/Rtools/bin/sh.exe
+R: C:/Program Files/R/R-3.3.2/bin/x64/R.exe
+RSCRIPT: C:/Program Files/R/R-3.3.2/bin/x64/Rscript.exe
+R_LIBS_USER: C:/Users/aappling/Documents/R/win-library/3.3
 }
 }
 

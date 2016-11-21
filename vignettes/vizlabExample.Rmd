@@ -196,7 +196,7 @@ The following steps are required to start a viz from scratch.  The first two hav
 
 2. *Fill in the viz.yaml*: As described above, `viz.yaml` needs to be filled out in order to guide the creation of the various `make` files.  An empty skeleton `viz.yaml` is created by the `vizSkeleton` fuction.  The complete `viz.yaml` in the example viz repository can also be a useful reference. 
 
-3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  It will be filled in automatically, unless your operating system is unrecognized.  Once run, this step only needs to be repeated when R is updated. 
+3. *Create the profile*: Next, run `createProfile()`.  This will create a `profile.yaml` in your home directory which stores the location of your R installation and some other information.  See `?createProfile` for options and special instructions by operating system. The profile will be filled in automatically, unless your operating system is unrecognized.  Once run, this step only needs to be repeated when R is updated. 
 
 4. *Create the Makefiles*: Create the `make` files using the `createMakeFiles` function.  This will create a `vizlab` directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.
   
