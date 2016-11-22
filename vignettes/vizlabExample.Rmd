@@ -37,7 +37,7 @@ To build the example viz, your working directory should be set to the main examp
 
 ### Info
 ```
-vizlab: "0.1.4"
+vizlab: "0.1.5"
 info:
   id: example
   name: Simple but complete vizualization
@@ -60,17 +60,20 @@ fetch:
     id: iris-data
     location: data/iris.csv
     mimetype: text/csv
+    scripts:
     refetch: TRUE
   -
     id: cars-data
     location: cache/cars.csv
     fetcher: cars
     mimetype: text/csv
+    scripts: scripts/fetch/cars.R
     refetch: TRUE
   -
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
+    scripts:
     refetch: TRUE
     remoteItemId: 575d839ee4b04f417c2a03fe
     remoteFilename: CuyahogaTDS.csv
@@ -83,10 +86,11 @@ Three possibilites for fetchers are utilized here. `iris-data` is a local file a
 ### Process
 ```
 process:
- -
+  -
     id: calc-cars
     location: cache/car-loess.rds
     processor: cars
+    scripts: scripts/process/cars.R
     reader: rds
     depends: [ "cars-data" ]
   -
@@ -95,6 +99,7 @@ process:
     mimetype: text/tab-separated-values
     depends: Cuyahoga
     processor: cuyahoga
+    scripts: scripts/process/cuyahoga.R
 ```
 `depends` references the IDs in the fetch section.  All processors must be supplied by the user.  Just as the custom fetchers are stored in `scripts/fetch`, processors are stored in `scripts/process`. The output of each processor is stored in the directory specified by the `location` field.  The `reader` specified will be used to read in the data for the visualize step.  Note the `calc-cars` step indicates a specific .Rds reader, rather than a mimetype.  The readers included in the vizlab package are located in the `readData` S3 method.  Alternatively, a custom reader could be specified, that should be located in the `scripts/process` directory.  
 
@@ -106,14 +111,16 @@ visualize:
   -
     id: plot-cars
     location: figures/cars.png
+    scripts: scripts/visualize/visualize.R
     visualizer: cars
     depends: [ "calc-cars", "cars-data" ]
     mimetype: image/png
-    title: "Speed vs. Breaking Distance"
-    alttext: "plot of ratio of speed to breaking distance"
+    title: "Speed vs. Braking Distance"
+    alttext: "plot of ratio of speed to braking distance"
   -
     id: plot-iris
     location: figures/iris.png
+    scripts: scripts/visualize/visualize.R
     visualizer: iris
     depends: [ "iris-data" ]
     mimetype: image/png
@@ -123,6 +130,7 @@ visualize:
     id: cuyahogaFig
     location: figures/cuyahogaFig.svg
     depends: "CuyahogaShort"
+    scripts: scripts/visualize/visualize.R
     visualizer: qTDS
     mimetype: image/svg+xml
     title: "Cuyahoga figure"
@@ -206,52 +214,91 @@ The following steps are required to start a viz from scratch.  The first two hav
   Finally, execute all the created make files by running `make` from the terminal in the main example viz directory:
 ```
 <terminal prompt>:~/Documents/R/example_viz$ make
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='fetch',outfile='vizlab/make/fetch.make')" \
-	vizlab/make/callFunction.R vizlab/make/log/make/fetch.Rout
+$ make
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='fetch',outfile='vizlab/make/fetch.make')" \
+vizlab/make/callFunction.R vizlab/make/log/make/fetch.Rout
 make -f vizlab/make/fetch.make
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='cars-data') scripts=c('scripts/fetch')" \
-	vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data_timestamp.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetch funargs=list(viz='cars-data') scripts=c('scripts/fetch')" \
-	vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='Cuyahoga') scripts=c('scripts/fetch')" \
-	vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga_timestamp.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='process',outfile='vizlab/make/process.make')" \
-	vizlab/make/callFunction.R vizlab/make/log/make/process.Rout
+make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='iris-data')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/iris-data_timestamp.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetch funargs=list(viz='iris-data')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/iris-data.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='cars-data') scripts=c('scripts/fetch/cars.R')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data_timestamp.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetch funargs=list(viz='cars-data') scripts=c('scripts/fetch/cars.R')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetchTimestamp funargs=list(viz='Cuyahoga')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga_timestamp.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=fetch funargs=list(viz='Cuyahoga')" \
+vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga.Rout
+
+fetch.make looks OK!
+
+make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='process',outfile='vizlab/make/process.make')" \
+vizlab/make/callFunction.R vizlab/make/log/make/process.Rout
 make -f vizlab/make/process.make
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=process funargs=list(viz='calc-cars') scripts=c('scripts/process')" \
-	vizlab/make/callFunction.R vizlab/make/log/process/calc-cars.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='visualize',outfile='vizlab/make/visualize.make')" \
-	vizlab/make/callFunction.R vizlab/make/log/make/visualize.Rout
+make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=process funargs=list(viz='calc-cars') scripts=c('scripts/process/cars.R')" \
+vizlab/make/callFunction.R vizlab/make/log/process/calc-cars.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=process funargs=list(viz='CuyahogaShort') scripts=c('scripts/process/cuyahoga.R')" \
+vizlab/make/callFunction.R vizlab/make/log/process/CuyahogaShort.Rout
+
+process.make looks OK!
+
+make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='visualize',outfile='vizlab/make/visualize.make')" \
+vizlab/make/callFunction.R vizlab/make/log/make/visualize.Rout
 make -f vizlab/make/visualize.make
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=visualize funargs=list(viz='plot-cars') scripts=c('scripts/visualize')" \
-	vizlab/make/callFunction.R vizlab/make/log/visualize/plot-cars.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='publish',outfile='vizlab/make/publish.make')" \
-	vizlab/make/callFunction.R vizlab/make/log/make/publish.Rout
+make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=visualize funargs=list(viz='plot-cars') scripts=c('scripts/visualize/visualize.R')" \
+vizlab/make/callFunction.R vizlab/make/log/visualize/plot-cars.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=visualize funargs=list(viz='plot-iris') scripts=c('scripts/visualize/visualize.R')" \
+vizlab/make/callFunction.R vizlab/make/log/visualize/plot-iris.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=visualize funargs=list(viz='cuyahogaFig') scripts=c('scripts/visualize/visualize.R')" \
+vizlab/make/callFunction.R vizlab/make/log/visualize/cuyahogaFig.Rout
+
+visualize.make looks OK!
+
+make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=createBlockMakefile funargs=list(block='publish',outfile='vizlab/make/publish.make')" \
+vizlab/make/callFunction.R vizlab/make/log/make/publish.Rout
 make -f vizlab/make/publish.make
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='index')" \
-	vizlab/make/callFunction.R vizlab/make/log/publish/index.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='cars-section')" \
-	vizlab/make/callFunction.R vizlab/make/log/publish/cars-section.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='text-section')" \
-	vizlab/make/callFunction.R vizlab/make/log/publish/text-section.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='iris-section')" \
-	vizlab/make/callFunction.R vizlab/make/log/publish/iris-section.Rout
-export R_LIBS_USER="/Users/wwatkins/Library/R/3.3/library";\
-	"/usr/local/bin/R" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='Cuyahoga-section')" \
-	vizlab/make/callFunction.R vizlab/make/log/publish/Cuyahoga-section.Rout
+make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='index')" \
+vizlab/make/callFunction.R vizlab/make/log/publish/index.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='cars-section')" \
+vizlab/make/callFunction.R vizlab/make/log/publish/cars-section.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='text-section')" \
+vizlab/make/callFunction.R vizlab/make/log/publish/text-section.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='iris-section')" \
+vizlab/make/callFunction.R vizlab/make/log/publish/iris-section.Rout
+export R_LIBS_USER="C:/Users/aappling/Documents/R/win-library/3.3";\
+"C:/Program Files/R/R-3.3.2/bin/x64/R.exe" CMD BATCH --no-timing --quiet --no-save --no-restore "--args fun=publish funargs=list(viz='Cuyahoga-section')" \
+vizlab/make/callFunction.R vizlab/make/log/publish/Cuyahoga-section.Rout
+
+publish.make looks OK!
+
+make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
 ```
 This will call the main makefile, which in turn calls the makefile for each section.  The finished HTML will be created in the `target` directory, along with its corresponding CSS and images for each figure.  
 
