@@ -37,7 +37,8 @@ test_that('layout subdirectories created', {
 test_that('.empty files created', {
   expect_true(file.exists('data/.empty'))
   expect_true(file.exists('figures/.empty'))
-  expect_true(file.exists('images/.empty'))
+  # expect_true(file.exists('images/.empty'))
+  expect_equal(list.files('images'), "favicon.ico")
   expect_false(file.exists('.empty')) #not created in home dir
 })
 
