@@ -1,43 +1,49 @@
 #' Define user profile information
-#'
-#' This creates a file that describes where necessary executables are located in order to run make.
-#' This sets up a template, it is necessary to fill in the missing information
-#'
-#' @param directory location to save the profile.yaml file. There are currently 2 options: "home" or "relative"
+#' 
+#' This creates a file that describes where necessary executables are located in
+#' order to run make. This sets up a template, it is necessary to fill in the 
+#' missing information
+#' 
+#' @param directory location to save the profile.yaml file. Though 
+#'   \code{directory} accepts any directory path, the only useful values are 
+#'   those that point to \code{~/.vizlab} or code{./vizlab} at runtime. The 
+#'   default is recommended except when the system variable \code{HOME} differs 
+#'   between the current R session (try \code{Sys.getenv('HOME')}) and the bash 
+#'   session from which \code{make} will be run (open bash and try \code{echo 
+#'   $HOME}). This parameter should match the bash version at a minimum; it 
+#'   might also be useful to run \code{createProfile()} once for each possible 
+#'   value of \code{HOME} (see examples). Another option is "./vizlab" within
+#'   the project directory for this particular visualization.
+#' @param overwrite logical. If the file exists, should it be overwritten?
 #' @export
 #' @examples
 #' \dontrun{
+#' # The two calls commonly useful for Windows:
+#' createProfile()
+#' createProfile("~/../.vizlab")
+#' 
 #' # Example file for Windows user[s]:
-#' SHELL: /usr/bin/sh
-#' R: C:/Program Files/R/R-3.3.0/bin/x64/R.exe
-#' RSCRIPT: C:/Program Files/R/R-3.3.0/bin/x64/Rscript.exe
-#' R_LIBS_USER: !eval >
-#'   paste0(
-#'     if(basename(Sys.getenv("R_USER"))=='Documents')
-#'       Sys.getenv("R_USER")
-#'     else
-#'       normalizePath(file.path(Sys.getenv("R_USER"), 'Documents'), winslash='/'),
-#'     "/R/win-library/3.3")
+#' SHELL: c:/Rtools/bin/sh.exe
+#' R: C:/Program Files/R/R-3.3.2/bin/x64/R.exe
+#' RSCRIPT: C:/Program Files/R/R-3.3.2/bin/x64/Rscript.exe
+#' R_LIBS_USER: C:/Users/aappling/Documents/R/win-library/3.3
 #' }
-createProfile <- function(directory = "home"){
-  if(directory=="home"){
-    file_dir <- file.path('~', '.vizlab')
-  } else if(directory=="relative"){
-    file_dir <- file.path('.', 'vizlab')
+createProfile <- function(directory = "~/.vizlab", overwrite = FALSE){
+  
+  if (!dir.exists(directory)) dir.create(directory)
+  
+  if(!overwrite && file.exists(file.path(directory, 'profile.yaml'))) {
+    message("profile.yaml already exists; leaving as-is")
   } else {
-    stop("Unsupported directory specified")
-  }
-
-  if (!dir.exists(file_dir)) dir.create(file_dir)
-
-  if (Sys.info()[['sysname']] == "Windows") {
-    createProfile.Windows(file_dir)
-  } else if (Sys.info()[['sysname']] == "Darwin") {
-    createProfile.Mac(file_dir)
-  } else if (Sys.info()[['sysname']] == "Linux") {
-    createProfile.Linux(file_dir)
-  } else {
-    stop("Unrecognized operating system. You'll need to create 'profile.yaml' on your own.")
+    message("Creating profile.yaml ...", domain = NA)
+    switch(
+      Sys.info()[['sysname']],
+      'Windows' = createProfile.Windows(directory),
+      'Darwin' = createProfile.Mac(directory),
+      'Linux' = createProfile.Linux(directory),
+      "Unrecognized operating system. You'll need to create 'profile.yaml' on your own."
+    )
+    message(paste("profile.yaml added to", normalizePath(directory)))
   }
 }
 
@@ -46,18 +52,13 @@ createProfile <- function(directory = "home"){
 #' @param file_dir existing file directory for where to save the profile.yaml file
 #' @keywords internal
 createProfile.Windows <- function(file_dir){
-  if(file.exists(file.path(file_dir, 'profile.yaml'))) {
-    message("profile.yaml already exists; leaving as-is")
-  } else {
-    message("Creating profile.yaml ...", domain = NA)
-    profile.yaml <- file(file.path(file_dir, "profile.yaml"))
-    cat(sprintf('SHELL: %s\n', Sys.which('sh.exe')),
-        sprintf('R: %s\n', Sys.which('R.exe')),
-        sprintf('RSCRIPT: %s\n', Sys.which('Rscript.exe')),
-        sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
-        file = profile.yaml, sep = "")
-    close(profile.yaml)
-  }
+  profile.yaml <- file(file.path(file_dir, "profile.yaml"))
+  cat(sprintf('SHELL: %s\n', normalizePath(Sys.which('sh.exe'), winslash='/')),
+      sprintf('R: %s\n', normalizePath(Sys.which('R.exe'), winslash='/')),
+      sprintf('RSCRIPT: %s\n', normalizePath(Sys.which('Rscript.exe'), winslash='/')),
+      sprintf('R_LIBS_USER: %s\n', normalizePath(.libPaths()[1], winslash='/')),
+      file = profile.yaml, sep = "")
+  close(profile.yaml)
 }
 
 #' Create user profile yaml file for Mac operating systems
@@ -65,18 +66,13 @@ createProfile.Windows <- function(file_dir){
 #' @param file_dir existing file directory for where to save the profile.yaml file
 #' @keywords internal
 createProfile.Mac <- function(file_dir){
-  if(file.exists(file.path(file_dir, 'profile.yaml'))) {
-    message("profile.yaml already exists; leaving as-is")
-  } else {
-    message("Creating profile.yaml ...", domain = NA)
-    profile.yaml <- file(file.path(file_dir, "profile.yaml"))
-    cat(sprintf('SHELL: %s\n', Sys.which('sh')),
-        sprintf('R: %s\n', Sys.which('R')),
-        sprintf('RSCRIPT: %s\n', Sys.which('Rscript')),
-        sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
-        file = profile.yaml, sep = "")
-    close(profile.yaml)
-  }
+  profile.yaml <- file(file.path(file_dir, "profile.yaml"))
+  cat(sprintf('SHELL: %s\n', Sys.which('sh')),
+      sprintf('R: %s\n', Sys.which('R')),
+      sprintf('RSCRIPT: %s\n', Sys.which('Rscript')),
+      sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
+      file = profile.yaml, sep = "")
+  close(profile.yaml)
 }
 
 #' Create user profile yaml file for Linux operating systems
@@ -84,16 +80,11 @@ createProfile.Mac <- function(file_dir){
 #' @param file_dir existing file directory for where to save the profile.yaml file
 #' @keywords internal
 createProfile.Linux <- function(file_dir) {
-  if(file.exists(file.path(file_dir, 'profile.yaml'))) {
-    message("profile.yaml already exists; leaving as-is")
-  } else {
-    message("Creating profile.yaml ...", domain = NA)
-    profile.yaml <- file(file.path(file_dir, "profile.yaml"))
-    cat(sprintf('SHELL: %s\n', Sys.which('sh')),
-        sprintf('R: %s\n', Sys.which('R')),
-        sprintf('RSCRIPT: %s\n', Sys.which('Rscript')),
-        sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
-        file = profile.yaml, sep = "")
-    close(profile.yaml)
-  }
+  profile.yaml <- file(file.path(file_dir, "profile.yaml"))
+  cat(sprintf('SHELL: %s\n', Sys.which('sh')),
+      sprintf('R: %s\n', Sys.which('R')),
+      sprintf('RSCRIPT: %s\n', Sys.which('Rscript')),
+      sprintf('R_LIBS_USER: %s\n', .libPaths()[1]),
+      file = profile.yaml, sep = "")
+  close(profile.yaml)
 }

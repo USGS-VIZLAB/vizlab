@@ -127,7 +127,7 @@ createMakeMacros <- function() {
 
   # write the macros
   macros <- c(
-    if(!is.null(profile$SHELL)) paste0('SHELL=', profile$SHELL),
+    if(!is.null(profile$SHELL)) paste0('SHELL="', profile$SHELL, '"'),
     paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) paste0('"', profile$R_LIBS_USER, '"') else '$(R_LIBS_USER)'),
     paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
     paste0('RBATCH="', profile$R, '" CMD BATCH --no-timing $(RARGS)'),
@@ -195,18 +195,43 @@ createMakeBlockRules <- function(block=c('fetch','process','visualize','publish'
   # read information about this block from viz.yaml
   content.info <- getContentInfos(block=block)
 
+  # check for and warn about dependencies on directories
+  dir.deps <- unlist(lapply(content.info, function(cinfo) {
+    is.dir <- sapply(cinfo$scripts, dir.exists)
+    names(is.dir)[is.dir]
+  }))
+  if(length(dir.deps) > 0) {
+    dir.deps.info <- sapply(unique(dir.deps), function(dependency) {
+      dependers <- names(dir.deps)[dir.deps == dependency]
+      sprintf("* Items depending on the %s directory: %s", dependency, paste(dependers, collapse=', '))
+    }, USE.NAMES=FALSE)
+    dir.deps.msg <- c(
+      '-----WARNING-----',
+      paste("Script dependencies should be specific files to avoid Making items too seldom or too often.",
+            "You can override the default (a directory) by setting 'scripts' in each viz.yaml item."),
+      paste0(dir.deps.info, collapse='\n'), 
+      '-----------------')
+  } else {
+    dir.deps.msg <- NULL
+  }
+  
   # set the 'all' target to include all content items
   all <- createMakeEmptyRule(
     target='all',
-    depends=paste0("\\\n\t", sapply(content.info, `[[`, 'id')))
+    depends=paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'), 'MakeMessages')))
 
   # write the rules for each content item
   items <- sapply(content.info, function(item.info) {
     createMakeItem(item.info)
   })
+  
+  # write any messages the user should see on calling 'make' - so far this is
+  # just the directory dependencies issues if present
+  if(length(dir.deps.msg) == 0) dir.deps.msg <- paste0(block, ".make looks OK!")
+  messages <- createMakeShellRule('MakeMessages', c(), paste0('@echo "', c('', dir.deps.msg, ''), '"'))
 
   # combine all the targets into a single string
-  paste(c(list("# Rules", all), items), collapse='\n\n')
+  paste(c(list("# Rules", all), items, list(messages)), collapse='\n\n')
 }
 
 #' Make a collection of makefile rules appropriate to a data/figure item

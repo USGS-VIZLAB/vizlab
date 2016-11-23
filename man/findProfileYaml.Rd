@@ -2,11 +2,13 @@
 % Please edit documentation in R/getProfileInfo.R
 \name{findProfileYaml}
 \alias{findProfileYaml}
-\title{find where the profile.yaml file is saved.}
+\title{Find where the profile.yaml file is saved.}
 \usage{
 findProfileYaml()
 }
 \description{
-Only 2 directories supported at this point (home and relative).
+Searches two directories, '~/.vizlab/' and './vizlab/', for a file called 
+'profile.yaml'. If found, returns the file path where it was found; otherwise
+throws an error.
 }
 

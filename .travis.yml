@@ -11,7 +11,7 @@ repos:
 
 r_github_packages:
  - jimhester/covr
- - cscheid/rgithub
+ - USGS-R/grithub
 
 after_success:
   - Rscript -e 'covr::coveralls()'
