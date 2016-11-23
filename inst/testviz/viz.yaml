@@ -83,6 +83,8 @@ visualize:
     visualizer: relativeAbundance
     mimetype: image/svg+xml
     export: false
+    title: "Relative Abundance"
+    alttext: "alt text"
 publish:
   -
     id: mainCSS
