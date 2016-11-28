@@ -32,6 +32,8 @@ library(vizlab)
 
 #optional, profile.yaml only needs to exist in one place on your computer
 createProfile() 
+# for Windows user:
+createProfile("~/../.vizlab")
 
 # to setup each project
 vizSkeleton(name="my awesome viz")
