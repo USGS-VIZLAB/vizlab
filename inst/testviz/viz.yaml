@@ -82,7 +82,9 @@ visualize:
     title: Relative Abundance
     alttext: Relative abundance of mayflies, above vs below
     location: figures/relativeAbundanceFig.svg
-    depends: [CuyahogaShort, MayflyNymph]
+    depends: 
+        cuyahoga: CuyahogaShort 
+        mayfly: MayflyNymph
     visualizer: relativeAbundance
     mimetype: image/svg+xml
     export: false
