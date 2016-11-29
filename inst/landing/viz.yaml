@@ -46,12 +46,70 @@ publish:
     alttext: VIZLAB logo
     title: VIZLAB logo
   -
+    id: usgsLogo
+    location: img/usgslogo.jpg
+    mimetype: image/jpg
+    alttext: USGS logo
+    title: USGS logo
+  -
+    id: usgsBanner
+    location: img/banner.png
+    mimetype: image/png
+    alttext: USGS banner
+    title: USGS banner
+  -
+    id: owiLogo
+    location: img/small-blue.png
+    mimetype: image/png
+    alttext: OWI Logo
+    title: OWI Logo
+  -
+    id: mobileBurger
+    location: img/mobileburger.png
+    mimetype: image/png
+    alttext: Mobile Burger
+    title: Mobile Burger
+  -
+    id: usagov
+    location: img/usa_gov.png
+    mimetype: image/png
+    alttext: USA GOV
+    title: USA GOV
+  -
+    id: appJS
+    location: js/app.js
+    mimetype: application/javascript
+  -
     id: landingCSS
     location: css/landing.css
     mimetype: text/css
+  -
+    id: owiCSS
+    location: css/owi.css
+    mimetype: text/css
+  -
+    id: usgsHeader
+    template: [templates/usgsHeader.mustache]
+    publisher: section
+    depends: [usgsLogo, usgsBanner]
+    context:
+      logo: usgsLogo
+      banner: usgsBanner
+  -
+    id: owiNav
+    template: [templates/owiNav.mustache]
+    publisher: section
+    depends: [owiLogo, mobileBurger]
+  -
+    id: usgsFooter
+    template: [templates/usgsFooter.mustache]
+    publisher: section
+    depends: [usagov]
+    context:
+      logo: usagov
   - 
     id: header
-    template: templates/header.mustache
+    template: [templates/header.mustache]
     publisher: section
     depends: [thumbnail]
     context: 
@@ -62,4 +120,4 @@ publish:
     template: fullPage
     publisher: landing
     org: USGS-VIZLAB
-    depends: [header, thumbnail, landingCSS]
+    depends: [usgsHeader, owiNav, header, usgsFooter, thumbnail, usgsLogo, usgsBanner, appJS, landingCSS, owiCSS]
