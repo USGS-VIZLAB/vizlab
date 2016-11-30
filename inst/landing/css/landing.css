@@ -20,7 +20,7 @@ h6 {
 }
 body {
   font-family: "Open Sans", Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: url('/img/cream_dust.png');
+  background: url('img/cream_dust.png');
 }
 #header {
   min-height: 60px;

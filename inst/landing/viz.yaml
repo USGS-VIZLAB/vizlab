@@ -89,7 +89,7 @@ publish:
     mimetype: text/css
   -
     id: usgsHeader
-    template: [templates/usgsHeader.mustache]
+    template: templates/usgsHeader.mustache
     publisher: section
     depends: [usgsLogo, usgsBanner]
     context:
@@ -97,19 +97,19 @@ publish:
       banner: usgsBanner
   -
     id: owiNav
-    template: [templates/owiNav.mustache]
+    template: templates/owiNav.mustache
     publisher: section
     depends: [owiLogo, mobileBurger]
   -
     id: usgsFooter
-    template: [templates/usgsFooter.mustache]
+    template: templates/usgsFooter.mustache
     publisher: section
     depends: [usagov]
     context:
       logo: usagov
   - 
     id: header
-    template: [templates/header.mustache]
+    template: templates/header.mustache
     publisher: section
     depends: [thumbnail]
     context: 
