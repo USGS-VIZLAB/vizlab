@@ -244,8 +244,8 @@ publish.landing <- function(viz){
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
   pageviz$depends <- append(pageviz$depends, viz_info)
-  pageviz$context <- list(sections = c("header", names(viz_info)), #names of section ids
-                          resources = "landingCSS")
+  pageviz$context <- list(sections = c("usgsHeader", "owiNav", "header", names(viz_info), "usgsFooter"), #names of section ids
+                          resources = c("landingCSS", "owiCSS", "appJS"))
   pageviz$publisher <- "page"
   pageviz <- as.viz(pageviz)
   pageviz <- as.publisher(pageviz) #maybe/maybe not
