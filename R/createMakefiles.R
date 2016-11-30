@@ -173,12 +173,12 @@ createMakeDirs <- function(makefile) {
     if(!dir.exists(timestampdir)) dir.create(timestampdir)
   }
 
-  # if any rules use callFunction.R, copy that script into the vizlab/make
-  # directory. this script allows us to call a single function via R CMD BATCH
-  if(any(grepl('callFunction.R', makefile))) {
-    file.copy(system.file('scripts/callFunction.R', package='vizlab'),
-              './vizlab/make/callFunction.R', overwrite=TRUE)
-  }
+  # always copy callFunction.R into the vizlab/make directory, on the assumption
+  # that even if there aren't currently any references to it in the makefiles,
+  # there will be soon. this script allows us to call a single function via R
+  # CMD BATCH
+  file.copy(system.file('scripts/callFunction.R', package='vizlab'),
+            './vizlab/make/callFunction.R', overwrite=TRUE)
 }
 
 #' Create the make rules for a block of the viz.yaml
