@@ -56,7 +56,7 @@ publish a resource
 
 Image publishing
 
-Favicon resourse
+Favicon resource
 
 javascript publishing
 TODO allow for cdn js
