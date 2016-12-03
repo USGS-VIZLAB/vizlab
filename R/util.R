@@ -64,23 +64,6 @@ expandDependencies <- function(x) {
   return(expanded.dep)
 }
 
-#' Get vizlab js as a resource
-#'
-#' @return vizlab object describing vizlab.js
-getVizlabJS <- function() {
-  vizlab.js <- list(
-    id = "_vizlabJS",
-    location = "js/vizlab.js",
-    packaging = "vizlab",
-    publisher = "resource",
-    mimetype = "application/javascript",
-    export = TRUE
-  )
-  vizlab.js <- as.viz(vizlab.js)
-  vizlab.js <- as.publisher(vizlab.js)
-  return(vizlab.js)
-}
-
 #' Use mimetype lookup to get reader
 #'
 #' @importFrom utils modifyList
