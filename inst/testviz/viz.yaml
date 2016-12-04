@@ -67,6 +67,19 @@ fetch:
     location: data/car_info
     mimetype: text/csv
     reader: folder
+  -
+    id: constant
+    fetcher: none
+    reader: inline
+    data: 42
+  -
+    id: constant-list
+    fetcher: none
+    reader: inline
+    data:
+      color: "#ffffff"
+      value: 45.5
+      text: "The quick brown fox jumped over the lazy dog"
 process:
   -
     id: CuyahogaShort
@@ -82,8 +95,8 @@ visualize:
     title: Relative Abundance
     alttext: Relative abundance of mayflies, above vs below
     location: figures/relativeAbundanceFig.svg
-    depends: 
-        cuyahoga: CuyahogaShort 
+    depends:
+        cuyahoga: CuyahogaShort
         mayfly: MayflyNymph
     visualizer: relativeAbundance
     mimetype: image/svg+xml
@@ -105,7 +118,7 @@ publish:
     template: fullPage
     depends: ["relativeAbundance"]
     publisher: page
-    context: 
+    context:
       title: testViz
       sections: [ "relativeAbundance" ]
       resources: [ "mainCSS", "normalizeCSS", "footer-style"]
@@ -129,7 +142,7 @@ publish:
       - name: Climate Change and Freshwater Fish
         org: USGS-VIZLAB
         repo: climate-fish-habitat
-    blogs: 
+    blogs:
       - name: Using the dataRetrieval Stats Service
         url: https://owi.usgs.gov/blog/stats-service-map/
         thumbLoc: https://owi.usgs.gov/blog/images/owi-mobile.png
