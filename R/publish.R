@@ -133,6 +133,23 @@ publish.img <- function(viz) {
   return(html)
 }
 
+#' Favicon resource
+#'
+#' @rdname publish
+#' @export
+publish.ico <- function(viz) {
+  required <- c("relpath")
+  viz <- NextMethod()
+  checkRequired(viz, required)
+
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    relative.path <- viz[['relpath']]
+    html <- sprintf('<link rel="icon" type="image/ico" href="%s"/>', relative.path)
+  }
+  return(html)
+}
+
 #' javascript publishing
 #' TODO allow for cdn js
 #'
@@ -281,9 +298,26 @@ as.resource <- function(viz, ...) {
   mimetype <- viz[['mimetype']]
   resource <- lookupMimetype(mimetype)
   if(length(resource) == 0){
-    stop(mimetype, " not supported: ", viz[['id']])
+    warning(mimetype, " will be treated as data: ", viz[['id']])
+    resource <- "data"
   }
 
   class(viz) <- c(resource, class(viz))
   return(viz)
+}
+
+### Helper functions for above
+# This should not be global, but should be a config for the "fullPage.mustache"
+getVizlabJS <- function() {
+  vizlab.js <- list(
+    id = "_vizlabJS",
+    location = "js/vizlab.js",
+    packaging = "vizlab",
+    publisher = "resource",
+    mimetype = "application/javascript",
+    export = TRUE
+  )
+  vizlab.js <- as.viz(vizlab.js)
+  vizlab.js <- as.publisher(vizlab.js)
+  return(vizlab.js)
 }

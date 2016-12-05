@@ -5,6 +5,7 @@
 \alias{publish.character}
 \alias{publish.css}
 \alias{publish.footer}
+\alias{publish.ico}
 \alias{publish.img}
 \alias{publish.js}
 \alias{publish.landing}
@@ -25,6 +26,8 @@ publish(viz)
 \method{publish}{resource}(viz)
 
 \method{publish}{img}(viz)
+
+\method{publish}{ico}(viz)
 
 \method{publish}{js}(viz)
 
@@ -52,6 +55,8 @@ publish a section
 publish a resource
 
 Image publishing
+
+Favicon resource
 
 javascript publishing
 TODO allow for cdn js
