@@ -6,6 +6,7 @@
 \alias{readData.excel}
 \alias{readData.filepath}
 \alias{readData.folder}
+\alias{readData.inline}
 \alias{readData.md}
 \alias{readData.rds}
 \alias{readData.tabular}
@@ -32,9 +33,14 @@ readData(viz)
 \method{readData}{txt}(viz)
 
 \method{readData}{md}(viz)
+
+\method{readData}{inline}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
+}
+\value{
+single value or list of values
 }
 \description{
 This function should be called from the generic, \code{readData()}. Reads
@@ -60,5 +66,7 @@ assigned a class to route it to a more specific reader
 
 Can either be a single markdown file, specified with mimetype: text/markdown
 or markdown contained in yaml with mimetype: text/yaml
+
+\code{readData.inline} reads data directly from inline yaml
 }
 

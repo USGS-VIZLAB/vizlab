@@ -83,6 +83,14 @@ fetch.url <- function(viz) {
   invisible()
 }
 
+#' \code{fetch.none} skips this fetch, might have other side effects
+#'
+#' @rdname fetch
+#' @export
+fetch.none <- function(viz) {
+  invisible()
+}
+
 ### Set up fetcher class
 
 #' Coerce vizlab object to a fetcher type

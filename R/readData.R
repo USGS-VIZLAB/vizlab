@@ -28,8 +28,11 @@ readData.character <- function(viz) {
 #' @export
 readData.tabular <- function(viz) {
   if(!requireNamespace('data.table', quietly = TRUE)) stop("package data.table is required for readData.tabular")
+  required <- c("location")
+  checkRequired(viz, required)
+
   x <- data.table::setDF(data.table::fread(viz[['location']]))
-  x # assign to x first so it returns visibly
+  return(x)
 }
 
 #' \code{readData.yaml} reads a yaml file.
@@ -38,7 +41,11 @@ readData.tabular <- function(viz) {
 #' @import yaml
 #' @export
 readData.yaml <- function(viz) {
-  yaml.load_file(viz[['location']])
+  required <- c("location")
+  checkRequired(viz, required)
+
+  yaml <- yaml.load_file(viz[['location']])
+  return(yaml)
 }
 
 #' \code{readData.excel} reads the first spreadsheet of an Excel file.
@@ -47,7 +54,12 @@ readData.yaml <- function(viz) {
 #' @export
 readData.excel <- function(viz) {
   if(!requireNamespace('readxl', quietly = TRUE)) stop("package readxl is required for readData.excel")
-  readxl::read_excel(viz[['location']])
+
+  required <- c("location")
+  checkRequired(viz, required)
+
+  xl <- readxl::read_excel(viz[['location']])
+  return(xl)
 }
 
 #' \code{readData.RDS} reads an R object saved as an RDS.
@@ -55,7 +67,11 @@ readData.excel <- function(viz) {
 #' @rdname readData
 #' @export
 readData.rds <- function(viz){
-  readRDS(viz[['location']])
+  required <- c("location")
+  checkRequired(viz, required)
+
+  rds <- readRDS(viz[['location']])
+  return(rds)
 }
 
 #' \code{readData.filepath} returns the file path
@@ -63,7 +79,10 @@ readData.rds <- function(viz){
 #' @rdname readData
 #' @export
 readData.filepath <- function(viz){
-  viz[['location']]
+  required <- c("location")
+  checkRequired(viz, required)
+
+  return(viz[['location']])
 }
 
 #' \code{readData.folder} returns names of files inside a folder
@@ -75,6 +94,9 @@ readData.folder <- function(viz){
   #          you need to specify "reader: folder" and the shared mimetype in "viz.yaml"
   # to do: make this recursive to get into subdirs (add to viz object)
   # to do: add pattern so that it only reads in files that meet some pattern (e.g ".csv")
+  required <- c("id", "location", "mimetype")
+  checkRequired(viz, required)
+
   filepaths <- dir(viz[['location']], full.names=TRUE)
 
   #create new vizlab object (one list element for each file)
@@ -95,7 +117,11 @@ readData.folder <- function(viz){
 #' @rdname readData
 #' @export
 readData.txt <- function(viz){
-  scan(viz[['location']], what = "character", sep = "\n", quiet = TRUE)
+  required <- c("location")
+  checkRequired(viz, required)
+
+  txt <- scan(viz[['location']], what = "character", sep = "\n", quiet = TRUE)
+  return(txt)
 }
 
 #' \code{readData.markdown} reads and renders markdown
@@ -106,17 +132,34 @@ readData.txt <- function(viz){
 #' @rdname readData
 #' @export
 readData.md <- function(viz) {
+  required <- c("location", "mimetype")
+  checkRequired(viz, required)
+
   mimetype <- viz[['mimetype']]
   html <- NULL
   if (is.null(mimetype) || mimetype == "text/yaml") {
     yaml <- readData.yaml(viz)
-    rapply(yaml, function(x) {
+    html <- rapply(yaml, function(x) {
       x <- handleMarkdown(x)
       return(x)
     }, how = "replace", classes = "character")
   } else {
     html <- handleMarkdown(viz)
   }
+  return(html)
+}
+
+#' \code{readData.inline} reads data directly from inline yaml
+#'
+#' @rdname readData
+#' @return single value or list of values
+#' @export
+readData.inline <- function(viz) {
+  required <- c("data")
+  checkRequired(viz, required)
+
+  data <- viz[["data"]]
+  return(data)
 }
 
 ### Set up the reader class
@@ -129,16 +172,12 @@ readData.md <- function(viz) {
 #' @export
 as.reader <- function(viz, ...) {
   id <- viz[['id']]
-  location <- viz[['location']]
-  if (is.null(location)) {
-    stop("Readers require 'location' property")
-  }
   reader <- viz[['reader']]
   if (is.null(reader)) {
     mimetype <- viz[['mimetype']]
     reader <- lookupMimetype(mimetype)
 
-    if(length(reader) == 0){
+    if (length(reader) == 0) {
       warning('Could not find specific readData method for viz.id=', id,
               ', mimetype=', mimetype, '; returning filepath.',
               ' Specify reader to override.')
