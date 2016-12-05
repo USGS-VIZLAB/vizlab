@@ -127,7 +127,8 @@ publish.img <- function(viz) {
     alt.text <- viz[['alttext']]
     relative.path <- viz[['relpath']]
     title.text <- viz[['title']]
-    html <- sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text)
+    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s" />', relative.path, uniqueness(),
+                    alt.text, title.text)
   }
   return(html)
 }
@@ -144,7 +145,8 @@ publish.ico <- function(viz) {
   html <- NULL
   if (!is.na(viz[['relpath']])) {
     relative.path <- viz[['relpath']]
-    html <- sprintf('<link rel="icon" type="image/ico" href="%s"/>', relative.path)
+    html <- sprintf('<link rel="icon" type="image/ico" href="%s?_c=%s"/>',
+                    relative.path, uniqueness())
   }
   return(html)
 }
@@ -161,7 +163,8 @@ publish.js <- function(viz) {
 
   output <- NULL
   if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+    output <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
+                      viz[['relpath']], uniqueness())
   }
   return(output)
 }
@@ -177,7 +180,8 @@ publish.css <- function(viz) {
 
   output <- NULL
   if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+    output <- sprintf('<link href="%s?_c=%s" rel="stylesheet" type="text/css" />',
+                      viz[['relpath']], uniqueness())
   }
   return(output)
 }

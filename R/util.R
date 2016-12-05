@@ -135,3 +135,11 @@ setupFoldersForFile <- function(file) {
   dir <- dirname(file)
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 }
+
+#' Grab a random number to break the cache
+#'
+#' @return random number between 10000 and 10000000
+uniqueness <- function() {
+  rng <- floor(runif(n = 1, min = 10000, max = 10000000))
+  return(rng)
+}
