@@ -83,11 +83,11 @@ getVizInfo <- function(org, repo){
 getVizUrl <- function(path){
   if(!is.null(path)){
     if(grepl('^/', path)){
-      path <- paste0('.', path)
+      path <- path
     } else if(grepl('^http', path)){
       path <- path
     } else {
-      path <- paste0('./', path)
+      path <- paste0('/', path)
     }
   }
   return(path)

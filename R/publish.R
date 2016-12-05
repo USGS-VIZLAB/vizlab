@@ -215,9 +215,8 @@ publish.footer <- function(viz) {
     vizzies[[v]]$name <- info$context$name
     # if / is first char, treat as relative path. If not, treat as absolute path.
     if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
-      vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", sub(".","",info$context$path))
-      vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url,
-                                    x = info$context$thumbnail)
+      vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
+      vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
     } else {
       vizzies[[v]]$url <- info$context$path
       vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
