@@ -145,7 +145,8 @@ publish.ico <- function(viz) {
   html <- NULL
   if (!is.na(viz[['relpath']])) {
     relative.path <- viz[['relpath']]
-    html <- sprintf('<link rel="icon" type="image/ico" href="%s"/>', relative.path)
+    html <- sprintf('<link rel="icon" type="image/ico" href="%s?_c=%s"/>',
+                    relative.path, uniqueness())
   }
   return(html)
 }
