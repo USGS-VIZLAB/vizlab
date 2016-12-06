@@ -48,6 +48,17 @@ export.img <- function(viz) {
 
 #' @rdname export
 #' @export
+export.ico <- function(viz) {
+  location <- viz[['location']]
+  file <- NULL
+  if (doExport(viz, TRUE)) {
+    file <- paste0(exportLocation(), "images/", basename(location))
+  }
+  return(file)
+}
+
+#' @rdname export
+#' @export
 export.svg <- function(viz) {
   # call image export directly
   return(export.img(viz))
