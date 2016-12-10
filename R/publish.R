@@ -233,7 +233,10 @@ publish.footer <- function(viz) {
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
     info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
-    vizzies[[v]]$name <- info$context$name
+    if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
+      vizzies[[v]]$name <- info$context$name
+    }
+     
     # if / is first char, treat as relative path. If not, treat as absolute path.
     if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
       vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
