@@ -66,8 +66,8 @@ getVizInfo <- function(org, repo){
                             template="templates/vizzies.mustache",
                             publisher="section",
                             context=list(name=viz_info$name,
-                                         thumbnail=getVizUrl(viz_info$thumbnail$url),
-                                         alttext=viz_info$thumbnail$alttext,
+                                         thumbnail=getVizUrl(viz_info$`thumbnail-landing`$url),
+                                         alttext=viz_info$`thumbnail-landing`$alttext,
                                          path=getVizUrl(viz_info$path),
                                          desription=viz_info$description))
   
@@ -84,12 +84,10 @@ getVizInfo <- function(org, repo){
 getVizUrl <- function(path){
   if(!is.null(path)){
     if(grepl('^/', path)){
-      path <- path
+      path <- paste0('.', path)
     } else if(grepl('^http', path)){
       path <- path
-    } else {
-      path <- paste0('/', path)
-    }
+    } 
   }
   return(path)
 }
