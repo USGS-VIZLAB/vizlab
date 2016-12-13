@@ -69,7 +69,7 @@ getVizInfo <- function(org, repo){
                                          thumbnail=getVizUrl(viz_info$`thumbnail-landing`$url),
                                          alttext=viz_info$`thumbnail-landing`$alttext,
                                          path=getVizUrl(viz_info$path),
-                                         desription=viz_info$description))
+                                         description=viz_info$description))
   
   viz_info_required <- as.viz(viz_info_required)
   viz_info_required <- as.publisher(viz_info_required)
