@@ -76,6 +76,10 @@ publish:
     alttext: USA GOV
     title: USA GOV
   -
+    id: jquery
+    location: js/jquery311.min.js
+    mimetype: application/javascript
+  -
     id: appJS
     location: js/app.js
     mimetype: application/javascript
@@ -120,4 +124,4 @@ publish:
     template: fullPage
     publisher: landing
     org: USGS-VIZLAB
-    depends: [usgsHeader, owiNav, header, usgsFooter, thumbnail, usgsLogo, usgsBanner, appJS, landingCSS, owiCSS]
+    depends: [usgsHeader, owiNav, header, usgsFooter, thumbnail, usgsLogo, usgsBanner, jquery, appJS, landingCSS, owiCSS]

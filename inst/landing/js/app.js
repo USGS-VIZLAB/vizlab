@@ -1,6 +1,15 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var menu = document.getElementById('navigation');
-  document.getElementById('mobileBurger').onclick=function(){
-    menu.style.display = (menu.style.display == 'block') ? 'none' : 'block';
-  }
+$(document).ready(function(){
+  var navigation = $('#navigation');
+  var menu = $('#menu');
+  
+  $(document).on('click', function(){
+    $(navigation).hide();
+  });
+  
+  $(menu).on('click', function(e){
+    e.stopPropagation();
+    $(navigation).toggle();
+  });
 });
+ 
+
