@@ -68,7 +68,8 @@ getVizInfo <- function(org, repo){
                             context=list(name=viz_info$name,
                                          thumbnail=getVizUrl(viz_info$thumbnail$url),
                                          alttext=viz_info$thumbnail$alttext,
-                                         path=getVizUrl(viz_info$path)))
+                                         path=getVizUrl(viz_info$path),
+                                         desription=viz_info$description))
   
   viz_info_required <- as.viz(viz_info_required)
   viz_info_required <- as.publisher(viz_info_required)
