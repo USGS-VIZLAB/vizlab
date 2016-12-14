@@ -131,9 +131,9 @@ test_that("makeFiles created", {
 context("publishers")
 test_that("publish footer works", {
   output <- publish('footer')
-  expect_true(any(grepl('./microplastics', output)))
+  expect_true(any(grepl('microplastics', output)))
   expect_true(any(grepl('https://owi.usgs.gov/blog/stats-service-map/', output)))
-  expect_true(any(grepl('./climate-change-walleye-bass', output)))
+  expect_true(any(grepl('climate-change-walleye-bass', output)))
   expect_true(any(grepl('blog|Blogs', output)))
   
   #without blogs
@@ -141,7 +141,7 @@ test_that("publish footer works", {
                   vizzies=list(list(name = "Microplastics in the Great Lakes", org="USGS-VIZLAB",
                                     repo = "great-lakes-microplastics")))
   output <- publish.footer(fakeViz)
-  expect_true(any(grepl('./microplastics', output)))
+  expect_true(any(grepl('microplastics', output)))
   expect_false(any(grepl('blog|Blogs', output)))
 })
 
