@@ -3,6 +3,7 @@
 \name{export}
 \alias{export}
 \alias{export.css}
+\alias{export.ico}
 \alias{export.img}
 \alias{export.js}
 \alias{export.page}
@@ -15,6 +16,8 @@ export(viz)
 \method{export}{page}(viz)
 
 \method{export}{img}(viz)
+
+\method{export}{ico}(viz)
 
 \method{export}{svg}(viz)
 

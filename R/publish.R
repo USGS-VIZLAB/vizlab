@@ -131,7 +131,26 @@ publish.img <- function(viz) {
     alt.text <- viz[['alttext']]
     relative.path <- viz[['relpath']]
     title.text <- viz[['title']]
-    html <- sprintf('<img src="%s" alt="%s" title="%s" />', relative.path, alt.text, title.text)
+    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s" />', relative.path, uniqueness(),
+                    alt.text, title.text)
+  }
+  return(html)
+}
+
+#' Favicon resource
+#'
+#' @rdname publish
+#' @export
+publish.ico <- function(viz) {
+  required <- c("relpath")
+  viz <- NextMethod()
+  checkRequired(viz, required)
+
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    relative.path <- viz[['relpath']]
+    html <- sprintf('<link rel="icon" type="image/ico" href="%s?_c=%s"/>',
+                    relative.path, uniqueness())
   }
   return(html)
 }
@@ -148,7 +167,8 @@ publish.js <- function(viz) {
 
   output <- NULL
   if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<script src="%s" type="text/javascript"></script>', viz[['relpath']])
+    output <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
+                      viz[['relpath']], uniqueness())
   }
   return(output)
 }
@@ -164,7 +184,8 @@ publish.css <- function(viz) {
 
   output <- NULL
   if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<link href="%s" rel="stylesheet" type="text/css" />', viz[['relpath']])
+    output <- sprintf('<link href="%s?_c=%s" rel="stylesheet" type="text/css" />',
+                      viz[['relpath']], uniqueness())
   }
   return(output)
 }
@@ -216,10 +237,18 @@ publish.footer <- function(viz) {
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
     info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
-    vizzies[[v]]$name <- info$context$name
-    vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", sub(".","",info$context$path))
-    vizzies[[v]]$thumbLoc <- sub(pattern = ".", replacement = vizzies[[v]]$url,
-                                  x = info$context$thumbnail)
+    if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
+      vizzies[[v]]$name <- info$context$name
+    }
+     
+    # if / is first char, treat as relative path. If not, treat as absolute path.
+    if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
+      vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
+      vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
+    } else {
+      vizzies[[v]]$url <- info$context$path
+      vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
+    }
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
@@ -248,8 +277,8 @@ publish.landing <- function(viz){
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
   pageviz$depends <- append(pageviz$depends, viz_info)
-  pageviz$context <- list(sections = c("header", names(viz_info)), #names of section ids
-                          resources = "landingCSS")
+  pageviz$context <- list(sections = c("usgsHeader", "owiNav", "header", names(viz_info), "usgsFooter"), #names of section ids
+                          resources = c("landingCSS", "owiCSS", "jquery", "appJS"))
   pageviz$publisher <- "page"
   pageviz <- as.viz(pageviz)
   pageviz <- as.publisher(pageviz) #maybe/maybe not
@@ -282,9 +311,26 @@ as.resource <- function(viz, ...) {
   mimetype <- viz[['mimetype']]
   resource <- lookupMimetype(mimetype)
   if(length(resource) == 0){
-    stop(mimetype, " not supported: ", viz[['id']])
+    warning(mimetype, " will be treated as data: ", viz[['id']])
+    resource <- "data"
   }
 
   class(viz) <- c(resource, class(viz))
   return(viz)
+}
+
+### Helper functions for above
+# This should not be global, but should be a config for the "fullPage.mustache"
+getVizlabJS <- function() {
+  vizlab.js <- list(
+    id = "_vizlabJS",
+    location = "js/vizlab.js",
+    packaging = "vizlab",
+    publisher = "resource",
+    mimetype = "application/javascript",
+    export = TRUE
+  )
+  vizlab.js <- as.viz(vizlab.js)
+  vizlab.js <- as.publisher(vizlab.js)
+  return(vizlab.js)
 }

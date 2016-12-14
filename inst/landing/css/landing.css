@@ -20,7 +20,7 @@ h6 {
 }
 body {
   font-family: "Open Sans", Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: url('../img/cream_dust.png');
+  background: url('img/cream_dust.png');
 }
 #header {
   min-height: 60px;
@@ -59,11 +59,13 @@ body {
   margin-bottom: 20px;
 }
 .vizzy {
-  height: 250px;
   border-radius: 10px;
-  margin: 0 auto 10px auto;
   overflow: hidden;
   position: relative;
+  width:200px;
+  height:200px;
+  flex:2;
+  margin:0 auto 10px auto;
 }
 .title {
   height: 40px;
@@ -86,6 +88,22 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+.description{
+  margin:0 auto;
+  text-align:center;
+  width:350px;
+}
+
+.description h4{
+  font-weight:bold;
+  font-size:.9em;
+}
+
+.description p{
+  font-size:.8em;
+}
+
 @media screen and (min-width: 768px) {
   #header {
     width: 760px;
@@ -99,6 +117,10 @@ body {
     width: 760px;
     margin: 0 auto;
   }
+  .visualizationsContainer {
+    display:flex;
+    flex-direction:row;
+  }
   .visualizationsContainer:after {
     visibility: hidden;
     display: block;
@@ -106,6 +128,26 @@ body {
     content: " ";
     clear: both;
     height: 0;
+  }
+  .vizzy {
+    width:300px;
+    height:300px;
+    flex:2;
+    margin-right:10px;
+  }
+  
+  .description{
+    flex:1;
+    text-align:left;
+    width:100%;
+  }
+  
+  .description h4{
+    font-size:1em;
+  }
+
+  .description p{
+    font-size:.9em;
   }
 }
 @media screen and (min-width: 1025px) {

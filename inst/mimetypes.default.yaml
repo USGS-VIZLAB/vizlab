@@ -15,6 +15,8 @@ svg:
 img:
   - "image/png"
   - "image/jpg"
+ico:
+  - "image/ico"
 js:
   - "application/javascript"
   - "text/javascript"

@@ -1,0 +1,179 @@
+#usgscolorband,
+#usgsfooter {
+  display: none;
+}
+
+nav {
+  border-bottom:1px solid rgb(190,190,190);
+  height: 40px;
+  position: relative;
+  z-index: 10000;
+}
+nav ul {
+  display: none;
+  list-style: none;
+  position: absolute;
+  top: 40px;
+  background: #fff;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+nav ul a {
+  color: #003366;
+  display: inline-block;
+  height: 41px;
+  width: 100%;
+}
+nav ul a:hover {
+  background: #003366;
+  color: #fff;
+}
+nav ul a li {
+  border-bottom: 1px solid #bebebe;
+  height: 20px;
+  padding: 10px;
+}
+.navContent{
+  height:40px;
+  position:relative;
+}
+
+#owiLogoSmall{
+    position:absolute;
+    left:10px;
+    top:3px;
+    display:block;
+    width:47px;
+}
+
+#menu{
+    background:#003366;
+    width:80px;
+    padding:4px 0;
+    text-align:center;
+    position:absolute;
+    right:10px;
+    top:5px;
+    border-radius:4px;
+    color:#fff;
+    cursor:pointer;
+}
+
+@media screen and (min-width: 768px) {
+/*========usgs-header========*/
+  #usgscolorband {
+    font: 14px Verdana, Arial, Helvetica, sans-serif;
+    width: 100%;
+    height: 5.14em;
+    min-height: 72px;
+    background: #000;
+    position: relative;
+    z-index: 20002;
+    display: block;
+  }
+  #usgsbanner {
+    width: 100%;
+    height: 72px;
+  }
+  #usgsidentifier {
+    background-color: black;
+    width: 178px;
+    height: 5.14em;
+    float: left;
+  }
+  #usgsidentifier img {
+    border: none;
+  }
+  #usgsccsabox {
+    float: right;
+    background-color: #000000;
+    min-height: 72px;
+    width: 120px;
+  }
+  #usgsccsa {
+    font: 1em/0.5em Verdana, Arial, Helvetica, sans-serif;
+    height: 63px;
+    padding-top: 9px;
+  }
+  #usgsccsa a:link,
+  #usgsccsa a:visited {
+    font: bold 1em/1.3em Verdana, Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+  #usgsccsa a:hover {
+    font: bold 1em/1.3em Verdana, Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    text-decoration: underline;
+    margin-left: 4px;
+  }
+  #usgsccsa a:active {
+    font: bold 1em/1.3em Verdana, Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+  
+  /*========nav========*/
+  
+  .navContent {
+    position: relative;
+    width: 768px;
+    height: 40px;
+    margin: 0 auto;
+  }
+  #owiLogoSmall {
+    display: block;
+    width: 47px;
+    position: absolute;
+    top: 3px;
+  }
+  
+/*========usgs-footer========*/
+  #usgsfooter {
+    background: #fff;
+    padding-bottom: 5px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: small;
+    clear: both;
+    margin: 0;
+    display: block;
+  }
+  #usgsfooterbar {
+    background-color: #666666;
+    padding: 4px;
+    margin: 0;
+  }
+  #usgsfooterbar a:link,
+  #usgsfooterbar a:visited {
+    margin-right: 40px;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  #usgsfooterbar a:hover {
+    margin-right: 40px;
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  #usgsfooterbar a:active {
+    margin-right: 40px;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  #usgsfootertext {
+    padding: 4px;
+    margin: 0;
+  }
+  #usgsfootertext img {
+    border: none;
+    float: right;
+    margin-right: 5px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .navContent {
+    width: 960px;
+  }
+}

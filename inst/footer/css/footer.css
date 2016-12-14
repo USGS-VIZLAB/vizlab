@@ -32,7 +32,6 @@ footer {
 .footerThumnail {
   height: 180px;
   margin: 0 0 15px 0;
-  border-radius: 10px;
   overflow: hidden;
 }
 .footerThumnail img {
@@ -56,12 +55,12 @@ footer {
   .footerThumnail {
     height: 200px;
   }
-  .blogTitle {
+  .titleHandler {
     height: 45px;
     vertical-align: text-bottom;
     position: relative;
   }
-  .blogTitle h4 {
+  .titleHandler h4 {
     position: absolute;
     bottom: 0;
   }
