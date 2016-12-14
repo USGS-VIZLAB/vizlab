@@ -66,7 +66,8 @@ getVizInfo <- function(org, repo){
                             template="templates/vizzies.mustache",
                             publisher="section",
                             context=list(name=viz_info$name,
-                                         thumbnail=getVizUrl(viz_info$`thumbnail-landing`$url),
+                                         thumbnail=file.path(getVizUrl(viz_info$path),
+                                                             getVizUrl(viz_info$`thumbnail-landing`$url)),
                                          alttext=viz_info$`thumbnail-landing`$alttext,
                                          path=getVizUrl(viz_info$path),
                                          description=viz_info$description))
