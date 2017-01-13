@@ -64,7 +64,7 @@ createCleanRule <- function() {
 #' Create the rules to run/make/update the non-top makefiles
 #'
 #' Each makefile gets a rule to run it and a rule to create the makefile
-#' 
+#'
 #' @keywords internal
 createMakeRunmakeRules <- function() {
   # create a list of info for each makefile in similar format to block info read
@@ -118,7 +118,7 @@ createBlockMakefile <- function(block=c('fetch','process','visualize','publish')
 #' Create the macros section
 #'
 #' Create a character string defining the macros to include in every makefile
-#' 
+#'
 #' @export
 createMakeMacros <- function() {
   # read user settings from profile.yaml
@@ -128,11 +128,11 @@ createMakeMacros <- function() {
   # write the macros
   macros <- c(
     if(!is.null(profile$SHELL)) paste0('SHELL="', profile$SHELL, '"'),
-    paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) paste0('"', profile$R_LIBS_USER, '"') else '$(R_LIBS_USER)'),
+    paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) profile$R_LIBS_USER else '$(R_LIBS_USER)'),
     paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
-    paste0('RBATCH="', profile$R, '" CMD BATCH --no-timing $(RARGS)'),
-    paste0('REXPR="', profile$R, '" $(RARGS) -e'),
-    paste0('RSCRIPT="', profile$RSCRIPT, '" $(RARGS)'))
+    paste0('RBATCH=', profile$R, ' CMD BATCH --no-timing $(RARGS)'),
+    paste0('REXPR=', profile$R, ' $(RARGS) -e'),
+    paste0('RSCRIPT=', profile$RSCRIPT, ' $(RARGS)'))
 
   # combine into a single string
   paste0('# Macros\n\n', paste(macros, collapse='\n'))
@@ -209,12 +209,12 @@ createMakeBlockRules <- function(block=c('fetch','process','visualize','publish'
       '-----WARNING-----',
       paste("Script dependencies should be specific files to avoid Making items too seldom or too often.",
             "You can override the default (a directory) by setting 'scripts' in each viz.yaml item."),
-      paste0(dir.deps.info, collapse='\n'), 
+      paste0(dir.deps.info, collapse='\n'),
       '-----------------')
   } else {
     dir.deps.msg <- NULL
   }
-  
+
   # set the 'all' target to include all content items
   all <- createMakeEmptyRule(
     target='all',
@@ -224,7 +224,7 @@ createMakeBlockRules <- function(block=c('fetch','process','visualize','publish'
   items <- sapply(content.info, function(item.info) {
     createMakeItem(item.info)
   })
-  
+
   # write any messages the user should see on calling 'make' - so far this is
   # just the directory dependencies issues if present
   if(length(dir.deps.msg) == 0) dir.deps.msg <- paste0(block, ".make looks OK!")
