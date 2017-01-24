@@ -127,7 +127,7 @@ createMakeMacros <- function() {
 
   # write the macros
   macros <- c(
-    if(!is.null(profile$SHELL)) paste0('SHELL="', profile$SHELL, '"'),
+    if(!is.null(profile$SHELL)) paste0('SHELL=', profile$SHELL),
     paste0('RLIBSUSER=', if(!is.null(profile$R_LIBS_USER)) profile$R_LIBS_USER else '$(R_LIBS_USER)'),
     paste0('RARGS=--quiet --no-save --no-restore'), # R_LIBS_USER="',profile$R_LIBS_USER,'"
     paste0('RBATCH=', profile$R, ' CMD BATCH --no-timing $(RARGS)'),
