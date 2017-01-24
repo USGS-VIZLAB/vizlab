@@ -45,6 +45,7 @@ fetch:
     id: siteTextData
     location: data/siteText.yaml
     mimetype: text/yaml
+    scripts:
   -
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
@@ -67,15 +68,18 @@ fetch:
     location: data/car_info
     mimetype: text/csv
     reader: folder
+    scripts:
   -
     id: constant
     fetcher: none
     reader: inline
     data: 42
+    scripts:
   -
     id: constant-list
     fetcher: none
     reader: inline
+    scripts:
     data:
       color: "#ffffff"
       value: 45.5
@@ -101,6 +105,7 @@ visualize:
     visualizer: relativeAbundance
     mimetype: image/svg+xml
     export: false
+    scripts:
 publish:
   -
     id: mainCSS
@@ -116,7 +121,8 @@ publish:
     id: index
     name: index
     template: fullPage
-    depends: ["relativeAbundance"]
+    depends:
+      relativeAbundance: "relativeAbundance"
     publisher: page
     context:
       title: testViz
@@ -125,7 +131,7 @@ publish:
       footer: [ "footer" ]
   -
     id: relativeAbundance
-    template: simpleFigure
+    template: simplefigure
     context: siteTextData
     depends: relativeAbundanceFig
     publisher: section
