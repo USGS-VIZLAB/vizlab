@@ -1,0 +1,66 @@
+---
+  -
+    id: brandcomment
+    location: templates/brandcomment.mustache
+    publisher: template
+    context:
+  -
+    id: externallink
+    location: templates/externallink.mustache
+    publisher: template
+    context:
+      link: "## MISSING LINK ##"
+      text: "## MISSING TEXT ##"
+  -
+    id: footer
+    publisher: template
+    depends:
+      logo: vizlab-logo
+      github: github-logo
+      css: header-footer-css
+    context:
+      logo: logo
+      github: github
+      vizzies: []
+      blogs: []
+      blogsInFooter: false
+  -
+    id: fullpage
+    location: templates/fullPage.mustache
+    publisher: template
+    depends:
+      brandcomment: brandcomment
+
+  -
+    id: keynote
+    publisher: template
+    location: templates/keynote.mustache
+  -
+    id: list
+    publisher: template
+    location: templates/list.mustache
+  -
+    id: printall
+    publisher: template
+    location: templates/printall.mustache
+  -
+    id: semantics
+    publisher: template
+    location: templates/semantics.mustache
+  -
+    id: simplefigure
+    publisher: template
+    location: templates/simplefigure.mustache
+---
+  -
+    id: vizlab-logo
+    location: images/atom.svg
+    mimetype: image/svg+xml
+    title: "Vizlab Logo"
+    alttext: "Vizlab Logo"
+  -
+    id: github-logo
+    location: images/github.svg
+    mimetype: image/svg+xml
+    title: "Github Logo"
+    alttext: "Github Logo"
