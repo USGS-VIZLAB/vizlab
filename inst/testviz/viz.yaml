@@ -104,8 +104,8 @@ visualize:
         mayfly: MayflyNymph
     visualizer: relativeAbundance
     mimetype: image/svg+xml
-    export: false
-    scripts:
+    export: true
+    scripts: scripts/visualize/relativeAbundance.R
 publish:
   -
     id: mainCSS
@@ -123,6 +123,10 @@ publish:
     template: fullPage
     depends:
       relativeAbundance: "relativeAbundance"
+      mainCSS: "mainCSS"
+      normalizeCSS: "normalizeCSS"
+      footer-style: "footer-style"
+      footer: "footer"
     publisher: page
     context:
       title: testViz
@@ -132,8 +136,12 @@ publish:
   -
     id: relativeAbundance
     template: simplefigure
-    context: siteTextData
-    depends: relativeAbundanceFig
+    context:
+      id: relativeAbundance
+      figure: relativeAbundanceFig
+      caption: "Relative Abundance"
+    depends:
+      relativeAbundanceFig: "relativeAbundanceFig"
     publisher: section
   -
     id: footer
