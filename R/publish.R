@@ -26,7 +26,7 @@ publish.page <- function(viz) {
   required <- c("template", "context")
   checkRequired(viz, required)
 
-  template <- readTemplate(viz[['template']])
+  template <- template(viz[['template']])
 
   dependencies <- as.list(viz[['depends']])
   # add automatic dependencies
@@ -74,7 +74,7 @@ publish.section <- function(viz) {
 
   context <- buildContext(viz, dependencies)
 
-  template <- readTemplate(viz[['template']])
+  template <- template(viz[['template']])
 
   viz[['output']] <- whisker.render(template = template, data = context)
   if (!is.null(viz[['analytics']])) {
@@ -236,7 +236,7 @@ publish.footer <- function(viz) {
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
-     
+
     # if / is first char, treat as relative path. If not, treat as absolute path.
     if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
       vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
@@ -249,7 +249,7 @@ publish.footer <- function(viz) {
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
   context[['vizzies']] <- vizzies
-  template <- readTemplate(viz[['template']])
+  template <- template(viz[['template']])
 
   viz[['output']] <- whisker.render(template = template, data = context)
   if (!is.null(viz[['analytics']])) {
@@ -292,6 +292,8 @@ as.publisher <- function(viz, ...) {
   class(viz) <- c(publisher, "publisher", class(viz))
   if (publisher == "resource") {
     viz <- as.resource(viz)
+  } else if (publisher == "template") {
+    viz <- as.template(viz)
   }
   return(viz)
 }

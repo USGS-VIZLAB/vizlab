@@ -111,6 +111,30 @@ getPartialLibrary <- function() {
   return(partials)
 }
 
+#' Internal function to get shared resources
+#' Implemented as a closure to avoid reloading file each time
+#'
+#' @param x character vector containing resource id
+#' @importFrom yaml yaml.load_file
+#' @return vizlab object from library or {code}NULL{/code} if it doesn't exist
+getResourceFromLibrary <- (function() {
+  resources <- yaml.load_file(system.file("resource.library.yaml", package=packageName()))
+  names(resources) <- lapply(resources, function(r) { r[['id']] })
+
+  return(function(x) {
+    viz <- resources[[x]]
+    if (!is.null(viz)) {
+      viz <- as.viz(viz)
+      resource.file <- system.file(viz[['location']], package=packageName())
+      # convert to absolute if exists
+      if (file.exists(resource.file)) {
+        viz[['location']] <- resource.file
+      }
+    }
+    return(viz)
+  })
+})()
+
 #' Replace any markdown text with rendered html
 #'
 #' @importFrom markdown markdownToHTML
