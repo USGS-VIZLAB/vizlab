@@ -1,44 +1,51 @@
 <footer>
-  <div id="vizlabPromo">
-  	{{{logo}}}
+  <div class="footerContentAligner">
+    <a href="{{github.url}}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+        <div id="github-link">
+        	{{{github.logo}}}
+      	  <p>The code used here is available on github</p>
+        </div>
+       </a>
+    <div id="relatedVizzies">
+    	<h3>Related Visualizations:</h3>
+
+    	{{#vizzies}}
+    		<a href="{{url}}" target="_blank">
+    			<div class="relatedItem">
+    			  <div class="titleHandler">
+    				  <h4>{{name}}</h4>
+    				</div>
+    				<div class="footerThumnail">
+    					<img src="{{thumbLoc}}" alt=""/>
+    				</div>
+    			</div>
+    		</a>
+    	{{/vizzies}}
+
+    </div>
+
+    {{#blogsInFooter}}
+    <div id="relatedBlogs">
+    	<h3>Related Blogs:</h3>
+
+    	{{#blogs}}
+    		<a href="{{url}}" target="_blank">
+    			<div class="relatedItem">
+    				<div class="titleHandler">
+    					<h4>{{name}}</h4>
+    				</div>
+    				<div class="footerThumnail blog">
+    					<img src="{{thumbLoc}}" alt=""/>
+    				</div>
+    			</div>
+    		</a>
+    	{{/blogs}}
+
+    </div>
+    {{/blogsInFooter}}
+    <div id="vizlabPromo">
+      <p>This interactive data visualization was created by <strong>USGS VIZLAB</strong></p>
+    	{{{logo}}}
+    </div>
   </div>
-  
-  <div id="relatedVizzies">
-  	<h3>Related Visualizations:</h3>
-  	
-  	{{#vizzies}}
-  		<a href="{{url}}" target="_blank">
-  			<div class="relatedItem">
-  			  <div class="titleHandler">
-  				  <h4>{{name}}</h4>
-  				</div>
-  				<div class="footerThumnail">
-  					<img src="{{thumbLoc}}" alt=""/>
-  				</div>
-  			</div>
-  		</a>
-  	{{/vizzies}}
-  	
-  </div>
-  
-  {{#blogsInFooter}}
-  <div id="relatedBlogs">
-  	<h3>Related Blogs:</h3>
-  	
-  	
-  	{{#blogs}}
-  		<a href="{{url}}" target="_blank">
-  			<div class="relatedItem">
-  				<div class="titleHandler">
-  					<h4>{{name}}</h4>
-  				</div>
-  				<div class="footerThumnail blog">
-  					<img src="{{thumbLoc}}" alt=""/>
-  				</div>
-  			</div>
-  		</a>
-  	{{/blogs}}
-  	
-  </div>
-  {{/blogsInFooter}}
 </footer>

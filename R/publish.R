@@ -20,7 +20,6 @@ publish.character <- function(viz) {
 
 #' publish a page
 #' @rdname publish
-#' @importFrom whisker whisker.render
 #' @export
 publish.page <- function(viz) {
   required <- c("template", "context")
@@ -28,29 +27,19 @@ publish.page <- function(viz) {
 
   template <- template(viz[['template']])
 
-  dependencies <- as.list(viz[['depends']])
-  # add automatic dependencies
-  vizlabjs <- '_vizlabJS'
-  dependencies[[vizlabjs]] <- getVizlabJS()
-
-  # TODO Watch out for cyclic depends
-  dependencies <- lapply(dependencies, expandDependencies)
-
-  # this is needed for unnamed depends lists
-  if (all(is.character(sapply(viz[['depends']], class)))) {
-    names(dependencies) <- c(viz[['depends']], vizlabjs)
-  }
-  dependencies <- c(dependencies, recursive = TRUE)
-
-  context <- buildContext(viz, dependencies)
+  dependencies <- gatherDependencyList(viz[['depends']], template[['depends']])
+  # TODO handle accessing nested dependencies elsewhere
 
   #also manually put resources into context
-  context[['resources']] <- append(context[['resources']], dependencies[[vizlabjs]])
-  context[['info']] <- append(context[['info']], getBlocks("info", keep.block=F)[[1]])
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+  context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
+
+  # replace ids in context with expanded dependencies
+  context <- buildContext(viz, dependencies)
 
   partials <- getPartialLibrary()
   file <- export(viz)
-  cat(whisker.render(template = template, data = context, partials = partials), file = file)
+  render(template, context, file)
 }
 
 #' publish a section
@@ -65,18 +54,18 @@ publish.section <- function(viz) {
   required <- c("template")
   checkRequired(viz, required)
 
+  template <- template(viz[['template']])
+
   # TODO Watch out for cyclic depends
-  dependencies <- as.list(viz[['depends']])
-  dependencies <- lapply(dependencies, expandDependencies)
+  dependencies <- gatherDependencyList(viz[['depends']], template[['depends']])
 
   names(dependencies) <- viz[['depends']]
   dependencies <- c(dependencies, recursive = TRUE)
 
+  context <- replaceOrAppend(template[['context']], viz[['context']])
   context <- buildContext(viz, dependencies)
 
-  template <- template(viz[['template']])
-
-  viz[['output']] <- whisker.render(template = template, data = context)
+  viz[['output']] <- render(template, context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
   }
@@ -219,15 +208,11 @@ publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
 
-  index_loc_css <- 'target/css'
-  if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
-  file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
-
-  dependencies <- lapply(viz[['depends']], publish)
+  template <- template(viz[['template']])
+  dependencies <- lapply(c(viz[['depends']], template[['depends']]), publish)
   names(dependencies) <- viz[['depends']]
 
   context <- buildContext(viz, dependencies)
-
 
   #add info from viz.yaml to context to inject into template
   vizzies <- viz$vizzies
@@ -249,7 +234,7 @@ publish.footer <- function(viz) {
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
   context[['vizzies']] <- vizzies
-  template <- template(viz[['template']])
+
 
   viz[['output']] <- whisker.render(template = template, data = context)
   if (!is.null(viz[['analytics']])) {
@@ -280,6 +265,14 @@ publish.landing <- function(viz){
   pageviz <- as.publisher(pageviz) #maybe/maybe not
 
   publish(pageviz)
+}
+
+#' publish template
+#'
+#' @rdname publish
+#' @export
+publish.template <- function(viz) {
+  # do nothing for now
 }
 
 #' coerce to a publisher
@@ -315,20 +308,4 @@ as.resource <- function(viz, ...) {
 
   class(viz) <- c(resource, class(viz))
   return(viz)
-}
-
-### Helper functions for above
-# This should not be global, but should be a config for the "fullPage.mustache"
-getVizlabJS <- function() {
-  vizlab.js <- list(
-    id = "_vizlabJS",
-    location = "js/vizlab.js",
-    packaging = "vizlab",
-    publisher = "resource",
-    mimetype = "application/javascript",
-    export = TRUE
-  )
-  vizlab.js <- as.viz(vizlab.js)
-  vizlab.js <- as.publisher(vizlab.js)
-  return(vizlab.js)
 }

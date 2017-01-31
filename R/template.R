@@ -16,6 +16,7 @@ template.character <- function(viz) {
       id = digest(viz, algo="sha1", file=TRUE),
       location = viz,
       publisher = "template",
+      mimetype = "text/mustache",
       context = NULL
     )
     viz <- new.obj
@@ -30,13 +31,12 @@ template.character <- function(viz) {
   return(viz)
 }
 
-
 #' Coerce to template type publisher
 #'
 #' @param viz vizlab object to coerce
 #' @export
 as.template <- function(viz, ...) {
-  template <- readLines(viz[['location']])
+  template <- readData(viz)
   viz[['template']] <- template
   return(viz)
 }

@@ -11,12 +11,15 @@
 \alias{readData.rds}
 \alias{readData.tabular}
 \alias{readData.txt}
+\alias{readData.viz}
 \alias{readData.yaml}
 \title{Ensure data is on the local file system}
 \usage{
 readData(viz)
 
 \method{readData}{character}(viz)
+
+\method{readData}{viz}(viz)
 
 \method{readData}{tabular}(viz)
 
@@ -49,6 +52,8 @@ it yourself, specify "customReader: filepath" in the viz.yaml
 
 \code{readData.character} is the standard entry point; from here, viz.id gets
 assigned a class to route it to a more specific reader
+
+\code{readData.viz} reads contents represented by vizlab object
 
 \code{readData.tabular} reads a text file.
 

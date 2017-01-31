@@ -64,6 +64,31 @@ expandDependencies <- function(x) {
   return(expanded.dep)
 }
 
+#' Pull together vizlab object dependencies
+#'
+#' @param ... dependencies to gather
+gatherDependencyList <- function(...) {
+  dependencies <- list()
+  depNames <- list()
+
+  # add automatic dependencies
+  for (dep in as.list(...)) {
+    if (!is.null(dep)) {
+      dependencies <- append(dependencies, dep)
+      if (is.null(names(dep))) {
+        depNames <- append(depNames, dep)
+      } else {
+        depNames <- append(depNames, names(dep))
+      }
+    }
+  }
+
+  # TODO Watch out for cyclic depends
+  dependencies <- lapply(dependencies, expandDependencies)
+
+  names(dependencies) <- depNames
+}
+
 #' Use mimetype lookup to get reader
 #'
 #' @importFrom utils modifyList
@@ -115,13 +140,15 @@ getPartialLibrary <- function() {
 #' Implemented as a closure to avoid reloading file each time
 #'
 #' @param x character vector containing resource id
+#' @param no.match what to do if the viz.id is not found: either 'stop' (throw
+#'   error) or 'NA' (return NA)
 #' @importFrom yaml yaml.load_file
-#' @return vizlab object from library or {code}NULL{/code} if it doesn't exist
+#' @return vizlab object from library or \code{NULL} if it doesn't exist
 getResourceFromLibrary <- (function() {
   resources <- yaml.load_file(system.file("resource.library.yaml", package=packageName()))
   names(resources) <- lapply(resources, function(r) { r[['id']] })
 
-  return(function(x) {
+  return(function(x, no.match = c("stop", "NA")) {
     viz <- resources[[x]]
     if (!is.null(viz)) {
       viz <- as.viz(viz)
@@ -130,6 +157,8 @@ getResourceFromLibrary <- (function() {
       if (file.exists(resource.file)) {
         viz[['location']] <- resource.file
       }
+    } else {
+      viz <- match(no.match, "NA" = NA, "stop" = stop("Could not find ", x))
     }
     return(viz)
   })
@@ -166,4 +195,29 @@ setupFoldersForFile <- function(file) {
 uniqueness <- function() {
   rng <- floor(runif(n = 1, min = 10000, max = 10000000))
   return(rng)
+}
+
+#' Append second list to first with overwrites
+#'
+#' @param x list template to be filled by values of another list
+#' @param y list to overwrite missing values or append to first list
+#' @return list containing merged values from both x and y
+replaceOrAppend <- function(x, y) {
+  slots <- unique(c(names(x), names(y)))
+  out <- list()
+  for (slot in slots) {
+    if (is.list(x[[slot]])) {
+      # append
+      out[[slot]] <- append(x[[slot]], y[[slot]])
+    } else {
+      if(!is.null(y[[slot]])) {
+        # replace
+        out[[slot]] <- y[[slot]]
+      } else {
+        # retain
+        out[[slot]] <- x[[slot]]
+      }
+    }
+  }
+  return(out)
 }

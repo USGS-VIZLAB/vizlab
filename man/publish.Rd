@@ -13,6 +13,7 @@
 \alias{publish.resource}
 \alias{publish.section}
 \alias{publish.svg}
+\alias{publish.template}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
@@ -38,6 +39,8 @@ publish(viz)
 \method{publish}{footer}(viz)
 
 \method{publish}{landing}(viz)
+
+\method{publish}{template}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -68,6 +71,8 @@ svg publishing, may return NULL
 Footer publishing
 
 publish landing page
+
+publish template
 }
 \details{
 I've been thinking maybe switching 'x' to 'viz' would be more clear

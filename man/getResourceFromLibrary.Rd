@@ -5,13 +5,16 @@
 \title{Internal function to get shared resources
 Implemented as a closure to avoid reloading file each time}
 \usage{
-getResourceFromLibrary(x)
+getResourceFromLibrary(x, no.match = c("stop", "NA"))
 }
 \arguments{
 \item{x}{character vector containing resource id}
+
+\item{no.match}{what to do if the viz.id is not found: either 'stop' (throw
+error) or 'NA' (return NA)}
 }
 \value{
-vizlab object from library or {code}NULL{/code} if it doesn't exist
+vizlab object from library or \code{NULL} if it doesn't exist
 }
 \description{
 Internal function to get shared resources
