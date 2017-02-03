@@ -22,7 +22,25 @@
     		</a>
     	{{/vizzies}}
     </div>
-    <div id="vizlabPromo">
+
+<div id="relatedBlogs">
+	<h3>Related Blogs:</h3>
+	
+	
+	{{#blogs}}
+		<a href="{{path}}" target="_blank">
+			<div class="relatedItem">
+				<div class="blogTitle">
+					<h4>{{name}}</h4>
+				</div>
+				<div class="footerThumnail blog">
+					<img src="{{thumbnail}}" alt=""/>
+				</div>
+			</div>
+		</a>
+	{{/blogs}}
+	
+<div id="vizlabPromo">
       <p>This interactive data visualization was created by <strong>USGS VIZLAB</strong></p>
     	{{{logo}}}
     </div>
