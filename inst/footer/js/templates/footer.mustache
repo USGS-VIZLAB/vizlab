@@ -1,0 +1,30 @@
+<footer>
+  <div class="footerContentAligner">
+    <a class="hotfix" href="https://github.com/USGS-VIZLAB/water-use" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+      <div id="github-link">
+      	{{{github}}}
+    	  <p>The code used here is available on github</p>
+      </div>
+     </a>
+    <div id="relatedVizzies">
+    	<h3>Related Visualizations:</h3>
+    	
+    	{{#vizzies}}
+    		<a href="{{url}}" target="_blank">
+    			<div class="relatedItem">
+    			  <div class="titleHandler">
+    				  <h4>{{name}}</h4>
+    				</div>
+    				<div class="footerThumnail">
+    					<img src="{{thumbLoc}}" alt=""/>
+    				</div>
+    			</div>
+    		</a>
+    	{{/vizzies}}
+    </div>
+    <div id="vizlabPromo">
+      <p>This interactive data visualization was created by <strong>USGS VIZLAB</strong></p>
+    	{{{logo}}}
+    </div>
+  </div>
+</footer>
