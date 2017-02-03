@@ -10,24 +10,71 @@ body {
   font-family: "Open Sans", Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 footer {
-  min-height: 100px;
-  padding: 15px;
+  background: #003366;
+  min-height: 400px;
+  color: #fff;
+  border-top: 5px solid #d2d2d2;
+  padding: 10px;
+  margin-top: 20px;
 }
-#vizlabPromo {
-  height: 100px;
+.hotfix {
+  color: #fff;
+  height: 40px;
+  display: inline-block;
+}
+footer .p-share {
   margin-bottom: 15px;
 }
-#vizlabPromo img {
-  height: 100%;
+footer:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
 }
-#relatedVizzies h3,
-#relatedBlogs h3 {
+#github-logo {
+  max-height: 40px;
+  float: left;
+  width: 40px;
+  margin: 0 10px 15px 0;
+  pointer-events: none;
+}
+#github-link {
+  display: inline-block;
+  visibility: visible;
+  cursor: pointer;
+  position: relative;
+  z-index: 2000;
+}
+#github-link p {
+  padding-top: 10px;
+}
+#vizlabPromo p,
+#github-link p {
+  font-size: .9em;
+  float: left;
+}
+#vizlab-logo {
+  max-height: 20px;
+  float: left;
+  width: 30px;
+  margin-left: 5px;
+}
+#relatedVizzies,
+#relatedBlogs {
+  font-family: "Source Sans Pro", sans-serif;
+  clear: both;
+}
+#relatedVizzies h5,
+#relatedBlogs h5 {
   margin-bottom: 10px;
 }
 #relatedVizzies h4,
 #relatedBlogs h4 {
   margin: 0 0 5px 0;
   font-weight: 400;
+  color: #fff;
 }
 .footerThumnail {
   height: 180px;
@@ -42,10 +89,36 @@ footer {
 .blog {
   border: 1px solid #bebebe;
 }
+/* Parts:share */
+.p-share {
+  text-align: center;
+}
+.p-share a {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  background-color: #263238;
+  border-radius: 100%;
+  color: #eceff1;
+  margin: 0 .5rem;
+}
 @media screen and (min-width: 768px) {
+  body {
+    padding-bottom: 450px;
+  }
   footer {
-    width: 760px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  #relatedVizzies {
     margin: 0 auto;
+  }
+  #relatedBlogs {
+    margin: 0 auto;
+    clear: both;
   }
   .relatedItem {
     width: 49%;
@@ -65,10 +138,27 @@ footer {
     bottom: 0;
   }
 }
-@media screen and (min-width: 1025px) {
-  footer {
-    width: 960px;
+@media screen and (min-width: 768px) {
+  .footerContentAligner {
+    margin: 10px auto 0 auto;
+    text-align: left;
+    width: 560px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .footerContentAligner {
+    width: 770px;
+  }
+}
+@media screen and (min-width: 1500px) {
+  .footerContentAligner {
+    width: 810px;
+  }
+}
+@media screen and (min-width: 2000px) {
+  .footerContentAligner {
+    width: 1210px;
   }
 }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=footer.css.map */
