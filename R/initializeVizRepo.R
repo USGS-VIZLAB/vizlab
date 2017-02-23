@@ -9,8 +9,6 @@
 #' @param org string, GitHub organization to create repository. Defaults to "USGS-VIZLAB"
 #' @param issue_json file path indicating the JSON file to be used to define what issues to create
 #' @param label_json file path indicating the JSON file to be used to define what labels to create
-#'  
-#' @importFrom jsonlite fromJSON
 #' 
 #' @return URL for the new GitHub repository.
 #' @export
