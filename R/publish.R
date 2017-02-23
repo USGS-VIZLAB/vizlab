@@ -292,15 +292,20 @@ publish.thumbnail <- function(viz){
     maxSize <- 8388608
     minHeight <- 630
     minWidth <- 1200
+    square <- FALSE
   } else if(tolower(viz[['for']]) == "twitter") {
     maxSize <- 1048576
     minHeight <- 150
     minWidth <- 280
+    square <- FALSE
   } else { #landing
-    maxSize <- 8388608
+    maxSize <- 1048576
+    minHeight <- 300
+    minWidth <- 300
+    square <- TRUE
   }
   checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
-                       minHeight = minHeight, minWidth = minWidth)
+                       minHeight = minHeight, minWidth = minWidth, square = square)
   #send to resources publisher if all ok
   viz <- as.resource(viz)
   publish.resource(viz)
@@ -308,13 +313,17 @@ publish.thumbnail <- function(viz){
 }
 
 #helper to check thumbnail compliance
-checkThumbCompliance <- function(file, maxSize, minHeight, minWidth) {
+checkThumbCompliance <- function(file, maxSize, minHeight, minWidth, square = FALSE) {
   fileSize <- file.info(file)
   im <- imager::load.image(file)
   width <- imager::width(im)
   height <- imager::height(im)
   if(fileSize > maxSize || width < minWidth || height < minHeight) {
     stop(paste("Thumbnail", file, "does not meet site requirements"))
+  }
+  if(square) {
+    if(width/height > 1.1 || width/height < 0.9)
+    stop(paste("Thumbnail", file, "needs to be more square"))
   }
 }
 
