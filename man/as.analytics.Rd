@@ -14,4 +14,3 @@ as.analytics(viz, ...)
 \description{
 Coerce vizlab object to include analytics
 }
-

@@ -17,4 +17,3 @@ vizlab fetcher object
 \description{
 Coerce vizlab object to a fetcher type
 }
-

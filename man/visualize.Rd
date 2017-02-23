@@ -18,4 +18,3 @@ This function should be called from the generic, \code{visualize()}.
 Visualize raw or intermediate data products into intermediate or final data
 products
 }
-

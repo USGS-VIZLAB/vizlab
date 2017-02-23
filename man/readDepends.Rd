@@ -37,4 +37,3 @@ setwd(wd)
 \seealso{
 readData
 }
-

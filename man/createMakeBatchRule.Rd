@@ -30,4 +30,3 @@ Create the text for a gnu make target that runs a function using R CMD BATCH
 and callFunction.R
 }
 \keyword{internal}
-

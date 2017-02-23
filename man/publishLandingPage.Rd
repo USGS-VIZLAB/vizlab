@@ -10,4 +10,3 @@ publishLandingPage()
 the github package from the GitHub repo rgithub (https://github.com/cscheid/rgithub)
 was moved to GRAN and called grithub
 }
-

@@ -12,4 +12,3 @@ getVizUrl(path)
 \description{
 function to keep the absolute viz path or make the path relative
 }
-

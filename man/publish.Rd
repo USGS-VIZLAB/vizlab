@@ -3,16 +3,16 @@
 \name{publish}
 \alias{publish}
 \alias{publish.character}
-\alias{publish.css}
-\alias{publish.footer}
-\alias{publish.ico}
-\alias{publish.img}
-\alias{publish.js}
-\alias{publish.landing}
 \alias{publish.page}
-\alias{publish.resource}
 \alias{publish.section}
+\alias{publish.resource}
+\alias{publish.img}
+\alias{publish.ico}
+\alias{publish.js}
+\alias{publish.css}
 \alias{publish.svg}
+\alias{publish.footer}
+\alias{publish.landing}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
@@ -83,4 +83,3 @@ currently this is not handled.
 
 Also, templating the resources that make sense would be useful
 }
-

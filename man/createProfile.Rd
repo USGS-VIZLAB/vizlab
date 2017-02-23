@@ -38,4 +38,3 @@ RSCRIPT: C:/Program Files/R/R-3.3.2/bin/x64/Rscript.exe
 R_LIBS_USER: C:/Users/aappling/Documents/R/win-library/3.3
 }
 }
-

@@ -12,4 +12,3 @@ createTopMakefile(outfile = "Makefile")
 \description{
 Declares the dependency of the other makefiles on the viz.yaml
 }
-

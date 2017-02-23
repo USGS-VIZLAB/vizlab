@@ -13,4 +13,3 @@ createMakeDirs(makefile)
 Seeks specific directories that are expected to appear in some or all
 visualization projects. Creates those for which the makefile indicates a need
 }
-

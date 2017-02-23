@@ -15,4 +15,3 @@ character vector describing the reader to be used
 \description{
 Use mimetype lookup to get reader
 }
-

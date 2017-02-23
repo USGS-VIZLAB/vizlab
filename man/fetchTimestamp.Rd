@@ -3,10 +3,10 @@
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
 \alias{fetchTimestamp.character}
-\alias{fetchTimestamp.fetcher}
-\alias{fetchTimestamp.file}
 \alias{fetchTimestamp.sciencebase}
+\alias{fetchTimestamp.file}
 \alias{fetchTimestamp.url}
+\alias{fetchTimestamp.fetcher}
 \title{Update timestamp file if needed}
 \usage{
 fetchTimestamp(viz)
@@ -44,4 +44,3 @@ check a URL for timestamp
 
 \code{fetchTimestamp.fetcher} superclass method catches missing implementation
 }
-
