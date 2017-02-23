@@ -13,4 +13,3 @@ createMakeBlockRules(block = c("fetch", "process", "visualize", "publish"))
 Create the 'all' and specific targets for a makefile for a block of the
 viz.yaml
 }
-

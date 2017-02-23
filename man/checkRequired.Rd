@@ -14,4 +14,3 @@ checkRequired(x, required)
 \description{
 Check required fields
 }
-

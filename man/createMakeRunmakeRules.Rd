@@ -10,4 +10,3 @@ createMakeRunmakeRules()
 Each makefile gets a rule to run it and a rule to create the makefile
 }
 \keyword{internal}
-

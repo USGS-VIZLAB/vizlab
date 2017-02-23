@@ -11,4 +11,3 @@ storeSBcreds()
 Store and verify credentials for ScienceBase.  User is prompted for credentials.
 Using a ScienceBase account tied to an AD account is not recommended for password security.
 }
-

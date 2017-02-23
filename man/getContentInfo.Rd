@@ -24,4 +24,3 @@ directory
 \seealso{
 getContentInfos
 }
-

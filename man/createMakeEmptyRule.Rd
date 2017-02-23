@@ -16,4 +16,3 @@ The resulting rule will have only a target and maybe dependencies, no
 commands
 }
 \keyword{internal}
-

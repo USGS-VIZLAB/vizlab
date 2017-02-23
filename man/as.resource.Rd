@@ -14,4 +14,3 @@ as.resource(viz, ...)
 \description{
 coerce to resource
 }
-

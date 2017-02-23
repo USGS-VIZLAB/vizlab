@@ -9,4 +9,3 @@ getVizlabVersion()
 \description{
 Read the version of the vizlab config document
 }
-

@@ -27,4 +27,3 @@ getAutoargs(data.info, fun = c("write", "read"), verbose = TRUE)
 Prepare the arguments to pass to a fetch, read, process, or
 visualize
 }
-

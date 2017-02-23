@@ -14,4 +14,3 @@ getVizYamlUrl(org, repo)
 \description{
 Get the full file path for the raw viz.yaml within a repository
 }
-

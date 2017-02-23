@@ -12,4 +12,3 @@ handleMarkdown(text)
 \description{
 Replace any markdown text with rendered html
 }
-

@@ -15,4 +15,3 @@ character vector containing template contents
 \description{
 Reads a template file and returns the contents
 }
-

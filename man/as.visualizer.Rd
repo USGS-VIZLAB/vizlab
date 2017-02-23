@@ -17,4 +17,3 @@ visualizer object
 \description{
 Coerce to a visualizer
 }
-

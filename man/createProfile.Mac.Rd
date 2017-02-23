@@ -13,4 +13,3 @@ createProfile.Mac(file_dir)
 Create user profile yaml file for Mac operating systems
 }
 \keyword{internal}
-

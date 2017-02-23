@@ -12,4 +12,3 @@ getRepoNames(org)
 \description{
 Get a vector a repository names for a specific organization
 }
-

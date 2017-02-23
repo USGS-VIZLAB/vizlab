@@ -13,4 +13,3 @@ createProfile.Linux(file_dir)
 Create user profile yaml file for Linux operating systems
 }
 \keyword{internal}
-
