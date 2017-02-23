@@ -20,4 +20,3 @@ key-value pairs. Reads from the viz.yaml in the current working directory
 \seealso{
 getContentInfo
 }
-

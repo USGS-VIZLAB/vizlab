@@ -15,4 +15,3 @@ writeTimestamp(new.timestamp, outfile)
 Should only be used outside the vizlab package if the developer is writing a
 new data + timestamp fetcher
 }
-

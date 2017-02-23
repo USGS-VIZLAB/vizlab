@@ -15,4 +15,3 @@ character vector describing relative path
 \description{
 Get webapp path
 }
-

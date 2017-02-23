@@ -20,4 +20,3 @@ Make the common rule pair where the item ID is a symbolic target that depends
 on the file, and the file depends on the scripts, args, dependencies, etc.
 listed in item.info
 }
-

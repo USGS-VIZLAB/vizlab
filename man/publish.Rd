@@ -3,16 +3,17 @@
 \name{publish}
 \alias{publish}
 \alias{publish.character}
-\alias{publish.css}
-\alias{publish.footer}
-\alias{publish.ico}
-\alias{publish.img}
-\alias{publish.js}
-\alias{publish.landing}
 \alias{publish.page}
-\alias{publish.resource}
 \alias{publish.section}
+\alias{publish.resource}
+\alias{publish.img}
+\alias{publish.ico}
+\alias{publish.js}
+\alias{publish.css}
 \alias{publish.svg}
+\alias{publish.footer}
+\alias{publish.landing}
+\alias{publish.thumbnail}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
@@ -38,6 +39,8 @@ publish(viz)
 \method{publish}{footer}(viz)
 
 \method{publish}{landing}(viz)
+
+\method{publish}{thumbnail}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -68,10 +71,10 @@ svg publishing, may return NULL
 Footer publishing
 
 publish landing page
+
+check dimensions and size, publish thumbnail
 }
 \details{
-I've been thinking maybe switching 'x' to 'viz' would be more clear
-
 Sections are published individually but are returned invisibly
 as text to be used directly.
 
@@ -83,4 +86,3 @@ currently this is not handled.
 
 Also, templating the resources that make sense would be useful
 }
-

@@ -17,4 +17,3 @@ logical should this object be exported
 \description{
 Should export be performed
 }
-

@@ -16,4 +16,3 @@ as.reader(viz, ...)
 Treat viz object as a reader
 Doesn't need to be generic at this point (ever?)
 }
-

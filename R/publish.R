@@ -3,8 +3,6 @@
 #' Determine the type and dispatch to that method to produce
 #' files to serve up as the final viz
 #'
-#' I've been thinking maybe switching 'x' to 'viz' would be more clear
-#'
 #' @param viz vizlab object or identifier
 #' @export
 publish <- function(viz) UseMethod("publish")
@@ -280,6 +278,44 @@ publish.landing <- function(viz){
   pageviz <- as.publisher(pageviz) #maybe/maybe not
 
   publish(pageviz)
+}
+
+#' check dimensions and size, publish thumbnail
+#'
+#' @rdname publish
+#' @export
+publish.thumbnail <- function(viz){
+  checkRequired(viz, required = c("for", "location"))
+  #compliance
+  #dimensions in pixels, file sizes in bytes!
+  if(tolower(viz[['for']]) == "facebook") {
+    maxSize <- 8388608
+    minHeight <- 630
+    minWidth <- 1200
+  } else if(tolower(viz[['for']]) == "twitter") {
+    maxSize <- 1048576
+    minHeight <- 150
+    minWidth <- 280
+  } else { #landing
+    maxSize <- 8388608
+  }
+  checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
+                       minHeight = minHeight, minWidth = minWidth)
+  #send to resources publisher if all ok
+  class(viz) <- c(class(viz), "resource")
+  publish.resource(viz)
+  
+}
+
+#helper to check thumbnail compliance
+checkThumbCompliance <- function(file, maxSize, minHeight, minWidth) {
+  fileSize <- file.info(file)
+  im <- imager::load.image(file)
+  width <- imager::width(im)
+  height <- imager::height(im)
+  if(fileSize > maxSize || width < minWidth || height < minHeight) {
+    stop(paste("Thumbnail", file, "does not meet site requirements"))
+  }
 }
 
 #' coerce to a publisher

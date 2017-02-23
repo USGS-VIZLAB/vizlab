@@ -136,6 +136,11 @@ publish:
     depends: relativeAbundanceFig
     publisher: section
   -
+    id: facebook-thumb
+    location: images/facebook-thumb.png
+    publisher: thumbnail
+    for: facebook
+  -
     id: footer
     publisher: footer
     template: footer
@@ -157,3 +162,4 @@ publish:
     location: layout/css/footer.css
     publisher: resource
     mimetype: text/css
+
