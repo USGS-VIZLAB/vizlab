@@ -13,12 +13,15 @@
 #' @return URL for the new GitHub repository.
 #' @export
 initializeVizRepo <- function(repo_name, description, org="USGS-VIZLAB",
-                              issue_json=file.path("inst", "issuetemplates.json"),
-                              label_json=file.path("inst", "labeltemplates.json")){
+                              issue_json=system.file("issuetemplates.json", package="vizlab"),
+                              label_json=system.file("labeltemplates.json", package="vizlab")){
   
   # log in to GitHub & scope to read/write access for repos using profile.yaml
   # for additional scope info, see https://developer.github.com/v3/oauth/#scopes
   github_creds <- getProfileInfo()
+  if(is.null(github_creds$GITHUB_ID) | is.null(github_creds$GITHUB_AUTH)){
+    stop("Check that your profile.yaml has GITHUB_ID and GITHUB_AUTH fields to authenticate GitHub.")
+  }
   ctx <- interactive.login(client_id = github_creds$GITHUB_ID, 
                            client_secret = github_creds$GITHUB_AUTH,
                            scopes=c("repo"))
