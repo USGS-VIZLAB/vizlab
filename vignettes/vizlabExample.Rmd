@@ -23,7 +23,7 @@ library(rmarkdown)
 Vizlab can be downloaded from github via `devtools`:
 ```{r eval=FALSE}
 install.packages('devtools')
-devtools::install.github('USGS-VIZLAB/vizlab')
+devtools::install_github('USGS-VIZLAB/vizlab')
 ```
 
 The example visualization ('viz') is located at [https://github.com/USGS-VIZLAB/example](https://github.com/USGS-VIZLAB/example) and should be cloned into a separate directory.  
