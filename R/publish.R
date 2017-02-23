@@ -302,7 +302,7 @@ publish.thumbnail <- function(viz){
   checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
                        minHeight = minHeight, minWidth = minWidth)
   #send to resources publisher if all ok
-  class(viz) <- c(class(viz), "resource")
+  viz <- as.resource(viz)
   publish.resource(viz)
   
 }
