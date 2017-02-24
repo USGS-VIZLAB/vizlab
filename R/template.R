@@ -36,6 +36,15 @@ template.character <- function(viz) {
 #' @param viz vizlab object to coerce
 #' @export
 as.template <- function(viz, ...) {
+  required <- c("location")
+  checkRequired(viz, required)
+
+  if (!file.exists(viz[['location']])) {
+    internal <- system.file(viz[['location']], package = packageName())
+    if (file.exists(internal)) {
+      viz[['location']] <- internal
+    }
+  }
   template <- readData(viz)
   viz[['template']] <- template
   return(viz)

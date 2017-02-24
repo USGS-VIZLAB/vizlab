@@ -24,12 +24,12 @@ relativePath <- function(file) {
 
 #' Build context for templating
 #'
-#' @param viz vizlab object
+#' @param context context list
 #' @param dependencies list of dependency ids
 #' @return list of context with dependencies injected
-buildContext <- function(viz, dependencies) {
+buildContext <- function(context, dependencies) {
   # allow for context to be inline
-  data <- viz[["context"]]
+  data <- context
 
   if (is.null(data)) {
     data <- list()
@@ -72,13 +72,14 @@ gatherDependencyList <- function(...) {
   depNames <- list()
 
   # add automatic dependencies
-  for (dep in as.list(...)) {
-    if (!is.null(dep)) {
-      dependencies <- append(dependencies, dep)
-      if (is.null(names(dep))) {
-        depNames <- append(depNames, dep)
+  deps <- as.list(...)
+  for (i in seq_along(deps)) {
+    if (!is.null(deps[i])) {
+      dependencies <- append(dependencies, deps[i])
+      if (is.null(names(deps)[i])) {
+        depNames <- append(depNames, deps[i])
       } else {
-        depNames <- append(depNames, names(dep))
+        depNames <- append(depNames, names(deps)[i])
       }
     }
   }
@@ -87,6 +88,7 @@ gatherDependencyList <- function(...) {
   dependencies <- lapply(dependencies, expandDependencies)
 
   names(dependencies) <- depNames
+  return(dependencies)
 }
 
 #' Use mimetype lookup to get reader

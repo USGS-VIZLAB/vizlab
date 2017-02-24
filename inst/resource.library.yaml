@@ -17,8 +17,9 @@
     text:
 -
   id: footer-template
-  publisher: footer
-  template: footer-template
+  location: templates/footer.mustache
+  publisher: template
+  mimetype: text/mustache
   depends:
     logo: vizlab-logo
     github-logo: github-logo
@@ -41,9 +42,10 @@
     semantics: semantics
     footer: footer
     vizlab-js: vizlab-javascript
+    favicon: vizlab-favicon
   context:
     info:
-    resources: [ vizlab-js ]
+    resources: [ favicon, vizlab-js ]
     sections: []
     footer: footer
   partials:
@@ -147,6 +149,6 @@
   publisher: resource
 -
   id: header-footer-css
-  location: css/header-footer.css
+  location: css/footer.css
   mimetype: text/css
   publisher: resource

@@ -20,7 +20,7 @@ as.viz <- function(x, ...) UseMethod("as.viz")
 as.viz.character <- function(x, ...) {
   # get the reading information for this data ID from viz.yaml
   viz <- getContentInfo(x, no.match='NA')
-  if (is.na(viz)) {
+  if (length(viz) == 1 && is.na(viz)) {
     viz <- getResourceFromLibrary(x, no.match='stop')
   }
   return(as.viz(viz))

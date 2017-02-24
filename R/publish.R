@@ -27,15 +27,19 @@ publish.page <- function(viz) {
 
   template <- template(viz[['template']])
 
-  dependencies <- gatherDependencyList(viz[['depends']], template[['depends']])
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
+
   # TODO handle accessing nested dependencies elsewhere
 
-  #also manually put resources into context
+  # also manually put resources into context
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
 
+  # flatten dependencies before lookups
+  dependencies <- c(dependencies, recursive = TRUE)
+
   # replace ids in context with expanded dependencies
-  context <- buildContext(viz, dependencies)
+  context <- buildContext(context, dependencies)
 
   partials <- getPartialLibrary()
   file <- export(viz)
@@ -57,13 +61,14 @@ publish.section <- function(viz) {
   template <- template(viz[['template']])
 
   # TODO Watch out for cyclic depends
-  dependencies <- gatherDependencyList(viz[['depends']], template[['depends']])
-
-  names(dependencies) <- viz[['depends']]
-  dependencies <- c(dependencies, recursive = TRUE)
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
   context <- replaceOrAppend(template[['context']], viz[['context']])
-  context <- buildContext(viz, dependencies)
+
+  # flatten dependencies before lookups
+  dependencies <- c(dependencies, recursive = TRUE)
+
+  context <- buildContext(context, dependencies)
 
   viz[['output']] <- render(template, context)
   if (!is.null(viz[['analytics']])) {
@@ -209,10 +214,14 @@ publish.footer <- function(viz) {
   checkRequired(viz, required = "vizzies")
 
   template <- template(viz[['template']])
-  dependencies <- lapply(c(viz[['depends']], template[['depends']]), publish)
-  names(dependencies) <- viz[['depends']]
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
-  context <- buildContext(viz, dependencies)
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+
+  # flatten dependencies before lookups
+  dependencies <- c(dependencies, recursive = TRUE)
+
+  context <- buildContext(context, dependencies)
 
   #add info from viz.yaml to context to inject into template
   vizzies <- viz$vizzies
@@ -236,7 +245,7 @@ publish.footer <- function(viz) {
   context[['vizzies']] <- vizzies
 
 
-  viz[['output']] <- whisker.render(template = template, data = context)
+  viz[['output']] <- render(template, data = context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
   }
@@ -272,7 +281,7 @@ publish.landing <- function(viz){
 #' @rdname publish
 #' @export
 publish.template <- function(viz) {
-  # do nothing for now
+  # nothing for now
 }
 
 #' coerce to a publisher
@@ -296,11 +305,18 @@ as.publisher <- function(viz, ...) {
 #' @param ... not used, following convention
 #' @export
 as.resource <- function(viz, ...) {
-  required <- c("mimetype")
+  required <- c("mimetype", "location")
   checkRequired(viz, required)
 
   mimetype <- viz[['mimetype']]
   resource <- lookupMimetype(mimetype)
+
+  if (!file.exists(viz[['location']])) {
+    internal <- system.file(viz[['location']], package = packageName())
+    if (file.exists(internal)) {
+      viz[['location']] <- internal
+    }
+  }
   if(length(resource) == 0){
     warning(mimetype, " will be treated as data: ", viz[['id']])
     resource <- "data"
