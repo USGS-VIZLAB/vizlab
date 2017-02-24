@@ -290,22 +290,19 @@ publish.thumbnail <- function(viz){
   #dimensions in pixels, file sizes in bytes!
   if(tolower(viz[['for']]) == "facebook") {
     maxSize <- 8388608
-    minHeight <- 630
-    minWidth <- 1200
-    square <- FALSE
+    checkHeight <- 820
+    checkWidth <- 1560
   } else if(tolower(viz[['for']]) == "twitter") {
     maxSize <- 1048576
-    minHeight <- 150
-    minWidth <- 280
-    square <- FALSE
+    checkHeight <- 300
+    checkWidth <- 560
   } else { #landing
     maxSize <- 1048576
-    minHeight <- 300
-    minWidth <- 300
-    square <- TRUE
+    checkHeight <- 400
+    checkWidth <- 400
   }
   dims <- checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
-                       minHeight = minHeight, minWidth = minWidth, square = square)
+                       checkHeight = checkHeight, checkWidth = checkWidth)
   #send to other publishers if all ok
   viz <- NextMethod()
   viz[['url']] <- paste(getVizURL(), viz[['relpath']])#need to add slash between?
@@ -319,18 +316,15 @@ getVizURL <- function() {
 
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
-checkThumbCompliance <- function(file, maxSize, minHeight, minWidth, square = FALSE) {
+checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
   fileSize <- file.info(file)
   im <- imager::load.image(file)
   width <- imager::width(im)
   height <- imager::height(im)
-  if(fileSize > maxSize || width < minWidth || height < minHeight) {
+  if(fileSize > maxSize || width != checkWidth || height != checkHeight) {
     stop(paste("Thumbnail", file, "does not meet site requirements"))
   }
-  if(square) {
-    if(width/height > 1.1 || width/height < 0.9)
-    stop(paste("Thumbnail", file, "needs to be more square"))
-  }
+ 
   return(c(width = width, height = height))
 }
 

@@ -4,7 +4,7 @@
 \alias{checkThumbCompliance}
 \title{helper to check thumbnail compliance}
 \usage{
-checkThumbCompliance(file, maxSize, minHeight, minWidth, square = FALSE)
+checkThumbCompliance(file, maxSize, checkHeight, checkWidth)
 }
 \description{
 helper to check thumbnail compliance

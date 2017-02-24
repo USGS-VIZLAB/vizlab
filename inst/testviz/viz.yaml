@@ -141,7 +141,12 @@ publish:
     publisher: thumbnail
     for: facebook
     mimetype: image/png
-    alttext: "facebook thumb"
+  -
+    id: landing-thumb
+    location: images/landing-thumb.png
+    publisher: thumbnail
+    for: landing
+    mimetype: image/png
   -
     id: footer
     publisher: footer

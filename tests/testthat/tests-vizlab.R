@@ -145,7 +145,8 @@ test_that("publish footer works", {
   expect_false(any(grepl('blog|Blogs', output)))
 })
 test_that("Thumb publisher works", {
-  publish("facebook-thumb")
+  expect_error(publish("facebook-thumb")) #incorrect dimensions
+  publish('landing-thumb')
   })
 
 cleanup(oldwd, testtmp)
