@@ -345,8 +345,9 @@ as.publisher <- function(viz, ...) {
   notResources <- c("page", "section", "footer", "landing")
   if (!publisher %in% notResources) {
     viz <- as.resource(viz)
-  } 
-  class(viz) <- c(publisher, class(viz))
+  } else {
+    class(viz) <- c(publisher, class(viz))
+  }
   return(viz)
 }
 
@@ -365,9 +366,9 @@ as.resource <- function(viz, ...) {
     resource <- "data"
   }
   if ("publisher" %in% names(viz) && viz[['publisher']] == "thumbnail") {
-    class(viz) <- c("resource", class(viz))
+    class(viz) <- c("thumbnail","resource", class(viz))
   } else {
-    class(viz) <- c(resource, class(viz))
+    class(viz) <- c(resource, "resource",class(viz))
   }
   
   return(viz)
