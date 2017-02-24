@@ -364,7 +364,7 @@ as.resource <- function(viz, ...) {
     warning(mimetype, " will be treated as data: ", viz[['id']])
     resource <- "data"
   }
-  if (viz[['publisher']] == "thumbnail") {
+  if ("publisher" %in% names(viz) && viz[['publisher']] == "thumbnail") {
     class(viz) <- c("resource", class(viz))
   } else {
     class(viz) <- c(resource, class(viz))
