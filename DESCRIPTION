@@ -20,6 +20,7 @@ Depends:
 Imports:
     grithub,
     httr,
+    imager,
     markdown,
     methods,
     tools,

@@ -66,11 +66,11 @@ getVizInfo <- function(org, repo){
                             template="templates/vizzies.mustache",
                             publisher="section",
                             context=list(name=viz_info$name,
-                                         thumbnail=paste(getVizUrl(viz_info$path),
-                                                         getVizUrl(viz_info$`thumbnail-landing`$url),
+                                         thumbnail=paste(getRelVizUrl(viz_info$path),
+                                                         getRelVizUrl(viz_info$`thumbnail-landing`$url),
                                                          sep='/'),
                                          alttext=viz_info$`thumbnail-landing`$alttext,
-                                         path=getVizUrl(viz_info$path),
+                                         path=getRelVizUrl(viz_info$path),
                                          description=viz_info$description))
   
   viz_info_required <- as.viz(viz_info_required)
@@ -83,7 +83,7 @@ getVizInfo <- function(org, repo){
 #' 
 #' @param path the path defined in the viz object
 #'
-getVizUrl <- function(path){
+checkRelVizUrl <- function(path){
   if(!is.null(path)){
     if(grepl('^/', path)){
       path <- paste0('.', path)

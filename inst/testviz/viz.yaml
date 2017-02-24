@@ -140,7 +140,8 @@ publish:
     location: images/facebook-thumb.png
     publisher: thumbnail
     for: facebook
-    mimetype: png
+    mimetype: image/png
+    alttext: "facebook thumb"
   -
     id: footer
     publisher: footer

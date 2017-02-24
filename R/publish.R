@@ -304,15 +304,21 @@ publish.thumbnail <- function(viz){
     minWidth <- 300
     square <- TRUE
   }
-  checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
+  dims <- checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
                        minHeight = minHeight, minWidth = minWidth, square = square)
-  #send to resources publisher if all ok
-  viz <- as.resource(viz)
-  publish.resource(viz)
-  
+  #send to other publishers if all ok
+  viz <- NextMethod()
+  viz[['url']] <- paste(getVizURL(), viz[['relpath']])#need to add slash between?
+  viz[['width']] <- dims[['width']]
+  viz[['height']] <- dims[['height']]
 }
 
-#helper to check thumbnail compliance
+getVizURL <- function() {
+  return(print(getBlocks("info")$info$path[[1]]))
+}
+
+#' helper to check thumbnail compliance
+#' @importFrom imager load.image width height
 checkThumbCompliance <- function(file, maxSize, minHeight, minWidth, square = FALSE) {
   fileSize <- file.info(file)
   im <- imager::load.image(file)
@@ -325,6 +331,7 @@ checkThumbCompliance <- function(file, maxSize, minHeight, minWidth, square = FA
     if(width/height > 1.1 || width/height < 0.9)
     stop(paste("Thumbnail", file, "needs to be more square"))
   }
+  return(c(width = width, height = height))
 }
 
 #' coerce to a publisher
@@ -334,10 +341,12 @@ checkThumbCompliance <- function(file, maxSize, minHeight, minWidth, square = FA
 as.publisher <- function(viz, ...) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
-  class(viz) <- c(publisher, "publisher", class(viz))
-  if (publisher == "resource") {
+  class(viz) <- c("publisher", class(viz))
+  notResources <- c("page", "section", "footer", "landing")
+  if (!publisher %in% notResources) {
     viz <- as.resource(viz)
-  }
+  } 
+  class(viz) <- c(publisher, class(viz))
   return(viz)
 }
 
@@ -355,8 +364,12 @@ as.resource <- function(viz, ...) {
     warning(mimetype, " will be treated as data: ", viz[['id']])
     resource <- "data"
   }
-
-  class(viz) <- c(resource, class(viz))
+  if (viz[['publisher']] == "thumbnail") {
+    class(viz) <- c("resource", class(viz))
+  } else {
+    class(viz) <- c(resource, class(viz))
+  }
+  
   return(viz)
 }
 

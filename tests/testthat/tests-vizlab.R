@@ -144,5 +144,8 @@ test_that("publish footer works", {
   expect_true(any(grepl('microplastics', output)))
   expect_false(any(grepl('blog|Blogs', output)))
 })
+test_that("Thumb publisher works", {
+  publish("facebook-thumb")
+  })
 
 cleanup(oldwd, testtmp)
