@@ -14,6 +14,7 @@
 \alias{publish.footer}
 \alias{publish.landing}
 \alias{publish.thumbnail}
+
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
