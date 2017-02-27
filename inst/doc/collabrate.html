@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Laura DeCicco" />
+
+<meta name="date" content="2017-02-27" />
+
+<title>Collaboration Example</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Collaboration Example</h1>
+<h4 class="author"><em>Laura DeCicco</em></h4>
+<h4 class="date"><em>2017-02-27</em></h4>
+
+
+
+<div id="jumping-in" class="section level1">
+<h1>Jumping in!</h1>
+<p>The vignette “Vizlab Example” gives a good overview on the complete process for initializing and creating a visualization product from <code>vizlab</code>. However, much of the infrastructure set up in this package is to improve the way we can collaborate during the visualization creation.</p>
+<div id="github" class="section level2">
+<h2>Github</h2>
+<p>During our collaboration “sprints”, we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. The scope of this vignette is not to give a complete picture of this git workflow. To briefly summarize however, we have a canonical “upstream” repository that each member forks off. Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github’s Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.</p>
+</div>
+<div id="assign-a-task" class="section level2">
+<h2>Assign a Task</h2>
+<p>Early on in the <code>vizlab</code> development, we made a data visualization of water use in the United States. The final product can be seen here:</p>
+<p><a href="https://owi.usgs.gov/vizlab/water-use/" class="uri">https://owi.usgs.gov/vizlab/water-use/</a></p>
+<p>The canonical GitHub repository for that work is here:</p>
+<p><a href="https://github.com/USGS-VIZLAB/water-use" class="uri">https://github.com/USGS-VIZLAB/water-use</a></p>
+<p>Let’s use this project to create a fictional task, and walk through the process of contributing to the project. Our fictional task is to change the way we “clean”&quot; the national water use data. When we were first were given the data, we were told there was no valid Industrial or Thermoelectric values of water use data before 1960 (in actuality, this was because they reported it in different ways before that time, so we could not compare pre-1960’s with post). However, in our fictional example, let’s say we were provided with a csv file with 1955 Thermoelectric water use data by state. So now our fictional project lead has created two tasks, and assigned these tasks to us:</p>
+<p>Task #1. Pull in the data file thermoelectric_1955.csv</p>
+<p>Task #2. Merge that data into the existing cleaned national state data.</p>
+<p>The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the <code>vizlab</code> package and creating your make files:</p>
+<pre><code>library(vizlab)
+createProfile()
+createMakefiles() </code></pre>
+</div>
+<div id="task-1-pull-in-new-data" class="section level2">
+<h2>Task 1: Pull in new data</h2>
+<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities.</p>
+<p>The whole <code>vizlab</code> process is coordinated by the <code>viz.yaml</code> file. Since we are “fetching” new data, we add a new field in the fetch section:</p>
+<pre><code>fetch:
+  -
+  *************bunch of stuff already there************
+  
+    -
+    id: oldThermoData
+    location: cache/thermoelectric_1955.csv
+    fetcher: sciencebase
+    remoteItemId: &quot;XXX123&quot;
+    remoteFilename: &quot;thermoelectric_1955.csv&quot;
+    refetch: FALSE
+    mimetype: text/csv
+    scripts: scripts/fetch/oldThermoFetch.R
+</code></pre>
+<p>What is this? We’ve added a new fetch job, and given it a unique id “oldThermoData”. The “location” is the relative path where the file that is produced from this job will be stored. The “fetcher” field indicates to <code>vizlab</code> to go to ScienceBase, look for the ScienceBase’s ID “XXX123”, and pull down the file “thermoelectric_1955.csv” from that ID. Since the mimetype is set, the next action that depends on this action will know automatically how to open the data. Finally, the scripts field is where we could put custom scripts. In this particular case, we don’t actually need any custom scripts. However, currently <code>vizlab</code> will give a warning if this field is missing. So, we can create a file in the “scripts/fetch” folder called “oldThermoFetch.R” to make an empty script to eliminate the warning.</p>
+<p>oldThermoFetch.R:</p>
+<pre><code>#nothing to see here
+</code></pre>
+<p>That’s it for Task #1! We commit our changes to the viz.yaml, push them up to our fork, and submit a pull request. Another member of our team should review the pull request and merge if it looks good.</p>
+</div>
+<div id="task-2-incorporating-the-data" class="section level2">
+<h2>Task 2: Incorporating the data</h2>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

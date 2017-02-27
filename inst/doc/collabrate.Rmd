@@ -1,0 +1,84 @@
+---
+title: "Collaboration Example"
+author: "Laura DeCicco"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Collaborate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Jumping in!
+
+The vignette "Vizlab Example" gives a good overview on the complete process for initializing and creating a visualization product from `vizlab`. However, much of the infrastructure set up in this package is to improve the way we can collaborate during the visualization creation. 
+
+## Github
+
+During our collaboration "sprints", we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. The scope of this vignette is not to give a complete picture of this git workflow. To briefly summarize however, we have a canonical "upstream" repository that each member forks off. Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github's Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.
+
+## Assign a Task
+
+Early on in the `vizlab` development, we made a data visualization of water use in the United States. The final product can be seen here:
+
+[https://owi.usgs.gov/vizlab/water-use/](https://owi.usgs.gov/vizlab/water-use/)
+
+The canonical GitHub repository for that work is here:
+
+[https://github.com/USGS-VIZLAB/water-use](https://github.com/USGS-VIZLAB/water-use)
+
+Let's use this project to create a fictional task, and walk through the process of contributing to the project. Our fictional task is to change the way we "clean"" the national water use data. When we were first were given the data, we were told there was no valid Industrial or Thermoelectric values of water use data before 1960 (in actuality, this was because they reported it in different ways before that time, so we could not compare pre-1960's with post). However, in our fictional example, let's say we were provided with a csv file with 1955 Thermoelectric water use data by state. So now our fictional project lead has created two tasks, and assigned these tasks to us: 
+
+Task #1. Pull in the data file thermoelectric_1955.csv
+
+Task #2. Merge that data into the existing cleaned national state data.
+
+The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the `vizlab` package and creating your make files:
+
+```
+library(vizlab)
+createProfile()
+createMakefiles() 
+```
+
+## Task 1: Pull in new data
+
+Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities.
+
+The whole `vizlab` process is coordinated by the `viz.yaml` file. Since we are "fetching" new data, we add a new field in the fetch section:
+
+```
+fetch:
+  -
+  *************bunch of stuff already there************
+  
+    -
+    id: oldThermoData
+    location: cache/thermoelectric_1955.csv
+    fetcher: sciencebase
+    remoteItemId: "XXX123"
+    remoteFilename: "thermoelectric_1955.csv"
+    refetch: FALSE
+    mimetype: text/csv
+    scripts: scripts/fetch/oldThermoFetch.R
+
+```
+
+What is this? We've added a new fetch job, and given it a unique id "oldThermoData". The "location" is the relative path where the file that is produced from this job will be stored. The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. Since the mimetype is set, the next action that depends on this action will know automatically how to open the data. Finally, the scripts field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts. However, currently `vizlab` will give a warning if this field is missing. So, we can create a file in the "scripts/fetch" folder called "oldThermoFetch.R" to make an empty script to eliminate the warning.
+
+oldThermoFetch.R:
+```
+#nothing to see here
+
+```
+That's it for Task #1! We commit our changes to the viz.yaml, push them up to our fork, and submit a pull request. Another member of our team should review the pull request and merge if it looks good.
+
+## Task 2: Incorporating the data
+
+
+
