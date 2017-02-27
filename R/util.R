@@ -143,3 +143,13 @@ uniqueness <- function() {
   rng <- floor(runif(n = 1, min = 10000, max = 10000000))
   return(rng)
 }
+
+#' Wrap an html block in a div that allows to embed url
+#' 
+#' @param html html block to wrap
+#' @param url url to link to with wrapper
+#' @return wrapped html
+wrapEmbed <- function(html, url) {
+  # load template wrappedembed and build it
+  return()
+}

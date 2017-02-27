@@ -80,6 +80,13 @@ publish.section <- function(viz) {
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
   }
+  if (!is.null(viz[['embed']]) && isTRUE(viz[['embed']])) {
+    file <- "embedlocation"
+    embedTmpl <- readTemplate("embed")
+    context[['embed']] <- viz[['output']]
+    cat(whisker.render(template=embedTempl, data=context), file = file)
+    viz[['output']] <- wrapEmbed(viz[['output']])
+  }
   return(viz[['output']])
 }
 
