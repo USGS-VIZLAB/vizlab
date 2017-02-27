@@ -154,6 +154,7 @@ publish.ico <- function(viz) {
 #' Add a font to the page
 #'
 #' @rdname publish
+#' @importFrom utils URLencode
 #' @export
 publish.googlefont <- function(viz) {
   required <- c("family", "weight")
