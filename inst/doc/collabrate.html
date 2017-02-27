@@ -59,7 +59,7 @@ createMakefiles() </code></pre>
 </div>
 <div id="task-1-pull-in-new-data" class="section level2">
 <h2>Task 1: Pull in new data</h2>
-<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities.</p>
+<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities. Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.</p>
 <p>The whole <code>vizlab</code> process is coordinated by the <code>viz.yaml</code> file. Since we are “fetching” new data, we add a new field in the fetch section:</p>
 <pre><code>fetch:
   -
@@ -83,6 +83,66 @@ createMakefiles() </code></pre>
 </div>
 <div id="task-2-incorporating-the-data" class="section level2">
 <h2>Task 2: Incorporating the data</h2>
+<p>Since we are starting a new task, it’s a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original process field in the viz.yaml:</p>
+<pre><code>id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
+    reader: rds
+    depends:
+      stateData: calc-histWaterData
+</code></pre>
+<p>We need to add a new dependency, and fiddle with the script itself. So, let’s add the new data to depends like this:</p>
+<pre><code>id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
+    reader: rds
+    depends:
+      stateData: calc-histWaterData
+      oldData: oldThermoData</code></pre>
+<p>Now, let’s look at the original script:</p>
+<pre><code>process.nationalClean &lt;- function(viz){
+  library(tidyr)
+  library(dplyr)
+  
+  stateData &lt;- readData(viz[['depends']][[&quot;stateData&quot;]])
+  
+  national &lt;- stateData %&gt;%
+    group_by(year, category) %&gt;%
+    summarise(value = sum(value)) %&gt;%
+    data.frame()
+  
+  national$value[national$year &lt; 1960 &amp; 
+                   national$category %in% c(&quot;Industrial&quot;,&quot;Thermoelectric&quot;)] &lt;- NA
+  
+  national$year[which(is.na(national$year))] = 2015
+  
+  saveRDS(national, file=viz[[&quot;location&quot;]])
+}</code></pre>
+<p>We need to add the data and merge:</p>
+<pre><code>process.nationalClean &lt;- function(viz){
+  library(tidyr)
+  library(dplyr)
+  
+  stateData &lt;- readData(viz[['depends']][[&quot;stateData&quot;]])
+  oldData &lt;- readData(viz[['depends']][[&quot;oldData&quot;]])
+
+  national &lt;- stateData %&gt;%
+    left_join(oldData, by=year) %&gt;%
+    group_by(year, category) %&gt;%
+    summarise(value = sum(value)) %&gt;%
+    data.frame()
+  
+  national$value[national$year &lt; 1960 &amp; 
+                   national$category %in% c(&quot;Industrial&quot;,&quot;Thermoelectric&quot;)] &lt;- NA
+  
+  national$year[which(is.na(national$year))] = 2015
+  
+
+  saveRDS(national, file=viz[[&quot;location&quot;]])
+}</code></pre>
+<p>Notice how the <code>depends</code> and <code>location</code> work.</p>
 </div>
 </div>
 

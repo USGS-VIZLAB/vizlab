@@ -48,7 +48,7 @@ createMakefiles()
 
 ## Task 1: Pull in new data
 
-Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities.
+Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities. Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.
 
 The whole `vizlab` process is coordinated by the `viz.yaml` file. Since we are "fetching" new data, we add a new field in the fetch section:
 
@@ -80,5 +80,79 @@ That's it for Task #1! We commit our changes to the viz.yaml, push them up to ou
 
 ## Task 2: Incorporating the data
 
+Since we are starting a new task, it's a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original process field in the viz.yaml:
 
+```
+id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
+    reader: rds
+    depends:
+      stateData: calc-histWaterData
 
+```
+
+We need to add a new dependency, and fiddle with the script itself. So, let's add the new data to depends like this:
+
+```
+id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
+    reader: rds
+    depends:
+      stateData: calc-histWaterData
+      oldData: oldThermoData
+```
+
+Now, let's look at the original script:
+
+```
+process.nationalClean <- function(viz){
+  library(tidyr)
+  library(dplyr)
+  
+  stateData <- readData(viz[['depends']][["stateData"]])
+  
+  national <- stateData %>%
+    group_by(year, category) %>%
+    summarise(value = sum(value)) %>%
+    data.frame()
+  
+  national$value[national$year < 1960 & 
+                   national$category %in% c("Industrial","Thermoelectric")] <- NA
+  
+  national$year[which(is.na(national$year))] = 2015
+  
+  saveRDS(national, file=viz[["location"]])
+}
+```
+
+We need to add the data and merge:
+
+```
+process.nationalClean <- function(viz){
+  library(tidyr)
+  library(dplyr)
+  
+  stateData <- readData(viz[['depends']][["stateData"]])
+  oldData <- readData(viz[['depends']][["oldData"]])
+
+  national <- stateData %>%
+    left_join(oldData, by=year) %>%
+    group_by(year, category) %>%
+    summarise(value = sum(value)) %>%
+    data.frame()
+  
+  national$value[national$year < 1960 & 
+                   national$category %in% c("Industrial","Thermoelectric")] <- NA
+  
+  national$year[which(is.na(national$year))] = 2015
+  
+
+  saveRDS(national, file=viz[["location"]])
+}
+```
+
+Notice how the `depends` and `location` work.
