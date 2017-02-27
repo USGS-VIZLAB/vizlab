@@ -305,13 +305,25 @@ publish.thumbnail <- function(viz){
                        checkHeight = checkHeight, checkWidth = checkWidth)
   #send to other publishers if all ok
   viz <- NextMethod()
-  viz[['url']] <- paste(getVizURL(), viz[['relpath']])#need to add slash between?
+  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
   viz[['width']] <- dims[['width']]
   viz[['height']] <- dims[['height']]
 }
 
 getVizURL <- function() {
-  return(print(getBlocks("info")$info$path[[1]]))
+  baseURL <- "https://owi.usgs.gov"
+  path <- getBlocks("info")$info$path[[1]]
+  return(pastePaths(baseURL, path))
+}
+
+#smart paste paths/URLs together with or without slashes included
+pastePaths <- function(str1, str2) {
+  if (substring(str1, nchar(str1)) == "/" || substring(str2, 1,1) == "/") {
+    ret <- paste0(str1, str2)
+  } else {
+    ret <- paste(str1, str2, sep = "/")
+  }
+  return(ret)
 }
 
 #' helper to check thumbnail compliance
