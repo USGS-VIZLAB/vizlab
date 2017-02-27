@@ -151,6 +151,23 @@ publish.ico <- function(viz) {
   return(html)
 }
 
+#' Add a font to the page
+#'
+#' @rdname publish
+#' @importFrom utils URLencode
+#' @export
+publish.googlefont <- function(viz) {
+  required <- c("family", "weight")
+  checkRequired(viz, required)
+  
+  families <- paste(URLencode(viz[["family"]]), collapse = "|")
+  weights <- paste(viz[["weight"]], collapse = ",")
+  googlefont <- "//fonts.googleapis.com/css"
+  html <- sprintf('<link href="%s?%s:%s" rel="stylesheet" type="text/css">',
+                  googlefont, families, weights)
+  return(html)
+}
+
 #' javascript publishing
 #' TODO allow for cdn js
 #'

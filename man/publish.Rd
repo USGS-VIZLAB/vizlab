@@ -8,6 +8,7 @@
 \alias{publish.resource}
 \alias{publish.img}
 \alias{publish.ico}
+\alias{publish.googlefont}
 \alias{publish.js}
 \alias{publish.css}
 \alias{publish.svg}
@@ -28,6 +29,8 @@ publish(viz)
 \method{publish}{img}(viz)
 
 \method{publish}{ico}(viz)
+
+\method{publish}{googlefont}(viz)
 
 \method{publish}{js}(viz)
 
@@ -57,6 +60,8 @@ publish a resource
 Image publishing
 
 Favicon resource
+
+Add a font to the page
 
 javascript publishing
 TODO allow for cdn js
