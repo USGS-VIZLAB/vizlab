@@ -6,6 +6,15 @@
 \usage{
 checkThumbCompliance(file, maxSize, checkHeight, checkWidth)
 }
+\arguments{
+\item{file}{char Name of thumbnail file}
+
+\item{maxSize}{numeric Max size in bytes}
+
+\item{checkHeight}{numeric Height in pixels to enforce}
+
+\item{checkWidth}{numeric Width in pixels to enforce}
+}
 \description{
 helper to check thumbnail compliance
 }

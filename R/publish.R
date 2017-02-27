@@ -316,6 +316,10 @@ getVizURL <- function() {
 
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
+#' @param file char Name of thumbnail file
+#' @param maxSize numeric Max size in bytes 
+#' @param checkHeight numeric Height in pixels to enforce
+#' @param checkWidth numeric Width in pixels to enforce
 checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
   fileSize <- file.info(file)
   im <- imager::load.image(file)
