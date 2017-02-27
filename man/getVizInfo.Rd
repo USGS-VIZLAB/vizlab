@@ -14,4 +14,3 @@ getVizInfo(org, repo)
 \description{
 Load yamls and find if the published date has passed yet
 }
-

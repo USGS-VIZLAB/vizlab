@@ -12,4 +12,3 @@ list containing partials available
 \description{
 Assemble whisker partials from vizlab package
 }
-

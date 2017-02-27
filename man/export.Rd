@@ -2,13 +2,13 @@
 % Please edit documentation in R/export.R
 \name{export}
 \alias{export}
-\alias{export.css}
-\alias{export.ico}
-\alias{export.img}
-\alias{export.js}
 \alias{export.page}
-\alias{export.resource}
+\alias{export.img}
+\alias{export.ico}
 \alias{export.svg}
+\alias{export.js}
+\alias{export.css}
+\alias{export.resource}
 \title{Export content to target}
 \usage{
 export(viz)
@@ -48,4 +48,3 @@ Default export, defaults to not export
 Currently the publish phase is responsible for exporting,
 but this could be separated in the future.
 }
-

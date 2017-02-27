@@ -12,4 +12,3 @@ gatherDependencyList(...)
 \description{
 Pull together vizlab object dependencies
 }
-

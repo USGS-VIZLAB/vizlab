@@ -22,7 +22,9 @@ getProfileInfo <- function() {
     SHELL=NULL,
     R='R',
     RSCRIPT='Rscript',
-    R_LIBS_USER=NULL)
+    R_LIBS_USER=NULL,
+    GITHUB_ID=NULL,
+    GITHUB_AUTH=NULL)
   use.defaults <- setdiff(names(defaults), names(profile.yaml))
   profile.yaml <- c(profile.yaml, defaults[use.defaults])
   

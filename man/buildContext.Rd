@@ -4,10 +4,10 @@
 \alias{buildContext}
 \title{Build context for templating}
 \usage{
-buildContext(viz, dependencies)
+buildContext(context, dependencies)
 }
 \arguments{
-\item{viz}{vizlab object}
+\item{context}{context list}
 
 \item{dependencies}{list of dependency ids}
 }
@@ -17,4 +17,3 @@ list of context with dependencies injected
 \description{
 Build context for templating
 }
-

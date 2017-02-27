@@ -12,4 +12,3 @@ as.template(viz, ...)
 \description{
 Coerce to template type publisher
 }
-

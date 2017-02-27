@@ -3,16 +3,16 @@
 \name{readData}
 \alias{readData}
 \alias{readData.character}
+\alias{readData.viz}
+\alias{readData.tabular}
+\alias{readData.yaml}
 \alias{readData.excel}
+\alias{readData.rds}
 \alias{readData.filepath}
 \alias{readData.folder}
-\alias{readData.inline}
-\alias{readData.md}
-\alias{readData.rds}
-\alias{readData.tabular}
 \alias{readData.txt}
-\alias{readData.viz}
-\alias{readData.yaml}
+\alias{readData.md}
+\alias{readData.inline}
 \title{Ensure data is on the local file system}
 \usage{
 readData(viz)
@@ -74,4 +74,3 @@ or markdown contained in yaml with mimetype: text/yaml
 
 \code{readData.inline} reads data directly from inline yaml
 }
-

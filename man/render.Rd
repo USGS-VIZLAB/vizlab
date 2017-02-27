@@ -21,4 +21,3 @@ Render contents to file
 
 Renter template, return output if file not specified
 }
-

@@ -12,4 +12,3 @@ Reads all values from the user's profile.yaml (path found through findProfileYam
 \seealso{
 findProfileYaml
 }
-

@@ -4,9 +4,9 @@
 \alias{fetch}
 \alias{fetch.character}
 \alias{fetch.file}
-\alias{fetch.none}
 \alias{fetch.sciencebase}
 \alias{fetch.url}
+\alias{fetch.none}
 \title{Ensure data is on the local file system}
 \usage{
 fetch(viz)
@@ -39,4 +39,3 @@ the .file type is an option for data items.
 
 \code{fetch.none} skips this fetch, might have other side effects
 }
-

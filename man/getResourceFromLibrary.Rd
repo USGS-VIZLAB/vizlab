@@ -20,4 +20,3 @@ vizlab object from library or \code{NULL} if it doesn't exist
 Internal function to get shared resources
 Implemented as a closure to avoid reloading file each time
 }
-

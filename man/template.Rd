@@ -20,4 +20,3 @@ Reads a template file and returns the contents
 
 Read a template from file or id
 }
-

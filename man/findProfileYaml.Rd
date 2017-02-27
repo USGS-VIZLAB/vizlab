@@ -11,4 +11,3 @@ Searches two directories, '~/.vizlab/' and './vizlab/', for a file called
 'profile.yaml'. If found, returns the file path where it was found; otherwise
 throws an error.
 }
-

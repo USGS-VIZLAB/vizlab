@@ -9,4 +9,3 @@ validateVizYaml()
 \description{
 Find obvious errors in your viz.yaml
 }
-
