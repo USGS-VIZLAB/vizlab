@@ -41,7 +41,6 @@ publish.page <- function(viz) {
   # replace ids in context with expanded dependencies
   context <- buildContext(context, dependencies)
 
-  partials <- getPartialLibrary()
   file <- export(viz)
   render(template, context, file)
 }

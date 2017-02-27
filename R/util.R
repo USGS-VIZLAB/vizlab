@@ -76,7 +76,7 @@ gatherDependencyList <- function(...) {
   for (i in seq_along(deps)) {
     if (!is.null(deps[i])) {
       dependencies <- append(dependencies, deps[i])
-      if (is.null(names(deps)[i])) {
+      if (is.null(names(deps)[i]) || names(deps)[i] == "") {
         depNames <- append(depNames, deps[i])
       } else {
         depNames <- append(depNames, names(deps)[i])
@@ -85,9 +85,9 @@ gatherDependencyList <- function(...) {
   }
 
   # TODO Watch out for cyclic depends
-  dependencies <- lapply(dependencies, expandDependencies)
-
   names(dependencies) <- depNames
+  dependencies <- lapply(dependencies, expandDependencies)
+  
   return(dependencies)
 }
 
@@ -160,7 +160,7 @@ getResourceFromLibrary <- (function() {
         viz[['location']] <- resource.file
       }
     } else {
-      viz <- match(no.match, "NA" = NA, "stop" = stop("Could not find ", x))
+      viz <- match(no.match, c("NA" = NA, "stop" = stop("Could not find ", x)))
     }
     return(viz)
   })

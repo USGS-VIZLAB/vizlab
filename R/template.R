@@ -20,13 +20,8 @@ template.character <- function(viz) {
       context = NULL
     )
     viz <- new.obj
-  } else {
-    resource <- getResourceFromLibrary(viz)
-    if (!is.null(resource)) {
-      viz <- resource
-    }
   }
-  viz <- as.viz(viz)
+  viz <- as.viz(viz) # lookup here if file doesn't exist
   viz <- as.publisher(viz)
   return(viz)
 }
