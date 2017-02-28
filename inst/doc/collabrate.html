@@ -12,7 +12,7 @@
 
 <meta name="author" content="Laura DeCicco" />
 
-<meta name="date" content="2017-02-27" />
+<meta name="date" content="2017-02-28" />
 
 <title>Collaboration Example</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Collaboration Example</h1>
 <h4 class="author"><em>Laura DeCicco</em></h4>
-<h4 class="date"><em>2017-02-27</em></h4>
+<h4 class="date"><em>2017-02-28</em></h4>
 
 
 
@@ -59,7 +59,10 @@ createMakefiles() </code></pre>
 </div>
 <div id="task-1-pull-in-new-data" class="section level2">
 <h2>Task 1: Pull in new data</h2>
-<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities. Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.</p>
+<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required, this is done by running:</p>
+<pre><code>storeSBcreds()</code></pre>
+<p>and type username and password. We established a service account for ScienceBase that can be used, otherwise AD login is supported.</p>
+<p>Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.</p>
 <p>The whole <code>vizlab</code> process is coordinated by the <code>viz.yaml</code> file. Since we are “fetching” new data, we add a new field in the fetch section:</p>
 <pre><code>fetch:
   -
@@ -73,27 +76,37 @@ createMakefiles() </code></pre>
     remoteFilename: &quot;thermoelectric_1955.csv&quot;
     refetch: FALSE
     mimetype: text/csv
-    scripts: scripts/fetch/oldThermoFetch.R
+    scripts: 
 </code></pre>
-<p>What is this? We’ve added a new fetch job, and given it a unique id “oldThermoData”. The “location” is the relative path where the file that is produced from this job will be stored. The “fetcher” field indicates to <code>vizlab</code> to go to ScienceBase, look for the ScienceBase’s ID “XXX123”, and pull down the file “thermoelectric_1955.csv” from that ID. Since the mimetype is set, the next action that depends on this action will know automatically how to open the data. Finally, the scripts field is where we could put custom scripts. In this particular case, we don’t actually need any custom scripts. However, currently <code>vizlab</code> will give a warning if this field is missing. So, we can create a file in the “scripts/fetch” folder called “oldThermoFetch.R” to make an empty script to eliminate the warning.</p>
-<p>oldThermoFetch.R:</p>
-<pre><code>#nothing to see here
-</code></pre>
+<p>What is this? We’ve added a new fetch job, and given it some information:</p>
+<ul>
+<li>A unique id “oldThermoData”. Downstream parts of this project that depend on this data will need to refer to this step by the unique id.</li>
+<li>A “location”, which is the relative path where the file that is produced from this job will be stored.</li>
+<li>The “fetcher” field indicates to <code>vizlab</code> to go to ScienceBase, look for the ScienceBase’s ID “XXX123”, and pull down the file “thermoelectric_1955.csv” from that ID.</li>
+<li>The “refetch” set to FALSE means that this step should not be consistently repeated (for example, when you are re-building the project for some other step well downstream of this point). If we would expect the data might change, we would want this set to TRUE.</li>
+<li>An optional field “mimetype”, this allows future jobs that depends on this data to know how to open the data.<br />
+</li>
+<li>A “scripts”&quot; field is where we could put custom scripts. In this particular case, we don’t actually need any custom scripts. However, currently <code>vizlab</code> will give a warning if this field is missing.</li>
+</ul>
 <p>That’s it for Task #1! We commit our changes to the viz.yaml, push them up to our fork, and submit a pull request. Another member of our team should review the pull request and merge if it looks good.</p>
 </div>
 <div id="task-2-incorporating-the-data" class="section level2">
 <h2>Task 2: Incorporating the data</h2>
-<p>Since we are starting a new task, it’s a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original process field in the viz.yaml:</p>
-<pre><code>id: calc-nationalData
-    location: cache/nationalClean.rds
-    processor: nationalClean
-    scripts: scripts/process/nationalClean.R
-    reader: rds
-    depends:
-      stateData: calc-histWaterData
+<p>Since we are starting a new task, it’s a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original “process”&quot; field in the viz.yaml:</p>
+<pre><code>process:
+  -
+    id: calc-nationalData
+        location: cache/nationalClean.rds
+        processor: nationalClean
+        scripts: scripts/process/nationalClean.R
+        reader: rds
+        depends:
+          stateData: calc-histWaterData
 </code></pre>
 <p>We need to add a new dependency, and fiddle with the script itself. So, let’s add the new data to depends like this:</p>
-<pre><code>id: calc-nationalData
+<pre><code>process:
+  -
+    id: calc-nationalData
     location: cache/nationalClean.rds
     processor: nationalClean
     scripts: scripts/process/nationalClean.R
@@ -101,12 +114,14 @@ createMakefiles() </code></pre>
     depends:
       stateData: calc-histWaterData
       oldData: oldThermoData</code></pre>
+<p>So in this processing job, we’ve added a new entry in the “depends” field, which is the unique id for our</p>
 <p>Now, let’s look at the original script:</p>
 <pre><code>process.nationalClean &lt;- function(viz){
   library(tidyr)
   library(dplyr)
   
-  stateData &lt;- readData(viz[['depends']][[&quot;stateData&quot;]])
+  viz.data &lt;- readDepends(viz)
+  stateData &lt;- viz.data[['stateData']]
   
   national &lt;- stateData %&gt;%
     group_by(year, category) %&gt;%
@@ -125,8 +140,9 @@ createMakefiles() </code></pre>
   library(tidyr)
   library(dplyr)
   
-  stateData &lt;- readData(viz[['depends']][[&quot;stateData&quot;]])
-  oldData &lt;- readData(viz[['depends']][[&quot;oldData&quot;]])
+  viz.data &lt;- readDepends(viz)
+  stateData &lt;- viz.data[['stateData']]
+  oldData &lt;- viz.data[['oldData']]
 
   national &lt;- stateData %&gt;%
     left_join(oldData, by=year) %&gt;%
@@ -143,6 +159,38 @@ createMakefiles() </code></pre>
   saveRDS(national, file=viz[[&quot;location&quot;]])
 }</code></pre>
 <p>Notice how the <code>depends</code> and <code>location</code> work.</p>
+<p>Seems about right, but we should probably test. What’s the easiest way to jump into your custom process task? Unfortunately, using <code>make</code> and RStudio (a common practice on our team), we can’t simply add breakpoints to the script (that currently is not supported).</p>
+<p>The best way is to load the <code>viz</code> object like this:</p>
+<pre><code>viz &lt;- getContentInfo(viz.id = &quot;calc-nationalData&quot;)</code></pre>
+<p>Now, we can step through our function line-by-line, and <code>viz</code> is defined as it will be during the <code>make</code> builds:</p>
+<pre><code>viz
+$id
+[1] &quot;calc-nationalData&quot;
+
+$location
+[1] &quot;cache/nationalClean.rds&quot;
+
+$processor
+[1] &quot;nationalClean&quot;
+
+$scripts
+[1] &quot;scripts/process/nationalClean.R&quot;
+
+$reader
+[1] &quot;rds&quot;
+
+$depends
+$depends$stateData
+[1] &quot;calc-histWaterData&quot;
+$depends$oldData
+[1] &quot;oldThermoData&quot;
+
+$block
+[1] &quot;process&quot;
+
+$export
+[1] FALSE</code></pre>
+<p>Once we’ve verified that our job works as expected, and doesn’t break anything in the <code>make</code> build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.</p>
 </div>
 </div>
 

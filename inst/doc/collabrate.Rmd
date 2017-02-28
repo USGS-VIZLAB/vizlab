@@ -48,7 +48,15 @@ createMakefiles()
 
 ## Task 1: Pull in new data
 
-Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities. Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.
+Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required, this is done by running:
+
+```
+storeSBcreds()
+```
+
+and type username and password.  We established a service account for ScienceBase that can be used, otherwise AD login is supported.
+
+Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.
 
 The whole `vizlab` process is coordinated by the `viz.yaml` file. Since we are "fetching" new data, we add a new field in the fetch section:
 
@@ -65,38 +73,44 @@ fetch:
     remoteFilename: "thermoelectric_1955.csv"
     refetch: FALSE
     mimetype: text/csv
-    scripts: scripts/fetch/oldThermoFetch.R
+    scripts: 
 
 ```
 
-What is this? We've added a new fetch job, and given it a unique id "oldThermoData". The "location" is the relative path where the file that is produced from this job will be stored. The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. Since the mimetype is set, the next action that depends on this action will know automatically how to open the data. Finally, the scripts field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts. However, currently `vizlab` will give a warning if this field is missing. So, we can create a file in the "scripts/fetch" folder called "oldThermoFetch.R" to make an empty script to eliminate the warning.
+What is this? We've added a new fetch job, and given it some information:
 
-oldThermoFetch.R:
-```
-#nothing to see here
+* A unique id "oldThermoData". Downstream parts of this project that depend on this data will need to refer to this step by the unique id.
+* A "location", which is the relative path where the file that is produced from this job will be stored. 
+* The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. 
+* The "refetch" set to FALSE means that this step should not be consistently repeated (for example, when you are re-building the project for some other step well downstream of this point). If we would expect the data might change, we would want this set to TRUE. 
+* An optional field "mimetype", this allows future jobs that depends on this data to know how to open the data.  
+* A "scripts"" field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts. However, currently `vizlab` will give a warning if this field is missing. 
 
-```
 That's it for Task #1! We commit our changes to the viz.yaml, push them up to our fork, and submit a pull request. Another member of our team should review the pull request and merge if it looks good.
 
 ## Task 2: Incorporating the data
 
-Since we are starting a new task, it's a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original process field in the viz.yaml:
+Since we are starting a new task, it's a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original "process"" field in the viz.yaml:
 
 ```
-id: calc-nationalData
-    location: cache/nationalClean.rds
-    processor: nationalClean
-    scripts: scripts/process/nationalClean.R
-    reader: rds
-    depends:
-      stateData: calc-histWaterData
+process:
+  -
+    id: calc-nationalData
+        location: cache/nationalClean.rds
+        processor: nationalClean
+        scripts: scripts/process/nationalClean.R
+        reader: rds
+        depends:
+          stateData: calc-histWaterData
 
 ```
 
 We need to add a new dependency, and fiddle with the script itself. So, let's add the new data to depends like this:
 
 ```
-id: calc-nationalData
+process:
+  -
+    id: calc-nationalData
     location: cache/nationalClean.rds
     processor: nationalClean
     scripts: scripts/process/nationalClean.R
@@ -106,6 +120,8 @@ id: calc-nationalData
       oldData: oldThermoData
 ```
 
+So in this processing job, we've added a new entry in the "depends" field, which is the unique id for our 
+
 Now, let's look at the original script:
 
 ```
@@ -113,7 +129,8 @@ process.nationalClean <- function(viz){
   library(tidyr)
   library(dplyr)
   
-  stateData <- readData(viz[['depends']][["stateData"]])
+  viz.data <- readDepends(viz)
+  stateData <- viz.data[['stateData']]
   
   national <- stateData %>%
     group_by(year, category) %>%
@@ -136,8 +153,9 @@ process.nationalClean <- function(viz){
   library(tidyr)
   library(dplyr)
   
-  stateData <- readData(viz[['depends']][["stateData"]])
-  oldData <- readData(viz[['depends']][["oldData"]])
+  viz.data <- readDepends(viz)
+  stateData <- viz.data[['stateData']]
+  oldData <- viz.data[['oldData']]
 
   national <- stateData %>%
     left_join(oldData, by=year) %>%
@@ -156,3 +174,46 @@ process.nationalClean <- function(viz){
 ```
 
 Notice how the `depends` and `location` work.
+
+Seems about right, but we should probably test. What's the easiest way to jump into your custom process task? Unfortunately, using `make` and RStudio (a common practice on our team), we can't simply add breakpoints to the script (that currently is not supported).
+
+The best way is to load the `viz` object like this:
+
+```
+viz <- getContentInfo(viz.id = "calc-nationalData")
+```
+
+Now, we can step through our function line-by-line, and `viz` is defined as it will be during the `make` builds:
+
+```
+viz
+$id
+[1] "calc-nationalData"
+
+$location
+[1] "cache/nationalClean.rds"
+
+$processor
+[1] "nationalClean"
+
+$scripts
+[1] "scripts/process/nationalClean.R"
+
+$reader
+[1] "rds"
+
+$depends
+$depends$stateData
+[1] "calc-histWaterData"
+$depends$oldData
+[1] "oldThermoData"
+
+$block
+[1] "process"
+
+$export
+[1] FALSE
+```
+
+Once we've verified that our job works as expected, and doesn't break anything in the `make` build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.
+
