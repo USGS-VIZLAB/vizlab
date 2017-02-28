@@ -127,11 +127,12 @@ publish:
       normalizeCSS: "normalizeCSS"
       footer-style: "footer-style"
       footer: "footer"
+      font: "pagefonts"
     publisher: page
     context:
       title: testViz
       sections: [ "relativeAbundance" ]
-      resources: [ "mainCSS", "normalizeCSS", "footer-style"]
+      resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
   -
     id: relativeAbundance
@@ -165,3 +166,8 @@ publish:
     location: layout/css/footer.css
     publisher: resource
     mimetype: text/css
+  -
+    id: pagefonts
+    publisher: googlefont
+    family: "Source Sans Pro"
+    weight: [300, 400, 700]
