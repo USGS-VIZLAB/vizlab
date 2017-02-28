@@ -146,7 +146,7 @@ uniqueness <- function() {
 
 
 getVizURL <- function() {
-  baseURL <- "https://owi.usgs.gov/vizlab"
+  baseURL <- vizlab.pkg.env$baseURL
   path <- getBlocks("info")$info$path[[1]]
   return(pastePaths(baseURL, path))
 }
