@@ -16,6 +16,15 @@ publish.character <- function(viz) {
   publish(viz)
 }
 
+#' publish a list representing a viz
+#' @rdname publish
+#' @export
+publish.list <- function(viz) {
+  viz <- as.viz(viz)
+  viz <- as.publisher(viz)
+  publish(viz)
+}
+
 #' publish a page
 #' @rdname publish
 #' @export
@@ -357,9 +366,11 @@ as.publisher <- function(viz, ...) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
   class(viz) <- c("publisher", class(viz))
-  notResources <- c("page", "section", "footer", "landing", "googlefont")
+  notResources <- c("page", "section", "footer", "landing", "googlefont", "template")
   if (!publisher %in% notResources) {
     viz <- as.resource(viz)
+  } else if (publisher == "template") {
+    viz <- as.template(viz)
   } else {
     class(viz) <- c(publisher, class(viz))
   }

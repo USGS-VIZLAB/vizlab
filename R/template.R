@@ -42,5 +42,6 @@ as.template <- function(viz, ...) {
   }
   template <- readData(viz)
   viz[['template']] <- template
+  class(viz) <- c("template", class(viz))
   return(viz)
 }

@@ -3,6 +3,7 @@
 \name{publish}
 \alias{publish}
 \alias{publish.character}
+\alias{publish.list}
 \alias{publish.page}
 \alias{publish.section}
 \alias{publish.resource}
@@ -21,6 +22,8 @@
 publish(viz)
 
 \method{publish}{character}(viz)
+
+\method{publish}{list}(viz)
 
 \method{publish}{page}(viz)
 
@@ -56,6 +59,8 @@ Determine the type and dispatch to that method to produce
 files to serve up as the final viz
 
 publish a given id
+
+publish a list representing a viz
 
 publish a page
 
