@@ -147,7 +147,7 @@ publish:
   -
     id: footer
     publisher: footer
-    template: footer
+    template: footer-template
     depends: footer-style
     blogsInFooter: TRUE
     vizzies:

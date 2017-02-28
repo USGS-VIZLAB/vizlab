@@ -21,9 +21,9 @@
   publisher: template
   mimetype: text/mustache
   depends:
-    logo: vizlab-logo
-    github-logo: github-logo
-    css: header-footer-css
+    logo: lib-vizlab-logo
+    github-logo: lib-github-logo
+    css: lib-footer-css
   context:
     logo: logo
     github-url:
