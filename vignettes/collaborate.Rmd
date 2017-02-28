@@ -32,7 +32,7 @@ The canonical GitHub repository for that work is here:
 
 [https://github.com/USGS-VIZLAB/water-use](https://github.com/USGS-VIZLAB/water-use)
 
-Let's use this project to create a fictional task, and walk through the process of contributing to the project. Our fictional task is to change the way we "clean"" the national water use data. When we were first were given the data, we were told there was no valid Industrial or Thermoelectric values of water use data before 1960 (in actuality, this was because they reported it in different ways before that time, so we could not compare pre-1960's with post). However, in our fictional example, let's say we were provided with a csv file with 1955 Thermoelectric water use data by state. So now our fictional project lead has created two tasks, and assigned these tasks to us: 
+Let's use this project to create a fictional task, and walk through the process of contributing to the project. Our fictional task is to change the way we "clean"" the national water use data. When we were first were given the data, we had no consistent Industrial or Thermoelectric values of water use data before 1960. However, in our fictional example, let's say we were provided with a csv file with 1955 Thermoelectric water use data by state. So now our fictional project lead has created two tasks, and assigned these tasks to us: 
 
 Task #1. Pull in the data file thermoelectric_1955.csv
 
@@ -54,18 +54,17 @@ Our first task was to add new (fictional) data to the project. Perhaps the data 
 storeSBcreds()
 ```
 
-and type username and password.  We established a service account for ScienceBase that can be used, otherwise AD login is supported.
+and type username and password.  We established a service account for ScienceBase that should be used if at all possible, otherwise AD login is supported.
 
 Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.
 
-The whole `vizlab` process is coordinated by the `viz.yaml` file. Since we are "fetching" new data, we add a new field in the fetch section:
+The whole `vizlab` process is coordinated by the `viz.yaml` file. Since we are "fetching" new data, we add a new job in the fetch section:
 
 ```
 fetch:
   -
   *************bunch of stuff already there************
-  
-    -
+  -
     id: oldThermoData
     location: cache/thermoelectric_1955.csv
     fetcher: sciencebase
@@ -84,7 +83,7 @@ What is this? We've added a new fetch job, and given it some information:
 * The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. 
 * The "refetch" set to FALSE means that this step should not be consistently repeated (for example, when you are re-building the project for some other step well downstream of this point). If we would expect the data might change, we would want this set to TRUE. 
 * An optional field "mimetype", this allows future jobs that depends on this data to know how to open the data.  
-* A "scripts"" field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts. However, currently `vizlab` will give a warning if this field is missing. 
+* A "scripts"" field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts because the 'fetcher' refers to a function already defined in `vizlab` (so we don't need to define our own). However, currently `vizlab` will give a warning if this field is missing. 
 
 That's it for Task #1! We commit our changes to the viz.yaml, push them up to our fork, and submit a pull request. Another member of our team should review the pull request and merge if it looks good.
 
@@ -96,12 +95,12 @@ Since we are starting a new task, it's a good idea to start a new branch. This t
 process:
   -
     id: calc-nationalData
-        location: cache/nationalClean.rds
-        processor: nationalClean
-        scripts: scripts/process/nationalClean.R
-        reader: rds
-        depends:
-          stateData: calc-histWaterData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
+    reader: rds
+    depends:
+      stateData: calc-histWaterData
 
 ```
 
@@ -120,12 +119,12 @@ process:
       oldData: oldThermoData
 ```
 
-So in this processing job, we've added a new entry in the "depends" field, which is the unique id for our 
+So in this processing job, we've added a new entry in the "depends" field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The `stateData` is the 1960-2015 state data, and the `oldThermoData` is our recent addition. 
 
-Now, let's look at the original script:
+Now, let's look at the original script in: scripts/process/nationalClean.R:
 
 ```
-process.nationalClean <- function(viz){
+process.nationalClean <- function(viz <- getContentInfo(viz.id = "calc-nationalData")){
   library(tidyr)
   library(dplyr)
   
@@ -149,7 +148,7 @@ process.nationalClean <- function(viz){
 We need to add the data and merge:
 
 ```
-process.nationalClean <- function(viz){
+process.nationalClean <- function(viz <- getContentInfo(viz.id = "calc-nationalData")){
   library(tidyr)
   library(dplyr)
   
@@ -175,15 +174,17 @@ process.nationalClean <- function(viz){
 
 Notice how the `depends` and `location` work.
 
-Seems about right, but we should probably test. What's the easiest way to jump into your custom process task? Unfortunately, using `make` and RStudio (a common practice on our team), we can't simply add breakpoints to the script (that currently is not supported).
+Seems about right, but we should probably test. What's the easiest way to jump into your custom process task? Unfortunately, using `make` and RStudio (a common practice on our team), we can't simply add breakpoints to the script.
 
-The best way is to load the `viz` object like this:
+You can load the `viz` object like this:
 
 ```
 viz <- getContentInfo(viz.id = "calc-nationalData")
 ```
 
-Now, we can step through our function line-by-line, and `viz` is defined as it will be during the `make` builds:
+and step through our function line-by-line.
+
+For fewer keystrokes, you can run `process.nationalClean` in `debug` mode, since `viz` is defined by default using `getContentInfo`.
 
 ```
 viz
@@ -214,6 +215,7 @@ $block
 $export
 [1] FALSE
 ```
+
 
 Once we've verified that our job works as expected, and doesn't break anything in the `make` build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.
 
