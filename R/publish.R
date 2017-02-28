@@ -284,8 +284,11 @@ publish.landing <- function(viz){
   repos <- getRepoNames(viz[['org']])
   viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
   names(viz_info) <- repos
+  # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
-
+  # sort reverse chronological
+  viz_info <- viz_info[order(sapply(viz_info, '[[', 'publish-date'), decreasing=TRUE)]
+  
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)

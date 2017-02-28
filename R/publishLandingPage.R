@@ -51,7 +51,8 @@ getVizInfo <- function(org, repo){
   
   has_publish_date <- !is.null(viz.yaml$info$`publish-date`)
   if(has_publish_date){
-    is_published <- as.Date(viz.yaml$info$`publish-date`) <= Sys.Date()  
+    publish_date <- as.Date(viz.yaml$info$`publish-date`)
+    is_published <- publish_date <= Sys.Date()  
     if(!is_published){
       return()
     } 
@@ -65,6 +66,7 @@ getVizInfo <- function(org, repo){
   viz_info_required <- list(id=viz_info$id,
                             template="templates/vizzies.mustache",
                             publisher="section",
+                            "publish-date"=publish_date,
                             context=list(name=viz_info$name,
                                          thumbnail=paste(getVizUrl(viz_info$path),
                                                          getVizUrl(viz_info$`thumbnail-landing`$url),
