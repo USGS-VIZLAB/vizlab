@@ -145,6 +145,20 @@ publish:
       relativeAbundanceFig: "relativeAbundanceFig"
     publisher: section
   -
+    id: facebook-thumb
+    location: images/facebook-thumb.png
+    publisher: thumbnail
+    for: facebook
+    mimetype: image/png
+    export: TRUE
+  -
+    id: landing-thumb
+    location: images/landing-thumb.png
+    publisher: thumbnail
+    for: landing
+    mimetype: image/png
+    export: TRUE
+  -
     id: footer
     publisher: footer
     template: footer-template
@@ -171,3 +185,4 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
+

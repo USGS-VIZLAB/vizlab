@@ -15,6 +15,7 @@
 \alias{publish.footer}
 \alias{publish.landing}
 \alias{publish.template}
+\alias{publish.thumbnail}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
@@ -44,6 +45,8 @@ publish(viz)
 \method{publish}{landing}(viz)
 
 \method{publish}{template}(viz)
+
+\method{publish}{thumbnail}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -78,10 +81,10 @@ Footer publishing
 publish landing page
 
 publish template
+
+check dimensions and size, publish thumbnail
 }
 \details{
-I've been thinking maybe switching 'x' to 'viz' would be more clear
-
 Sections are published individually but are returned invisibly
 as text to be used directly.
 
