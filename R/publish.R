@@ -380,6 +380,7 @@ as.publisher <- function(viz, ...) {
 #' coerce to resource
 #' @param viz vizlab object
 #' @param ... not used, following convention
+#' @importFrom utils packageName
 #' @export
 as.resource <- function(viz, ...) {
   required <- c("mimetype", "location")

@@ -145,6 +145,7 @@ getPartialLibrary <- function() {
 #' @param no.match what to do if the viz.id is not found: either 'stop' (throw
 #'   error) or 'NA' (return NA)
 #' @importFrom yaml yaml.load_file
+#' @importFrom utils packageName
 #' @return vizlab object from library or \code{NULL} if it doesn't exist
 getResourceFromLibrary <- (function() {
   resources <- yaml.load_file(system.file("resource.library.yaml", package=packageName()))
@@ -192,7 +193,7 @@ setupFoldersForFile <- function(file) {
 }
 
 #' Grab a random number to break the cache
-#'
+#' @importFrom stats runif
 #' @return random number between 10000 and 10000000
 uniqueness <- function() {
   rng <- floor(runif(n = 1, min = 10000, max = 10000000))

@@ -8,6 +8,8 @@ as.template(viz, ...)
 }
 \arguments{
 \item{viz}{vizlab object to coerce}
+
+\item{...}{unused, but follows as. pattern}
 }
 \description{
 Coerce to template type publisher

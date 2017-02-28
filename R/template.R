@@ -29,6 +29,9 @@ template.character <- function(viz) {
 #' Coerce to template type publisher
 #'
 #' @param viz vizlab object to coerce
+#' @param ... unused, but follows as. pattern
+#' 
+#' @importFrom utils packageName
 #' @export
 as.template <- function(viz, ...) {
   required <- c("location")
