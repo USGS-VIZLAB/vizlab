@@ -147,6 +147,13 @@ test_that("publish footer works", {
 test_that("Thumb publisher works", {
   expect_error(publish("facebook-thumb")) #incorrect dimensions
   publish('landing-thumb')
+  expect_true(file.exists('target/images/landing-thumb.png'))
   })
+
+test_that("URL utils", {
+  expect_equal(getVizURL(), "https://owi.usgs.gov/vizlab/notsure")
+  expect_equal(pastePaths("bar", "baz"), "bar/baz")
+  expect_equal(pastePaths("bar/", "baz"), "bar/baz")
+})
 
 cleanup(oldwd, testtmp)

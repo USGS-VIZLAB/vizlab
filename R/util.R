@@ -143,3 +143,21 @@ uniqueness <- function() {
   rng <- floor(runif(n = 1, min = 10000, max = 10000000))
   return(rng)
 }
+
+
+getVizURL <- function() {
+  baseURL <- "https://owi.usgs.gov/vizlab"
+  path <- getBlocks("info")$info$path[[1]]
+  return(pastePaths(baseURL, path))
+}
+
+#smart paste paths/URLs together with or without slashes included
+#doesn't handle NA or nulls
+pastePaths <- function(str1, str2) {
+  if (substring(str1, nchar(str1)) == "/" || substring(str2, 1,1) == "/") {
+    ret <- paste0(str1, str2)
+  } else {
+    ret <- paste(str1, str2, sep = "/")
+  }
+  return(ret)
+}

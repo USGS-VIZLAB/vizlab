@@ -310,22 +310,6 @@ publish.thumbnail <- function(viz){
   viz[['height']] <- dims[['height']]
 }
 
-getVizURL <- function() {
-  baseURL <- "https://owi.usgs.gov"
-  path <- getBlocks("info")$info$path[[1]]
-  return(pastePaths(baseURL, path))
-}
-
-#smart paste paths/URLs together with or without slashes included
-pastePaths <- function(str1, str2) {
-  if (substring(str1, nchar(str1)) == "/" || substring(str2, 1,1) == "/") {
-    ret <- paste0(str1, str2)
-  } else {
-    ret <- paste(str1, str2, sep = "/")
-  }
-  return(ret)
-}
-
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
 #' @param file char Name of thumbnail file
