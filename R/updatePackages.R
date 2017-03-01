@@ -10,20 +10,22 @@
 #' @param absent the function to call on a message about missing packages (if 
 #'   there are any)
 #' @export
-checkPackages <- function(newer=warning, older=stop, absent=stop) {
-  status <- packageStatus()
+checkVizPackages <- function(newer=warning, older=stop, absent=stop) {
+  status <- vizPackageStatus()
   miss <- status$package.name[status$status == 'missing']
   old <- status$package.name[status$status == 'older']
   new <- status$package.name[status$status == 'newer']
+  info <- setNames(paste0(status$package.name, " (need ", status$target.version, ", have ", status$current.version, ")"), status$package.name)
   if(length(new) > 0) {
-    newer("these packages are newer than required: ", paste0(old, collapse=", "))
+    newer("these packages are newer than required: ", paste0(info[new], collapse=", "))
   }
   if(length(old) > 0) {
-    older("these packages are older than required: ", paste0(old, collapse=", "))
+    older("these packages are older than required: ", paste0(info[old], collapse=", "))
   }
   if(length(miss) > 0) {
-    absent("these packages are absent: ", paste0(smissing, collapse=", "))
+    absent("these packages are absent: ", paste0(info[miss], collapse=", "))
   }
+  return(status)
 }
 
 #' Identify any missing or outdated packages
@@ -32,7 +34,7 @@ checkPackages <- function(newer=warning, older=stop, absent=stop) {
 #' `required-packages` section of the viz.yaml. Returns a list of two vectors,
 #' one with the names of completely missing packages and one with the names of
 #' out of date packages.
-packageStatus <- function() {
+vizPackageStatus <- function() {
   packages.info <- getBlocks('info', FALSE)[[1]]$'required-packages'
   if(is.null(packages.info)) stop("info$required-packages section of viz.yaml cannot be empty")
   
@@ -43,7 +45,7 @@ packageStatus <- function() {
   status <- do.call(rbind, lapply(names(packages.info), function(package.name) {
     target.version <- numeric_version(packages.info[[package.name]]$version)
     missing.package <- !package.name %in% names(installed)
-    current.version <- if(!missing.package) numeric_version(installed[package.name]) else NA
+    current.version <- if(!missing.package) numeric_version(installed[package.name]) else numeric_version(NA, strict=FALSE)
     status <- if(missing.package) {
       'missing'
     } else if(current.version < target.version) {
@@ -78,9 +80,9 @@ packageStatus <- function() {
 #'   sometimes-reasonable additional option, and "perfect" is technically also 
 #'   an option (if you want to reinstall everything no matter what).
 #' @export
-updatePackages <- function(install.if=c('older','missing')) {
+updateVizPackages <- function(install.if=c('older','missing')) {
   # find out which packages need installation
-  status <- packageStatus()
+  status <- checkVizPackages(message, message, message)
   needed <- status$package.name[status$status %in% install.if]
   
   # get installation instructions
