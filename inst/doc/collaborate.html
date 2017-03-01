@@ -12,7 +12,7 @@
 
 <meta name="author" content="Laura DeCicco" />
 
-<meta name="date" content="2017-02-28" />
+<meta name="date" content="2017-03-01" />
 
 <title>Collaboration Example</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Collaboration Example</h1>
 <h4 class="author"><em>Laura DeCicco</em></h4>
-<h4 class="date"><em>2017-02-28</em></h4>
+<h4 class="date"><em>2017-03-01</em></h4>
 
 
 
@@ -115,7 +115,7 @@ createMakefiles() </code></pre>
       oldData: oldThermoData</code></pre>
 <p>So in this processing job, we’ve added a new entry in the “depends” field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The <code>stateData</code> is the 1960-2015 state data, and the <code>oldThermoData</code> is our recent addition.</p>
 <p>Now, let’s look at the original script in: scripts/process/nationalClean.R:</p>
-<pre><code>process.nationalClean &lt;- function(viz &lt;- getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
+<pre><code>process.nationalClean &lt;- function(viz = getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
   library(tidyr)
   library(dplyr)
   
@@ -135,7 +135,7 @@ createMakefiles() </code></pre>
   saveRDS(national, file=viz[[&quot;location&quot;]])
 }</code></pre>
 <p>We need to add the data and merge:</p>
-<pre><code>process.nationalClean &lt;- function(viz &lt;- getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
+<pre><code>process.nationalClean &lt;- function(viz = getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
   library(tidyr)
   library(dplyr)
   

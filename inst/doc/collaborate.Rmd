@@ -124,7 +124,7 @@ So in this processing job, we've added a new entry in the "depends" field, which
 Now, let's look at the original script in: scripts/process/nationalClean.R:
 
 ```
-process.nationalClean <- function(viz <- getContentInfo(viz.id = "calc-nationalData")){
+process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalData")){
   library(tidyr)
   library(dplyr)
   
@@ -148,7 +148,7 @@ process.nationalClean <- function(viz <- getContentInfo(viz.id = "calc-nationalD
 We need to add the data and merge:
 
 ```
-process.nationalClean <- function(viz <- getContentInfo(viz.id = "calc-nationalData")){
+process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalData")){
   library(tidyr)
   library(dplyr)
   
