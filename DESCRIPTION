@@ -23,6 +23,7 @@ Imports:
     imager,
     markdown,
     methods,
+    remotes,
     tools,
     whisker,
     xml2,
