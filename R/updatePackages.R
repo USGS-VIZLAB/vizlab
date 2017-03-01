@@ -34,6 +34,8 @@ checkVizPackages <- function(newer=warning, older=stop, absent=stop) {
 #' `required-packages` section of the viz.yaml. Returns a list of two vectors,
 #' one with the names of completely missing packages and one with the names of
 #' out of date packages.
+#' 
+#' @importFrom utils installed.packages
 vizPackageStatus <- function() {
   packages.info <- getBlocks('info', FALSE)[[1]]$'required-packages'
   if(is.null(packages.info)) stop("info$required-packages section of viz.yaml cannot be empty")
@@ -79,6 +81,9 @@ vizPackageStatus <- function() {
 #'   reinstalled. The default is recommended, but "newer" is a 
 #'   sometimes-reasonable additional option, and "perfect" is technically also 
 #'   an option (if you want to reinstall everything no matter what).
+#'   
+#' @importFrom utils install.packages
+#' @importFrom remotes install_github
 #' @export
 updateVizPackages <- function(install.if=c('older','missing')) {
   # find out which packages need installation
@@ -100,7 +105,7 @@ updateVizPackages <- function(install.if=c('older','missing')) {
         install.packages(package.name, repos=union(getOption("repos"), 'https://owi.usgs.gov/R'))
       },
       github={
-        remotes::install_github(repo=package.info$name, ref=package.info$ref)
+        install_github(repo=package.info$name, ref=package.info$ref)
       })
   })
 }

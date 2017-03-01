@@ -26,10 +26,10 @@ test_that("publish footer works", {
   expect_true(any(grepl('blog|Blogs', output)))
   
   #without blogs
-  fakeViz <- list(id="footer", publisher="footer", template = "footer", blogsInFooter=FALSE,
+  fakeViz <- list(id="footer", publisher="footer", template = "footer-template", blogsInFooter=FALSE,
                   vizzies=list(list(name = "Microplastics in the Great Lakes", org="USGS-VIZLAB",
                                     repo = "great-lakes-microplastics")))
-  output <- publish.footer(fakeViz)
+  output <- publish(fakeViz)
   expect_true(any(grepl('microplastics', output)))
   expect_false(any(grepl('blog|Blogs', output)))
 })

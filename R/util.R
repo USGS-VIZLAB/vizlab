@@ -24,12 +24,12 @@ relativePath <- function(file) {
 
 #' Build context for templating
 #'
-#' @param viz vizlab object
+#' @param context context list
 #' @param dependencies list of dependency ids
 #' @return list of context with dependencies injected
-buildContext <- function(viz, dependencies) {
+buildContext <- function(context, dependencies) {
   # allow for context to be inline
-  data <- viz[["context"]]
+  data <- context
 
   if (is.null(data)) {
     data <- list()
@@ -62,6 +62,33 @@ expandDependencies <- function(x) {
     expanded.dep <- readData(expanded.dep)
   }
   return(expanded.dep)
+}
+
+#' Pull together vizlab object dependencies
+#'
+#' @param ... dependencies to gather
+gatherDependencyList <- function(...) {
+  dependencies <- list()
+  depNames <- list()
+
+  # add automatic dependencies
+  deps <- as.list(...)
+  for (i in seq_along(deps)) {
+    if (!is.null(deps[i])) {
+      dependencies <- append(dependencies, deps[i])
+      if (is.null(names(deps)[i]) || names(deps)[i] == "") {
+        depNames <- append(depNames, deps[i])
+      } else {
+        depNames <- append(depNames, names(deps)[i])
+      }
+    }
+  }
+
+  # TODO Watch out for cyclic depends
+  names(dependencies) <- depNames
+  dependencies <- lapply(dependencies, expandDependencies)
+  
+  return(dependencies)
 }
 
 #' Use mimetype lookup to get reader
@@ -111,6 +138,35 @@ getPartialLibrary <- function() {
   return(partials)
 }
 
+#' Internal function to get shared resources
+#' Implemented as a closure to avoid reloading file each time
+#'
+#' @param x character vector containing resource id
+#' @param no.match what to do if the viz.id is not found: either 'stop' (throw
+#'   error) or 'NA' (return NA)
+#' @importFrom yaml yaml.load_file
+#' @importFrom utils packageName
+#' @return vizlab object from library or \code{NULL} if it doesn't exist
+getResourceFromLibrary <- (function() {
+  resources <- yaml.load_file(system.file("resource.library.yaml", package=packageName()))
+  names(resources) <- lapply(resources, function(r) { r[['id']] })
+
+  return(function(x, no.match = c("stop", "NA")) {
+    viz <- resources[[x]]
+    if (!is.null(viz)) {
+      viz <- as.viz(viz)
+      resource.file <- system.file(viz[['location']], package=packageName())
+      # convert to absolute if exists
+      if (file.exists(resource.file)) {
+        viz[['location']] <- resource.file
+      }
+    } else {
+      viz <- match(no.match, c("NA" = NA, "stop" = stop("Could not find ", x)))
+    }
+    return(viz)
+  })
+})()
+
 #' Replace any markdown text with rendered html
 #'
 #' @importFrom markdown markdownToHTML
@@ -137,13 +193,37 @@ setupFoldersForFile <- function(file) {
 }
 
 #' Grab a random number to break the cache
-#'
+#' @importFrom stats runif
 #' @return random number between 10000 and 10000000
 uniqueness <- function() {
   rng <- floor(runif(n = 1, min = 10000, max = 10000000))
   return(rng)
 }
 
+#' Append second list to first with overwrites
+#'
+#' @param x list template to be filled by values of another list
+#' @param y list to overwrite missing values or append to first list
+#' @return list containing merged values from both x and y
+replaceOrAppend <- function(x, y) {
+  slots <- unique(c(names(x), names(y)))
+  out <- list()
+  for (slot in slots) {
+    if (is.list(x[[slot]])) {
+      # append
+      out[[slot]] <- append(x[[slot]], y[[slot]])
+    } else {
+      if(!is.null(y[[slot]])) {
+        # replace
+        out[[slot]] <- y[[slot]]
+      } else {
+        # retain
+        out[[slot]] <- x[[slot]]
+      }
+    }
+  }
+  return(out)
+}
 
 getVizURL <- function() {
   baseURL <- vizlab.pkg.env$baseURL
@@ -161,3 +241,4 @@ pastePaths <- function(str1, str2) {
   }
   return(ret)
 }
+
