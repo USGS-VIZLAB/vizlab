@@ -3,21 +3,27 @@
 \name{publish}
 \alias{publish}
 \alias{publish.character}
+\alias{publish.list}
 \alias{publish.page}
 \alias{publish.section}
 \alias{publish.resource}
 \alias{publish.img}
 \alias{publish.ico}
+\alias{publish.googlefont}
 \alias{publish.js}
 \alias{publish.css}
 \alias{publish.svg}
 \alias{publish.footer}
 \alias{publish.landing}
+\alias{publish.template}
+\alias{publish.thumbnail}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
 publish(viz)
 
 \method{publish}{character}(viz)
+
+\method{publish}{list}(viz)
 
 \method{publish}{page}(viz)
 
@@ -29,6 +35,8 @@ publish(viz)
 
 \method{publish}{ico}(viz)
 
+\method{publish}{googlefont}(viz)
+
 \method{publish}{js}(viz)
 
 \method{publish}{css}(viz)
@@ -38,6 +46,10 @@ publish(viz)
 \method{publish}{footer}(viz)
 
 \method{publish}{landing}(viz)
+
+\method{publish}{template}(viz)
+
+\method{publish}{thumbnail}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -47,6 +59,8 @@ Determine the type and dispatch to that method to produce
 files to serve up as the final viz
 
 publish a given id
+
+publish a list representing a viz
 
 publish a page
 
@@ -58,6 +72,8 @@ Image publishing
 
 Favicon resource
 
+Add a font to the page
+
 javascript publishing
 TODO allow for cdn js
 
@@ -68,10 +84,12 @@ svg publishing, may return NULL
 Footer publishing
 
 publish landing page
+
+publish template
+
+check dimensions and size, publish thumbnail
 }
 \details{
-I've been thinking maybe switching 'x' to 'viz' would be more clear
-
 Sections are published individually but are returned invisibly
 as text to be used directly.
 

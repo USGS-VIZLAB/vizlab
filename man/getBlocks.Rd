@@ -5,7 +5,7 @@
 \title{Read vizlab config document and return specific blocks}
 \usage{
 getBlocks(block = c("vizlab", "info", "fetch", "process", "visualize",
-  "publish"), keep.block = TRUE)
+  "publish", "resource"), keep.block = TRUE)
 }
 \arguments{
 \item{block}{character vector of blocks to read}

@@ -5,6 +5,8 @@ yaml:
   - "text/yaml"
 txt:
   - "text/plain"
+  - "text/template"
+  - "text/mustache"
 excel:
   - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 filepath:

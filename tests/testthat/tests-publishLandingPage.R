@@ -6,7 +6,7 @@ setuptmp <- setup()
 test_that("publishLandingPage works", {
 
   publishLandingPage()
-  index <- readLines('landing/target/index.html')
+  index <- readLines('landing/target/index.html', warn = FALSE)
 
   expect_true(any(grepl('microplastics', index)))
   expect_true(any(grepl('climate-change-walleye-bass', index)))

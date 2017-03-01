@@ -3,8 +3,6 @@
 #' Determine the type and dispatch to that method to produce
 #' files to serve up as the final viz
 #'
-#' I've been thinking maybe switching 'x' to 'viz' would be more clear
-#'
 #' @param viz vizlab object or identifier
 #' @export
 publish <- function(viz) UseMethod("publish")
@@ -18,39 +16,40 @@ publish.character <- function(viz) {
   publish(viz)
 }
 
+#' publish a list representing a viz
+#' @rdname publish
+#' @export
+publish.list <- function(viz) {
+  viz <- as.viz(viz)
+  viz <- as.publisher(viz)
+  publish(viz)
+}
+
 #' publish a page
 #' @rdname publish
-#' @importFrom whisker whisker.render
 #' @export
 publish.page <- function(viz) {
   required <- c("template", "context")
   checkRequired(viz, required)
 
-  template <- readTemplate(viz[['template']])
+  template <- template(viz[['template']])
 
-  dependencies <- as.list(viz[['depends']])
-  # add automatic dependencies
-  vizlabjs <- '_vizlabJS'
-  dependencies[[vizlabjs]] <- getVizlabJS()
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
-  # TODO Watch out for cyclic depends
-  dependencies <- lapply(dependencies, expandDependencies)
+  # TODO handle accessing nested dependencies elsewhere
 
-  # this is needed for unnamed depends lists
-  if (all(is.character(sapply(viz[['depends']], class)))) {
-    names(dependencies) <- c(viz[['depends']], vizlabjs)
-  }
+  # also manually put resources into context
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+  context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
+
+  # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
-  context <- buildContext(viz, dependencies)
+  # replace ids in context with expanded dependencies
+  context <- buildContext(context, dependencies)
 
-  #also manually put resources into context
-  context[['resources']] <- append(context[['resources']], dependencies[[vizlabjs]])
-  context[['info']] <- append(context[['info']], getBlocks("info", keep.block=F)[[1]])
-
-  partials <- getPartialLibrary()
   file <- export(viz)
-  cat(whisker.render(template = template, data = context, partials = partials), file = file)
+  render(template, context, file)
 }
 
 #' publish a section
@@ -65,18 +64,19 @@ publish.section <- function(viz) {
   required <- c("template")
   checkRequired(viz, required)
 
-  # TODO Watch out for cyclic depends
-  dependencies <- as.list(viz[['depends']])
-  dependencies <- lapply(dependencies, expandDependencies)
+  template <- template(viz[['template']])
 
-  names(dependencies) <- viz[['depends']]
+  # TODO Watch out for cyclic depends
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
+
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+
+  # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
-  context <- buildContext(viz, dependencies)
+  context <- buildContext(context, dependencies)
 
-  template <- readTemplate(viz[['template']])
-
-  viz[['output']] <- whisker.render(template = template, data = context)
+  viz[['output']] <- render(template, context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
   }
@@ -158,6 +158,23 @@ publish.ico <- function(viz) {
   return(html)
 }
 
+#' Add a font to the page
+#'
+#' @rdname publish
+#' @importFrom utils URLencode
+#' @export
+publish.googlefont <- function(viz) {
+  required <- c("family", "weight")
+  checkRequired(viz, required)
+  
+  families <- paste(URLencode(viz[["family"]]), collapse = "|")
+  weights <- paste(viz[["weight"]], collapse = ",")
+  googlefont <- "//fonts.googleapis.com/css"
+  html <- sprintf('<link href="%s?%s:%s" rel="stylesheet" type="text/css">',
+                  googlefont, families, weights)
+  return(html)
+}
+
 #' javascript publishing
 #' TODO allow for cdn js
 #'
@@ -226,15 +243,15 @@ publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
 
-  index_loc_css <- 'target/css'
-  if(!dir.exists(index_loc_css)) dir.create(index_loc_css, recursive=TRUE)
-  file.copy(from=system.file('footer/css/footer.css', package="vizlab"), to=index_loc_css)
+  template <- template(viz[['template']])
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
-  dependencies <- lapply(viz[['depends']], publish)
-  names(dependencies) <- viz[['depends']]
+  context <- replaceOrAppend(template[['context']], viz[['context']])
 
-  context <- buildContext(viz, dependencies)
+  # flatten dependencies before lookups
+  dependencies <- c(dependencies, recursive = TRUE)
 
+  context <- buildContext(context, dependencies)
 
   #add info from viz.yaml to context to inject into template
   vizzies <- viz$vizzies
@@ -243,10 +260,10 @@ publish.footer <- function(viz) {
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
-     
+
     # if / is first char, treat as relative path. If not, treat as absolute path.
     if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
-      vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
+      vizzies[[v]]$url <- paste0(vizlab.pkg.env$baseURL, info$context$path)
       vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
     } else {
       vizzies[[v]]$url <- info$context$path
@@ -256,9 +273,9 @@ publish.footer <- function(viz) {
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
   context[['vizzies']] <- vizzies
-  template <- readTemplate(viz[['template']])
 
-  viz[['output']] <- whisker.render(template = template, data = context)
+
+  viz[['output']] <- render(template, data = context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
   }
@@ -274,8 +291,11 @@ publish.landing <- function(viz){
   repos <- getRepoNames(viz[['org']])
   viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
   names(viz_info) <- repos
+  # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
-
+  # sort reverse chronological
+  viz_info <- viz_info[order(sapply(viz_info, '[[', 'publish-date'), decreasing=TRUE)]
+  
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
@@ -289,6 +309,62 @@ publish.landing <- function(viz){
   publish(pageviz)
 }
 
+#' publish template
+#'
+#' @rdname publish
+#' @export
+publish.template <- function(viz) {
+  # nothing for now
+}
+
+#' check dimensions and size, publish thumbnail
+#'
+#' @rdname publish
+#' @export
+publish.thumbnail <- function(viz){
+  checkRequired(viz, required = c("for", "location"))
+  #compliance
+  #dimensions in pixels, file sizes in bytes!
+  if(tolower(viz[['for']]) == "facebook") {
+    maxSize <- 8388608
+    checkHeight <- 820
+    checkWidth <- 1560
+  } else if(tolower(viz[['for']]) == "twitter") {
+    maxSize <- 1048576
+    checkHeight <- 300
+    checkWidth <- 560
+  } else { #landing
+    maxSize <- 1048576
+    checkHeight <- 400
+    checkWidth <- 400
+  }
+  dims <- checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
+                       checkHeight = checkHeight, checkWidth = checkWidth)
+  #send to other publishers if all ok
+  viz <- NextMethod()
+  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
+  viz[['width']] <- dims[['width']]
+  viz[['height']] <- dims[['height']]
+}
+
+#' helper to check thumbnail compliance
+#' @importFrom imager load.image width height
+#' @param file char Name of thumbnail file
+#' @param maxSize numeric Max size in bytes 
+#' @param checkHeight numeric Height in pixels to enforce
+#' @param checkWidth numeric Width in pixels to enforce
+checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
+  fileSize <- file.info(file)
+  im <- imager::load.image(file)
+  width <- imager::width(im)
+  height <- imager::height(im)
+  if(fileSize > maxSize || width != checkWidth || height != checkHeight) {
+    stop(paste("Thumbnail", file, "does not meet site requirements"))
+  }
+ 
+  return(c(width = width, height = height))
+}
+
 #' coerce to a publisher
 #' @param viz object describing publisher
 #' @param ... not used, just for consistency
@@ -296,9 +372,14 @@ publish.landing <- function(viz){
 as.publisher <- function(viz, ...) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
-  class(viz) <- c(publisher, "publisher", class(viz))
-  if (publisher == "resource") {
+  class(viz) <- c("publisher", class(viz))
+  notResources <- c("page", "section", "footer", "landing", "googlefont", "template")
+  if (!publisher %in% notResources) {
     viz <- as.resource(viz)
+  } else if (publisher == "template") {
+    viz <- as.template(viz)
+  } else {
+    class(viz) <- c(publisher, class(viz))
   }
   return(viz)
 }
@@ -306,34 +387,30 @@ as.publisher <- function(viz, ...) {
 #' coerce to resource
 #' @param viz vizlab object
 #' @param ... not used, following convention
+#' @importFrom utils packageName
 #' @export
 as.resource <- function(viz, ...) {
-  required <- c("mimetype")
+  required <- c("mimetype", "location")
   checkRequired(viz, required)
 
   mimetype <- viz[['mimetype']]
   resource <- lookupMimetype(mimetype)
+
+  if (!file.exists(viz[['location']])) {
+    internal <- system.file(viz[['location']], package = packageName())
+    if (file.exists(internal)) {
+      viz[['location']] <- internal
+    }
+  }
   if(length(resource) == 0){
     warning(mimetype, " will be treated as data: ", viz[['id']])
     resource <- "data"
   }
-
-  class(viz) <- c(resource, class(viz))
+  if ("publisher" %in% names(viz) && viz[['publisher']] == "thumbnail") {
+    class(viz) <- c("thumbnail","resource", class(viz))
+  } else {
+    class(viz) <- c(resource, "resource",class(viz))
+  }
+  
   return(viz)
-}
-
-### Helper functions for above
-# This should not be global, but should be a config for the "fullPage.mustache"
-getVizlabJS <- function() {
-  vizlab.js <- list(
-    id = "_vizlabJS",
-    location = "js/vizlab.js",
-    packaging = "vizlab",
-    publisher = "resource",
-    mimetype = "application/javascript",
-    export = TRUE
-  )
-  vizlab.js <- as.viz(vizlab.js)
-  vizlab.js <- as.publisher(vizlab.js)
-  return(vizlab.js)
 }

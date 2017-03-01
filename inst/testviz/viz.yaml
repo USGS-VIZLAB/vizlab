@@ -1,9 +1,9 @@
-vizlab: "0.1"
+vizlab: "0.1.7"
 info:
   id: testviz
-  name: Example visualization project directory
+  name: Example visualization project
   date: 2016-06-09
-  publish-date: 2016-07-09
+  publish-date: 2017-02-28
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
@@ -40,6 +40,21 @@ info:
     width: 250
     height: 250
     alttext: Test for vizlab
+  required-packages:
+    vizlab:
+      repo: github
+      version: 0.1.8
+      name: USGS-VIZLAB/vizlab
+      ref: f685369086a4d9f890ad8ce837dfa582586aaba3
+    dplyr:
+      repo: CRAN
+      version: 0.5.0
+    wateRuse:
+      repo: GRAN
+      version: 1.0.4
+    crazy:
+      repo: CRAN
+      version: 20.11.45
 fetch:
   -
     id: siteTextData
@@ -104,8 +119,8 @@ visualize:
         mayfly: MayflyNymph
     visualizer: relativeAbundance
     mimetype: image/svg+xml
-    export: false
-    scripts:
+    export: true
+    scripts: scripts/visualize/relativeAbundance.R
 publish:
   -
     id: mainCSS
@@ -123,22 +138,45 @@ publish:
     template: fullPage
     depends:
       relativeAbundance: "relativeAbundance"
+      mainCSS: "mainCSS"
+      normalizeCSS: "normalizeCSS"
+      footer-style: "footer-style"
+      footer: "footer"
+      font: "pagefonts"
     publisher: page
     context:
       title: testViz
       sections: [ "relativeAbundance" ]
-      resources: [ "mainCSS", "normalizeCSS", "footer-style"]
+      resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
   -
     id: relativeAbundance
     template: simplefigure
-    context: siteTextData
-    depends: relativeAbundanceFig
+    context:
+      id: relativeAbundance
+      figure: relativeAbundanceFig
+      caption: "Relative Abundance"
+    depends:
+      relativeAbundanceFig: "relativeAbundanceFig"
     publisher: section
+  -
+    id: facebook-thumb
+    location: images/facebook-thumb.png
+    publisher: thumbnail
+    for: facebook
+    mimetype: image/png
+    export: TRUE
+  -
+    id: landing-thumb
+    location: images/landing-thumb.png
+    publisher: thumbnail
+    for: landing
+    mimetype: image/png
+    export: TRUE
   -
     id: footer
     publisher: footer
-    template: footer
+    template: footer-template
     depends: footer-style
     blogsInFooter: TRUE
     vizzies:
@@ -157,3 +195,9 @@ publish:
     location: layout/css/footer.css
     publisher: resource
     mimetype: text/css
+  -
+    id: pagefonts
+    publisher: googlefont
+    family: "Source Sans Pro"
+    weight: [300, 400, 700]
+

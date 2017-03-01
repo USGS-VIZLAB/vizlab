@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 20.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 373.5 378" style="enable-background:new 0 0 373.5 378;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#414042;}
+	.st1{fill:none;stroke:#A7A9AC;stroke-width:6;stroke-miterlimit:10;}
+	.st2{fill:url(#SVGID_1_);}
+	.st3{fill:url(#SVGID_2_);}
+	.st4{fill:url(#SVGID_3_);}
+	.st5{fill:#FFFFFF;}
+</style>
+<path class="st0" d="M330.4,367.9h-291c-18.5,0-33.5-15-33.5-33.5v-291c0-18.5,15-33.5,33.5-33.5h291c18.5,0,33.5,15,33.5,33.5v291
+	C363.9,352.9,348.9,367.9,330.4,367.9z"/>
+<g>
+	<polyline class="st1" points="99.4,203.7 184.9,123.7 270.4,203.7 	"/>
+	<radialGradient id="SVGID_1_" cx="184.875" cy="123.7328" r="49" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#ED1C24"/>
+		<stop  offset="0.3136" style="stop-color:#E51D25"/>
+		<stop  offset="0.6604" style="stop-color:#D41D28"/>
+		<stop  offset="1" style="stop-color:#BE1E2D"/>
+	</radialGradient>
+	<circle class="st2" cx="184.9" cy="123.7" r="49"/>
+	<radialGradient id="SVGID_2_" cx="270.375" cy="203.7328" r="29.7589" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.3909" style="stop-color:#F9F9F9"/>
+		<stop  offset="0.8232" style="stop-color:#EDEDEE"/>
+		<stop  offset="1" style="stop-color:#E6E7E8"/>
+	</radialGradient>
+	<circle class="st3" cx="270.4" cy="203.7" r="34"/>
+	<radialGradient id="SVGID_3_" cx="99.375" cy="203.7328" r="34" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.3909" style="stop-color:#F9F9F9"/>
+		<stop  offset="0.8232" style="stop-color:#EDEDEE"/>
+		<stop  offset="1" style="stop-color:#E6E7E8"/>
+	</radialGradient>
+	<circle class="st4" cx="99.4" cy="203.7" r="34"/>
+</g>
+<g>
+	<path class="st5" d="M85,280.4h10.7l7.6,35.7h0.1l8.6-35.7h10.1l-13,49.1h-12L85,280.4z"/>
+	<path class="st5" d="M126.7,329.4v-49.1H137v49.1H126.7z"/>
+	<path class="st5" d="M143.8,280.4h29.6v8.9l-20.7,32.6h21.1v7.5h-31v-9l20.6-32.6h-19.6V280.4z"/>
+	<path class="st5" d="M179.7,329.4v-49.1h10.3v40.9h15.4v8.2H179.7z"/>
+	<path class="st5" d="M206.1,329.4l13.6-49.1h13.5l13.3,49.1h-10.8l-2.7-10.9h-14l-2.8,10.9H206.1z M225.8,289.8h-0.1L221,311h9.8
+		L225.8,289.8z"/>
+	<path class="st5" d="M251.5,329.4v-49.1h18.2c7.8,0,14.3,2.2,14.3,12.7c0,5.6-2.8,9.7-8.4,10.8v0.1c7.3,1,9.2,5.7,9.2,12.4
+		c0,12.4-10.8,13-15.2,13H251.5z M261.7,300.4h6.9c2.2,0,5.4-1.5,5.4-6.3c0-3.6-2.4-6.3-5.9-6.3h-6.3V300.4z M261.7,321.9h5.7
+		c2.2,0,7.1-0.1,7.1-6.9c0-4.4-1.6-7-6.8-7h-6V321.9z"/>
+</g>
+</svg>

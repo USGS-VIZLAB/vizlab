@@ -34,7 +34,7 @@ info:
       email: mwernimont@usgs.gov
       affiliation: U.S. Geological Survey
   thumbnail:
-    url: img/vizlab06.png
+    url: https://owi.usgs.gov/vizlab/img/vizlab06.png
     width: 250
     height: 250
     alttext: VIZLAB
@@ -121,7 +121,7 @@ publish:
   - 
     id: landing
     name: index
-    template: fullPage
+    template: fullpage
     publisher: landing
     org: USGS-VIZLAB
     depends: [usgsHeader, owiNav, header, usgsFooter, thumbnail, usgsLogo, usgsBanner, jquery, appJS, landingCSS, owiCSS]

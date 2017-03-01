@@ -1,14 +1,14 @@
 <footer>
   <div class="footerContentAligner">
-    <a class="hotfix" href="https://github.com/USGS-VIZLAB/water-use" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
-      <div id="github-link">
-      	{{{github}}}
-    	  <p>The code used here is available on github</p>
-      </div>
-     </a>
+    <a href="{{github-url}}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+        <div id="github-link">
+        	{{{github-logo}}}
+      	  <p>The code used here is available on github</p>
+        </div>
+       </a>
     <div id="relatedVizzies">
     	<h3>Related Visualizations:</h3>
-    	
+
     	{{#vizzies}}
     		<a href="{{url}}" target="_blank">
     			<div class="relatedItem">

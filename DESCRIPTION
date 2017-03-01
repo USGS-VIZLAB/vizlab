@@ -18,10 +18,13 @@ BuildVignettes: true
 Depends:
     R (>= 3.0)
 Imports:
+    digest,
     grithub,
     httr,
+    imager,
     markdown,
     methods,
+    remotes,
     tools,
     whisker,
     xml2,

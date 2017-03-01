@@ -4,8 +4,8 @@
 \alias{getContentInfo}
 \title{Get information on a content item from the viz.yaml}
 \usage{
-getContentInfo(viz.id, block = c("fetch", "process", "visualize", "publish"),
-  no.match = c("stop", "NA"))
+getContentInfo(viz.id, block = c("fetch", "process", "visualize", "publish",
+  "resource"), no.match = c("stop", "NA"))
 }
 \arguments{
 \item{viz.id}{a length-1 character string giving the ID for a single content

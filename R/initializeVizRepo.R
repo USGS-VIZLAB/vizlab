@@ -10,11 +10,13 @@
 #' @param issue_json file path indicating the JSON file to be used to define what issues to create
 #' @param label_json file path indicating the JSON file to be used to define what labels to create
 #' 
+#' @importFrom grithub interactive.login
+#' @importFrom utils packageName
 #' @return URL for the new GitHub repository.
 #' @export
 initializeVizRepo <- function(repo_name, description, org="USGS-VIZLAB",
-                              issue_json=system.file("issuetemplates.json", package="vizlab"),
-                              label_json=system.file("labeltemplates.json", package="vizlab")){
+                              issue_json=system.file("issuetemplates.json", package=packageName()),
+                              label_json=system.file("labeltemplates.json", package=packageName())){
   
   # log in to GitHub & scope to read/write access for repos using profile.yaml
   # for additional scope info, see https://developer.github.com/v3/oauth/#scopes
@@ -47,7 +49,7 @@ initializeVizRepo <- function(repo_name, description, org="USGS-VIZLAB",
 #' @export
 createNewRepo <- function(repo_name, description, org="USGS-VIZLAB", ctx = get.github.context()){
   # check if this repo already exists
-  if(repo_name %in% vizlab:::getRepoNames(org=org)){
+  if(repo_name %in% getRepoNames(org=org)){
     stop(paste0("The repo `", repo_name, "` already exists within ", org))
   }
 
@@ -55,7 +57,7 @@ createNewRepo <- function(repo_name, description, org="USGS-VIZLAB", ctx = get.g
   new_repo <- create.organization.repository(org=org, name=repo_name, description=description, ctx=ctx)
   
   # make sure that it worked
-  stopifnot(repo_name %in% vizlab:::getRepoNames(org=org))
+  stopifnot(repo_name %in% getRepoNames(org=org))
   
   return(new_repo)
 }
@@ -74,7 +76,7 @@ createNewRepo <- function(repo_name, description, org="USGS-VIZLAB", ctx = get.g
 #' @export
 createNewLabels <- function(label_json, repo_name, org="USGS-VIZLAB", ctx = get.github.context()){
   # make sure that the repo exists
-  stopifnot(repo_name %in% vizlab:::getRepoNames(org=org))
+  stopifnot(repo_name %in% getRepoNames(org=org))
   
   label_content <- readLines(label_json)
   new_labels <- lapply(label_content, create.repository.label, owner=org, repo=repo_name, ctx=ctx)
@@ -96,7 +98,7 @@ createNewLabels <- function(label_json, repo_name, org="USGS-VIZLAB", ctx = get.
 #' @export
 createNewIssues <- function(issue_json, repo_name, org="USGS-VIZLAB", ctx = get.github.context()){
   # make sure that the repo exists
-  stopifnot(repo_name %in% vizlab:::getRepoNames(org=org))
+  stopifnot(repo_name %in% getRepoNames(org=org))
   
   # make issues from the issue template JSON file
   issue_content <- readLines(issue_json)

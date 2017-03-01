@@ -14,3 +14,4 @@ vignettes/*.pdf
 .httr-oauth
 .Rproj.user
 *.Rproj
+.DS_store

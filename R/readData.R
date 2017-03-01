@@ -16,6 +16,14 @@ readData <- function(viz) UseMethod("readData")
 #' @export
 readData.character <- function(viz) {
   viz <- as.viz(viz)
+  readData(viz)
+}
+
+#' \code{readData.viz} reads contents represented by vizlab object
+#'
+#' @rdname readData
+#' @export
+readData.viz <- function(viz) {
   viz <- as.reader(viz)
   sourceScripts('scripts/read')
   # call the readData method applicable to this item

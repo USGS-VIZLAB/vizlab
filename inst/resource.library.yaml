@@ -1,0 +1,153 @@
+
+### TEMPLATES ###
+
+-
+  id: brandcomment
+  location: templates/brandcomment.mustache
+  publisher: template
+  mimetype: text/mustache
+  context:
+-
+  id: externallink
+  location: templates/externallink.mustache
+  publisher: template
+  mimetype: text/mustache
+  context:
+    link:
+    text:
+-
+  id: footer-template
+  location: templates/footer.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    logo: lib-vizlab-logo
+    github-logo: lib-github-logo
+    css: lib-footer-css
+  context:
+    logo: logo
+    github-url:
+    github-logo: github-logo
+    resources: [ "css" ]
+    vizzies: []
+    blogs: []
+    blogsInFooter: false
+-
+  id: fullpage
+  location: templates/fullPage.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    brandcomment: brandcomment
+    semantics: semantics
+    vizlab-js: lib-vizlab-javascript
+    favicon: lib-vizlab-favicon
+  context:
+    info:
+    resources: [ favicon, vizlab-js ]
+    sections: []
+    footer: footer
+  partials:
+    brandcomment: brandcomment
+    semantics: semantics
+-
+  id: keynote
+  publisher: template
+  mimetype: text/mustache
+  location: templates/keynote.mustache
+  context:
+    id:
+    alttext:
+    content:
+-
+  id: list
+  publisher: template
+  mimetype: text/mustache
+  location: templates/list.mustache
+  context:
+    listItems: []
+-
+  id: printall
+  publisher: template
+  mimetype: text/mustache
+  location: templates/printall.mustache
+  context:
+    text:
+-
+  id: semantics
+  publisher: template
+  mimetype: text/mustache
+  location: templates/semantics.mustache
+  context:
+    name:
+    url:
+    thumbnail:
+      url:
+      alttext:
+      height:
+      width:
+      type:
+    description:
+    twitter:
+    owner:
+      name:
+      email:
+      affiliation:
+    contributors: []
+    audience:
+    keywords:
+-
+  id: simplefigure
+  publisher: template
+  mimetype: text/mustache
+  location: templates/simplefigure.mustache
+  context:
+    id:
+    figure:
+    caption:
+
+### RESOURCES ###
+
+-
+  id: lib-vizlab-favicon
+  location: images/favicon.ico
+  mimetype: image/ico
+  publisher: resource
+-
+  id: lib-vizlab-logo
+  location: images/atom.svg
+  mimetype: image/svg+xml
+  title: "Vizlab Logo"
+  alttext: "Vizlab Logo"
+  publisher: resource
+-
+  id: lib-github-logo
+  location: images/github.svg
+  mimetype: image/svg+xml
+  title: "Github Logo"
+  alttext: "Github Logo"
+  publisher: resource
+-
+  id: lib-vizlab-long
+  location: images/usgs-vizlab-long.svg
+  mimetype: image/svg+xml
+  title: "USGS Visualization Laboratory"
+  alttext: "USGS Visualization Laboratory"
+  publisher: resource
+-
+  id: lib-usgs-logo
+  location: images/usgsLogo.png
+  mimetype: image/png
+  title: "USGS"
+  alttext: "USGS"
+  publisher: resource
+-
+  id: lib-vizlab-javascript
+  location: js/vizlab.js
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-footer-css
+  location: css/footer.css
+  mimetype: text/css
+  publisher: resource
