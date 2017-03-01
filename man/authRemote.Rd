@@ -33,4 +33,3 @@ starts its own R session, an existing ScienceBase session cannot be used.
 \details{
 To add ScienceBase credentials, run the \code{storeSBcreds} function.
 }
-

@@ -99,6 +99,18 @@ export.resource <- function(viz) {
   return(file)
 }
 
+#' export thumbnail class to images
+#' @rdname export
+#' @export
+export.thumbnail <- function(viz) {
+  location <- viz[['location']]
+  file <- NULL
+  if (doExport(viz, FALSE)) {
+    file <- paste0(exportLocation(), "images/", basename(location))
+  }
+  return(file)
+}
+
 ### Utility functions provided by export
 
 #' Set where exports should be placed

@@ -15,4 +15,3 @@ POSIXct timestamp for vizlab object
 \description{
 Read an old timestamp for viz
 }
-

@@ -20,4 +20,3 @@ vizSkeleton(name="test", path=path)
 file.remove(path) # cleanup
 
 }
-

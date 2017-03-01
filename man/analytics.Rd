@@ -2,10 +2,10 @@
 % Please edit documentation in R/analytics.R
 \name{analytics}
 \alias{analytics}
-\alias{analytics.analytics}
-\alias{analytics.click}
-\alias{analytics.scroll}
 \alias{analytics.viz}
+\alias{analytics.analytics}
+\alias{analytics.scroll}
+\alias{analytics.click}
 \title{Generic function that will apply a particular analytics
 approach to a vizlab object}
 \usage{
@@ -39,4 +39,3 @@ when it is scrolled to
 Add an event handler for a user clicking on a visualization
 that causes an analytics event to occur
 }
-

@@ -15,4 +15,3 @@ getBlocks(block = c("vizlab", "info", "fetch", "process", "visualize",
 \description{
 Read vizlab config document and return specific blocks
 }
-

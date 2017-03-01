@@ -33,7 +33,51 @@ To build the example viz, your working directory should be set to the main examp
 ## Getting Started
 
 ### Viz design: the viz.yaml
-  The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  Here we will examine the `viz.yaml` included in the example viz:
+  The `viz.yaml` file manages all the different components of the viz, and is used to generate the `make` files that build the final published product.  `viz.yaml` contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz.  For each individual step, information is read from the `viz.yaml` and passed to the appropriate internal or external function as a `viz` object.  This is simply a list with elements for each field of that yaml section.  For example, this yaml section:
+```
+id: cars-data
+    location: cache/cars.csv
+    fetcher: cars
+    mimetype: text/csv
+    scripts: scripts/fetch/cars.R
+    refetch: TRUE
+```
+becomes this R list object:
+
+```{r, eval=FALSE}
+as.viz('cars-data')
+```  
+```
+$id
+[1] "cars-data"
+
+$location
+[1] "cache/cars.csv"
+
+$fetcher
+[1] "cars"
+
+$mimetype
+[1] "text/csv"
+
+$scripts
+[1] "scripts/fetch/cars.R"
+
+$refetch
+[1] TRUE
+
+$block
+[1] "fetch"
+
+$export
+[1] FALSE
+
+attr(,"class")
+[1] "viz"
+```
+The viz object will inherit additional classes as it passes through different functions.  For further information on how vizlab interacts with scripts, see the --------- vignette.
+
+Here we will examine the `viz.yaml` included in the example viz:
 
 ### Info
 ```
@@ -193,8 +237,26 @@ publish:
     location: layout/css/main.css
     publisher: resource
     mimetype: text/css
+  -
+    id: footer
+    publisher: footer
+    template: footer
+    depends: footer-style
+    blogsInFooter: TRUE
+    vizzies:
+      - name: Microplastics in the Great Lakes
+        org: USGS-VIZLAB
+        repo: great-lakes-microplastics
+      - name: Climate Change and Freshwater Fish
+        org: USGS-VIZLAB
+        repo: climate-fish-habitat
+    blogs: 
+      - name: Using the dataRetrieval Stats Service
+        url: https://owi.usgs.gov/blog/stats-service-map/
+        thumbLoc: https://owi.usgs.gov/blog/images/owi-mobile.png
+  
 ```
-  The publish step creates the finished viz product.  The first section applies to the viz as a whole. It is dependent on all the other publish sections for each figure and the text. `name` will be the name of the finished viz HTML file. Each section with a figure depends on the corresponding visualize section. Publishers and templates are used in each section of process, and correspond to the sections's content.  Default publisher R functions are stored in `publish.R` in the `vizlab` package, and default templates inside the vizlab package in `inst/templates`.  Templates are [mustache files](https://mustache.github.io/) that define how the text or image content is displayed in the final HTML.  For the example viz, the `section` publisher is used for every individual section, and `fullPage` publishes the full viz. Each section, including `index`, has a context section that defines the actual material to be used.  For figures it includes the caption.  Note that text-only sections can be included here as well, using the `printall` template (`text-section` above).  The `figure-style` section references CSS included with the example viz package.                        
+  The publish step creates the finished viz product.  The first section applies to the viz as a whole. It is dependent on all the other publish sections for each figure and the text. `name` will be the name of the finished viz HTML file. Each section with a figure depends on the corresponding visualize section. Publishers and templates are used in each section of process, and correspond to the sections's content.  Default publisher R functions are stored in `publish.R` in the `vizlab` package, and default templates inside the vizlab package in `inst/templates`.  Templates are [mustache files](https://mustache.github.io/) that define how the text or image content is displayed in the final HTML.  For the example viz, the `section` publisher is used for every individual section, and `fullPage` publishes the full viz. Each section, including `index`, has a context section that defines the actual material to be used.  For figures it includes the caption.  Note that text-only sections can be included here as well, using the `printall` template (`text-section` above).  The `figure-style` section references CSS included with the example viz package. The `footer` section builds a footer for the web page which may contain links to other visualizations or footers.  The `footer` publisher gets viz information from theirGithub repos, while blog information is specified directly.                    
   
 ### Setup
 
@@ -307,3 +369,6 @@ This will call the main makefile, which in turn calls the makefile for each sect
 
 ### Controlling the fetch section
   By default, the `refetch` option is set to `TRUE` in the `viz.yaml` for each section. `vizlab` checks the timestamps of online resources to see if the file or resource has changed since it was last fetched.  If the timestamp has changed, or a timestamp cannot be obtained, the data will be fetched again.  However, this may be undesireable in some scenarios.  To force `vizlab` to use the cached versions of remote files, set `refetch` to `FALSE` in the relevant sections of the `viz.yaml`.  Conversely, to force `vizlab` to refetch the data regardless of timestamps, set `refetch` to `TRUE` and delete the timestamps for each section.  These are stored in `vizlab/make/timestamps`.    
+  
+### Dependencies
+  R package dependencies are stored in the `required-packages` section of the `viz.yaml`, with a repository (CRAN or GRAN generally) and version number.  

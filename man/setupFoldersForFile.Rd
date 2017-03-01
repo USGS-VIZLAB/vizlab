@@ -12,4 +12,3 @@ setupFoldersForFile(file)
 \description{
 Sets up folders so file can be written without warnings
 }
-

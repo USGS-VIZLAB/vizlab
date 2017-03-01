@@ -3,8 +3,6 @@
 #' Determine the type and dispatch to that method to produce
 #' files to serve up as the final viz
 #'
-#' I've been thinking maybe switching 'x' to 'viz' would be more clear
-#'
 #' @param viz vizlab object or identifier
 #' @export
 publish <- function(viz) UseMethod("publish")
@@ -151,6 +149,23 @@ publish.ico <- function(viz) {
   return(html)
 }
 
+#' Add a font to the page
+#'
+#' @rdname publish
+#' @importFrom utils URLencode
+#' @export
+publish.googlefont <- function(viz) {
+  required <- c("family", "weight")
+  checkRequired(viz, required)
+  
+  families <- paste(URLencode(viz[["family"]]), collapse = "|")
+  weights <- paste(viz[["weight"]], collapse = ",")
+  googlefont <- "//fonts.googleapis.com/css"
+  html <- sprintf('<link href="%s?%s:%s" rel="stylesheet" type="text/css">',
+                  googlefont, families, weights)
+  return(html)
+}
+
 #' javascript publishing
 #' TODO allow for cdn js
 #'
@@ -239,7 +254,7 @@ publish.footer <- function(viz) {
      
     # if / is first char, treat as relative path. If not, treat as absolute path.
     if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
-      vizzies[[v]]$url <- paste0("https://owi.usgs.gov/vizlab", info$context$path)
+      vizzies[[v]]$url <- paste0(vizlab.pkg.env$baseURL, info$context$path)
       vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
     } else {
       vizzies[[v]]$url <- info$context$path
@@ -267,8 +282,11 @@ publish.landing <- function(viz){
   repos <- getRepoNames(viz[['org']])
   viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
   names(viz_info) <- repos
+  # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
-
+  # sort reverse chronological
+  viz_info <- viz_info[order(sapply(viz_info, '[[', 'publish-date'), decreasing=TRUE)]
+  
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
@@ -282,6 +300,54 @@ publish.landing <- function(viz){
   publish(pageviz)
 }
 
+#' check dimensions and size, publish thumbnail
+#'
+#' @rdname publish
+#' @export
+publish.thumbnail <- function(viz){
+  checkRequired(viz, required = c("for", "location"))
+  #compliance
+  #dimensions in pixels, file sizes in bytes!
+  if(tolower(viz[['for']]) == "facebook") {
+    maxSize <- 8388608
+    checkHeight <- 820
+    checkWidth <- 1560
+  } else if(tolower(viz[['for']]) == "twitter") {
+    maxSize <- 1048576
+    checkHeight <- 300
+    checkWidth <- 560
+  } else { #landing
+    maxSize <- 1048576
+    checkHeight <- 400
+    checkWidth <- 400
+  }
+  dims <- checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
+                       checkHeight = checkHeight, checkWidth = checkWidth)
+  #send to other publishers if all ok
+  viz <- NextMethod()
+  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
+  viz[['width']] <- dims[['width']]
+  viz[['height']] <- dims[['height']]
+}
+
+#' helper to check thumbnail compliance
+#' @importFrom imager load.image width height
+#' @param file char Name of thumbnail file
+#' @param maxSize numeric Max size in bytes 
+#' @param checkHeight numeric Height in pixels to enforce
+#' @param checkWidth numeric Width in pixels to enforce
+checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
+  fileSize <- file.info(file)
+  im <- imager::load.image(file)
+  width <- imager::width(im)
+  height <- imager::height(im)
+  if(fileSize > maxSize || width != checkWidth || height != checkHeight) {
+    stop(paste("Thumbnail", file, "does not meet site requirements"))
+  }
+ 
+  return(c(width = width, height = height))
+}
+
 #' coerce to a publisher
 #' @param viz object describing publisher
 #' @param ... not used, just for consistency
@@ -289,9 +355,12 @@ publish.landing <- function(viz){
 as.publisher <- function(viz, ...) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
-  class(viz) <- c(publisher, "publisher", class(viz))
-  if (publisher == "resource") {
+  class(viz) <- c("publisher", class(viz))
+  notResources <- c("page", "section", "footer", "landing", "googlefont")
+  if (!publisher %in% notResources) {
     viz <- as.resource(viz)
+  } else {
+    class(viz) <- c(publisher, class(viz))
   }
   return(viz)
 }
@@ -310,8 +379,12 @@ as.resource <- function(viz, ...) {
     warning(mimetype, " will be treated as data: ", viz[['id']])
     resource <- "data"
   }
-
-  class(viz) <- c(resource, class(viz))
+  if ("publisher" %in% names(viz) && viz[['publisher']] == "thumbnail") {
+    class(viz) <- c("thumbnail","resource", class(viz))
+  } else {
+    class(viz) <- c(resource, "resource",class(viz))
+  }
+  
   return(viz)
 }
 

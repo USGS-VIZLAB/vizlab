@@ -2,13 +2,14 @@
 % Please edit documentation in R/export.R
 \name{export}
 \alias{export}
-\alias{export.css}
-\alias{export.ico}
-\alias{export.img}
-\alias{export.js}
 \alias{export.page}
-\alias{export.resource}
+\alias{export.img}
+\alias{export.ico}
 \alias{export.svg}
+\alias{export.js}
+\alias{export.css}
+\alias{export.resource}
+\alias{export.thumbnail}
 \title{Export content to target}
 \usage{
 export(viz)
@@ -26,6 +27,8 @@ export(viz)
 \method{export}{css}(viz)
 
 \method{export}{resource}(viz)
+
+\method{export}{thumbnail}(viz)
 }
 \arguments{
 \item{viz}{object to export}
@@ -43,9 +46,10 @@ a list of pages named according to different formats
 (tags, media type, language, etc.)
 
 Default export, defaults to not export
+
+export thumbnail class to images
 }
 \details{
 Currently the publish phase is responsible for exporting,
 but this could be separated in the future.
 }
-

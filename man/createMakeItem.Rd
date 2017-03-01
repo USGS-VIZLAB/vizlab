@@ -4,10 +4,10 @@
 \alias{createMakeItem}
 \alias{createMakeItem.default}
 \alias{createMakeItem.fetch}
-\alias{createMakeItem.makefile}
 \alias{createMakeItem.process}
-\alias{createMakeItem.publish}
 \alias{createMakeItem.visualize}
+\alias{createMakeItem.publish}
+\alias{createMakeItem.makefile}
 \title{Make a collection of makefile rules appropriate to a data/figure item}
 \usage{
 createMakeItem(item.info, ...)
@@ -47,4 +47,3 @@ publish block of viz.yaml
 \code{createMakeItem.visualize}: create makefile rules for an item in the
 visualize block of viz.yaml
 }
-

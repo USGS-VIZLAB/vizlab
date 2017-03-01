@@ -17,4 +17,3 @@ list of context with dependencies injected
 \description{
 Build context for templating
 }
-

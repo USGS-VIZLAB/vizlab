@@ -20,6 +20,7 @@ Depends:
 Imports:
     grithub,
     httr,
+    imager,
     markdown,
     methods,
     tools,
@@ -33,4 +34,4 @@ Suggests:
     rmarkdown,
     sbtools (>= 0.19.3),
     testthat
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

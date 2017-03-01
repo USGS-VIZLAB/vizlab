@@ -15,4 +15,3 @@ character vector template contents
 \description{
 Internal function to get shared templates
 }
-

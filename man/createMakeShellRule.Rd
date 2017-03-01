@@ -17,4 +17,3 @@ createMakeShellRule(target, depends = c(), cmd)
 The shell command will be called exactly as-is
 }
 \keyword{internal}
-

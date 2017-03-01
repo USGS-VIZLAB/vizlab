@@ -14,4 +14,3 @@ as.publisher(viz, ...)
 \description{
 coerce to a publisher
 }
-

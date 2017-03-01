@@ -9,4 +9,3 @@ createMakeMacros()
 \description{
 Create a character string defining the macros to include in every makefile
 }
-
