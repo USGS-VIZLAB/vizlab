@@ -52,6 +52,9 @@ info:
     wateRuse:
       repo: GRAN
       version: 1.0.4
+    crazy:
+      repo: CRAN
+      version: 20.11.45
 fetch:
   -
     id: siteTextData
