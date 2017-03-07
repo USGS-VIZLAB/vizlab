@@ -36,8 +36,6 @@ publish.page <- function(viz) {
 
   dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
-  # TODO handle accessing nested dependencies elsewhere
-
   # also manually put resources into context
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
@@ -70,7 +68,8 @@ publish.section <- function(viz) {
   dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
   context <- replaceOrAppend(template[['context']], viz[['context']])
-
+  context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
+  
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
@@ -81,11 +80,15 @@ publish.section <- function(viz) {
     viz <- analytics(viz)
   }
   if (!is.null(viz[['embed']]) && isTRUE(viz[['embed']])) {
-    file <- "embedlocation"
-    embedTmpl <- readTemplate("embed")
+    file <- export(viz)
+    setupFoldersForFile(file)
+    
+    embedTmpl <- template("embed")
     context[['embed']] <- viz[['output']]
-    cat(whisker.render(template=embedTempl, data=context), file = file)
-    viz[['output']] <- wrapEmbed(viz[['output']])
+    render(embedTmpl, data = context, file = file)
+    
+    # viz[['output']] <- wrapEmbed(viz[['output']])
+    # wrap or add embed links to page
   }
   return(viz[['output']])
 }

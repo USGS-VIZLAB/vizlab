@@ -200,16 +200,6 @@ uniqueness <- function() {
   return(rng)
 }
 
-#' Wrap an html block in a div that allows to embed url
-#' 
-#' @param html html block to wrap
-#' @param url url to link to with wrapper
-#' @return wrapped html
-wrapEmbed <- function(html, url) {
-  # load template wrappedembed and build it
-  return()
-}
-
 #' Append second list to first with overwrites
 #'
 #' @param x list template to be filled by values of another list
