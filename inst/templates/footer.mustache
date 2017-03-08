@@ -1,29 +1,43 @@
-<footer>
-  <div class="footerContentAligner">
-    <a href="{{github-url}}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
-        <div id="github-link">
-        	{{{github-logo}}}
-      	  <p>The code used here is available on github</p>
-        </div>
-       </a>
-    <div id="relatedVizzies">
-    	<h3>Related Visualizations:</h3>
 
-    	{{#vizzies}}
+  <div class="footerContentAligner">
+  
+    <div class="usgsLogoFooterArea">
+      <a href="https://usgs.gov" target="_blank">
+        {{{usgsLogo}}}
+      </a>
+    </div>
+    
+    <div class="footerMenu">
+      <a href="https://owi.usgs.gov/vizlab/" target="_blank">
+        <p>About Us</p>
+      </a>
+      <a href="{{github-url}}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+        <p>Get the Code</p>
+      </a>
+      <a href="https://owi.usgs.gov/" target="_blank">
+        <p>Office of Water Information</p>
+      </a>
+      <a href="mailto:vizlab@usgs.gov">
+        <p>Contact Us</p>
+      </a>
+    </div>
+    
+    <div id="relatedVizzies">
+      <!--{{#vizzies}}-->
     		<a href="{{url}}" target="_blank">
     			<div class="relatedItem">
+    			<div class="footerThumnail">
+    					<img src="{{thumbLoc}}" alt=""/>
+    				</div>
     			  <div class="titleHandler">
     				  <h4>{{name}}</h4>
     				</div>
-    				<div class="footerThumnail">
-    					<img src="{{thumbLoc}}" alt=""/>
-    				</div>
     			</div>
     		</a>
-    	{{/vizzies}}
+    	<!--{{/vizzies}}-->
     </div>
-  
-  {{#blogsInFooter}}
+    
+   <!-- {{#blogsInFooter}}
   <div id="relatedBlogs">
   	<h3>Related Blogs:</h3>
   	
@@ -41,11 +55,7 @@
   	{{/blogs}}
   	
   </div>
-  {{/blogsInFooter}}
-  
-  	<div id="vizlabPromo">
-      <p>This interactive data visualization was created by <strong>USGS VIZLAB</strong></p>
-    	{{{logo}}}
-    </div>
+  {{/blogsInFooter}}-->
+    
   </div>
-</footer>
+

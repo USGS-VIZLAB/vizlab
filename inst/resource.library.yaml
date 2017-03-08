@@ -22,10 +22,12 @@
   mimetype: text/mustache
   depends:
     logo: lib-vizlab-logo
+    usgsLogo: lib-usgs-logo
     github-logo: lib-github-logo
     css: lib-footer-css
   context:
     logo: logo
+    usgsLogo: usgsLogo
     github-url:
     github-logo: github-logo
     resources: [ "css" ]
@@ -107,7 +109,6 @@
     caption:
 
 ### RESOURCES ###
-
 -
   id: lib-vizlab-favicon
   location: images/favicon.ico
@@ -145,6 +146,11 @@
   id: lib-vizlab-javascript
   location: js/vizlab.js
   mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-header-css
+  location: css/header.css
+  mimetype: text/css
   publisher: resource
 -
   id: lib-footer-css
