@@ -35,6 +35,23 @@ export.page <- function(viz) {
   return(file)
 }
 
+export.section <- function(viz) {
+  if (!isTRUE(viz[['embed']])) {
+    warning("cannot export section except for embeds")
+  }
+  name <- viz[['id']]
+  if ("name" %in% names(viz)) {
+    name <- viz[['name']]
+  }
+  
+  file <- NULL
+  if (doExport(viz, default = TRUE)) {
+    file <- paste0(exportLocation(), "embed/", name, ".html")
+  }
+  
+  return(file)
+}
+
 #' @rdname export
 #' @export
 export.img <- function(viz) {

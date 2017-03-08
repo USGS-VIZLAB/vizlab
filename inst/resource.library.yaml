@@ -53,6 +53,19 @@
     brandcomment: brandcomment
     semantics: semantics
 -
+  id: embed
+  location: templates/embed.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+  context:
+    info:
+    resources: [ favicon, vizlab-js ]
+    embed:
+  partials:
+    brandcomment: brandcomment
+    semantics: semantics
+-
   id: keynote
   publisher: template
   mimetype: text/mustache
