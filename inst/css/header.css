@@ -1,0 +1,25 @@
+#header{
+	background:rgb(0,51,102);
+	color:#fff;
+	height:32px;
+	padding:8px  0 0 10px;
+	border-bottom:5px solid rgb(210,210,210);
+	font-family:"Source Sans Pro", sans-serif;
+	}
+	
+p {
+  font-size:1.2em;
+  line-height:1.5em;
+}
+#header h3{
+	padding-top:3px;
+	font-size:0.9em;
+	font-weight:400;
+	}
+	
+#header img{
+	float:left;
+	margin-right:5px;
+	width:80px;
+	}
+	
