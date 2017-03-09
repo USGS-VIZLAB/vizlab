@@ -22,40 +22,44 @@
       </a>
     </div>
     
-    <div id="relatedVizzies">
-      {{#vizzies}}
+    <div id="relatedItems">
+    
+      <div id="relatedVizzies">
+        {{#vizzies}}
+      		<a href="{{url}}" target="_blank">
+      			<div class="relatedItem">
+      			<div class="footerThumnail">
+      					<img src="{{thumbLoc}}" alt=""/>
+      				</div>
+      			  <div class="titleHandler">
+      				  <h4>{{name}}</h4>
+      				</div>
+      			</div>
+      		</a>
+      	{{/vizzies}}
+      </div>
+      
+    {{#blogsInFooter}}
+    <div id="relatedBlogs">
+    	<h3>Related Blogs:</h3>
+    	
+    	{{#blogs}}
     		<a href="{{url}}" target="_blank">
     			<div class="relatedItem">
-    			<div class="footerThumnail">
-    					<img src="{{thumbLoc}}" alt=""/>
+    				<div class="titleHandler">
+    					<h4>{{name}}</h4>
     				</div>
-    			  <div class="titleHandler">
-    				  <h4>{{name}}</h4>
+    				<div class="footerThumnail blog">
+    					<img src="{{thumbLoc}}" alt=""/>
     				</div>
     			</div>
     		</a>
-    	{{/vizzies}}
+    	{{/blogs}}
+    	
     </div>
+    {{/blogsInFooter}}
+  
+  </div><!--relatedItems-->
     
-   <!-- {{#blogsInFooter}}
-  <div id="relatedBlogs">
-  	<h3>Related Blogs:</h3>
-  	
-  	{{#blogs}}
-  		<a href="{{url}}" target="_blank">
-  			<div class="relatedItem">
-  				<div class="titleHandler">
-  					<h4>{{name}}</h4>
-  				</div>
-  				<div class="footerThumnail blog">
-  					<img src="{{thumbLoc}}" alt=""/>
-  				</div>
-  			</div>
-  		</a>
-  	{{/blogs}}
-  	
-  </div>
-  {{/blogsInFooter}}-->
-    
-  </div>
+</div>
 
