@@ -40,7 +40,8 @@ footer a:active{
   font-size:.95em;
 }
 
-#relatedVizzies{
+#relatedVizzies,
+#relatedBlogs{
   min-height:40px;
   padding:10px;
   text-align:center;
@@ -51,7 +52,7 @@ footer a:active{
 }
 
 .footerThumnail{
-  background:lime;
+  background:#fff;
   width:100px;
   height:150px;
   margin:0 auto;
@@ -60,6 +61,11 @@ footer a:active{
 .footerThumnail img{
   width:100%;
   height:100%;
+}
+
+.blog img{
+  width:100%;
+  height:auto;
 }
 
 @media screen and (min-width:768px){
@@ -74,14 +80,18 @@ footer a:active{
     flex:1;
   }
   
-  #relatedVizzies{
+  #relatedItems{
     flex:2;
     display:flex;
     flex-direction:row;
   }
   
-  .relatedItem{
+  #relatedVizzies,
+  #relatedBlogs{
     flex:1;
+  }
+  
+  #relatedVizzies{
     margin-right:10px;
   }
   
