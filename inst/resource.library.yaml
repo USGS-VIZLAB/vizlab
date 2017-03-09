@@ -15,6 +15,20 @@
   context:
     link:
     text:
+    
+-
+  id: header-template
+  location: templates/header.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    usgsLogo: lib-usgs-logo
+    css: lib-header-css
+  context:
+    id: header
+    usgsLogo: usgsLogo
+    title: test
+    resources: ["css"]
 -
   id: footer-template
   location: templates/footer.mustache
@@ -22,10 +36,12 @@
   mimetype: text/mustache
   depends:
     logo: lib-vizlab-logo
+    usgsLogo: lib-usgs-logo
     github-logo: lib-github-logo
     css: lib-footer-css
   context:
     logo: logo
+    usgsLogo: usgsLogo
     github-url:
     github-logo: github-logo
     resources: [ "css" ]
@@ -47,6 +63,20 @@
     resources: [ favicon, vizlab-js ]
     sections: []
     footer: footer
+    header: header
+  partials:
+    brandcomment: brandcomment
+    semantics: semantics
+-
+  id: embed
+  location: templates/embed.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+  context:
+    info:
+    resources: [ favicon, vizlab-js ]
+    embed:
   partials:
     brandcomment: brandcomment
     semantics: semantics
@@ -107,7 +137,6 @@
     caption:
 
 ### RESOURCES ###
-
 -
   id: lib-vizlab-favicon
   location: images/favicon.ico
@@ -145,6 +174,11 @@
   id: lib-vizlab-javascript
   location: js/vizlab.js
   mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-header-css
+  location: css/header.css
+  mimetype: text/css
   publisher: resource
 -
   id: lib-footer-css

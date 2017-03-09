@@ -14,12 +14,11 @@
     {{>semantics}}
   {{/info}}
   <title>{{ info.name }}</title>
-  <!-- How do we want to declare the font to replace this -->
-  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
   {{#resources }}
     {{{ . }}}
   {{/resources }}
   <noscript>Javascript is not enabled</noscript>
+  <script type="application/javascript" src="https://www2.usgs.gov/scripts/analytics/usgs-analytics.js"></script>
   {{#info}}
     {{#analytics-id}}
     <script>
@@ -37,20 +36,8 @@
 </head>
 <body>
 
-{{#header}}
-  {{{header}}}
-{{/header}}
-
-{{#sections }}
-  {{{ . }}}
-{{/sections }}
-{{#footer}}
-  <footer>
-    {{{footer}}}
-  </footer>
-{{/footer}}
+  {{{ embed }}}
 
 </body>
 
 </html>
-
