@@ -15,6 +15,20 @@
   context:
     link:
     text:
+    
+-
+  id: header-template
+  location: templates/header.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    usgsLogo: lib-usgs-logo
+    css: lib-header-css
+  context:
+    id: header
+    usgsLogo: usgsLogo
+    title: test
+    resources: ["css"]
 -
   id: footer-template
   location: templates/footer.mustache
@@ -49,6 +63,7 @@
     resources: [ favicon, vizlab-js ]
     sections: []
     footer: footer
+    header: header
   partials:
     brandcomment: brandcomment
     semantics: semantics
