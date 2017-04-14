@@ -48,6 +48,7 @@ publish.page <- function(viz) {
 
   file <- export(viz)
   render(template, context, file)
+  return(relativePath(file))
 }
 
 #' publish a section
