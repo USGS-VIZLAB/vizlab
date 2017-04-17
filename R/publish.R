@@ -379,8 +379,7 @@ as.publisher <- function(viz, ...) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
   class(viz) <- c("publisher", class(viz))
-  notResources <- c("page", "section", "footer", "landing", "googlefont", "template")
-  if (!publisher %in% notResources) {
+  if (publisher %in% c("resource", "thumbnail")) {
     viz <- as.resource(viz)
   } else if (publisher == "template") {
     viz <- as.template(viz)
