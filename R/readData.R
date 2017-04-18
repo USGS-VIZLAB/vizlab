@@ -25,9 +25,14 @@ readData.character <- function(viz) {
 #' @export
 readData.viz <- function(viz) {
   viz <- as.reader(viz)
-  sourceScripts('scripts/read')
-  # call the readData method applicable to this item
-  readData(viz)
+  if (isTRUE(viz[['_stop_recursion_']])) {
+    readData.filepath(viz) # default
+  } else {
+    viz[['_stop_recursion_']] <- TRUE
+    sourceScripts('scripts/read')
+    # call the readData method applicable to this item
+    readData(viz)
+  }
 }
 
 #' \code{readData.tabular} reads a text file.
@@ -82,14 +87,12 @@ readData.rds <- function(viz){
   return(rds)
 }
 
-#' \code{readData.filepath} returns the file path
+#' \code{readData.filepath} returns the file path or null if location is not set
 #'
 #' @rdname readData
 #' @export
 readData.filepath <- function(viz){
-  required <- c("location")
-  checkRequired(viz, required)
-
+  # returns NULL if missing
   return(viz[['location']])
 }
 

@@ -63,7 +63,7 @@ assigned a class to route it to a more specific reader
 
 \code{readData.RDS} reads an R object saved as an RDS.
 
-\code{readData.filepath} returns the file path
+\code{readData.filepath} returns the file path or null if location is not set
 
 \code{readData.folder} returns names of files inside a folder
 
