@@ -38,6 +38,8 @@ readDepends.list <- function(viz){
 readDepends.viz <- function(viz){
   viz.ids <- viz[['depends']]
   depends <- lapply(viz.ids, readData)
-  names(depends) <- viz.ids
+  if (is.null(names(depends)) {
+    names(depends) <- viz.ids
+  }
   return(depends)
 }
