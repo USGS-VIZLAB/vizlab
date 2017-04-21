@@ -32,6 +32,8 @@ library(vizlab)
 
 #optional, profile.yaml only needs to exist in one place on your computer
 createProfile() 
+# for Windows user:
+createProfile("~/../.vizlab")
 
 # to create and initialize the GitHub repository (includes standard issues)
 initializeVizRepo(repo_name="myFirstViz", description="This is the GitHub repo for my first viz.")
@@ -40,6 +42,20 @@ initializeVizRepo(repo_name="myFirstViz", description="This is the GitHub repo f
 vizSkeleton(name="my awesome viz")
 createMakefiles() 
 ```
+
+Then, from the terminal/shell:
+```
+make
+```
+or...individual sections can be done:
+
+```
+make vizlab/make/fetch.make
+make vizlab/make/process.make
+make vizlab/make/visualize.make
+make vizlab/make/publish.make
+```
+
 
 ## Adding your own mimetypes
 To specify your own mimetypes (or override defaults), create a `.yaml` to specify the mimetype and it's corresponding reader, publisher, or resource (see inst/mimetypes.default.yaml for example structure). Then add the filename to your `viz.yaml` file under info with the name `mimetypeDictionary`.

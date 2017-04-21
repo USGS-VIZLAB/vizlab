@@ -46,6 +46,9 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
   safe.dir.create(file.path(script_dir, "visualize"), createEmpty=TRUE)
   safe.dir.create(file.path(script_dir, "read"), createEmpty=TRUE)
 
+  file.copy(file.path(system.file("img", package="vizlab"),"favicon.ico"),
+            file.path(file.path(path, "images"),"favicon.ico"))
+  
   # Write viz.yaml
   if(file.exists(file.path(path, 'viz.yaml'))) {
     message("viz.yaml already exists; leaving as-is")

@@ -133,6 +133,10 @@ publish.img <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
+  index_fav <- 'target/img'
+  if(!dir.exists(index_fav)) dir.create(index_fav, recursive=TRUE)
+  file.copy(from=system.file('img/favicon.ico', package="vizlab"), to=index_fav)
+  
   html <- NULL
   if (!is.na(viz[['relpath']])) {
     alt.text <- viz[['alttext']]
