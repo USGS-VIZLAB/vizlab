@@ -70,7 +70,7 @@ publish.section <- function(viz) {
 
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
-  
+
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
@@ -83,11 +83,11 @@ publish.section <- function(viz) {
   if (!is.null(viz[['embed']]) && isTRUE(viz[['embed']])) {
     file <- export(viz)
     setupFoldersForFile(file)
-    
+
     embedTmpl <- template("embed")
     context[['embed']] <- viz[['output']]
     render(embedTmpl, data = context, file = file)
-    
+
     # viz[['output']] <- wrapEmbed(viz[['output']])
     # wrap or add embed links to page
   }
@@ -138,8 +138,12 @@ publish.img <- function(viz) {
     alt.text <- viz[['alttext']]
     relative.path <- viz[['relpath']]
     title.text <- viz[['title']]
-    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s" />', relative.path, uniqueness(),
-                    alt.text, title.text)
+    img.class <- ifelse(is.null(viz[['class']]), "",
+                        paste0(" class=\"",
+                          paste0(viz[['class']], collapse=" "),
+                        "\""))
+    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s"%s />', relative.path, uniqueness(),
+                    alt.text, title.text, img.class)
   }
   return(html)
 }
@@ -170,7 +174,7 @@ publish.ico <- function(viz) {
 publish.googlefont <- function(viz) {
   required <- c("family", "weight")
   checkRequired(viz, required)
-  
+
   families <- paste(URLencode(viz[["family"]]), collapse = "|")
   weights <- paste(viz[["weight"]], collapse = ",")
   googlefont <- "//fonts.googleapis.com/css"
@@ -299,7 +303,7 @@ publish.landing <- function(viz){
   viz_info <- viz_info[!sapply(viz_info, is.null)]
   # sort reverse chronological
   viz_info <- viz_info[order(sapply(viz_info, '[[', 'publish-date'), decreasing=TRUE)]
-  
+
   pageviz <- viz
   names(pageviz$depends) <- pageviz$depends
   pageviz$depends <- as.list(pageviz$depends)
@@ -356,7 +360,7 @@ publish.thumbnail <- function(viz){
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
 #' @param file char Name of thumbnail file
-#' @param maxSize numeric Max size in bytes 
+#' @param maxSize numeric Max size in bytes
 #' @param checkHeight numeric Height in pixels to enforce
 #' @param checkWidth numeric Width in pixels to enforce
 checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
@@ -367,7 +371,7 @@ checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
   if(fileSize > maxSize || width != checkWidth || height != checkHeight) {
     stop(paste("Thumbnail", file, "does not meet site requirements"))
   }
- 
+
   return(c(width = width, height = height))
 }
 
@@ -416,6 +420,6 @@ as.resource <- function(viz, ...) {
   } else {
     class(viz) <- c(resource, "resource",class(viz))
   }
-  
+
   return(viz)
 }
