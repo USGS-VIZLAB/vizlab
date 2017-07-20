@@ -123,7 +123,7 @@ readData.folder <- function(viz){
   return(data_list)
 }
 
-#' \code{readData.txt} returns names of files inside a folder
+#' \code{readData.txt} returns contents of file as character
 #'
 #' @rdname readData
 #' @export
@@ -131,7 +131,9 @@ readData.txt <- function(viz){
   required <- c("location")
   checkRequired(viz, required)
 
-  txt <- scan(viz[['location']], what = "character", sep = "\n", quiet = TRUE)
+  if(!requireNamespace('readr', quietly = TRUE)) stop("package readr is required for readData.txt")
+
+  txt <- readr::read_file(viz[['location']])
   return(txt)
 }
 

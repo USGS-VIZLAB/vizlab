@@ -32,6 +32,7 @@ Imports:
 Suggests:
     data.table,
     knitr,
+    readr,
     readxl,
     rmarkdown,
     sbtools (>= 0.19.3),
