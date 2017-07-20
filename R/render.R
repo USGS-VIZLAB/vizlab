@@ -12,7 +12,7 @@ render <- function(viz, data, file) UseMethod("render")
 #' @importFrom whisker whisker.render
 #' @export
 render.template <- function(viz, data, file = NULL) {
-  partials <- sapply(viz[['partials']], function(x) {
+  partials <- lapply(viz[['partials']], function(x) {
     t <- template(x)
     return(t[['template']])
   })
