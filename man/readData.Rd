@@ -67,7 +67,7 @@ assigned a class to route it to a more specific reader
 
 \code{readData.folder} returns names of files inside a folder
 
-\code{readData.txt} returns names of files inside a folder
+\code{readData.txt} returns contents of file as character
 
 Can either be a single markdown file, specified with mimetype: text/markdown
 or markdown contained in yaml with mimetype: text/yaml
