@@ -53,10 +53,13 @@ createProfile <- function(directory = "~/.vizlab", overwrite = FALSE){
 #' @keywords internal
 createProfile.Windows <- function(file_dir){
   profile.yaml <- file(file.path(file_dir, "profile.yaml"))
-  cat(sprintf('SHELL: %s\n', normalizePath(Sys.which('sh.exe'), winslash='/')),
-      sprintf('R: %s\n', normalizePath(Sys.which('R.exe'), winslash='/')),
-      sprintf('RSCRIPT: %s\n', normalizePath(Sys.which('Rscript.exe'), winslash='/')),
-      sprintf('R_LIBS_USER: %s\n', normalizePath(.libPaths()[1], winslash='/')),
+  bashpath <- function(path) {
+    gsub(' ', '\\ ', normalizePath(path, winslash='/'), fixed=TRUE)
+  }
+  cat(sprintf('SHELL: %s\n', bashpath(Sys.which('sh.exe'))),
+      sprintf('R: %s\n', bashpath(Sys.which('R.exe'))),
+      sprintf('RSCRIPT: %s\n', bashpath(Sys.which('Rscript.exe'))),
+      sprintf('R_LIBS_USER: %s\n', bashpath(.libPaths()[1])),
       file = profile.yaml, sep = "")
   close(profile.yaml)
 }
