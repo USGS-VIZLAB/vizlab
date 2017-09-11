@@ -86,6 +86,8 @@ publish.section <- function(viz) {
 
     embedTmpl <- template("embed")
     context[['embed']] <- viz[['output']]
+    context[['resources']] <- lapply(context[['resources']], gsub, pattern = '(href="|src=")(css|js|images)', 
+                                     replacement = '\\1../\\2')
     render(embedTmpl, data = context, file = file)
 
     # viz[['output']] <- wrapEmbed(viz[['output']])
