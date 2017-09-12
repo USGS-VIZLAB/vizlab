@@ -438,7 +438,8 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
   if(!is.null(data.file) && grepl(" ", data.file)) data.file <- dquote(data.file)
   dep.files <- c(
     item.info$depfiles, # depfiles get listed as dependencies but not read in or passed to the function
-    sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+    sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE),
+    file.path("cache","config",paste0(item.info$id,".rds"))
   )
   #dep.args <- sapply(item.info$depends, function(dep) paste0("readData('", dep, "')" ))
 
@@ -449,7 +450,7 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
     depends=data.file)
   rules$file.data <- createMakeBatchRule(
     target=data.file,
-    depends=c(dep.files,file.path("cache","config",paste0(item.info$id,".rds"))),
+    depends=dep.files,
     fun=block,
     funargs=c(viz=squote(item.info$id)),
     scripts=item.info$scripts,
