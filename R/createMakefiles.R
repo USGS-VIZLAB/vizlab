@@ -449,7 +449,7 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
     depends=data.file)
   rules$file.data <- createMakeBatchRule(
     target=data.file,
-    depends=dep.files,
+    depends=c(dep.files,file.path("cache","config",paste0(item.info$id,".rds"))),
     fun=block,
     funargs=c(viz=squote(item.info$id)),
     scripts=item.info$scripts,
