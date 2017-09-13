@@ -4,7 +4,8 @@
 \alias{createMakeBlockRules}
 \title{Create the make rules for a block of the viz.yaml}
 \usage{
-createMakeBlockRules(block = c("fetch", "process", "visualize", "publish"))
+createMakeBlockRules(block = c("global", "fetch", "process", "visualize",
+  "publish"))
 }
 \arguments{
 \item{block}{character name of the block for which to create the make rules}

@@ -9,6 +9,7 @@
 \alias{readData.excel}
 \alias{readData.rds}
 \alias{readData.filepath}
+\alias{readData.global}
 \alias{readData.folder}
 \alias{readData.txt}
 \alias{readData.md}
@@ -30,6 +31,8 @@ readData(viz)
 \method{readData}{rds}(viz)
 
 \method{readData}{filepath}(viz)
+
+\method{readData}{global}(viz)
 
 \method{readData}{folder}(viz)
 
@@ -64,6 +67,8 @@ assigned a class to route it to a more specific reader
 \code{readData.RDS} reads an R object saved as an RDS.
 
 \code{readData.filepath} returns the file path or null if location is not set
+
+\code{readData.global} returns the file path or null if location is not set
 
 \code{readData.folder} returns names of files inside a folder
 

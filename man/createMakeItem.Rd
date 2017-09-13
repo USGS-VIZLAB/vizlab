@@ -5,6 +5,7 @@
 \alias{createMakeItem.default}
 \alias{createMakeItem.fetch}
 \alias{createMakeItem.process}
+\alias{createMakeItem.global}
 \alias{createMakeItem.visualize}
 \alias{createMakeItem.publish}
 \alias{createMakeItem.makefile}
@@ -17,6 +18,8 @@ createMakeItem(item.info, ...)
 \method{createMakeItem}{fetch}(item.info, ...)
 
 \method{createMakeItem}{process}(item.info, ...)
+
+\method{createMakeItem}{global}(item.info, ...)
 
 \method{createMakeItem}{visualize}(item.info, ...)
 
@@ -37,6 +40,9 @@ of viz.yaml
 
 \code{createMakeItem.process}: create makefile rules for an item in the
 process block of viz.yaml
+
+\code{createMakeItem.global}: create makefile rules for an item in the
+global block of viz.yaml
 
 \code{createMakeItem.visualize}: create makefile rules for an item in the
 visualize block of viz.yaml

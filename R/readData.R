@@ -96,6 +96,14 @@ readData.filepath <- function(viz){
   return(viz[['location']])
 }
 
+#' \code{readData.global} returns the file path or null if location is not set
+#'
+#' @rdname readData
+#' @export
+readData.global <- function(viz){
+  return(viz)
+}
+
 #' \code{readData.folder} returns names of files inside a folder
 #'
 #' @rdname readData

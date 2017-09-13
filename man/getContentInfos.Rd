@@ -4,8 +4,8 @@
 \alias{getContentInfos}
 \title{Get information on one or more content items from the viz.yaml}
 \usage{
-getContentInfos(viz.id, block = c("fetch", "process", "visualize", "publish",
-  "resource"))
+getContentInfos(viz.id, block = c("global", "fetch", "process", "visualize",
+  "publish", "resource"))
 }
 \arguments{
 \item{viz.id}{character[s] giving specific IDs of items to return, or missing
