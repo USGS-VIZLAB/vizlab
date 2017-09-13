@@ -146,6 +146,9 @@ createConfigCall <- function(){
     "cache/config/%.rds : viz.yaml",
     '\texport R_LIBS_USER=$(RLIBSUSER);\\',
     '\t${RSCRIPT}  -e "library(vizlab); updateConfigInfoFile(\'$*\')"\\',
+    '\t> vizlab/make/log/config.Rout 2>&1'),
+    # each target overwrites the last b/c i don't expect to debug it often,
+    # don't want a bazillion extra files
     collapse='\n')
 }
 
