@@ -143,9 +143,12 @@ createBlockMakefile <- function(block=c('fetch','process','visualize','publish')
 createConfigCall <- function(){
   
   paste(c(
-    "cache/config/%.rds : viz.yaml",
-    sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
-    sprintf('\t${RSCRIPT}  -e \'library(vizlab); updateConfigInfoFile("$*")\'')),
+    "vizlab/make/config/%.rds : viz.yaml",
+    '\texport R_LIBS_USER=$(RLIBSUSER);\\',
+    '\t${RSCRIPT}  -e "library(vizlab); updateConfigInfoFile(\'$*\')"\\',
+    '\t> vizlab/make/log/config.Rout 2>&1'),
+    # each target overwrites the last b/c i don't expect to debug it often,
+    # don't want a bazillion extra files
     collapse='\n')
 }
 
@@ -165,14 +168,14 @@ updateConfigInfoFile <- function(viz.id){
   info <- getContentInfo(viz.id)
   
   file.config <- paste0(viz.id,".rds")
-  full.config <- file.path("cache","config",file.config) 
+  full.config <- file.path("vizlab/make/config",file.config) 
   if(file.exists(full.config)){
     orig.info <- readRDS(full.config)
     if(!all(orig.info %in% info)){
       saveRDS(info, full.config)
     }
   } else {
-    dir.create(file.path("cache","config"),showWarnings = FALSE,recursive = TRUE)
+    dir.create(dirname(full.config), showWarnings=FALSE, recursive=TRUE)
     saveRDS(info, full.config)
   }
   
@@ -425,7 +428,7 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
   dep.files <- c(
     item.info$depfiles, # depfiles get listed as dependencies but not read in or passed to the function
     sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE),
-    file.path("cache","config",paste0(item.info$id,".rds"))
+    file.path("vizlab/make/config",paste0(item.info$id,".rds"))
   )
   #dep.args <- sapply(item.info$depends, function(dep) paste0("readData('", dep, "')" ))
 
