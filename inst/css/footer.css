@@ -33,10 +33,10 @@ footer a:active{
   padding:0 10px;
 }
 
-.hotfix{
+.githublink{
   display:inline-block;
   height: 25px;
-  width:125px;
+  width:140px;
 }
 
 #github-contact{
@@ -49,6 +49,10 @@ footer a:active{
   float: left;
   width: 25px;
   margin: 0 10px 0 0;
+}
+
+#github-contact a{
+  font-weight:300;
 }
 
 #github-contact p{
