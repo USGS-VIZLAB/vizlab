@@ -144,8 +144,8 @@ createConfigCall <- function(){
   
   paste(c(
     "cache/config/%.rds : viz.yaml",
-    sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
-    sprintf('\t${RSCRIPT}  -e \'library(vizlab); updateConfigInfoFile("$*")\'')),
+    '\texport R_LIBS_USER=$(RLIBSUSER);\\',
+    '\t${RSCRIPT}  -e "library(vizlab); updateConfigInfoFile(\'$*\')"\\',
     collapse='\n')
 }
 
