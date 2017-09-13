@@ -143,9 +143,12 @@ createBlockMakefile <- function(block=c('global','fetch','process','visualize','
 createConfigCall <- function(){
   
   paste(c(
-    "cache/config/%.rds : viz.yaml",
-    sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
-    sprintf('\t${RSCRIPT}  -e \'library(vizlab); updateConfigInfoFile("$*")\'')),
+    "vizlab/make/config/%.rds : viz.yaml",
+    '\texport R_LIBS_USER=$(RLIBSUSER);\\',
+    '\t${RSCRIPT}  -e "library(vizlab); updateConfigInfoFile(\'$*\')"\\',
+    '\t> vizlab/make/log/config.Rout 2>&1'),
+    # each target overwrites the last b/c i don't expect to debug it often,
+    # don't want a bazillion extra files
     collapse='\n')
 }
 
@@ -165,14 +168,14 @@ updateConfigInfoFile <- function(viz.id){
   info <- getContentInfo(viz.id)
   
   file.config <- paste0(viz.id,".rds")
-  full.config <- file.path("cache","config",file.config) 
+  full.config <- file.path("vizlab/make/config",file.config) 
   if(file.exists(full.config)){
     orig.info <- readRDS(full.config)
     if(!all(orig.info %in% info)){
       saveRDS(info, full.config)
     }
   } else {
-    dir.create(file.path("cache","config"),showWarnings = FALSE,recursive = TRUE)
+    dir.create(dirname(full.config), showWarnings=FALSE, recursive=TRUE)
     saveRDS(info, full.config)
   }
   
@@ -430,27 +433,26 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
   squote <- function(x) paste0("'", x, "'")
   dquote <- function(x) paste0('"', x, '"')
   data.file <- item.info$location
-  config.file <- file.path("cache","config",paste0(item.info$id,".rds"))
+  config.file <- file.path("vizlab/make/config",paste0(item.info$id,".rds"))
 
   if(!is.null(data.file) && grepl(" ", data.file)) data.file <- dquote(data.file)
+  dep.location <- sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+  dep.location <- Filter(Negate(is.null), dep.location) # this happens in global (no location)
   
   if(is.null(data.file)){
     data.file <- config.file
     dep.files <- c(
       item.info$depfiles, # depfiles get listed as dependencies but not read in or passed to the function
-      sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+      dep.location
     )
   } else {
     dep.files <- c(
       item.info$depfiles, # depfiles get listed as dependencies but not read in or passed to the function
-      sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE),
+      dep.location,
       config.file
     )
   }
   
-
-  #dep.args <- sapply(item.info$depends, function(dep) paste0("readData('", dep, "')" ))
-
   # data args
   rules <- list()
   rules$phony.data <- createMakeEmptyRule(
