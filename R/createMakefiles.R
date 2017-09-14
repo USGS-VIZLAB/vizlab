@@ -369,7 +369,10 @@ createMakeItem.process <- function(item.info, ...) {
 #' @rdname createMakeItem
 #' @export
 createMakeItem.global <- function(item.info, ...) {
-  createMakeRulePair(item.info, block='global', concat=TRUE)
+
+  config.file <- file.path("vizlab/make/config",paste0(item.info$id,".rds"))
+  paste0(item.info$id, ": ", config.file, "\n")
+  # createMakeRulePair(item.info, block='global', concat=TRUE)
 }
 
 #' \code{createMakeItem.visualize}: create makefile rules for an item in the
@@ -437,7 +440,11 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
 
   if(!is.null(data.file) && grepl(" ", data.file)) data.file <- dquote(data.file)
   dep.location <- sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
-  dep.location <- Filter(Negate(is.null), dep.location) # this happens in global (no location)
+  if(any(vapply(dep.location, is.null, TRUE))){
+    glob_id <- which(vapply(dep.location, is.null, TRUE))
+    config_dep <- file.path("vizlab/make/config",paste0(item.info$depends[glob_id],".rds"))
+    dep.location[glob_id] <- config_dep
+  }
   
   if(is.null(data.file)){
     data.file <- config.file
