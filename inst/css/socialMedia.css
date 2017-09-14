@@ -1,0 +1,52 @@
+#socialHolder{
+  text-align: center;
+  height: 30px;
+  margin: 10px 0;
+}
+
+.socialMediaOption {
+    width: 30px;
+    height: 30px;
+    margin: 0 2px 0 2px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: all .5s ease;
+    opacity: 0.85;
+    filter: alpha(opacity=85);
+}
+
+.socialMediaOption:hover{
+  transform: scale(1.2);
+  opacity: 1.0;
+  filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
+.github{
+  background:rgb(38,40,47);
+}
+
+.twitter{
+  background:rgb(108,175,224);
+}
+
+.facebook{
+  background:rgb(66,88,149);
+}
+
+
+.socialMediaOption img{
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.github img{
+  right:.5px;
+}
+
