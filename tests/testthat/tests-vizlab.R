@@ -29,10 +29,10 @@ test_that("file fetcher has correct components", {
 
 })
 
-test_that("global has correct components", {
+test_that("parameter has correct components", {
   viz <- as.viz("plot-info")
-  viz <- as.global(viz)
-  expect_is(object = viz, class = "global")
+  viz <- as.parameter(viz)
+  expect_is(object = viz, class = "parameter")
   
 })
 

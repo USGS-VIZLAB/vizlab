@@ -4,7 +4,7 @@
 \alias{getContentInfo}
 \title{Get information on a content item from the viz.yaml}
 \usage{
-getContentInfo(viz.id, block = c("global", "fetch", "process", "visualize",
+getContentInfo(viz.id, block = c("parameter", "fetch", "process", "visualize",
   "publish", "resource"), no.match = c("stop", "NA"))
 }
 \arguments{

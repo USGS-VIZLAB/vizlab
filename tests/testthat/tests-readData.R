@@ -43,7 +43,7 @@ test_that("readDepends works as expected with viz input",{
 })
 
 context("readDepends")
-test_that("readDepends works as expected with global input",{
+test_that("readDepends works as expected with parameters input",{
   viz.dep <- readDepends(viz)
   expect_equal(plotData, viz.dep[["plot-info"]])
 })

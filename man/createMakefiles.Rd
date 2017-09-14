@@ -4,7 +4,7 @@
 \alias{createMakefiles}
 \title{Create fetch.make, etc. from the information in viz.yaml}
 \usage{
-createMakefiles(blocks = c("global", "fetch", "process", "visualize",
+createMakefiles(blocks = c("parameter", "fetch", "process", "visualize",
   "publish"), display = FALSE)
 }
 \arguments{

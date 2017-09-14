@@ -10,7 +10,7 @@
 #'   error) or 'NA' (return NA)
 #' @seealso getContentInfos
 #' @export
-getContentInfo <- function(viz.id, block=c('global','fetch','process','visualize','publish','resource'), no.match=c('stop','NA')) {
+getContentInfo <- function(viz.id, block=c('parameter','fetch','process','visualize','publish','resource'), no.match=c('stop','NA')) {
   if(length(viz.id) != 1) stop("viz.id must have length 1; see getContentInfos for alternatives")
   infos <- getContentInfos(viz.id, block=block)
   if(length(infos) == 0) {
@@ -38,7 +38,7 @@ getContentInfo <- function(viz.id, block=c('global','fetch','process','visualize
 #' @import yaml
 #' @importFrom stats setNames
 #' @export
-getContentInfos <- function(viz.id, block=c('global','fetch','process','visualize', 'publish', 'resource')) {
+getContentInfos <- function(viz.id, block=c('parameter','fetch','process','visualize', 'publish', 'resource')) {
 
   content.list <- getBlocks(block)
 
@@ -84,7 +84,7 @@ getVizlabVersion <- function() {
 #' @param keep.block logical whether to include block information in read block
 #' @importFrom utils packageName
 #' @export
-getBlocks <- function(block=c('vizlab', 'info', 'global','fetch', 'process', 'visualize', 'publish', 'resource'), keep.block=TRUE) {
+getBlocks <- function(block=c('vizlab', 'info', 'parameter','fetch', 'process', 'visualize', 'publish', 'resource'), keep.block=TRUE) {
   # read viz.yaml and isolate the data block
   if (!file.exists('viz.yaml')) {
     stop("viz.yaml does not exist in this working directory (", getwd(), ")")

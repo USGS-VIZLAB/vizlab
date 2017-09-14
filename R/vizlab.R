@@ -26,8 +26,8 @@ as.viz.character <- function(x, ...) {
   viz <- as.viz(viz)
   if("block" %in% names(viz)){
     class(viz) <- c(class(viz), viz[["block"]])
-    if(viz[["block"]] == "global"){
-      class(viz) <- "global"
+    if(viz[["block"]] == "parameter"){
+      class(viz) <- "parameter"
     }
   }
   return(viz)

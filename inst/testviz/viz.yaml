@@ -55,7 +55,7 @@ info:
     crazy:
       repo: CRAN
       version: 20.11.45
-global:
+parameter:
   -
     id: plot-info
     width: 4

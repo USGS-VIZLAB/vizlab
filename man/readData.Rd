@@ -9,7 +9,7 @@
 \alias{readData.excel}
 \alias{readData.rds}
 \alias{readData.filepath}
-\alias{readData.global}
+\alias{readData.parameter}
 \alias{readData.folder}
 \alias{readData.txt}
 \alias{readData.md}
@@ -32,7 +32,7 @@ readData(viz)
 
 \method{readData}{filepath}(viz)
 
-\method{readData}{global}(viz)
+\method{readData}{parameter}(viz)
 
 \method{readData}{folder}(viz)
 
@@ -68,7 +68,7 @@ assigned a class to route it to a more specific reader
 
 \code{readData.filepath} returns the file path or null if location is not set
 
-\code{readData.global} returns the file path or null if location is not set
+\code{readData.parameter} returns the file path or null if location is not set
 
 \code{readData.folder} returns names of files inside a folder
 

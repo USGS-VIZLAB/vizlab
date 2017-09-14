@@ -1,32 +1,32 @@
-#' Get global variables for project
+#' Get parameter variables for project
 #'
-#' This function should be called from the generic, \code{global()}.
+#' This function should be called from the generic, \code{parameter()}.
 #'
 #' @param viz vizlab object described in viz.yaml
 #' @export
-global <- function(viz) UseMethod("global")
+parameter <- function(viz) UseMethod("parameter")
 
-#' @rdname global
+#' @rdname parameter
 #' @export
-global.character <- function(viz) {
+parameter.character <- function(viz) {
   viz <- as.viz(viz)
-  viz <- as.global(viz)
-  global(viz)
+  viz <- as.parameter(viz)
+  parameter(viz)
 }
 
-#' @rdname global
+#' @rdname parameter
 #' @export
-global.global <- function(viz) {
+parameter.parameter <- function(viz) {
   invisible()
 }
 
-#' Coerce vizlab object to a global type
+#' Coerce vizlab object to a parameter type
 #'
 #' @param viz vizlab object
 #' @param ... not used, following convention
-#' @return vizlab global object
+#' @return vizlab parameter object
 #' @export
-as.global <- function(viz, ...) {
-  class(viz) <- c('global', class(viz))
+as.parameter <- function(viz, ...) {
+  class(viz) <- c('parameter', class(viz))
   return(viz)
 }

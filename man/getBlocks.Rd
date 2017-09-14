@@ -4,7 +4,7 @@
 \alias{getBlocks}
 \title{Read vizlab config document and return specific blocks}
 \usage{
-getBlocks(block = c("vizlab", "info", "global", "fetch", "process",
+getBlocks(block = c("vizlab", "info", "parameter", "fetch", "process",
   "visualize", "publish", "resource"), keep.block = TRUE)
 }
 \arguments{

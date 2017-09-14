@@ -96,11 +96,11 @@ readData.filepath <- function(viz){
   return(viz[['location']])
 }
 
-#' \code{readData.global} returns the file path or null if location is not set
+#' \code{readData.parameter} returns the file path or null if location is not set
 #'
 #' @rdname readData
 #' @export
-readData.global <- function(viz){
+readData.parameter <- function(viz){
   viz <- viz[names(viz)[!(names(viz) %in% c("id","block"))]]
   class(viz) <- 'list'
   return(viz)
