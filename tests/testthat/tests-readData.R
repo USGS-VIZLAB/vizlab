@@ -19,7 +19,7 @@ test_that("readData works as expected", {
   expect_is(carData[[1]], 'data.frame')
   expect_is(carData[[2]], 'data.frame')
   expect_is(plotData, 'global')
-  expect_true(all(names(plotData) %in% c("id","width","height","block")) )
+  expect_true(all(names(plotData) %in% c("width","height")) )
   
 })
 
