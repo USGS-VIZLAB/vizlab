@@ -329,9 +329,16 @@ createMakeItem.fetch <- function(item.info, ...) {
 
   rules <- list()
 
+  # this is where we used to do something with a refetch argument from the
+  # viz.yaml. Since we're taking that out, add a check & message here. A warning
+  # might be more appropriate than an error but wouldn't always be seen by users
+  # running this function via `make` (via Rscript or R CMD BATCH)
+  if(!is.null(item.info$refetch)) {
+    stop('refetch is deprecated and ignored')
+  }
+    
   # timestamp rules
-  needs.timestamp <- item.info$refetch
-  if(needs.timestamp) {
+  if(needsTimestamp(item.info)) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
     timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id)
@@ -352,6 +359,64 @@ createMakeItem.fetch <- function(item.info, ...) {
 
   # return
   paste(unlist(unname(rules)), collapse='\n')
+}
+
+#' Determine whether an item should fetch a timestamp or not
+#'
+#' Looks in the dependency scripts and on the current search path (plus vizlab)
+#' to determine whether the fetchTimestamp method for this fetcher is actually
+#' available somewhere. DOESN'T currently look in any packages loaded via
+#' `library` within the sourced scripts (to avoid altering the current
+#' environment without the user's permission), which means we'll get confused if
+#' some other package implements, say, fetchTimestamp.yadayada. That's an
+#' unlikely situation, so if we need it, we can implement it then (or the user
+#' can call `library()` on that package before calling `createMakefiles()`).
+#'
+#' Looks at the fetchTimestamp argument in this item's viz.yaml info to see what
+#' the user expects.
+#'
+#' @return logical: TRUE if timestamp is needed (== a
+#'   fetchTimestamp.fetcherforthisvizitem method is available), FALSE otherwise.
+#'   Also produces an error if there's a mismatch between what's declared in the
+#'   viz.yaml and whether a fetchTimestamp method appears to be available for
+#'   this fetcher.
+#' @md
+#' @keywords internal
+needsTimestamp <- function(item.info) {
+  
+  # look for a fetchTimestamp method appropriate to this item's fetcher. this
+  # code is a bit fragile, because we're not quite doing our darndest to
+  # replicate the runtime environment. but it should work for the common cases,
+  # and can be debugged/inspected by specifying a fetchTimestamp parameter in
+  # the viz item (see next code block).
+  FT_method <- paste0('fetchTimestamp.', item.info$fetcher)
+  # (1) search through the text of the item's declared scripts
+  FT_in_scripts <- if(length(item.info$scripts) > 0) {
+    script_text <- unlist(lapply(item.info$scripts, function(script) {
+      deparse(parse(script)) # use deparse to get rid of commented-out code
+    }))
+    any(grep(FT_method, script_text, fixed=TRUE))
+  } else FALSE
+  # (2) search through the current global environment and
+  FT_in_env <- !is.null(getS3method('fetchTimestamp', item.info$fetcher, optional=TRUE, envir=asNamespace('vizlab')))
+  # accept the presence of a fetchTimestamp method in either location
+  FT_method_exists <- FT_in_scripts || FT_in_env
+  
+  # if the user bothered to provide a fetchTimestamp flag, check that flag
+  # against what we're seeing. This is purely a way for users to confirm that
+  # their methods are getting seen or not; if the flag doesn't exist, nothing
+  # happens. If the flag does exist, the only things that can happen are an
+  # error (if there's a mismatch) or nothing.
+  if(!is.null(item.info$fetchTimestamp) && item.info$fetchTimestamp != FT_method_exists) {
+    stop("fetchTimestamp is ", item.info$fetchTimestamp, 
+         ", which conflicts with the ",
+         if(FT_method_exists) "presence" else "absence",
+         " of a fetchTimestamp.", item.info$fetcher, " method")
+  }
+  
+  # return needsTimestamp = TRUE if and only if there is a matching
+  # fetchTimestamp method for this item's fetcher
+  return(FT_method_exists)
 }
 
 #' \code{createMakeItem.process}: create makefile rules for an item in the
