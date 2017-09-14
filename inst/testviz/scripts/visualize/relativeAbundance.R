@@ -5,8 +5,8 @@
 visualize.relativeAbundance <- function(viz) {
   outfile <- viz[["location"]]
   data <- readDepends(viz)
-
-  svg(outfile, height=4, width=4)
+  sizes <- data[["sizes"]]
+  svg(outfile, height=sizes$height, width=sizes$width)
   plot(Above ~ Below, data[["MayflyNymph"]])
   dev.off()
 }
