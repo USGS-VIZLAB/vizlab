@@ -298,10 +298,9 @@ createMakeBlockRules <- function(block=c('parameter','fetch','process','visualiz
 
   depends_text <- paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'), 'MakeMessages'))
   if(block == "parameter"){
-    resources <- yaml::yaml.load_file(file.path(system.file(package="vizlab"),"resource.library.yaml"))
+    resources_ids <- getResourceIDs()
     depends_text <- paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'),
-                       sapply(resources, function(x)x[["id"]]),
-                       'MakeMessages'))
+                                       resources_ids, 'MakeMessages'))
   }
   
   # set the 'all' target to include all content items
