@@ -130,9 +130,23 @@ createBlockMakefile <- function(block=c('parameter','fetch','process','visualize
     createConfigCall(),
     createMakeBlockRules(block),
     sep='\n\n')
+  if(block == "parameter"){
+    makefile <- paste(makefile,createResourcesMake(),sep="\n\n")
+  }
   createMakeDirs(makefile)
   writeLines(makefile, con=outfile)
   invisible(makefile)
+}
+
+getResourceIDs <- function(){
+  resources <- yaml::yaml.load_file(file.path(system.file(package="vizlab"),"resource.library.yaml"))
+  ids <- unlist(lapply(resources, function(x)x[["id"]]))
+  return(ids)
+}
+
+createResourcesMake <- function(){
+  ids <-getResourceIDs()
+  paste0(paste0(ids, ": vizlab/make/config/", ids,".rds"),collapse = "\n\n")
 }
 
 #' Create the rules for the content make file
@@ -282,10 +296,18 @@ createMakeBlockRules <- function(block=c('parameter','fetch','process','visualiz
     dir.deps.msg <- NULL
   }
 
+  depends_text <- paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'), 'MakeMessages'))
+  if(block == "parameter"){
+    resources <- yaml::yaml.load_file(file.path(system.file(package="vizlab"),"resource.library.yaml"))
+    depends_text <- paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'),
+                       sapply(resources, function(x)x[["id"]]),
+                       'MakeMessages'))
+  }
+  
   # set the 'all' target to include all content items
   all <- createMakeEmptyRule(
     target='all',
-    depends=paste0("\\\n\t", c(sapply(content.info, `[[`, 'id'), 'MakeMessages')))
+    depends=depends_text)
 
   # write the rules for each content item
   items <- sapply(content.info, function(item.info) {
@@ -372,7 +394,7 @@ createMakeItem.parameter <- function(item.info, ...) {
 
   config.file <- file.path("vizlab/make/config",paste0(item.info$id,".rds"))
   paste0(item.info$id, ": ", config.file, "\n")
-  # createMakeRulePair(item.info, block='parameter', concat=TRUE)
+
 }
 
 #' \code{createMakeItem.visualize}: create makefile rules for an item in the
@@ -440,6 +462,11 @@ createMakeRulePair <- function(item.info, block, concat=TRUE) {
 
   if(!is.null(data.file) && grepl(" ", data.file)) data.file <- dquote(data.file)
   dep.location <- sapply(item.info$depends, function(dep) getContentInfo(dep)$location, USE.NAMES=FALSE)
+  resource_ids <- getResourceIDs()
+  if(any(item.info$depends %in% resource_ids)){
+    dep.location[which(item.info$depends %in% resource_ids)] <- file.path(system.file(package="vizlab"),dep.location[which(item.info$depends %in% resource_ids)])
+  }
+  
   if(any(vapply(dep.location, is.null, TRUE))){
     glob_id <- which(vapply(dep.location, is.null, TRUE))
     config_dep <- file.path("vizlab/make/config",paste0(item.info$depends[glob_id],".rds"))
