@@ -101,6 +101,8 @@ readData.filepath <- function(viz){
 #' @rdname readData
 #' @export
 readData.global <- function(viz){
+  viz <- viz[names(viz)[!(names(viz) %in% c("id","block"))]]
+  class(viz) <- 'list'
   return(viz)
 }
 
