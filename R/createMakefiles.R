@@ -336,6 +336,9 @@ createMakeItem.fetch <- function(item.info, ...) {
   if(!is.null(item.info$refetch)) {
     stop('refetch is deprecated and ignored')
   }
+  if(!is.null(item.info$fetchTimestamp)) {
+    stop('fetchTimestamp is deprecated and ignored')
+  }
     
   # timestamp rules
   if(needsTimestamp(item.info)) {
@@ -401,18 +404,6 @@ needsTimestamp <- function(item.info) {
   FT_in_env <- !is.null(getS3method('fetchTimestamp', item.info$fetcher, optional=TRUE, envir=asNamespace('vizlab')))
   # accept the presence of a fetchTimestamp method in either location
   FT_method_exists <- FT_in_scripts || FT_in_env
-  
-  # if the user bothered to provide a fetchTimestamp flag, check that flag
-  # against what we're seeing. This is purely a way for users to confirm that
-  # their methods are getting seen or not; if the flag doesn't exist, nothing
-  # happens. If the flag does exist, the only things that can happen are an
-  # error (if there's a mismatch) or nothing.
-  if(!is.null(item.info$fetchTimestamp) && item.info$fetchTimestamp != FT_method_exists) {
-    stop("fetchTimestamp is ", item.info$fetchTimestamp, 
-         ", which conflicts with the ",
-         if(FT_method_exists) "presence" else "absence",
-         " of a fetchTimestamp.", item.info$fetcher, " method")
-  }
   
   # return needsTimestamp = TRUE if and only if there is a matching
   # fetchTimestamp method for this item's fetcher
