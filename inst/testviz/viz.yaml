@@ -3,7 +3,7 @@ info:
   id: testviz
   name: Example visualization project
   date: 2016-06-09
-  publish-date: 2017-02-28
+  publish-date: 2016-06-09
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
