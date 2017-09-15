@@ -180,7 +180,7 @@ publish.googlefont <- function(viz) {
   families <- paste(URLencode(viz[["family"]]), collapse = "|")
   weights <- paste(viz[["weight"]], collapse = ",")
   googlefont <- "//fonts.googleapis.com/css"
-  html <- sprintf('<link href="%s?%s:%s" rel="stylesheet" type="text/css">',
+  html <- sprintf('<link href="%s?family=%s:%s" rel="stylesheet" type="text/css">',
                   googlefont, families, weights)
   return(html)
 }

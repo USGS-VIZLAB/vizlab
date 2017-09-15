@@ -1,63 +1,66 @@
 
-  <div class="footerContentAligner">
-  
-    <div class="usgsLogoFooterArea">
-      <a href="https://usgs.gov" target="_blank">
-        {{{usgsLogo}}}
-      </a>
+<div class="footerContentAligner">
+
+    <div id="vizlabPromo">
+      <p>This interactive data visualization was created by 
+      <a href="https://owi.usgs.gov/vizlab/" target="_blank">
+        <strong>USGS VIZLAB</strong></p>
+      	<img src="images/atom.svg" alt="atom icon"/>
+    	</a>
     </div>
     
-    <div class="footerMenu">
-      <a href="https://owi.usgs.gov/vizlab/" target="_blank">
-        <p>About Us</p>
+    <div id="github-contact">
+      <a class="githublink" href="#" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+        <img src="images/github.svg" alt="github icon"/>
+      	<p>Get the Code</p>
       </a>
-      <a href="{{github-url}}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
-        <p>Get the Code</p>
-      </a>
-      <a href="https://owi.usgs.gov/" target="_blank">
-        <p>Office of Water Information</p>
-      </a>
+      <span>|</span>
       <a href="mailto:vizlab@usgs.gov">
-        <p>Contact Us</p>
-      </a>
+    	  Contact Us
+    	</a>
     </div>
     
     <div id="relatedItems">
     
       <div id="relatedVizzies">
-        {{#vizzies}}
-      		<a href="{{url}}" target="_blank">
-      			<div class="relatedItem">
-      			<div class="footerThumnail">
-      					<img src="{{thumbLoc}}" alt=""/>
-      				</div>
-      			  <div class="titleHandler">
-      				  <h4>{{name}}</h4>
-      				</div>
-      			</div>
-      		</a>
-      	{{/vizzies}}
+        <h3>Related Visualizations:</h3>
+        <div class="relatedItemContainer">
+          {{#vizzies}}
+        		<div class="relatedItem">
+        		  <a href="{{url}}" target="_blank">
+        		    <div class="footerThumbnail">
+        					<img src="{{thumbLoc}}" alt=""/>
+        				</div>
+        			  <div class="titleHandler">
+        				  <h4>{{name}}</h4>
+        				</div>
+        			</a>
+        		</div>
+        	{{/vizzies}}
+      	</div>
       </div>
       
-    {{#blogsInFooter}}
-    <div id="relatedBlogs">
-    	{{#blogs}}
-    		<a href="{{url}}" target="_blank">
-    			<div class="relatedItem">
-    				<div class="footerThumnail blog">
-    					<img src="{{thumbLoc}}" alt=""/>
-    				</div>
-    				<div class="titleHandler">
-    					<h4>{{name}}</h4>
-    				</div>
-    			</div>
-    		</a>
-    	{{/blogs}}
-    	
+      {{#blogsInFooter}}
+        <div id="relatedBlogs">
+          <h3>Related Blogs:</h3>
+          <div class="relatedItemContainer">
+          	{{#blogs}}
+          		<div class="relatedItem">
+          		  <a href="{{url}}" target="_blank">
+          				<div class="footerThumbnail blog">
+          					<img src="{{thumbLoc}}" alt=""/>
+          				</div>
+          				<div class="titleHandler">
+          					<h4>{{name}}</h4>
+          				</div>
+          			</a>
+          		</div>
+          	{{/blogs}}
+        	</div>
+        </div>
+      {{/blogsInFooter}}
+      
     </div>
-    {{/blogsInFooter}}
-  
-  </div><!--relatedItems-->
     
 </div>
 
