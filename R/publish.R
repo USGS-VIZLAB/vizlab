@@ -271,8 +271,14 @@ publish.footer <- function(viz) {
       vizzies[[v]]$name <- info$context$name
     }
     
-    vizzies[[v]]$url <- info$context$path
-    vizzies[[v]]$thumbLoc <- info$context$thumbnail
+    if(is.null(vizzies[[v]]$url)){
+      vizzies[[v]]$url <- info$context$path
+    }
+    
+    if(is.null(vizzies[[v]]$thumbLoc)){
+      vizzies[[v]]$thumbLoc <- info$context$thumbnail
+    }
+    
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
