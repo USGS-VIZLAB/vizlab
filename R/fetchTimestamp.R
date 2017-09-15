@@ -69,7 +69,16 @@ fetchTimestamp.sciencebase <- function(viz) {
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-  invisible()
+  old.timestamp <- readOldTimestamp(viz)
+  if(is.na(old.timestamp)) {
+    new.timestamp <- file.mtime(viz$location)
+    writeTimestamp(new.timestamp, viz)
+    old.timestamp.loc <- locateTimestampFile(viz$id)
+    Sys.setFileTime(old.timestamp.loc, new.timestamp)
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
 }
 
 #' check a URL for timestamp

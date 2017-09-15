@@ -4,7 +4,7 @@
 \alias{writeTimestamp}
 \title{Write a timestamp file with the conventions used by fetchTimestamp}
 \usage{
-writeTimestamp(new.timestamp, outfile)
+writeTimestamp(new.timestamp, viz)
 }
 \arguments{
 \item{new.timestamp}{the new timestamp to write to file}
