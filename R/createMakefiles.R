@@ -346,7 +346,8 @@ createMakeItem.fetch <- function(item.info, ...) {
   }
     
   # timestamp rules
-  if(needsTimestamp(item.info)) {
+  needs.timestamp <- needsTimestamp(item.info)
+  if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
     timestamp.file <- paste0('vizlab/make/timestamps/', item.info$id)
@@ -409,6 +410,15 @@ needsTimestamp <- function(item.info) {
   FT_in_env <- !is.null(getS3method('fetchTimestamp', item.info$fetcher, optional=TRUE, envir=asNamespace('vizlab')))
   # accept the presence of a fetchTimestamp method in either location
   FT_method_exists <- FT_in_scripts || FT_in_env
+  
+  # enforce our current policy, which is to require the availability of a
+  # fetchTimestamp method for every fetch item. this error is complemented by a
+  # near-identical error in the fetchTimestamp.fetcher superclass method; we're
+  # minimizing time to failure+understanding by giving this error in both places
+  if(!FT_method_exists) {
+    stop(paste0("fetchTimestamp.", item.info$fetcher, " must be implemented for ",
+                item.info$id, ", probably in an R file in 'scripts:'"))
+  }
   
   # return needsTimestamp = TRUE if and only if there is a matching
   # fetchTimestamp method for this item's fetcher

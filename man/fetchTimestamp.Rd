@@ -42,5 +42,6 @@ Does nothing - \code{make} already checks timestamps of local files
 
 check a URL for timestamp
 
-\code{fetchTimestamp.fetcher} superclass method catches missing implementation
+\code{fetchTimestamp.fetcher} superclass method catches missing
+implementation
 }

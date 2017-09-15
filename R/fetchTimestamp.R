@@ -98,13 +98,18 @@ fetchTimestamp.url <- function(viz) {
   }
 }
 
-#' \code{fetchTimestamp.fetcher} superclass method catches missing implementation
+#' \code{fetchTimestamp.fetcher} superclass method catches missing
+#' implementation
 #'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.fetcher <- function(viz){
-  warning(paste("fetchTimestamp.fetcher needs to be implemented for", viz$fetcher))
-  return(TRUE)
+  # require the availability of a fetcher-specific method by giving an error if
+  # we arrive here. this error is complemented by a near-identical error in
+  # needsTimestamp (beneath createMakefiles); we're minimizing time to
+  # failure+understanding by giving this error in both places
+  stop(paste0("fetchTimestamp.", viz$fetcher, " must be implemented for ",
+              viz$id, ", probably in an R file in 'scripts:'"))
 }
 
 
