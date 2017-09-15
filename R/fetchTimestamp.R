@@ -57,7 +57,7 @@ fetchTimestamp.sciencebase <- function(viz) {
 
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
-    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    writeTimestamp(new.timestamp, viz)
     return(TRUE)
   }else{
     return(FALSE)
@@ -69,7 +69,16 @@ fetchTimestamp.sciencebase <- function(viz) {
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-  invisible()
+  old.timestamp <- readOldTimestamp(viz)
+  if(is.na(old.timestamp) && file.exists(viz$location)) {
+    new.timestamp <- file.mtime(viz$location)
+    writeTimestamp(new.timestamp, viz)
+    old.timestamp.loc <- locateTimestampFile(viz$id)
+    Sys.setFileTime(old.timestamp.loc, new.timestamp)
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
 }
 
 #' check a URL for timestamp
@@ -91,20 +100,25 @@ fetchTimestamp.url <- function(viz) {
 
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
-    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    writeTimestamp(new.timestamp, viz)
     return(TRUE)
   }else{
     return(FALSE)
   }
 }
 
-#' \code{fetchTimestamp.fetcher} superclass method catches missing implementation
+#' \code{fetchTimestamp.fetcher} superclass method catches missing
+#' implementation
 #'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.fetcher <- function(viz){
-  warning(paste("fetchTimestamp.fetcher needs to be implemented for", viz$fetcher))
-  return(TRUE)
+  # require the availability of a fetcher-specific method by giving an error if
+  # we arrive here. this error is complemented by a near-identical error in
+  # needsTimestamp (beneath createMakefiles); we're minimizing time to
+  # failure+understanding by giving this error in both places
+  stop(paste0("fetchTimestamp.", viz$fetcher, " must be implemented for ",
+              viz$id, ", probably in an R file in 'scripts:'"))
 }
 
 
@@ -114,10 +128,11 @@ fetchTimestamp.fetcher <- function(viz){
 #' new data + timestamp fetcher
 #'
 #' @param new.timestamp the new timestamp to write to file
-#' @param outfile the filename where the new timestamp should be saved
+#' @param viz a viz item (e.g., from as.viz)
 #'
 #' @export
-writeTimestamp <- function(new.timestamp, outfile) {
+writeTimestamp <- function(new.timestamp, viz) {
+  outfile <- locateTimestampFile(viz[["id"]])
   writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), outfile)
 }
 
@@ -126,11 +141,9 @@ writeTimestamp <- function(new.timestamp, outfile) {
 #' @param id viz id needing timestamp
 #' @return character vector location of timestamp file
 locateTimestampFile <- function(id) {
-  # TODO standardize timestamp file location
-  #vizlab/make/timestamps?
   timestampDir <- "./vizlab/make/timestamps"
-  timestampDir <- file.path(timestampDir, id)
-  return(timestampDir)
+  timestampFile <- file.path(timestampDir, id)
+  return(timestampFile)
 }
 
 #' Read an old timestamp for viz

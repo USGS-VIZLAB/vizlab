@@ -23,18 +23,6 @@ test_that("readData works as expected", {
   
 })
 
-test_that("inline depends can contain a value", {
-  data <- readData("constant")
-  expect_equal(data, 42)
-})
-
-test_that("inline depends can contain list", {
-  data <- readData("constant-list")
-  expect_equal(data$color, "#ffffff")
-  expect_equal(data$value, 45.5)
-  expect_match(data$text, ".*quick.*fox.*lazy.*")
-})
-
 context("readDepends")
 test_that("readDepends works as expected with viz input",{
   viz.dep <- readDepends(viz)

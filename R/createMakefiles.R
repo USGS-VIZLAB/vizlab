@@ -189,7 +189,6 @@ updateConfigInfoFile <- function(viz.id){
       saveRDS(info, full.config)
     }
   } else {
-    dir.create(dirname(full.config), showWarnings=FALSE, recursive=TRUE)
     saveRDS(info, full.config)
   }
   
@@ -254,6 +253,12 @@ createMakeDirs <- function(makefile) {
     if(!dir.exists(timestampdir)) dir.create(timestampdir)
   }
 
+  # create the config.rds file directory if specified
+  configdir <- unique(dirname(grep('^vizlab/make/config', strsplit(makefile, '[[:space:]|\\|=|:]')[[1]], value=TRUE)))
+  if(length(configdir) > 0) {
+    if(!dir.exists(configdir)) dir.create(configdir)
+  }
+  
   # always copy callFunction.R into the vizlab/make directory, on the assumption
   # that even if there aren't currently any references to it in the makefiles,
   # there will be soon. this script allows us to call a single function via R
@@ -350,8 +355,19 @@ createMakeItem.fetch <- function(item.info, ...) {
 
   rules <- list()
 
+  # this is where we used to do something with a refetch argument from the
+  # viz.yaml. Since we're taking that out, add a check & message here. A warning
+  # might be more appropriate than an error but wouldn't always be seen by users
+  # running this function via `make` (via Rscript or R CMD BATCH)
+  if(!is.null(item.info$refetch)) {
+    stop('refetch is deprecated and ignored')
+  }
+  if(!is.null(item.info$fetchTimestamp)) {
+    stop('fetchTimestamp is deprecated and ignored')
+  }
+    
   # timestamp rules
-  needs.timestamp <- item.info$refetch
+  needs.timestamp <- needsTimestamp(item.info)
   if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
@@ -359,20 +375,85 @@ createMakeItem.fetch <- function(item.info, ...) {
     rules$file.timestamp <- createMakeEmptyRule(
       target=timestamp.file,
       depends=timestamp.id)
-    rules$phony.timestamp <- createMakeBatchRule(
+    phony.timestamp <- createMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
       funargs=c(viz=squote(item.info$id)),
       scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
+    # interleave a gnu make conditional (I hope it works on all systems!!) for exceedance of timetolive
+    phony.timestamp.split <- strsplit(phony.timestamp, split='\n')[[1]]
+    phony.timestamp.full <- c(phony.timestamp.split[1],
+      sprintf("ifeq ($(shell echo $(shell Rscript -e \"vizlab::exceededTimeToLive('%s')\" 2> null)),TRUE)", item.info$id),
+      phony.timestamp.split[-1],
+      "else",
+      sprintf("\t@echo \"%s: exceededTimeToLive('%s')=FALSE\"", timestamp.id, item.info$id),
+      "endif")
+    rules$phony.timestamp <- paste(phony.timestamp.full, collapse='\n')
   }
-
+  
   # data rules
   item.info$depfiles <- if(needs.timestamp) timestamp.file else c()
   rules <- c(createMakeRulePair(item.info, block='fetch', concat=FALSE), rules)
 
   # return
   paste(unlist(unname(rules)), collapse='\n')
+}
+
+#' Determine whether an item should fetch a timestamp or not
+#'
+#' Looks in the dependency scripts and on the current search path (plus vizlab)
+#' to determine whether the fetchTimestamp method for this fetcher is actually
+#' available somewhere. DOESN'T currently look in any packages loaded via
+#' `library` within the sourced scripts (to avoid altering the current
+#' environment without the user's permission), which means we'll get confused if
+#' some other package implements, say, fetchTimestamp.yadayada. That's an
+#' unlikely situation, so if we need it, we can implement it then (or the user
+#' can call `library()` on that package before calling `createMakefiles()`).
+#'
+#' Looks at the fetchTimestamp argument in this item's viz.yaml info to see what
+#' the user expects.
+#'
+#' @return logical: TRUE if timestamp is needed (== a
+#'   fetchTimestamp.fetcherforthisvizitem method is available), FALSE otherwise.
+#'   Also produces an error if there's a mismatch between what's declared in the
+#'   viz.yaml and whether a fetchTimestamp method appears to be available for
+#'   this fetcher.
+#' @importFrom utils getS3method
+#' @md
+#' @keywords internal
+needsTimestamp <- function(item.info) {
+  
+  # look for a fetchTimestamp method appropriate to this item's fetcher. this
+  # code is a bit fragile, because we're not quite doing our darndest to
+  # replicate the runtime environment. but it should work for the common cases,
+  # and can be debugged/inspected by specifying a fetchTimestamp parameter in
+  # the viz item (see next code block).
+  FT_method <- paste0('fetchTimestamp.', item.info$fetcher)
+  # (1) search through the text of the item's declared scripts
+  FT_in_scripts <- if(length(item.info$scripts) > 0) {
+    script_text <- unlist(lapply(item.info$scripts, function(script) {
+      deparse(parse(script)) # use deparse to get rid of commented-out code
+    }))
+    any(grep(FT_method, script_text, fixed=TRUE))
+  } else FALSE
+  # (2) search through the current global environment and
+  FT_in_env <- !is.null(getS3method('fetchTimestamp', item.info$fetcher, optional=TRUE, envir=asNamespace('vizlab')))
+  # accept the presence of a fetchTimestamp method in either location
+  FT_method_exists <- FT_in_scripts || FT_in_env
+  
+  # enforce our current policy, which is to require the availability of a
+  # fetchTimestamp method for every fetch item. this error is complemented by a
+  # near-identical error in the fetchTimestamp.fetcher superclass method; we're
+  # minimizing time to failure+understanding by giving this error in both places
+  if(!FT_method_exists) {
+    stop(paste0("fetchTimestamp.", item.info$fetcher, " must be implemented for ",
+                item.info$id, ", probably in an R file in 'scripts:'"))
+  }
+  
+  # return needsTimestamp = TRUE if and only if there is a matching
+  # fetchTimestamp method for this item's fetcher
+  return(FT_method_exists)
 }
 
 #' \code{createMakeItem.process}: create makefile rules for an item in the

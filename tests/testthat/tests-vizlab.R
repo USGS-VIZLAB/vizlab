@@ -116,14 +116,14 @@ test_that("sciencebase works",{
   expect_true(fetchTimestamp('Cuyahoga'))
   
   #write the timestamp for the Cuyahoga file
-  writeTimestamp(as.POSIXct("2016-06-12 15:50:15 CDT"), "vizlab/make/timestamps/Cuyahoga")
+  writeTimestamp(as.POSIXct("2016-06-12 15:50:15 CDT"), as.viz("Cuyahoga"))
   expect_false(fetchTimestamp('Cuyahoga'))
 })
 
-test_that("custom fetcher hits timestamp.fetcher", {
-  viz <- list()
-  attr(viz, "class") <- c("cars", "fetcher", "viz")
-  expect_warning(fetchTimestamp(viz))
+test_that("unimplemented fetcher hits timestamp.fetcher", {
+  viz <- list(id='trucks', fetcher='notaTSfetcher')
+  attr(viz, "class") <- c("notaTSfetcher", "fetcher", "viz")
+  expect_error(fetchTimestamp(viz))
 })
 
 test_that("makeFiles created", {
