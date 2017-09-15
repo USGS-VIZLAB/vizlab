@@ -15,7 +15,6 @@
   context:
     link:
     text:
-    
 -
   id: header-template
   location: templates/header.mustache
@@ -49,6 +48,22 @@
     blogs: []
     blogsInFooter: false
 -
+  id: social-media-template
+  location: templates/socialMedia.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    github-logo: lib-github-logo
+    twitter-logo: lib-twitter-logo
+    facebook-logo: lib-facebook-logo
+    css: lib-social-media-css
+  context:
+    id: social
+    github-logo: github-logo
+    twitter-logo: twitter-logo
+    facebook-logo: facebook-logo
+    resources: [ "css" ]
+-
   id: fullpage
   location: templates/fullPage.mustache
   publisher: template
@@ -64,6 +79,7 @@
     sections: []
     footer: footer
     header: header
+    social: social
   partials:
     brandcomment: brandcomment
     semantics: semantics
@@ -157,6 +173,20 @@
   alttext: "Github Logo"
   publisher: resource
 -
+  id: lib-twitter-logo
+  location: images/twitter.svg
+  mimetype: image/svg+xml
+  title: "Twitter Logo"
+  alttext: "Twitter Logo"
+  publisher: resource
+-
+  id: lib-facebook-logo
+  location: images/facebook.svg
+  mimetype: image/svg+xml
+  title: "Facebook Logo"
+  alttext: "Facebook Logo"
+  publisher: resource
+-
   id: lib-vizlab-long
   location: images/usgs-vizlab-long.svg
   mimetype: image/svg+xml
@@ -183,5 +213,10 @@
 -
   id: lib-footer-css
   location: css/footer.css
+  mimetype: text/css
+  publisher: resource
+-
+  id: lib-social-media-css
+  location: css/socialMedia.css
   mimetype: text/css
   publisher: resource
