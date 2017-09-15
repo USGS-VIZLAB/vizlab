@@ -1,9 +1,9 @@
-vizlab: "0.1.7"
+vizlab: "0.2.0"
 info:
   id: testviz
   name: Example visualization project
   date: 2016-06-09
-  publish-date: 2017-02-28
+  publish-date: 2016-06-09
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
@@ -43,7 +43,7 @@ info:
   required-packages:
     vizlab:
       repo: github
-      version: 0.1.8
+      version: 0.2.0
       name: USGS-VIZLAB/vizlab
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
     dplyr:
@@ -55,6 +55,11 @@ info:
     crazy:
       repo: CRAN
       version: 20.11.45
+parameter:
+  -
+    id: plot-info
+    width: 4
+    height: 4
 fetch:
   -
     id: siteTextData
@@ -117,6 +122,7 @@ visualize:
     depends:
         cuyahoga: CuyahogaShort
         mayfly: MayflyNymph
+        sizes: plot-info
     visualizer: relativeAbundance
     mimetype: image/svg+xml
     export: true

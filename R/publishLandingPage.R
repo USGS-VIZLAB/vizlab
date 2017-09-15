@@ -62,17 +62,28 @@ getVizInfo <- function(org, repo){
 
   viz_info <- viz.yaml$info
   
+  viz_url <- viz_info$url
+  if(is.null(viz_url)) {
+    viz_url <- viz_info$path
+    if(!grepl('^http', viz_url)){
+      viz_url <- paste0("https://owi.usgs.gov/vizlab/",viz_url)
+    }
+  }
+  
+  if(substring(viz_url, nchar(viz_url)) != "/"){
+    viz_url <- paste0(viz_url,"/")
+  }
+  
   #what viz info needs to look like:
   viz_info_required <- list(id=viz_info$id,
                             template="templates/vizzies.mustache",
                             publisher="section",
                             "publish-date"=publish_date,
                             context=list(name=viz_info$name,
-                                         thumbnail=paste(checkRelVizUrl(viz_info$path),
-                                                         checkRelVizUrl(viz_info$`thumbnail-landing`$url),
-                                                         sep='/'),
+                                         thumbnail=paste0(viz_url,
+                                                         checkRelVizUrl(viz_info$`thumbnail-landing`$url)),
                                          alttext=viz_info$`thumbnail-landing`$alttext,
-                                         path=checkRelVizUrl(viz_info$path),
+                                         path=checkRelVizUrl(viz_url),
                                          description=viz_info$description))
   
   viz_info_required <- as.viz(viz_info_required)
