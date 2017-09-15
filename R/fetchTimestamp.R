@@ -128,7 +128,7 @@ fetchTimestamp.fetcher <- function(viz){
 #' new data + timestamp fetcher
 #'
 #' @param new.timestamp the new timestamp to write to file
-#' @param outfile the filename where the new timestamp should be saved
+#' @param viz a viz item (e.g., from as.viz)
 #'
 #' @export
 writeTimestamp <- function(new.timestamp, viz) {
