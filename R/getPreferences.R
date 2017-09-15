@@ -52,10 +52,13 @@ getPreferences <- function() {
 #' @export
 exceededTimeToLive <- function(id) {
   viz <- as.viz(id)
-  ttl <- getPreferences()[['timetolive']][[id]]
-  old.timestamp <- readOldTimestamp(viz)
-  
-  exceeded <- Sys.time() > old.timestamp + ttl
-  cat(exceeded)
+  if(!file.exists(locateTimestampFile(id))) {
+    exceeded <- TRUE
+  } else {
+    ttl <- getPreferences()[['timetolive']][[id]]
+    old.timestamp <- readOldTimestamp(viz)
+    exceeded <- Sys.time() > old.timestamp + ttl
+  }
+  cat(exceeded) # so `make` can read the result
   invisible()
 }
