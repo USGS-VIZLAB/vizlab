@@ -180,7 +180,7 @@ publish.googlefont <- function(viz) {
   families <- paste(URLencode(viz[["family"]]), collapse = "|")
   weights <- paste(viz[["weight"]], collapse = ",")
   googlefont <- "//fonts.googleapis.com/css"
-  html <- sprintf('<link href="%s?%s:%s" rel="stylesheet" type="text/css">',
+  html <- sprintf('<link href="%s?family=%s:%s" rel="stylesheet" type="text/css">',
                   googlefont, families, weights)
   return(html)
 }
@@ -270,15 +270,15 @@ publish.footer <- function(viz) {
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
-
-    # if / is first char, treat as relative path. If not, treat as absolute path.
-    if(strsplit(info$context$path, split = "")[[1]][1] == "/"){
-      vizzies[[v]]$url <- paste0(vizlab.pkg.env$baseURL, info$context$path)
-      vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
-    } else {
+    
+    if(is.null(vizzies[[v]]$url)){
       vizzies[[v]]$url <- info$context$path
-      vizzies[[v]]$thumbLoc <- paste0(vizzies[[v]]$url, info$context$thumbnail)
     }
+    
+    if(is.null(vizzies[[v]]$thumbLoc)){
+      vizzies[[v]]$thumbLoc <- info$context$thumbnail
+    }
+    
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs

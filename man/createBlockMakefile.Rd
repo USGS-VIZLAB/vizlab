@@ -4,8 +4,8 @@
 \alias{createBlockMakefile}
 \title{Create a single makefile from the information in viz.yaml}
 \usage{
-createBlockMakefile(block = c("fetch", "process", "visualize", "publish"),
-  outfile)
+createBlockMakefile(block = c("parameter", "fetch", "process", "visualize",
+  "publish"), outfile)
 }
 \arguments{
 \item{block}{character name of the block in the viz.yaml for which to create a
