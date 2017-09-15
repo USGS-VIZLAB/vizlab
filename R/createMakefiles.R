@@ -354,14 +354,23 @@ createMakeItem.fetch <- function(item.info, ...) {
     rules$file.timestamp <- createMakeEmptyRule(
       target=timestamp.file,
       depends=timestamp.id)
-    rules$phony.timestamp <- createMakeBatchRule(
+    phony.timestamp <- createMakeBatchRule(
       target=timestamp.id,
       fun='fetchTimestamp',
       funargs=c(viz=squote(item.info$id)),
       scripts=item.info$scripts,
       logfile=paste0('fetch/', timestamp.id, '.Rout'))
+    # interleave a gnu make conditional (I hope it works on all systems!!) for exceedance of timetolive
+    phony.timestamp.split <- strsplit(phony.timestamp, split='\n')[[1]]
+    phony.timestamp.full <- c(phony.timestamp.split[1],
+      sprintf("ifeq ($(shell echo $(shell Rscript -e \"vizlab::exceededTimeToLive('%s')\" 2> null)),TRUE)", item.info$id),
+      phony.timestamp.split[-1],
+      "else",
+      sprintf("\t@echo \"%s: exceededTimeToLive('%s')=FALSE\"", timestamp.id, item.info$id),
+      "endif")
+    rules$phony.timestamp <- paste(phony.timestamp.full, collapse='\n')
   }
-
+  
   # data rules
   item.info$depfiles <- if(needs.timestamp) timestamp.file else c()
   rules <- c(createMakeRulePair(item.info, block='fetch', concat=FALSE), rules)
