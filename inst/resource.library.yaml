@@ -72,10 +72,11 @@
     brandcomment: brandcomment
     semantics: semantics
     vizlab-js: lib-vizlab-javascript
+    svg-injector-js: lib-svg-injector-js
     favicon: lib-vizlab-favicon
   context:
     info:
-    resources: [ favicon, vizlab-js ]
+    resources: [ favicon, vizlab-js, svg-injector-js ]
     sections: []
     footer: footer
     header: header
@@ -219,4 +220,9 @@
   id: lib-social-media-css
   location: css/socialMedia.css
   mimetype: text/css
+  publisher: resource
+-
+  id: lib-svg-injector-js
+  location: js/third-party/svg-injector-1.1.3.min.js
+  mimetype: text/javascript
   publisher: resource
