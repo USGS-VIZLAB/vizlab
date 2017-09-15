@@ -24,36 +24,39 @@
     
       <div id="relatedVizzies">
         <h3>Related Visualizations:</h3>
-        {{#vizzies}}
-      		<div class="relatedItem">
-      		  <a href="{{url}}" target="_blank">
-      		    <div class="footerThumbnail">
-      					<img src="{{thumbLoc}}" alt=""/>
-      				</div>
-      			  <div class="titleHandler">
-      				  <h4>{{name}}</h4>
-      				</div>
-      			</a>
-      		</div>
-      		
-      	{{/vizzies}}
+        <div class="relatedItemContainer">
+          {{#vizzies}}
+        		<div class="relatedItem">
+        		  <a href="{{url}}" target="_blank">
+        		    <div class="footerThumbnail">
+        					<img src="{{thumbLoc}}" alt=""/>
+        				</div>
+        			  <div class="titleHandler">
+        				  <h4>{{name}}</h4>
+        				</div>
+        			</a>
+        		</div>
+        	{{/vizzies}}
+      	</div>
       </div>
       
       {{#blogsInFooter}}
         <div id="relatedBlogs">
           <h3>Related Blogs:</h3>
-        	{{#blogs}}
-        		<div class="relatedItem">
-        		  <a href="{{url}}" target="_blank">
-        				<div class="footerThumbnail blog">
-        					<img src="{{thumbLoc}}" alt=""/>
-        				</div>
-        				<div class="titleHandler">
-        					<h4>{{name}}</h4>
-        				</div>
-        			</a>
-        		</div>
-        	{{/blogs}}
+          <div class="relatedItemContainer">
+          	{{#blogs}}
+          		<div class="relatedItem">
+          		  <a href="{{url}}" target="_blank">
+          				<div class="footerThumbnail blog">
+          					<img src="{{thumbLoc}}" alt=""/>
+          				</div>
+          				<div class="titleHandler">
+          					<h4>{{name}}</h4>
+          				</div>
+          			</a>
+          		</div>
+          	{{/blogs}}
+        	</div>
         </div>
       {{/blogsInFooter}}
       
