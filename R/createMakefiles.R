@@ -175,7 +175,6 @@ updateConfigInfoFile <- function(viz.id){
       saveRDS(info, full.config)
     }
   } else {
-    dir.create(dirname(full.config), showWarnings=FALSE, recursive=TRUE)
     saveRDS(info, full.config)
   }
   
@@ -240,6 +239,12 @@ createMakeDirs <- function(makefile) {
     if(!dir.exists(timestampdir)) dir.create(timestampdir)
   }
 
+  # create the config.rds file directory if specified
+  configdir <- unique(dirname(grep('^vizlab/make/config', strsplit(makefile, '[[:space:]|\\|=|:]')[[1]], value=TRUE)))
+  if(length(configdir) > 0) {
+    if(!dir.exists(configdir)) dir.create(configdir)
+  }
+  
   # always copy callFunction.R into the vizlab/make directory, on the assumption
   # that even if there aren't currently any references to it in the makefiles,
   # there will be soon. this script allows us to call a single function via R
