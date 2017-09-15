@@ -40,7 +40,6 @@ id: cars-data
     fetcher: cars
     mimetype: text/csv
     scripts: scripts/fetch/cars.R
-    refetch: TRUE
 ```
 becomes this R list object:
 
@@ -62,9 +61,6 @@ $mimetype
 
 $scripts
 [1] "scripts/fetch/cars.R"
-
-$refetch
-[1] TRUE
 
 $block
 [1] "fetch"
@@ -105,25 +101,22 @@ fetch:
     location: data/iris.csv
     mimetype: text/csv
     scripts:
-    refetch: TRUE
   -
     id: cars-data
     location: cache/cars.csv
     fetcher: cars
     mimetype: text/csv
     scripts: scripts/fetch/cars.R
-    refetch: TRUE
   -
     id: Cuyahoga
     location: cache/fetch/CuyahogaTDS.csv
     fetcher: sciencebase
     scripts:
-    refetch: TRUE
     remoteItemId: 575d839ee4b04f417c2a03fe
     remoteFilename: CuyahogaTDS.csv
     mimetype: text/csv
 ```
-Each individual piece in each section of the `viz.yaml` should have it's own unique ID, so they can be referenced by the suceeding sections.  Following sections will look in the `location` field to find the corresponding file.  `mimetype` specifies file type, and is a required field unless a custom `reader` is specified.  `refetch` controls whether existing cached data files are used, or newer versions are checked for.  It is discussed in more detail at the end of this vignette.
+Each individual piece in each section of the `viz.yaml` should have it's own unique ID, so they can be referenced by the suceeding sections.  Following sections will look in the `location` field to find the corresponding file.  `mimetype` specifies file type, and is a required field unless a custom `reader` is specified.
 
 Three possibilites for fetchers are utilized here. `iris-data` is a local file already located in the `data` folder, and so does not need to be fetched. `cars-data` is a custom fetcher, located in `scripts/fetch/cars.R`.  It will retrieve the cars data (by reading in the default cars dataset) and save it to `cache/cars.csv`.  `Cuyahoga` uses the built-in USGS ScienceBase fetcher, and will save the retrieved file to `cache/fetch/CuyahogaTDS.csv`.
 
@@ -368,7 +361,14 @@ This will call the main makefile, which in turn calls the makefile for each sect
   Because all R commands are executed by the makefiles, the output does not print to the console, but can be viewed in the various `.Rout` text files in `vizlab/make/log/` for each section.  The names are printed to the console when the makefile is executed, as seen above.
 
 ### Controlling the fetch section
-  By default, the `refetch` option is set to `TRUE` in the `viz.yaml` for each section. `vizlab` checks the timestamps of online resources to see if the file or resource has changed since it was last fetched.  If the timestamp has changed, or a timestamp cannot be obtained, the data will be fetched again.  However, this may be undesireable in some scenarios.  To force `vizlab` to use the cached versions of remote files, set `refetch` to `FALSE` in the relevant sections of the `viz.yaml`.  Conversely, to force `vizlab` to refetch the data regardless of timestamps, set `refetch` to `TRUE` and delete the timestamps for each section.  These are stored in `vizlab/make/timestamps`.    
+  Every fetch item has a `fetcher`, either implemented by `vizlab` or within your code. There must be methods for both `fetch` and `fetchTimestamp` for every fetcher. By default, timestamps are checked (using `fetchTimestamp`) every time you build a `fetch` item with `make`. You can slow down the frequency of timestamp checks or eliminate checks altogether by placing a line in a file called preferences.yaml in your main project directory. For example:
+
+```yaml
+timetolive:
+  iris-data: Inf days
+  Cuyahoga: 6 hours
+```
+means that the `iris-data` item will never have its timestamp checked, while `Cuyahoga` will have its timestamp checked on any build occuring more than 6 hours after the timestamp noted in `Cuyahoga`'s timestamp file. The default (for unmentioned fetch items) is "0 days". If the timestamp is checked and has changed, the item with be re-fetched. Edits to the viz.yaml chunk for the fetch item will also trigger re-fetches, regardless of the timestamp's value or whether it has exceeded its timetolive.
   
 ### Dependencies
   R package dependencies are stored in the `required-packages` section of the `viz.yaml`, with a repository (CRAN or GRAN generally) and version number.  
