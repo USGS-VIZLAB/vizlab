@@ -398,6 +398,7 @@ createMakeItem.fetch <- function(item.info, ...) {
 #'   Also produces an error if there's a mismatch between what's declared in the
 #'   viz.yaml and whether a fetchTimestamp method appears to be available for
 #'   this fetcher.
+#' @importFrom utils getS3method
 #' @md
 #' @keywords internal
 needsTimestamp <- function(item.info) {
