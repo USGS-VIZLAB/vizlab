@@ -88,21 +88,6 @@ fetch:
     mimetype: text/csv
     reader: folder
     scripts:
-  -
-    id: constant
-    fetcher: none
-    reader: inline
-    data: 42
-    scripts:
-  -
-    id: constant-list
-    fetcher: none
-    reader: inline
-    scripts:
-    data:
-      color: "#ffffff"
-      value: 45.5
-      text: "The quick brown fox jumped over the lazy dog"
 process:
   -
     id: CuyahogaShort
