@@ -1,5 +1,5 @@
 if (typeof $ === "undefined") {
-  console.err("jQuery required");
+  console.error("jQuery required");
 }
 
 (function() {
@@ -82,4 +82,4 @@ if (typeof $ === "undefined") {
   window.vizlab = vizlab;
 })();
 
-$.ready(vizlab.init);
+$(document).ready(vizlab.init);

@@ -236,7 +236,7 @@ publish.svg <- function(viz) {
   }
   output <- NULL
   if (!is.na(viz[['relpath']])) {
-    output <- sprintf('<img class="%s" src="%s" title="%s", alt="%s" />',
+    output <- sprintf('<img class="%s" src="%s" title="%s" alt="%s" />',
                       "vizlab-inject", viz[['relpath']], viz[['title']], viz[['alttext']])
   }
   return(output)
@@ -268,15 +268,15 @@ publish.footer <- function(viz) {
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
-    
+
     if(is.null(vizzies[[v]]$url)){
       vizzies[[v]]$url <- info$context$path
     }
-    
+
     if(is.null(vizzies[[v]]$thumbLoc)){
       vizzies[[v]]$thumbLoc <- info$context$thumbnail
     }
-    
+
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs
