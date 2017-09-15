@@ -70,7 +70,7 @@ fetchTimestamp.sciencebase <- function(viz) {
 #' @export
 fetchTimestamp.file <- function(viz) {
   old.timestamp <- readOldTimestamp(viz)
-  if(is.na(old.timestamp)) {
+  if(is.na(old.timestamp) && file.exists(viz$location)) {
     new.timestamp <- file.mtime(viz$location)
     writeTimestamp(new.timestamp, viz)
     old.timestamp.loc <- locateTimestampFile(viz$id)
