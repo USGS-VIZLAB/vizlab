@@ -57,7 +57,7 @@ fetchTimestamp.sciencebase <- function(viz) {
 
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
-    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    writeTimestamp(new.timestamp, viz)
     return(TRUE)
   }else{
     return(FALSE)
@@ -91,7 +91,7 @@ fetchTimestamp.url <- function(viz) {
 
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
-    writeTimestamp(new.timestamp, locateTimestampFile(viz[['id']]))
+    writeTimestamp(new.timestamp, viz)
     return(TRUE)
   }else{
     return(FALSE)
@@ -117,7 +117,8 @@ fetchTimestamp.fetcher <- function(viz){
 #' @param outfile the filename where the new timestamp should be saved
 #'
 #' @export
-writeTimestamp <- function(new.timestamp, outfile) {
+writeTimestamp <- function(new.timestamp, viz) {
+  outfile <- locateTimestampFile(viz[["id"]])
   writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), outfile)
 }
 
@@ -126,11 +127,9 @@ writeTimestamp <- function(new.timestamp, outfile) {
 #' @param id viz id needing timestamp
 #' @return character vector location of timestamp file
 locateTimestampFile <- function(id) {
-  # TODO standardize timestamp file location
-  #vizlab/make/timestamps?
   timestampDir <- "./vizlab/make/timestamps"
-  timestampDir <- file.path(timestampDir, id)
-  return(timestampDir)
+  timestampFile <- file.path(timestampDir, id)
+  return(timestampFile)
 }
 
 #' Read an old timestamp for viz
