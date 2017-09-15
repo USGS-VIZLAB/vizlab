@@ -83,11 +83,19 @@ fetch.url <- function(viz) {
   invisible()
 }
 
-#' \code{fetch.none} skips this fetch, might have other side effects
+#' \code{fetch.none} skips this fetch
 #'
 #' @rdname fetch
 #' @export
 fetch.none <- function(viz) {
+  invisible()
+}
+
+#' \code{fetchTimestamp.none} skips this fetchTimestamp
+#'
+#' @rdname fetch
+#' @export
+fetchTimestamp.none <- function(viz) {
   invisible()
 }
 

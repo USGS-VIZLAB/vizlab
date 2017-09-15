@@ -120,10 +120,10 @@ test_that("sciencebase works",{
   expect_false(fetchTimestamp('Cuyahoga'))
 })
 
-test_that("custom fetcher hits timestamp.fetcher", {
-  viz <- list()
-  attr(viz, "class") <- c("cars", "fetcher", "viz")
-  expect_warning(fetchTimestamp(viz))
+test_that("unimplemented fetcher hits timestamp.fetcher", {
+  viz <- list(id='trucks', fetcher='notaTSfetcher')
+  attr(viz, "class") <- c("notaTSfetcher", "fetcher", "viz")
+  expect_error(fetchTimestamp(viz))
 })
 
 test_that("makeFiles created", {
