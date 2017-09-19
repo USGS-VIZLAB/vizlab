@@ -243,7 +243,7 @@ publish.svg <- function(viz) {
   output <- NULL
   if (!is.na(viz[['relpath']])) {
     output <- sprintf('<img class="%s" src="%s" title="%s" alt="%s" />',
-                      "orientation", viz[['relpath']], viz[['title']], viz[['alttext']])
+                      orientation, viz[['relpath']], viz[['title']], viz[['alttext']])
   }
   return(output)
 }
