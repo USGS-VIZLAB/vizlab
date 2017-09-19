@@ -64,6 +64,22 @@
     facebook-logo: facebook-logo
     resources: [ "css" ]
 -
+  id: vertical-social-media-template
+  location: templates/verticalSocialMedia.mustache
+  publisher: template
+  mimetype: text/mustache
+  depends:
+    github-logo: lib-github-logo
+    twitter-logo: lib-twitter-logo
+    facebook-logo: lib-facebook-logo
+    css: lib-social-media-css
+  context:
+    id: social
+    github-logo: github-logo
+    twitter-logo: twitter-logo
+    facebook-logo: facebook-logo
+    resources: [ "css" ]
+-
   id: fullpage
   location: templates/fullPage.mustache
   publisher: template
@@ -79,7 +95,6 @@
     sections: []
     footer: footer
     header: header
-    social: social
   partials:
     brandcomment: brandcomment
     semantics: semantics
