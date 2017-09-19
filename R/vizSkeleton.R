@@ -76,6 +76,7 @@ vizSkeleton <- function (name = "cool-viz", path = ".") {
         "    dplyr:\n",
         "      repo: CRAN\n",
         "      version: 0.5.0\n",
+        "parameter:\n",
         "fetch:\n",
         "process:\n",
         "visualize:\n",
