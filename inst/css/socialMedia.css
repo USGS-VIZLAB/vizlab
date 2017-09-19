@@ -1,7 +1,14 @@
-#socialHolder{
+#socialHolder,
+#verticalSocialHolder{
   text-align: center;
   height: 30px;
   margin: 10px 0;
+}
+
+#socialHolder a,
+#verticalSocialHolder a{
+  display:inline-block;
+  height:30px;
 }
 
 .socialMediaOption {
@@ -48,5 +55,14 @@
 
 .github img{
   right:.5px;
+}
+
+@media screen and (min-width:600px){
+  #verticalSocialHolder{
+    width:30px;
+    height:100px;
+    position:absolute;
+    right:10px;
+  }
 }
 
