@@ -96,6 +96,16 @@ readData.filepath <- function(viz){
   return(viz[['location']])
 }
 
+#' \code{readData.parameter} returns the file path or null if location is not set
+#'
+#' @rdname readData
+#' @export
+readData.parameter <- function(viz){
+  viz <- viz[names(viz)[!(names(viz) %in% c("id","block"))]]
+  class(viz) <- 'list'
+  return(viz)
+}
+
 #' \code{readData.folder} returns names of files inside a folder
 #'
 #' @rdname readData

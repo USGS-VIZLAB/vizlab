@@ -36,7 +36,7 @@ footer a:active{
 .githublink{
   display:inline-block;
   height: 25px;
-  width:140px;
+  width:125px;
 }
 
 #github-contact{
@@ -79,7 +79,10 @@ footer a:active{
 
 #relatedItems h3{
   margin-bottom:10px;
-  width:100%;
+}
+
+#relatedItems h4{
+  font-size:.9em;
 }
 
 #relatedVizzies,
@@ -151,11 +154,21 @@ footer a:active{
   
   #relatedVizzies,
   #relatedBlogs{
-    width:47.5%;
+    flex:1;
   }
   
   #relatedVizzies{
     margin-right:5%;
+  }
+  
+  .relatedItemContainer{
+    display:flex;
+    flex-wrap:wrap;
+  }
+  
+  .relatedItem{
+    flex: 47.5%;
+    margin-right:10px;
   }
   
   .footerThumbnail{
@@ -179,6 +192,12 @@ footer a:active{
   
   .footerThumbnail{
     height:200px;
+  }
+}
+
+@media screen and (min-width:1200px){
+  .footerContentAligner{
+    width:960px;
   }
 }
 
