@@ -79,7 +79,7 @@ TODO allow for cdn js
 
 css publishing
 
-svg publishing, may return NULL
+from here on out will use svg-inject to get svg to dom
 
 Footer publishing
 

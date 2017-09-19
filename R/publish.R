@@ -86,7 +86,7 @@ publish.section <- function(viz) {
 
     embedTmpl <- template("embed")
     context[['embed']] <- viz[['output']]
-    context[['resources']] <- lapply(context[['resources']], gsub, pattern = '(href="|src=")(css|js|images)', 
+    context[['resources']] <- lapply(context[['resources']], gsub, pattern = '(href="|src=")(css|js|images)',
                                      replacement = '\\1../\\2')
     render(embedTmpl, data = context, file = file)
 
@@ -222,6 +222,8 @@ publish.css <- function(viz) {
 
 #' svg publishing, may return NULL
 #'
+#' from here on out will use svg-inject to get svg to dom
+#'
 #' @rdname publish
 #' @export
 publish.svg <- function(viz) {
@@ -229,17 +231,13 @@ publish.svg <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
+  if (!is.null(viz[['inline']])) {
+    warning("inline option is deprecated, all SVGs now use svg-inject")
+  }
   output <- NULL
-  if (is.null(viz[['inline']]) || !viz[['inline']]) {
-    if (!is.na(viz[['relpath']])) {
-      output <- sprintf(
-        '<object id="%s" type="image/svg+xml" class="svgFig" data="%s" title="%s" >%s</object>',
-        viz[['id']], viz[['relpath']], viz[['title']], viz[['alttext']])
-    }
-  } else {
-    # skip prolog
-    output <- scan(file = viz[['location']], what = "character", sep = "\n", skip = 1)
-    output <- paste(output, collapse = "\n")
+  if (!is.na(viz[['relpath']])) {
+    output <- sprintf('<img class="%s" src="%s" title="%s" alt="%s" />',
+                      "vizlab-inject", viz[['relpath']], viz[['title']], viz[['alttext']])
   }
   return(output)
 }
@@ -270,15 +268,15 @@ publish.footer <- function(viz) {
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
-    
+
     if(is.null(vizzies[[v]]$url)){
       vizzies[[v]]$url <- info$context$path
     }
-    
+
     if(is.null(vizzies[[v]]$thumbLoc)){
       vizzies[[v]]$thumbLoc <- info$context$thumbnail
     }
-    
+
   }
   context[['blogsInFooter']] <- viz$blogsInFooter
   context[['blogs']] <- viz$blogs

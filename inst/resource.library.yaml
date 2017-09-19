@@ -87,11 +87,13 @@
   depends:
     brandcomment: brandcomment
     semantics: semantics
+    jquery-js: lib-jquery-js
     vizlab-js: lib-vizlab-javascript
+    svg-injector-js: lib-svg-injector-js
     favicon: lib-vizlab-favicon
   context:
     info:
-    resources: [ favicon, vizlab-js ]
+    resources: [ favicon, jquery-js, vizlab-js, svg-injector-js ]
     sections: []
     footer: footer
     header: header
@@ -234,4 +236,18 @@
   id: lib-social-media-css
   location: css/socialMedia.css
   mimetype: text/css
+  publisher: resource
+
+### THIRD-PARTY JS LIBRARIES ###
+-
+  id: lib-svg-injector-js
+  location: js/third-party/svg-injector-1.1.3.min.js
+  version: 1.1.3
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-jquery-js
+  location: js/third-party/jquery-3.2.1.min.js
+  version: 3.2.1
+  mimetype: text/javascript
   publisher: resource
