@@ -57,7 +57,8 @@ if (typeof $ === "undefined") {
   };
 
   vizlab.load.inject = function() {
-    SVGInjector($("img.vizlab-inject"), {
+    var svgSelector = (window.innerWidth > window.innerHeight) ? "img.vizlab-landscape" : "img.vizlab-portrait";
+    SVGInjector($(svgSelector), {
       evalScripts: "once",
       pngFallback: "images/fallback",
       each: function(svg) {
