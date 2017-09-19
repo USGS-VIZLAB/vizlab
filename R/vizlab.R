@@ -23,7 +23,11 @@ as.viz.character <- function(x, ...) {
   if (length(viz) == 1 && is.na(viz)) {
     viz <- getResourceFromLibrary(x, no.match='stop')
   }
-  return(as.viz(viz))
+  viz <- as.viz(viz)
+  if("block" %in% names(viz)){
+    class(viz) <- c(viz[["block"]],class(viz))
+  }
+  return(viz)
 }
 
 #' Convert list into vizlab object

@@ -1,7 +1,7 @@
 Package: vizlab
 Type: Package
 Title: Utilities for building online data visualizations
-Version: 0.1.8.10
+Version: 0.2.0.9000
 Date: 2017-09-12
 Author: Jordan Walker, Alison Appling, Lindsay Carr, Luke Winslow, Jordan Read
 Maintainer: Jordan Walker <jiwalker@usgs.gov>

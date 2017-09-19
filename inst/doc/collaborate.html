@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Laura DeCicco" />
 
-<meta name="date" content="2017-03-01" />
+<meta name="date" content="2017-09-15" />
 
 <title>Collaboration Example</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Collaboration Example</h1>
 <h4 class="author"><em>Laura DeCicco</em></h4>
-<h4 class="date"><em>2017-03-01</em></h4>
+<h4 class="date"><em>2017-09-15</em></h4>
 
 
 
@@ -73,7 +73,6 @@ createMakefiles() </code></pre>
     fetcher: sciencebase
     remoteItemId: &quot;XXX123&quot;
     remoteFilename: &quot;thermoelectric_1955.csv&quot;
-    refetch: FALSE
     mimetype: text/csv
     scripts: 
 </code></pre>
@@ -82,7 +81,6 @@ createMakefiles() </code></pre>
 <li>A unique id “oldThermoData”. Downstream parts of this project that depend on this data will need to refer to this step by the unique id.</li>
 <li>A “location”, which is the relative path where the file that is produced from this job will be stored.</li>
 <li>The “fetcher” field indicates to <code>vizlab</code> to go to ScienceBase, look for the ScienceBase’s ID “XXX123”, and pull down the file “thermoelectric_1955.csv” from that ID.</li>
-<li>The “refetch” set to FALSE means that this step should not be consistently repeated (for example, when you are re-building the project for some other step well downstream of this point). If we would expect the data might change, we would want this set to TRUE.</li>
 <li>An optional field “mimetype”, this allows future jobs that depends on this data to know how to open the data.<br />
 </li>
 <li>A “scripts”&quot; field is where we could put custom scripts. In this particular case, we don’t actually need any custom scripts because the ‘fetcher’ refers to a function already defined in <code>vizlab</code> (so we don’t need to define our own). However, currently <code>vizlab</code> will give a warning if this field is missing.</li>
@@ -201,7 +199,7 @@ $export
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

@@ -70,7 +70,6 @@ fetch:
     fetcher: sciencebase
     remoteItemId: "XXX123"
     remoteFilename: "thermoelectric_1955.csv"
-    refetch: FALSE
     mimetype: text/csv
     scripts: 
 
@@ -81,7 +80,6 @@ What is this? We've added a new fetch job, and given it some information:
 * A unique id "oldThermoData". Downstream parts of this project that depend on this data will need to refer to this step by the unique id.
 * A "location", which is the relative path where the file that is produced from this job will be stored. 
 * The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. 
-* The "refetch" set to FALSE means that this step should not be consistently repeated (for example, when you are re-building the project for some other step well downstream of this point). If we would expect the data might change, we would want this set to TRUE. 
 * An optional field "mimetype", this allows future jobs that depends on this data to know how to open the data.  
 * A "scripts"" field is where we could put custom scripts. In this particular case, we don't actually need any custom scripts because the 'fetcher' refers to a function already defined in `vizlab` (so we don't need to define our own). However, currently `vizlab` will give a warning if this field is missing. 
 
