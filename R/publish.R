@@ -224,6 +224,8 @@ publish.css <- function(viz) {
 #'
 #' from here on out will use svg-inject to get svg to dom
 #'
+#' also, svg will support landscape or portrait for mobile support
+#'
 #' @rdname publish
 #' @export
 publish.svg <- function(viz) {
@@ -231,13 +233,17 @@ publish.svg <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
+  orientation <- "vizlab-landscape"
+  if (!is.null(viz[['orientation']]) && viz[['orientation']] == "portrait") {
+    orientation <- "vizlab-portrait"
+  }
   if (!is.null(viz[['inline']])) {
     warning("inline option is deprecated, all SVGs now use svg-inject")
   }
   output <- NULL
   if (!is.na(viz[['relpath']])) {
     output <- sprintf('<img class="%s" src="%s" title="%s" alt="%s" />',
-                      "vizlab-inject", viz[['relpath']], viz[['title']], viz[['alttext']])
+                      "orientation", viz[['relpath']], viz[['title']], viz[['alttext']])
   }
   return(output)
 }
