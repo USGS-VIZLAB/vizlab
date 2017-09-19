@@ -158,11 +158,12 @@ createConfigCall <- function(){
   
   paste(c(
     "vizlab/make/config/%.rds : viz.yaml",
-    '\texport R_LIBS_USER=$(RLIBSUSER);\\',
+    # '\t@echo "$@: updateConfigInfoFile(\'$*\')"', # could be nice for debugging/optimizing, but for now be quiet about this
+    '\t@export R_LIBS_USER=$(RLIBSUSER);\\',
     '\t${RSCRIPT}  -e "library(vizlab); updateConfigInfoFile(\'$*\')"\\',
     '\t> vizlab/make/log/config.Rout 2>&1'),
-    # each target overwrites the last b/c i don't expect to debug it often,
-    # don't want a bazillion extra files
+    # each target logfile overwrites the last b/c i don't expect to debug it
+    # often, don't want a bazillion extra files
     collapse='\n')
 }
 
@@ -636,32 +637,24 @@ createMakeBatchRule <- function(target, depends=c(), fun, funargs=c(), scripts=c
   scripts_chr <- if(length(scripts) > 0) {
     paste0(' scripts=', mQuote(paste0("c(", paste0("'", scripts, "'", collapse=','), ")")))
   } else ''
+  funargs_inner <- if(length(funargs) > 0) {
+    paste0(names(funargs), "=", funargs, collapse=",")
+  } else ''
   funargs_chr <- if(length(funargs) > 0) {
-    paste0(' funargs=', mQuote(paste0("list(", paste0(names(funargs), "=", funargs, collapse=","), ")")))
+    paste0(' funargs=', mQuote(paste0("list(", funargs_inner, ")")))
   } else ''
 
+  # create a descriptive character string to summarize the recipe & bash command
+  is_helper_target <- !is.null(target) && nchar(target) > 7 && substr(target, 1, 7) == 'vizlab/'
+  echo_target <- if(is.null(target)) tools::file_path_sans_ext(basename(logfile)) else target
+  
   # produce the final character string
   paste(c(
     createMakeEmptyRule(target, depends),
-    sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
+    sprintf('\t@echo "%s: %s(%s)"', echo_target, fun, funargs_inner),
+    sprintf('\t@export R_LIBS_USER=$(RLIBSUSER);\\'),
     sprintf('\t${RBATCH} "--args fun=%s%s%s" \\', fun, funargs_chr, scripts_chr),
     sprintf('\tvizlab/make/callFunction.R vizlab/make/log/%s', logfile)),
-    collapse='\n')
-}
-
-#' Create text for a make rule that calls an R expression
-#'
-#' The R expression will be called by R.exe -e
-#'
-#' @inheritParams createMakeEmptyRule
-#' @param expr character vector of one or more R commands
-#' @keywords internal
-createMakeExprRule <- function(target, depends=c(), expr) {
-  # produce the final character string
-  paste(c(
-    createMakeEmptyRule(target, depends),
-    sprintf('\texport R_LIBS_USER=$(RLIBSUSER);\\'),
-    sprintf('\t${REXPR} "%s"', paste0(expr, collapse='; \\\n\t'))),
     collapse='\n')
 }
 
