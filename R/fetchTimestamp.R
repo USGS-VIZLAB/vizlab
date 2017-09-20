@@ -1,22 +1,27 @@
 #' Update timestamp file if needed
 #'
-#' This function should be called from the generic, \code{fetchTimestamp()}.
-#' Update timestamp file if the local copy of a file is out of date relative to
-#' a remote copy. The need for a timestamp file, and the method for finding the
-#' timestamp, will be determined by the metadata in viz.yaml for the item.
+#' `fetchTimestamp` updates a timestamp file if the local copy of a file is out
+#' of date relative to the data source. In practice, the desired definition of
+#' 'out of date' differs widely among data sources, sizes, and projects, so
+#' `fetchTimestamp` is a generic function with a method specific to each
+#' `fetcher`. Every `fetchTimestamp` method should write a timestamp file, or
+#' not, as required to achieve the desired `make` behavior. See
+#' [fetchTimestampMethods] and [fetchTimestampHelpers] for assistance in
+#' defining new fetchTimestamp methods. Also consider preferences.yaml and
+#' [exceededTimeToLive()] for additional options for managing data fetches.
 #'
-#' @param viz the identifier for this data item in viz.yaml
-#' @importFrom httr HEAD
-#' @importFrom httr headers
-#' @importFrom httr parse_http_date
-#' @return logical \code{TRUE} if a timestamp does not exist or has changed,
-#' \code{FALSE} if the timestamps are identical.
+#' @param viz the identifier for a fetch item in viz.yaml
+#' @return It doesn't matter what a fetchTimestamp method returns. It matters a
+#'   lot more whether it creates/updates the timestamp file or not.
 #' @export
+#' @md
 fetchTimestamp <- function(viz) UseMethod("fetchTimestamp")
 
-#' \code{fetchTimestamp.character} fetches timestamp for a given id
+#' Routes the timestamp fetching to a more specific fetcher.
 #'
-#' @rdname fetchTimestamp
+#' This particular method is not really a timestamp fetcher, just an
+#' intermediary, and so is not documented in [fetchTimestamp()].
+#' @inheritParams fetchTimestamp
 #' @export
 fetchTimestamp.character <- function(viz) {
   # get the fetching information for this data ID from viz.yaml
@@ -27,8 +32,11 @@ fetchTimestamp.character <- function(viz) {
   fetchTimestamp(viz)
 }
 
-#' \code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
+#' `fetchTimestamp.sciencebase` gets the file timestamp from ScienceBase.
 #'
+#' @importFrom httr HEAD
+#' @importFrom httr headers
+#' @importFrom httr parse_http_date
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.sciencebase <- function(viz) {
@@ -40,7 +48,7 @@ fetchTimestamp.sciencebase <- function(viz) {
   remoteItemId <- viz[['remoteItemId']]
   remoteFilename <- viz[['remoteFilename']]
 
-  old.timestamp <- readOldTimestamp(viz)
+  old.timestamp <- readTimestamp(viz)
   # try to get the timestamp from sciencebase. if we can't get it, give a
   # warning and leave the outfile as it was
   new.timestamp <- tryCatch({
@@ -58,53 +66,76 @@ fetchTimestamp.sciencebase <- function(viz) {
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, viz)
-    return(TRUE)
-  }else{
-    return(FALSE)
   }
+  
+  # return nothing
+  invisible()
 }
 
-#' Does nothing - \code{make} already checks timestamps of local files
+#' `fetchTimestamp.file` creates a timestamp file once, with file metadata and
+#' file contents that both match the timestamp of the viz data file. If the
+#' timestamp file already exists, it is only modified if the data file is
+#' updated.
 #'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.file <- function(viz) {
-  old.timestamp <- readOldTimestamp(viz)
-  if(is.na(old.timestamp) && file.exists(viz$location)) {
-    new.timestamp <- file.mtime(viz$location)
-    writeTimestamp(new.timestamp, viz)
-    old.timestamp.loc <- locateTimestampFile(viz$id)
-    Sys.setFileTime(old.timestamp.loc, new.timestamp)
-    return(TRUE)
-  } else {
-    return(FALSE)
+  
+  # get the old timestamp
+  old.timestamp <- readTimestamp(viz)
+  new.timestamp <- if(file.exists(viz$location)) file.mtime(viz$location) else NA
+  
+  if(!is.na(new.timestamp)) {
+    if(is.na(old.timestamp) || (new.timestamp > old.timestamp)) {
+    # write the new timestamp to match the timestamp of the data file. also
+    # write the file metadata for the timestamp file so its timestamp matches
+    # the data file's timestamp
+    writeTimestamp(new.timestamp, viz, timestamp.mtime=new.timestamp)
+    }
+  } else if(!is.na(old.timestamp)) {
+    # if the data file is now missing, make sure the timestamp file is missing,
+    # too. this is not terribly important, because a missing data file is always
+    # refetched, but this keeps the timestamp file honest
+    file.remove(locateTimestampFile(viz$id))
   }
+  
+  # return nothing
+  invisible()
 }
 
-#' check a URL for timestamp
+#' `fetchTimestamp.url` checks a URL for a timestamp. The URL headers must
+#' include a 'last-modified' field; otherwise, this method breaks and you should
+#' write your own for the specific URL in question.
 #'
 #' @rdname fetchTimestamp
 #' @export
 fetchTimestamp.url <- function(viz) {
 
-  #URL will be specified in viz.yaml as remoteURL
+  # URL will be specified in viz.yaml as remoteURL
+  required <- c("remoteURL")
+  checkRequired(viz, required)
   url <- viz$remoteURL
+  
+  # read the URL header and the current timestamp file
   new.timestamp <- headers(HEAD(url))[['last-modified']]
-  old.timestamp <- readOldTimestamp(viz)
-  #tag will be NULL if the last-modified tag doesn't exist
-  if(is.null(new.timestamp)){
-    new.timestamp <- Sys.time()
-  }else{
+  old.timestamp <- readTimestamp(viz)
+  
+  # Parse the new.timestamp if available. tag will be NULL if the last-modified
+  # tag doesn't exist
+  if(is.null(new.timestamp)) {
+    stop("'last-modified' field not found in headers of ", url)
+  } else {
     new.timestamp <- parse_http_date(new.timestamp)
+    attr(new.timestamp, "tzone") <- "UTC"
   }
 
   # write the new timestamp to the file
   if(!is.na(new.timestamp) && (is.na(old.timestamp) || (new.timestamp != old.timestamp))) {
     writeTimestamp(new.timestamp, viz)
-    return(TRUE)
-  }else{
-    return(FALSE)
   }
+  
+  # return nothing
+  invisible()
 }
 
 #' \code{fetchTimestamp.fetcher} superclass method catches missing
@@ -119,47 +150,4 @@ fetchTimestamp.fetcher <- function(viz){
   # failure+understanding by giving this error in both places
   stop(paste0("fetchTimestamp.", viz$fetcher, " must be implemented for ",
               viz$id, ", probably in an R file in 'scripts:'"))
-}
-
-
-#' Write a timestamp file with the conventions used by fetchTimestamp
-#'
-#' Should only be used outside the vizlab package if the developer is writing a
-#' new data + timestamp fetcher
-#'
-#' @param new.timestamp the new timestamp to write to file
-#' @param viz a viz item (e.g., from as.viz)
-#'
-#' @export
-writeTimestamp <- function(new.timestamp, viz) {
-  outfile <- locateTimestampFile(viz[["id"]])
-  writeLines(format(new.timestamp, "%Y-%m-%d %H:%M:%S %Z"), outfile)
-}
-
-#' Where is the timestamp file
-#'
-#' @param id viz id needing timestamp
-#' @return character vector location of timestamp file
-locateTimestampFile <- function(id) {
-  timestampDir <- "./vizlab/make/timestamps"
-  timestampFile <- file.path(timestampDir, id)
-  return(timestampFile)
-}
-
-#' Read an old timestamp for viz
-#'
-#' @param viz vizlab object
-#' @return POSIXct timestamp for vizlab object
-readOldTimestamp <- function(viz) {
-  timestamp.file <- locateTimestampFile(viz$id)
-  # get the locally stored timestamp if it exists
-  old.timestamp <- if(file.exists(timestamp.file)) {
-    tryCatch({
-      old.timestamp.chr <- readLines(timestamp.file)
-      as.POSIXct(old.timestamp.chr)
-    }, error=function(e) NA, warning=function(w) NA)
-  } else {
-    NA
-  }
-  return(old.timestamp)
 }
