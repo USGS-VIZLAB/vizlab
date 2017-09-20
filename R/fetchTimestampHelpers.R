@@ -49,6 +49,8 @@ neverCurrent <- function(viz) {
 #' @name fetchTimestampHelpers
 #' @md
 #' @param viz a viz item (e.g., from as.viz)
+#' @param id the viz id - should be the same as for the viz in the calling
+#'   function
 #' @examples
 #' \dontrun{
 #' # this custom method probably won't do what you want,
@@ -72,8 +74,6 @@ NULL
 #'
 #' @rdname fetchTimestampHelpers
 #' @md
-#' @param id the viz id - should be the same as for the viz in the calling
-#'   function
 #' @param location the fetched data file location - should be the same as for
 #'   the viz in the calling function. May be NA if you're only passing the
 #'   output to [fetchTimestamp()]; required for [fetch()].
@@ -144,7 +144,6 @@ formatTimestamp <- function(timestamp) {
 #'
 #' @rdname fetchTimestampHelpers
 #' @md
-#' @param id character id of the viz item for which to locate the timestamp file
 #' @export
 locateTimestampFile <- function(id) {
   timestampFile <- file.path("./vizlab/make/timestamps", id)

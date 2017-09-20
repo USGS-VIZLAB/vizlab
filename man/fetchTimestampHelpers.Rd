@@ -40,8 +40,6 @@ metadata (using Sys.setFileTime - sets the mtime=modified time property);
 NA leaves the metadata alone}
 
 \item{timestamp}{POSIXct timestamp to format into a character string}
-
-\item{id}{character id of the viz item for which to locate the timestamp file}
 }
 \description{
 These functions are used within vizlab \code{\link[=fetchTimestamp]{fetchTimestamp()}} methods and may be
