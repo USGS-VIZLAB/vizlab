@@ -56,7 +56,7 @@ exceededTimeToLive <- function(id) {
     exceeded <- TRUE
   } else {
     ttl <- getPreferences()[['timetolive']][[id]]
-    old.timestamp <- readOldTimestamp(viz)
+    old.timestamp <- readTimestamp(viz)
     exceeded <- Sys.time() > old.timestamp + ttl
   }
   cat(exceeded) # so `make` can read the result
