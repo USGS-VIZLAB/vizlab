@@ -2,7 +2,6 @@
 % Please edit documentation in R/fetchTimestamp.R
 \name{fetchTimestamp}
 \alias{fetchTimestamp}
-\alias{fetchTimestamp.character}
 \alias{fetchTimestamp.sciencebase}
 \alias{fetchTimestamp.file}
 \alias{fetchTimestamp.url}
@@ -10,8 +9,6 @@
 \title{Update timestamp file if needed}
 \usage{
 fetchTimestamp(viz)
-
-\method{fetchTimestamp}{character}(viz)
 
 \method{fetchTimestamp}{sciencebase}(viz)
 
@@ -22,25 +19,33 @@ fetchTimestamp(viz)
 \method{fetchTimestamp}{fetcher}(viz)
 }
 \arguments{
-\item{viz}{the identifier for this data item in viz.yaml}
+\item{viz}{the identifier for a fetch item in viz.yaml}
 }
 \value{
-logical \code{TRUE} if a timestamp does not exist or has changed,
-\code{FALSE} if the timestamps are identical.
+It doesn't matter what a fetchTimestamp method returns. It matters a
+lot more whether it creates/updates the timestamp file or not.
 }
 \description{
-This function should be called from the generic, \code{fetchTimestamp()}.
-Update timestamp file if the local copy of a file is out of date relative to
-a remote copy. The need for a timestamp file, and the method for finding the
-timestamp, will be determined by the metadata in viz.yaml for the item.
+\code{fetchTimestamp} updates a timestamp file if the local copy of a file is out
+of date relative to the data source. In practice, the desired definition of
+'out of date' differs widely among data sources, sizes, and projects, so
+\code{fetchTimestamp} is a generic function with a method specific to each
+\code{fetcher}. Every \code{fetchTimestamp} method should write a timestamp file, or
+not, as required to achieve the desired \code{make} behavior. See
+\link{fetchTimestampMethods} and \link{fetchTimestampHelpers} for assistance in
+defining new fetchTimestamp methods. Also consider preferences.yaml and
+\code{\link[=exceededTimeToLive]{exceededTimeToLive()}} for additional options for managing data fetches.
 
-\code{fetchTimestamp.character} fetches timestamp for a given id
+`fetchTimestamp.sciencebase` gets the file timestamp from ScienceBase.
 
-\code{fetchTimestamp.sciencebase} gets the file timestamp from ScienceBase.
+`fetchTimestamp.file` creates a timestamp file once, with file metadata and
+file contents that both match the timestamp of the viz data file. If the
+timestamp file already exists, it is only modified if the data file is
+updated.
 
-Does nothing - \code{make} already checks timestamps of local files
-
-check a URL for timestamp
+`fetchTimestamp.url` checks a URL for a timestamp. The URL headers must
+include a 'last-modified' field; otherwise, this method breaks and you should
+write your own for the specific URL in question.
 
 \code{fetchTimestamp.fetcher} superclass method catches missing
 implementation

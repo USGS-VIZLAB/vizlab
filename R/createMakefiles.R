@@ -385,7 +385,7 @@ createMakeItem.fetch <- function(item.info, ...) {
     # interleave a gnu make conditional (I hope it works on all systems!!) for exceedance of timetolive
     phony.timestamp.split <- strsplit(phony.timestamp, split='\n')[[1]]
     phony.timestamp.full <- c(phony.timestamp.split[1],
-      sprintf("ifeq ($(shell echo $(shell Rscript -e \"vizlab::exceededTimeToLive('%s')\" 2> null)),TRUE)", item.info$id),
+      sprintf("ifeq ($(shell echo $(shell Rscript -e \"vizlab::exceededTimeToLive('%s')\" 2> /dev/null)),TRUE)", item.info$id),
       phony.timestamp.split[-1],
       "else",
       sprintf("\t@echo \"%s: exceededTimeToLive('%s')=FALSE\"", timestamp.id, item.info$id),

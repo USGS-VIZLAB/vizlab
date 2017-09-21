@@ -79,7 +79,7 @@ TODO allow for cdn js
 
 css publishing
 
-svg publishing, may return NULL
+from here on out will use svg-inject to get svg to dom
 
 Footer publishing
 
@@ -100,4 +100,6 @@ The job of minification or css precompiling could also be added here, but
 currently this is not handled.
 
 Also, templating the resources that make sense would be useful
+
+also, svg will support landscape or portrait for mobile support
 }
