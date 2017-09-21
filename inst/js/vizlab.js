@@ -53,18 +53,39 @@ if (typeof $ === "undefined") {
 
   vizlab.load.init = function() {
     vizlab.load.inject();
+    $(window).on("resize", vizlab.load.inject); // re-inject on orientation change
     // TODO: here we can hide the loading overlay when it exists
   };
 
   vizlab.load.inject = function() {
-    SVGInjector($("img.vizlab-inject"), {
-      evalScripts: "once",
-      pngFallback: "images/fallback",
-      each: function(svg) {
-        // TODO do we need to do anything per svg?
+    var orientMatch = window.matchMedia("(orientation: portrait)");
+    var orientSelector = null;
+
+    var inject = function() {
+      SVGInjector($(orientSelector), {
+        evalScripts: "once",
+        pngFallback: "images/fallback",
+        each: function(svg) {
+          // TODO do we need to do anything per svg?
+        }
+      }, function(count) {
+        $(document).trigger("vizlab.ready");
+      });
+    };
+
+    if (orientMatch.matches) {
+      orientSelector = "img.vizlab-portrait";
+    } else {
+      orientSelector = "img.vizlab-landscape";
+    }
+    inject();
+    orientMatch.addListener(function(o) {
+      if (o.matches) {
+        orientSelecor = "img.vizlab-portrait";
+      } else {
+        orientSelector = "img.vizlab-landscape";
       }
-    }, function(count) {
-      $(document).trigger("vizlab.ready");
+      inject();
     });
   };
 
