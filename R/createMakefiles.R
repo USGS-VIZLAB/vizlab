@@ -186,7 +186,7 @@ updateConfigInfoFile <- function(viz.id){
   full.config <- file.path("vizlab/make/config",file.config) 
   if(file.exists(full.config)){
     orig.info <- readRDS(full.config)
-    if(!all(orig.info %in% info)){
+    if(!isTRUE(all.equal(orig.info, info))) {
       saveRDS(info, full.config)
     }
   } else {
