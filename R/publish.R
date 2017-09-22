@@ -234,9 +234,9 @@ publish.svg <- function(viz) {
   checkRequired(viz, required)
 
   orientation = c()
-  if (!is.null(viz[['orientation']]) || viz[['orientation']] == "landscape") {
+  if (!is.null(viz[['orientation']]) && viz[['orientation']] == "landscape") {
     orientation <- "vizlab-landscape"
-  } else if (!is.null(viz[['orientation']]) || viz[['orientation']] == "portrait"){
+  } else if (!is.null(viz[['orientation']]) && viz[['orientation']] == "portrait"){
     orientation <- "vizlab-portrait"
   } else { # default or both
     orientation <- "vizlab-landscape vizlab-portrait"
