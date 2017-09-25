@@ -2,9 +2,9 @@ context("markdown")
 
 oldwd <- getwd()
 testtmp <- setup(TRUE)
-test_that("markdown in context becomes proper html", {
+test_that("markdown from yaml becomes proper html fragments", {
   viz <- as.viz(list(
-    id = "test_markdown",
+    id = "test_markdown_yaml",
     location = "data/siteText.yaml",
     reader = "md",
     mimetype = "text/yaml"
@@ -20,9 +20,9 @@ test_that("markdown in context becomes proper html", {
 
 })
 
-test_that("markdown in viz converts to html", {
+test_that("markdown file converts to html", {
   viz <- as.viz(list(
-    id = "md_inline",
+    id = "test_markdown_file",
     location = "data/example.md",
     reader = "md",
     mimetype = "text/markdown"
