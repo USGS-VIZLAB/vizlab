@@ -19,4 +19,20 @@ test_that("markdown in context becomes proper html", {
   expect_match(fragment$list, "<li>or numbered</li>")
 
 })
+
+test_that("markdown in viz converts to html", {
+  viz <- as.viz(list(
+    id = "md_inline",
+    location = "data/example.md",
+    reader = "md",
+    mimetype = "text/markdown"
+  ))
+  viz <- as.reader(viz)
+
+  fragment <- readData(viz)
+  expect_match(fragment, "<h3>Simple markdown document</h3>")
+  expect_match(fragment, "<em>auctor.*</em>")
+  expect_match(fragment, "<strong>morbi.*</strong>")
+  expect_match(fragment, "<pre><code>.*goes_here().*</code></pre>")
+})
 cleanup(oldwd, testtmp)
