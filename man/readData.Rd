@@ -79,3 +79,7 @@ or markdown contained in yaml with mimetype: text/yaml
 
 \code{readData.inline} reads data directly from inline yaml
 }
+\details{
+If simple markdown is used, return will be the rendered html, otherwise it
+will be a list of html fragments named with the keys from the yaml.
+}
