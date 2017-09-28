@@ -195,6 +195,12 @@ readData.inline <- function(viz) {
 #' @return single value or list of values
 #' @export
 readData.json <- function(viz) {
+  
+  has_jsonlite <- suppressMessages(suppressWarnings(require(jsonlite)))
+  if(!has_jsonlite) { 
+    stop("jsonlite package is required to read JSON data (mimetype='application/javascript', reader='json')")
+  }
+  
   required <- c("data")
   checkRequired(viz, required)
   
