@@ -50,8 +50,6 @@ readData(viz)
 }
 \value{
 single value or list of values
-
-single value or list of values
 }
 \description{
 This function should be called from the generic, \code{readData()}. Reads

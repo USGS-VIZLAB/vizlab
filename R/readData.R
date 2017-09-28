@@ -192,7 +192,6 @@ readData.inline <- function(viz) {
 #' \code{readData.json} reads json files
 #'
 #' @rdname readData
-#' @return single value or list of values
 #' @export
 readData.json <- function(viz) {
   
