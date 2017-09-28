@@ -201,7 +201,7 @@ readData.json <- function(viz) {
     stop("jsonlite package is required to read JSON data (mimetype='application/javascript', reader='json')")
   }
   
-  required <- c("data")
+  required <- c("location")
   checkRequired(viz, required)
   
   data <- jsonlite::fromJSON(viz[['location']])
