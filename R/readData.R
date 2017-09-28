@@ -189,6 +189,24 @@ readData.inline <- function(viz) {
   return(data)
 }
 
+#' \code{readData.json} reads json files
+#'
+#' @rdname readData
+#' @export
+readData.json <- function(viz) {
+  
+  has_jsonlite <- suppressMessages(suppressWarnings(require(jsonlite)))
+  if(!has_jsonlite) { 
+    stop("jsonlite package is required to read JSON data (mimetype='application/javascript', reader='json')")
+  }
+  
+  required <- c("location")
+  checkRequired(viz, required)
+  
+  data <- jsonlite::fromJSON(viz[['location']])
+  return(data)
+}
+
 ### Set up the reader class
 
 #' Treat viz object as a reader
