@@ -152,6 +152,9 @@ readData.txt <- function(viz){
 #' Can either be a single markdown file, specified with mimetype: text/markdown
 #' or markdown contained in yaml with mimetype: text/yaml
 #'
+#' If simple markdown is used, return will be the rendered html, otherwise it
+#' will be a list of html fragments named with the keys from the yaml.
+#'
 #' @rdname readData
 #' @export
 readData.md <- function(viz) {
@@ -167,7 +170,8 @@ readData.md <- function(viz) {
       return(x)
     }, how = "replace", classes = "character")
   } else {
-    html <- handleMarkdown(viz)
+    md <- readData.txt(viz)
+    html <- handleMarkdown(md)
   }
   return(html)
 }
@@ -182,6 +186,24 @@ readData.inline <- function(viz) {
   checkRequired(viz, required)
 
   data <- viz[["data"]]
+  return(data)
+}
+
+#' \code{readData.json} reads json files
+#'
+#' @rdname readData
+#' @export
+readData.json <- function(viz) {
+  
+  has_jsonlite <- suppressMessages(suppressWarnings(require(jsonlite)))
+  if(!has_jsonlite) { 
+    stop("jsonlite package is required to read JSON data (mimetype='application/javascript', reader='json')")
+  }
+  
+  required <- c("location")
+  checkRequired(viz, required)
+  
+  data <- jsonlite::fromJSON(viz[['location']])
   return(data)
 }
 

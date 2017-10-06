@@ -56,7 +56,7 @@ fetchTimestamp.sciencebase <- function(viz) {
     sb.info <- sbtools::item_get(remoteItemId)
     files.info <- sb.info$files
     file.info <- files.info[[which(sapply(files.info, function(fileinf) { fileinf$name == remoteFilename }))]]
-    as.POSIXct(file.info$dateUploaded, format = '%Y-%m-%dT%H:%M:%SZ')
+    as.POSIXct(file.info$dateUploaded, format = '%Y-%m-%dT%H:%M:%SZ', tz='UTC')
   }, error=function(e) {
     warning(e$message, call.=FALSE)
     warning("could not retrieve timestamp from ScienceBase; local timestamp information will be left as-is", call.=FALSE)

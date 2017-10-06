@@ -2,9 +2,9 @@ context("markdown")
 
 oldwd <- getwd()
 testtmp <- setup(TRUE)
-test_that("markdown in context becomes proper html", {
+test_that("markdown from yaml becomes proper html fragments", {
   viz <- as.viz(list(
-    id = "test_markdown",
+    id = "test_markdown_yaml",
     location = "data/siteText.yaml",
     reader = "md",
     mimetype = "text/yaml"
@@ -18,5 +18,21 @@ test_that("markdown in context becomes proper html", {
   expect_match(fragment$list, "<li>bullets</li>")
   expect_match(fragment$list, "<li>or numbered</li>")
 
+})
+
+test_that("markdown file converts to html", {
+  viz <- as.viz(list(
+    id = "test_markdown_file",
+    location = "data/example.md",
+    reader = "md",
+    mimetype = "text/markdown"
+  ))
+  viz <- as.reader(viz)
+
+  fragment <- readData(viz)
+  expect_match(fragment, "<h3>Simple markdown document</h3>")
+  expect_match(fragment, "<em>auctor.*</em>")
+  expect_match(fragment, "<strong>morbi.*</strong>")
+  expect_match(fragment, "<pre><code>.*goes_here().*</code></pre>")
 })
 cleanup(oldwd, testtmp)

@@ -14,6 +14,7 @@
 \alias{readData.txt}
 \alias{readData.md}
 \alias{readData.inline}
+\alias{readData.json}
 \title{Ensure data is on the local file system}
 \usage{
 readData(viz)
@@ -41,6 +42,8 @@ readData(viz)
 \method{readData}{md}(viz)
 
 \method{readData}{inline}(viz)
+
+\method{readData}{json}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -78,4 +81,10 @@ Can either be a single markdown file, specified with mimetype: text/markdown
 or markdown contained in yaml with mimetype: text/yaml
 
 \code{readData.inline} reads data directly from inline yaml
+
+\code{readData.json} reads json files
+}
+\details{
+If simple markdown is used, return will be the rendered html, otherwise it
+will be a list of html fragments named with the keys from the yaml.
 }

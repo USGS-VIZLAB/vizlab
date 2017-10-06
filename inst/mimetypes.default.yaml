@@ -22,5 +22,7 @@ ico:
 js:
   - "application/javascript"
   - "text/javascript"
+json:
+  - "application/json"
 css:
   - "text/css"

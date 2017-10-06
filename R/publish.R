@@ -233,10 +233,15 @@ publish.svg <- function(viz) {
   viz <- NextMethod()
   checkRequired(viz, required)
 
-  orientation <- "vizlab-landscape"
-  if (!is.null(viz[['orientation']]) && viz[['orientation']] == "portrait") {
+  orientation = c()
+  if (!is.null(viz[['orientation']]) && viz[['orientation']] == "landscape") {
+    orientation <- "vizlab-landscape"
+  } else if (!is.null(viz[['orientation']]) && viz[['orientation']] == "portrait"){
     orientation <- "vizlab-portrait"
+  } else { # default or both
+    orientation <- "vizlab-landscape vizlab-portrait"
   }
+
   if (!is.null(viz[['inline']])) {
     warning("inline option is deprecated, all SVGs now use svg-inject")
   }
