@@ -223,8 +223,8 @@
   mimetype: text/javascript
   publisher: resource
 -
-  id: lib-svg-javascript
-  location: js/svg.js
+  id: lib-tooltip-js
+  location: js/tooltip.js
   mimetype: text/javascript
   publisher: resource
 -
