@@ -14,23 +14,32 @@ function hovertext(text, evt){
       clearTimeout(hoverTimer); //stop when off area
     }
   } else {
+    var svgPoint = cursorPoint(evt);
+    var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
+    var textLength;
+    var halfLength;
+    var tooltipX;
     var tooltip_bg = tipG.append('rect').attr("id", "tooltip-box").attr("height", 24).attr("class", "tooltip-box");
     var tool_pt = tipG.append('path').attr("id", "tooltip-point").attr("d", "M-6,-11 l6,10 l6,-11").attr("class","tooltip-box");
     var tooltip = tipG.append('text').attr("id", "tooltip-text").attr("dy","-1.1em").attr('text-anchor',"middle").attr("class","tooltip-text-label svg-text").text(text);
-    pt = cursorPoint(evt);
-    pt.x = Math.round(pt.x);
-    pt.y = Math.round(pt.y);
-    var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
-    tooltip.attr("x",pt.x).attr("y",pt.y);
-    var length = Math.round(tooltip.node().getComputedTextLength());
-    if (pt.x - length/2 - 6 < 0){
-      tooltip.attr("x",length/2+6);
-    } else if (pt.x + length/2 + 6 > svgWidth) {
-      tooltip.attr("x", svgWidth-length/2-6);
+    
+    textLength = Math.round(tooltip.node().getComputedTextLength());
+    halfLength = textLength / 2;
+    
+    
+    if (svgPoint.x - halfLength - 6 < 0)  {
+      tooltipX = halfLength + 6;
     }
-    tool_pt.attr("transform","translate("+pt.x+","+pt.y+")");
-    tooltip_bg.attr("x", tooltip.attr("x")-length/2-6).attr("y",pt.y-35).attr("class","tooltip-box").attr("width", length+12);
-
+    else if (svgPoint.x + halfLength + 6 > svgWidth) {
+      tooltipX = svgWidth - halfLength - 6;
+    } 
+    else {
+      tooltipX = svgPoint.x;
+    }
+    tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
+    tool_pt.attr("transform","translate(" + svgPoint.x + "," + svgPoint.y + ")");
+    tooltip_bg.attr("x", tooltipX - halfLength - 6).attr("y", svgPoint.y - 35).attr("width", textLength + 12);
+    
     if(hoverTimer){
       clearTimeout(hoverTimer);
     }
@@ -39,7 +48,12 @@ function hovertext(text, evt){
     }, hoverDelay);
   }
 }
+
 function cursorPoint(evt){  
-  pt.x = evt.clientX; pt.y = evt.clientY;
-  return pt.matrixTransform(svg.getScreenCTM().inverse());
+  pt.x = evt.clientX; 
+  pt.y = evt.clientY;
+  pt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  pt.x = Math.round(pt.x);
+  pt.y = Math.round(pt.y);
+  return pt;
 }
