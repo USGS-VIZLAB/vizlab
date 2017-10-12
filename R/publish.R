@@ -322,7 +322,8 @@ publish.landing <- function(viz){
   pageviz$context <- list(sections = c("owiNav", "header", names(viz_info)), #names of section ids
                           resources = c("landingCSS", "owiCSS", "jquery", "appJS"),
                           header = "usgsHeader",
-                          footer = "usgsFooter")
+                          footer = "usgsFooter", 
+                          info = list(`analytics-id` = "UA-78530187-11"))
   pageviz$publisher <- "page"
   pageviz <- as.viz(pageviz)
   pageviz <- as.publisher(pageviz) #maybe/maybe not
