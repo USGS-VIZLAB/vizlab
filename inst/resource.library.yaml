@@ -223,6 +223,11 @@
   mimetype: text/javascript
   publisher: resource
 -
+  id: lib-svg-javascript
+  location: js/svg.js
+  mimetype: text/javascript
+  publisher: resource
+-
   id: lib-header-css
   location: css/header.css
   mimetype: text/css
