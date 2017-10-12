@@ -432,8 +432,11 @@ needsTimestamp <- function(item.info) {
   # the viz item (see next code block).
   FT_method <- paste0('fetchTimestamp.', item.info$fetcher)
   # (1) search through the text of the item's declared scripts
-  FT_in_scripts <- if(length(item.info$scripts) > 0) {
-    script_text <- unlist(lapply(item.info$scripts, function(script) {
+  scripts <- unlist(sapply(item.info$scripts, function(sdep) {
+    if(dir.exists(sdep)) dir(sdep, full.names = TRUE) else sdep
+  }))
+  FT_in_scripts <- if(length(scripts) > 0) {
+    script_text <- unlist(lapply(scripts, function(script) {
       deparse(parse(script)) # use deparse to get rid of commented-out code
     }))
     any(grep(FT_method, script_text, fixed=TRUE))
