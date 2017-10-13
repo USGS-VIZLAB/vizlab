@@ -47,7 +47,7 @@ authRemote.sciencebase <- function(fetcher, user, ...) {
   }
   
   # next try dssecrets
-  if(suppressWarnings(require(dssecrets, quietly=TRUE))) {
+  if(requireNamespace('dssecrets', quietly=TRUE)) {
     success <- tryCatch({
       creds <- dssecrets::get_dssecret('vizlab-sb-srvc-acct')
       sbtools::authenticate_sb(username=creds[['username']], password=creds[['password']])
@@ -61,7 +61,7 @@ authRemote.sciencebase <- function(fetcher, user, ...) {
   }
   
   # next try secret
-  if(suppressWarnings(require(secret, quietly=TRUE))) {
+  if(requireNamespace('secret', quietly=TRUE)) {
     success <- tryCatch({
       creds <- secret::get_secret('vizlab-sciencebase')
       sbtools::authenticate_sb(username=creds[['username']], password=creds[['password']])
