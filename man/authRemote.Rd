@@ -26,9 +26,13 @@ Uses authentication information in the ~/.vizlab driectory to log onto a remote
 file service such as ScienceBase. This function is primarily for internal use
 but can be called directly to check credentials.
 
-\code{authRemote.sciencebase} Uses the credentials stored in ~/.vizlab to log in to
-ScienceBase.  Use the storeSBcreds function to verify and store credentials.  Since vizlab
-starts its own R session, an existing ScienceBase session cannot be used.
+\code{authRemote.sciencebase} Looks for an existing ScienceBase session or
+uses stored credentials to log into ScienceBase. There are several
+possibilities for authentication. From first to last priority: (1) If you're
+already logged in within the current R session, this function does nothing.
+(2) If the dssecrets package is installed, uses the vizlabrobot secret. (3)
+If the secret package is installed, uses the 'vizlab-sciencebase' secret. (4)
+Otherwise gives a warning and proceeds.
 }
 \details{
 To add ScienceBase credentials, run the \code{storeSBcreds} function.
