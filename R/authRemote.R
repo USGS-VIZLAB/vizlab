@@ -32,8 +32,9 @@ authRemote.default <- function(fetcher, user='local', ...) {
 #' possibilities for authentication. From first to last priority: (1) If you're
 #' already logged in within the current R session, this function does nothing.
 #' (2) If the dssecrets package is installed, uses the vizlabrobot secret. (3)
-#' If the secret package is installed, uses the 'vizlab-sciencebase' secret. (4)
-#' Otherwise gives a warning and proceeds.
+#' If the secret package is installed, uses the 'vizlab-sciencebase' secret with
+#' fields 'username' and 'password'. (4) Otherwise gives a warning and proceeds
+#' without authenticating.
 #'
 #' @rdname authRemote
 #' @export
