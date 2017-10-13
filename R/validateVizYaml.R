@@ -4,7 +4,7 @@
 validateVizYaml <- function() {
   viz.items <- getContentInfos()
   
-  # require that ids have no spaces or dashes in them
+  # require that ids are always present and have no spaces, dashes, etc. in them
   for(i in seq_along(viz.items)) {
     id <- viz.items[[i]]$id
     if(is.null(id)) {
@@ -27,5 +27,4 @@ validateVizYaml <- function() {
   # require that item locations are in data, cache/fetch, cache/process, cache/visualize, or 
   #   maybe external to visualization directory (?)
   # etc.
-  warning("this function currently doesn't do any checking")
 }
