@@ -22,27 +22,34 @@ function hovertext(text, evt){
     var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
     var textLength;
     var halfLength;
+    var textHeight;
+    var textBuffer;
     var tooltipX;
-    var tooltip_bg = tipG.append('rect').attr("id", "tooltip-box").attr("height", 24).attr("class", "tooltip-box");
-    var tool_pt = tipG.append('path').attr("id", "tooltip-point").attr("d", "M-6,-11 l6,10 l6,-11").attr("class","tooltip-box");
-    var tooltip = tipG.append('text').attr("id", "tooltip-text").attr("dy","-1.1em").attr('text-anchor',"middle").attr("class","tooltip-text-label svg-text").text(text);
+    var tooltip_bg = tipG.append('rect').attr("id", "tooltip-box").attr("class", "tooltip-box");
+    var tool_pt = tipG.append('path').attr("id", "tooltip-point").attr("d", "M-6,-12 l6,10.5 l6,-10.5").attr("class","tooltip-box");
+    var tooltip = tipG.append('text').attr("id", "tooltip-text").attr("dy","-1em").attr('text-anchor',"middle").attr("class","tooltip-text-label svg-text").text(text);
     
-    textLength = Math.round(tooltip.node().getComputedTextLength());
+    textBox = tooltip.node().getBBox();
+    textLength = Math.round(textBox.width);
+    textHeight = Math.round(textBox.height);
     halfLength = textLength / 2;
+    textBuffer = 6;
     
-    
-    if (svgPoint.x - halfLength - 6 < 0)  {
-      tooltipX = halfLength + 6;
+    if (svgPoint.x - halfLength - textBuffer < 0)  {
+      tooltipX = halfLength + textBuffer;
     }
-    else if (svgPoint.x + halfLength + 6 > svgWidth) {
-      tooltipX = svgWidth - halfLength - 6;
+    else if (svgPoint.x + halfLength + textBuffer > svgWidth) {
+      tooltipX = svgWidth - halfLength - textBuffer;
     } 
     else {
       tooltipX = svgPoint.x;
     }
     tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
     tool_pt.attr("transform","translate(" + svgPoint.x + "," + svgPoint.y + ")");
-    tooltip_bg.attr("x", tooltipX - halfLength - 6).attr("y", svgPoint.y - 35).attr("width", textLength + 12);
+    tooltip_bg.attr("x", tooltipX - halfLength - textBuffer)
+      .attr("y", svgPoint.y - textBuffer * 2 - textHeight)
+      .attr("width", textLength + textBuffer * 2)
+      .attr("height", textHeight);
     
     if(hoverTimer){
       clearTimeout(hoverTimer);
