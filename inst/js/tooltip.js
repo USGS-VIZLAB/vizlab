@@ -1,6 +1,6 @@
 var hoverTimer = null;
 var hoverDelay = 400; //ms
-  
+
 function hovertext(text, evt){
   
   // remove all children from any tooltip group:
@@ -61,6 +61,7 @@ function hovertext(text, evt){
 }
 
 function cursorPoint(evt, thisSVG){  
+  var pt;
   pt.x = evt.clientX; 
   pt.y = evt.clientY;
   pt = pt.matrixTransform(thisSVG.getScreenCTM().inverse());
