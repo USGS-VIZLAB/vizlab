@@ -61,7 +61,7 @@ function hovertext(text, evt){
 }
 
 function cursorPoint(evt, thisSVG){  
-  var pt;
+  var pt = thisSVG.createSVGPoint();
   pt.x = evt.clientX; 
   pt.y = evt.clientY;
   pt = pt.matrixTransform(thisSVG.getScreenCTM().inverse());
