@@ -2,20 +2,24 @@ var hoverTimer = null;
 var hoverDelay = 400; //ms
   
 function hovertext(text, evt){
-  var tipG = d3.selectAll('#tooltip-group');
-  if (tipG.empty()) {
-    console.error("a #tooltip-group <g/> element is required");
-  }  
-  // remove all children of the tooltip group:
-  tipG.selectAll("*").remove();
+  
+  // remove all children from any tooltip group:
+  d3.selectAll("#tooltip-group").selectAll("*").remove();
+  // does the above work to clear out multiple tooltips from multiple svgs?
   
   if (evt === undefined){
     if(hoverTimer) {
       clearTimeout(hoverTimer); //stop when off area
     }
   } else {
-    var svgPoint = cursorPoint(evt);
-    var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
+    var thisSVG = evt.target.ownerSVGElement;
+    var tipG = d3.select(thisSVG).select('#tooltip-group');
+    if (tipG.empty()) {
+      console.error("a #tooltip-group <g/> element is required");
+    }  
+    
+    var svgPoint = cursorPoint(evt, thisSVG);
+    var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
     var textLength;
     var halfLength;
     var tooltipX;
@@ -49,10 +53,10 @@ function hovertext(text, evt){
   }
 }
 
-function cursorPoint(evt){  
+function cursorPoint(evt, thisSVG){  
   pt.x = evt.clientX; 
   pt.y = evt.clientY;
-  pt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  pt = pt.matrixTransform(thisSVG.getScreenCTM().inverse());
   pt.x = Math.round(pt.x);
   pt.y = Math.round(pt.y);
   return pt;
