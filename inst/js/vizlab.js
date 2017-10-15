@@ -1,5 +1,5 @@
 if (typeof $ === "undefined") {
-  console.error("jQuery required");
+  console.error("jQuery is required and has not been loaded");
 }
 
 (function() {

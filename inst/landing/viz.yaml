@@ -124,4 +124,7 @@ publish:
     template: fullpage
     publisher: landing
     org: USGS-VIZLAB
-    depends: [usgsHeader, owiNav, header, usgsFooter, thumbnail, usgsLogo, usgsBanner, jquery, appJS, landingCSS, owiCSS]
+    depends: ["lib-vizlab-favicon", "usgsHeader", "owiNav", "header", "usgsFooter", "thumbnail", "usgsLogo", 
+      "usgsBanner", "jquery", "appJS", "landingCSS", "owiCSS"]
+    context:
+      resources: ["lib-vizlab-favicon", "jquery", "appJS", "landingCSS", "owiCSS"]

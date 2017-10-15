@@ -320,7 +320,7 @@ publish.landing <- function(viz){
   pageviz$depends <- as.list(pageviz$depends)
   pageviz$depends <- append(pageviz$depends, viz_info)
   pageviz$context <- list(sections = c("owiNav", "header", names(viz_info)), #names of section ids
-                          resources = c("landingCSS", "owiCSS", "jquery", "appJS"),
+                          resources = c("lib-vizlab-favicon", "landingCSS", "owiCSS", "jquery", "appJS"),
                           header = "usgsHeader",
                           footer = "usgsFooter", 
                           info = list(`analytics-id` = "UA-78530187-11"))
