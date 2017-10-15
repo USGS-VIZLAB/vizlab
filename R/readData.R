@@ -207,6 +207,50 @@ readData.json <- function(viz) {
   return(data)
 }
 
+#' \code{readData.shp} reads shapefiles 
+#' 
+#' assumes only one .shp file in zip folder
+#' 
+#' @rdname readData
+#' @export
+readData.shp <- function(viz){
+  required <- c('location')
+  checkRequired(viz, required)
+  
+  has_rgdal <- suppressMessages(suppressWarnings(require(rgdal)))
+  if(!has_rgdal) { 
+    stop("rgdal package is required to read .shp files (mimetype='application/zip', reader='shp')")
+  }
+  
+  shp.path <- file.path(tempdir(), 'tmp')
+  if (!dir.exists(shp.path)){
+    dir.create(shp.path)
+  }
+  
+  unzip(viz[['location']], exdir = shp.path)
+  layer <- tools::file_path_sans_ext(list.files(shp.path, pattern='*.shp'))[1]
+  data.out = readOGR(shp.path, layer=layer)
+  unlink(shp.path, recursive = TRUE)
+  return(data.out)
+}
+
+#' \code{readData.svg_map} reads svg
+#' 
+#' @rdname readData
+#' @export
+readData.svg <- function(viz){
+  required <- c('location') 
+  checkRequired(viz, required)
+  
+  has_xml2 <- suppressMessages(suppressWarnings(require(xml2)))
+  if(!has_xml2) { 
+    stop("xml2 package is required to read svg files (mimetype='image/svg+xml', reader='svg')")
+  }
+  
+  svg <- xml2::read_xml(viz[['location']])
+  return(svg)
+}
+
 ### Set up the reader class
 
 #' Treat viz object as a reader
