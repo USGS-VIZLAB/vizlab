@@ -5,7 +5,6 @@ function hovertext(text, evt){
   
   // remove all children from any tooltip group:
   d3.selectAll("#tooltip-group").selectAll("*").remove();
-  // does the above work to clear out multiple tooltips from multiple svgs?
   
   if (evt === undefined){
     if(hoverTimer) {
