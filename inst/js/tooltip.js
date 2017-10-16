@@ -5,7 +5,6 @@ function hovertext(text, evt){
   
   // remove all children from any tooltip group:
   d3.selectAll("#tooltip-group").selectAll("*").remove();
-  // does the above work to clear out multiple tooltips from multiple svgs?
   
   if (evt === undefined){
     if(hoverTimer) {
@@ -20,20 +19,26 @@ function hovertext(text, evt){
     
     var svgPoint = cursorPoint(evt, thisSVG);
     var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
-    var textLength;
-    var halfLength;
-    var textHeight;
-    var textBuffer;
     var tooltipX;
-    var tooltip_bg = tipG.append('rect').attr("id", "tooltip-box").attr("class", "tooltip-box");
-    var tool_pt = tipG.append('path').attr("id", "tooltip-point").attr("d", "M-6,-12 l6,10.5 l6,-10.5").attr("class","tooltip-box");
-    var tooltip = tipG.append('text').attr("id", "tooltip-text").attr("dy","-1em").attr('text-anchor',"middle").attr("class","tooltip-text-label svg-text").text(text);
     
-    textBox = tooltip.node().getBBox();
-    textLength = Math.round(textBox.width);
-    textHeight = Math.round(textBox.height);
-    halfLength = textLength / 2;
-    textBuffer = 6;
+    var tooltip_bg= tipG.append('path')
+      .attr("id", "tooltip-box")
+      .attr("class", "tooltip-box");
+    var tooltip = tipG.append('text')
+      .attr("id", "tooltip-text")
+      .attr("dy","-1em")
+      .attr('text-anchor',"middle")
+      .attr("class","tooltip-text-label svg-text")
+      .text(text);
+    
+    var textBox = tooltip.node().getBBox();
+    var textLength = Math.round(textBox.width);
+    var textHeight = Math.round(textBox.height);
+    var halfLength = textLength / 2;
+    var textBuffer = 6;
+    var tipYoffset = -2; // so that the tip is slightly above the mouse location
+    var tipTriangle = {x:6, y:10};
+    
     
     if (svgPoint.x - halfLength - textBuffer < 0)  {
       tooltipX = halfLength + textBuffer;
@@ -45,11 +50,14 @@ function hovertext(text, evt){
       tooltipX = svgPoint.x;
     }
     tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
-    tool_pt.attr("transform","translate(" + svgPoint.x + "," + svgPoint.y + ")");
-    tooltip_bg.attr("x", tooltipX - halfLength - textBuffer)
-      .attr("y", svgPoint.y - textBuffer * 2 - textHeight)
-      .attr("width", textLength + textBuffer * 2)
-      .attr("height", textHeight);
+    tooltip_bg.attr("d", 
+      "M"+(svgPoint.x-tipTriangle.x)+","+(svgPoint.y-tipTriangle.y)+
+      " l"+tipTriangle.x+","+(tipTriangle.y+tipYoffset)+
+      " l"+tipTriangle.x+",-"+(tipTriangle.y+tipYoffset)+
+      " H"+(tooltipX + halfLength + textBuffer)+
+      " v-"+(textHeight+textBuffer)+
+      " H"+(tooltipX - halfLength - textBuffer)+
+      " v"+(textHeight+textBuffer)+"Z");
     
     if(hoverTimer){
       clearTimeout(hoverTimer);
