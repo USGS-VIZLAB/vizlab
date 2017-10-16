@@ -18,7 +18,9 @@ function hovertext(text, evt){
     }  
     
     var svgPoint = cursorPoint(evt, thisSVG);
-    var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
+    var svgDims = thisSVG.getAttribute("viewBox").split(" ");
+    var svgLeftBound = Number(svgDims[0]);
+    var svgRightBound = Number(svgDims[2]) + svgLeftBound;
     var tooltipX;
     
     var tooltip_bg= tipG.append('path')
@@ -40,11 +42,11 @@ function hovertext(text, evt){
     var tipTriangle = {x:6, y:10};
     
     
-    if (svgPoint.x - halfLength - textBuffer < 0)  {
+    if (svgPoint.x - halfLength - textBuffer < svgLeftBound)  {
       tooltipX = halfLength + textBuffer;
     }
-    else if (svgPoint.x + halfLength + textBuffer > svgWidth) {
-      tooltipX = svgWidth - halfLength - textBuffer;
+    else if (svgPoint.x + halfLength + textBuffer > svgRightBound) {
+      tooltipX = svgRightBound - halfLength - textBuffer;
     } 
     else {
       tooltipX = svgPoint.x;
