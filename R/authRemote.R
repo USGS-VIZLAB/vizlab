@@ -27,49 +27,55 @@ authRemote.default <- function(fetcher, user='local', ...) {
   invisible(authRemote(fetcher, user=user, ...))
 }
 
-#' \code{authRemote.sciencebase} Uses the credentials stored in ~/.vizlab to log in to
-#' ScienceBase.  Use the storeSBcreds function to verify and store credentials.  Since vizlab
-#' starts its own R session, an existing ScienceBase session cannot be used.
+#' \code{authRemote.sciencebase} Looks for an existing ScienceBase session or
+#' uses stored credentials to log into ScienceBase. There are several
+#' possibilities for authentication. From first to last priority: (1) If you're
+#' already logged in within the current R session, this function does nothing.
+#' (2) If the dssecrets package is installed, uses the vizlabrobot secret. (3)
+#' If the secret package is installed, uses the 'vizlab-sciencebase' secret with
+#' fields 'username' and 'password'. (4) Otherwise gives a warning and proceeds
+#' without authenticating.
 #'
 #' @rdname authRemote
 #' @export
 authRemote.sciencebase <- function(fetcher, user, ...) {
-  #change to home directory for storage
-  home <- path.expand('~')
-  sbCreds <- file.path(home, ".vizlab/sbCreds")
 
-  #check if already logged in; don't think there is a way for this to happen
+  # use existing session if already logged in
   if(sbtools::is_logged_in()){
-    message("Using existing sciencebase session")
-  } else if(file.exists(sbCreds)) {
-    credList <- readRDS(sbCreds)
-    un <- rawToChar(credList$username)
-    pw <- rawToChar(credList$password)
-    sbtools::authenticate_sb(un, pw)
-    message("Logging into ScienceBase with stored credentials")
-  } else {
-    message('requesting data from ScienceBase without authentication because
-            no credentials exist.  Use the storeSBcreds() function to add credentials.')
+    message("Using existing ScienceBase session")
+    return(invisible())
   }
-
-  invisible()
-}
-
-#' Store and verify credentials for ScienceBase.  User is prompted for credentials.
-#' Using a ScienceBase account tied to an AD account is not recommended for password security.
-#'
-#' @export
-storeSBcreds<- function(){
-  if (!requireNamespace('sbtools', quietly = TRUE)) stop("package sbtools is required for storing creds")
-
-  dotVizlab <- file.path(path.expand("~"),".vizlab")
-  if(!dir.exists(dotVizlab)){
-    dir.create(dotVizlab)
+  
+  # next try dssecrets
+  if(requireNamespace('dssecrets', quietly=TRUE)) {
+    success <- tryCatch({
+      creds <- dssecrets::get_dssecret('vizlab-sb-srvc-acct')
+      sbtools::authenticate_sb(username=creds[['username']], password=creds[['password']])
+      message("Logged into ScienceBase with dssecrets package")
+      TRUE
+    }, error=function(e) {
+      message("Failed to log in using the dssecrets package. proceeding to next option")
+      FALSE
+    })
+    if(success) return(invisible())
   }
-  un <- readline(prompt = "Enter username: ")
-  pw <- readline(prompt = "Enter password: ")
-  sbtools::authenticate_sb(un, pw)
-  sbtools::session_logout()
-  sbCreds <- list(username=charToRaw(un),password=charToRaw(pw))
-  saveRDS(sbCreds, file.path(dotVizlab, "sbCreds"))
+  
+  # next try secret
+  if(requireNamespace('secret', quietly=TRUE)) {
+    success <- tryCatch({
+      creds <- secret::get_secret('vizlab-sciencebase')
+      sbtools::authenticate_sb(username=creds[['username']], password=creds[['password']])
+      message("Logged into ScienceBase with secret package")
+      TRUE
+    }, error=function(e) {
+      message("Failed to log in using the secret package. proceeding to next option")
+      FALSE
+    })
+    if(success) return(invisible())
+  }
+  
+  # next give up
+  warning(paste(strwrap(paste(
+    'Requesting data from ScienceBase without authentication because',
+    'no credentials exist. Log in first or use the dssecrets or secret packages.')), collapse='\n'))
 }
