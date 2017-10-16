@@ -1,44 +1,63 @@
 var hoverTimer = null;
 var hoverDelay = 400; //ms
-  
+
 function hovertext(text, evt){
-  var tipG = d3.selectAll('#tooltip-group');
-  if (tipG.empty()) {
-    console.error("a #tooltip-group <g/> element is required");
-  }  
-  // remove all children of the tooltip group:
-  tipG.selectAll("*").remove();
+  
+  // remove all children from any tooltip group:
+  d3.selectAll("#tooltip-group").selectAll("*").remove();
   
   if (evt === undefined){
     if(hoverTimer) {
       clearTimeout(hoverTimer); //stop when off area
     }
   } else {
-    var svgPoint = cursorPoint(evt);
-    var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
-    var textLength;
-    var halfLength;
+    var thisSVG = evt.target.ownerSVGElement;
+    var tipG = d3.select(thisSVG).select('#tooltip-group');
+    if (tipG.empty()) {
+      console.error("a #tooltip-group <g/> element is required");
+    }  
+    
+    var svgPoint = cursorPoint(evt, thisSVG);
+    var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
     var tooltipX;
-    var tooltip_bg = tipG.append('rect').attr("id", "tooltip-box").attr("height", 24).attr("class", "tooltip-box");
-    var tool_pt = tipG.append('path').attr("id", "tooltip-point").attr("d", "M-6,-11 l6,10 l6,-11").attr("class","tooltip-box");
-    var tooltip = tipG.append('text').attr("id", "tooltip-text").attr("dy","-1.1em").attr('text-anchor',"middle").attr("class","tooltip-text-label svg-text").text(text);
     
-    textLength = Math.round(tooltip.node().getComputedTextLength());
-    halfLength = textLength / 2;
+    var tooltip_bg= tipG.append('path')
+      .attr("id", "tooltip-box")
+      .attr("class", "tooltip-box");
+    var tooltip = tipG.append('text')
+      .attr("id", "tooltip-text")
+      .attr("dy","-1em")
+      .attr('text-anchor',"middle")
+      .attr("class","tooltip-text-label svg-text")
+      .text(text);
+    
+    var textBox = tooltip.node().getBBox();
+    var textLength = Math.round(textBox.width);
+    var textHeight = Math.round(textBox.height);
+    var halfLength = textLength / 2;
+    var textBuffer = 6;
+    var tipYoffset = -2; // so that the tip is slightly above the mouse location
+    var tipTriangle = {x:6, y:10};
     
     
-    if (svgPoint.x - halfLength - 6 < 0)  {
-      tooltipX = halfLength + 6;
+    if (svgPoint.x - halfLength - textBuffer < 0)  {
+      tooltipX = halfLength + textBuffer;
     }
-    else if (svgPoint.x + halfLength + 6 > svgWidth) {
-      tooltipX = svgWidth - halfLength - 6;
+    else if (svgPoint.x + halfLength + textBuffer > svgWidth) {
+      tooltipX = svgWidth - halfLength - textBuffer;
     } 
     else {
       tooltipX = svgPoint.x;
     }
     tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
-    tool_pt.attr("transform","translate(" + svgPoint.x + "," + svgPoint.y + ")");
-    tooltip_bg.attr("x", tooltipX - halfLength - 6).attr("y", svgPoint.y - 35).attr("width", textLength + 12);
+    tooltip_bg.attr("d", 
+      "M"+(svgPoint.x-tipTriangle.x)+","+(svgPoint.y-tipTriangle.y)+
+      " l"+tipTriangle.x+","+(tipTriangle.y+tipYoffset)+
+      " l"+tipTriangle.x+",-"+(tipTriangle.y+tipYoffset)+
+      " H"+(tooltipX + halfLength + textBuffer)+
+      " v-"+(textHeight+textBuffer)+
+      " H"+(tooltipX - halfLength - textBuffer)+
+      " v"+(textHeight+textBuffer)+"Z");
     
     if(hoverTimer){
       clearTimeout(hoverTimer);
@@ -49,10 +68,11 @@ function hovertext(text, evt){
   }
 }
 
-function cursorPoint(evt){  
+function cursorPoint(evt, thisSVG){  
+  var pt = thisSVG.createSVGPoint();
   pt.x = evt.clientX; 
   pt.y = evt.clientY;
-  pt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  pt = pt.matrixTransform(thisSVG.getScreenCTM().inverse());
   pt.x = Math.round(pt.x);
   pt.y = Math.round(pt.y);
   return pt;
