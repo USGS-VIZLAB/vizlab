@@ -20,28 +20,23 @@ function hovertext(text, evt){
     
     var svgPoint = cursorPoint(evt, thisSVG);
     var svgWidth = Number(thisSVG.getAttribute("viewBox").split(" ")[2]);
-    var textLength;
-    var halfLength;
-    var textHeight;
-    var textBuffer;
     var tooltipX;
-    var tooltip_bg;
-    var tooltip;
-    tooltip_bg= tipG.append('path').
-      attr("id", "tooltip-box").
-      attr("class", "tooltip-box");
-    tooltip = tipG.append('text').
-      attr("id", "tooltip-text").
-      attr("dy","-1em").
-      attr('text-anchor',"middle").
-      attr("class","tooltip-text-label svg-text").
-      text(text);
     
-    textBox = tooltip.node().getBBox();
-    textLength = Math.round(textBox.width);
-    textHeight = Math.round(textBox.height);
-    halfLength = textLength / 2;
-    textBuffer = 6;
+    var tooltip_bg= tipG.append('path')
+      .attr("id", "tooltip-box")
+      .attr("class", "tooltip-box");
+    var tooltip = tipG.append('text')
+      .attr("id", "tooltip-text")
+      .attr("dy","-1em")
+      .attr('text-anchor',"middle")
+      .attr("class","tooltip-text-label svg-text")
+      .text(text);
+    
+    var textBox = tooltip.node().getBBox();
+    var textLength = Math.round(textBox.width);
+    var textHeight = Math.round(textBox.height);
+    var halfLength = textLength / 2;
+    var textBuffer = 6;
     var tipYoffset = -2; // so that the tip is slightly above the mouse location
     var tipTriangle = {x:6, y:10};
     
