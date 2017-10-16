@@ -217,7 +217,7 @@ readData.shp <- function(viz){
   required <- c('location')
   checkRequired(viz, required)
   
-  has_rgdal <- suppressMessages(suppressWarnings(require(rgdal)))
+  has_rgdal <- requireNamespace('rgdal', quietly = TRUE)
   if(!has_rgdal) { 
     stop("rgdal package is required to read .shp files (mimetype='application/zip', reader='shp')")
   }
@@ -241,11 +241,6 @@ readData.shp <- function(viz){
 readData.svg <- function(viz){
   required <- c('location') 
   checkRequired(viz, required)
-  
-  has_xml2 <- suppressMessages(suppressWarnings(require(xml2)))
-  if(!has_xml2) { 
-    stop("xml2 package is required to read svg files (mimetype='image/svg+xml', reader='svg')")
-  }
   
   svg <- xml2::read_xml(viz[['location']])
   return(svg)

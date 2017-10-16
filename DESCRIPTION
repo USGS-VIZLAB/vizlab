@@ -36,6 +36,7 @@ Suggests:
     knitr,
     readr,
     readxl,
+    rgdal,
     rmarkdown,
     sbtools (>= 0.19.3),
     secret,
