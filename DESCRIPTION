@@ -24,6 +24,7 @@ Imports:
     imager,
     markdown,
     methods,
+    remake,
     remotes,
     tools,
     whisker,

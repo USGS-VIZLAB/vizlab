@@ -2,6 +2,11 @@
 #'
 #' This is the front-line function to call when you want to build all or part of
 #' a visualization.
+#' @param target_names names of targets to build, or NULL for the default, as
+#'   passed to `remake::make()`
+#' @param ... arguments passed to `remake::make()` (besides `target_names`,
+#'   above, or `remake_file`, which is fixed at 'remake.yaml')
+#' @md
 #' @export
 vizmake <- function(target_names=NULL, ...) {
   
@@ -24,7 +29,7 @@ vizmake <- function(target_names=NULL, ...) {
     source(remake.yaml$sources[i])
   }
   
-  # run remake::make(target_name, ..., remake_file='remake.yaml'). show a timestamp for #283
+  # run remake::make(target_name, ..., remake_file='remake.yaml')
   message('Starting build at ', Sys.time())
   remake::make(target_names=target_names, ..., remake_file='remake.yaml')
   message('Finished build at ', Sys.time())
