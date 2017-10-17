@@ -31,11 +31,13 @@ Imports:
     yaml
 Suggests:
     data.table,
+    dssecrets,
     jsonlite,
     knitr,
     readr,
     readxl,
     rmarkdown,
     sbtools (>= 0.19.3),
+    secret,
     testthat
 RoxygenNote: 6.0.1
