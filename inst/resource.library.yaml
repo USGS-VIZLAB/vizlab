@@ -63,8 +63,12 @@
     github-logo: github-logo
     twitter-logo: twitter-logo
     facebook-logo: facebook-logo
-    embed-logo: lib-embed-logo
+    embed-logo: embed-logo
     resources: [ "css" ]
+    facebookLink: 
+    twitterLink: 
+    githubLink: 
+    embedLink: 
 -
   id: vertical-social-media-template
   location: templates/verticalSocialMedia.mustache
@@ -81,8 +85,12 @@
     github-logo: github-logo
     twitter-logo: twitter-logo
     facebook-logo: facebook-logo
-    embed-logo: lib-embed-logo
+    embed-logo: embed-logo
     resources: [ "css" ]
+    facebookLink: 
+    twitterLink: 
+    githubLink: 
+    embedLink: 
 -
   id: fullpage
   location: templates/fullPage.mustache

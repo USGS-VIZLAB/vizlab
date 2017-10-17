@@ -257,7 +257,6 @@ publish.svg <- function(viz) {
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
-
 publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
@@ -299,6 +298,44 @@ publish.footer <- function(viz) {
     viz <- analytics(viz)
   }
   return(viz[['output']])
+}
+
+#' Footer publishing
+#' @importFrom utils download.file
+#' @rdname publish
+#' @export
+
+publish.social <- function(viz) {
+
+  template <- template(viz[['template']])
+  dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
+  
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+  
+  # flatten dependencies before lookups
+  dependencies <- c(dependencies, recursive = TRUE)
+  
+  context <- buildContext(context, dependencies)
+  
+  context[['mainEmbed']] <- viz$mainEmbed
+  context[['facebookLink']] <- viz$facebookLink
+  context[['twitterLink']] <- viz$twitterLink
+  context[['githubLink']] <- viz$githubLink
+  context[['embedLink']] <- viz$embedLink
+
+  viz[['output']] <- render(template, data = context)
+  if (!is.null(viz[['analytics']])) {
+    viz <- analytics(viz)
+  }
+  return(viz[['output']])
+}
+
+#' Header publishing
+#' @rdname publish
+#' @export
+publish.header <- function(viz) {
+  
+  return(publish.section(viz))
 }
 
 #' publish landing page
