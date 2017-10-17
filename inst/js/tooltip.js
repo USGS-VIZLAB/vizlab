@@ -11,55 +11,86 @@ function hovertext(text, evt){
       clearTimeout(hoverTimer); //stop when off area
     }
   } else {
+    
+    var textBuffer = 6; // px between text edge and tooltipPath border
+    var tipYoffset = -1; // so that the tip is slightly above the mouse location
+    var tipPointer = {x:6, y:10}; // dimensions on the tooltip pointer
+    
+    // the svg that this element belongs to
     var thisSVG = evt.target.ownerSVGElement;
     var tipG = d3.select(thisSVG).select('#tooltip-group');
     if (tipG.empty()) {
       console.error("a #tooltip-group <g/> element is required");
     }  
     
+    // turn the mouse location into a properly scaled set of coordinates
     var svgPoint = cursorPoint(evt, thisSVG);
     var svgDims = thisSVG.getAttribute("viewBox").split(" ");
     var svgLeftBound = Number(svgDims[0]);
     var svgRightBound = Number(svgDims[2]) + svgLeftBound;
-    var tooltipX;
+    var svgTopBound = Number(svgDims[1]);
+    var tooltipX = svgPoint.x;
+    var tooltipY = svgPoint.y;
     
-    var tooltip_bg= tipG.append('path')
+    // create the tooltip border
+    var tooltipPath = tipG.append('path')
       .attr("id", "tooltip-box")
       .attr("class", "tooltip-box");
-    var tooltip = tipG.append('text')
+    
+    var tooltipText = tipG.append('text')
       .attr("id", "tooltip-text")
-      .attr("dy","-1em")
-      .attr('text-anchor',"middle")
+      .attr("alignment-baseline", "middle")
+      .attr("dy", "0.1em")
+      .attr("text-anchor","middle")
       .attr("class","tooltip-text-label svg-text")
       .text(text);
     
-    var textBox = tooltip.node().getBBox();
+    var textBox = tooltipText.node().getBBox();
     var textLength = Math.round(textBox.width);
     var textHeight = Math.round(textBox.height);
     var halfLength = textLength / 2;
-    var textBuffer = 6;
-    var tipYoffset = -2; // so that the tip is slightly above the mouse location
-    var tipTriangle = {x:6, y:10};
     
     
+    // modify the border if part of it is outside of the bounds
     if (svgPoint.x - halfLength - textBuffer < svgLeftBound)  {
       tooltipX = halfLength + textBuffer;
     }
     else if (svgPoint.x + halfLength + textBuffer > svgRightBound) {
       tooltipX = svgRightBound - halfLength - textBuffer;
     } 
-    else {
-      tooltipX = svgPoint.x;
+
+    var totHeight = tipPointer.y + textHeight + textBuffer;
+    if (svgPoint.y - totHeight < 0){
+      tipPointer.y = svgPoint.y - totHeight + tipPointer.y;
+      tooltipY = tooltipY - (svgPoint.y - totHeight);
     }
-    tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
-    tooltip_bg.attr("d", 
-      "M"+(svgPoint.x-tipTriangle.x)+","+(svgPoint.y-tipTriangle.y)+
-      " l"+tipTriangle.x+","+(tipTriangle.y+tipYoffset)+
-      " l"+tipTriangle.x+",-"+(tipTriangle.y+tipYoffset)+
-      " H"+(tooltipX + halfLength + textBuffer)+
-      " v-"+(textHeight+textBuffer)+
-      " H"+(tooltipX - halfLength - textBuffer)+
-      " v"+(textHeight+textBuffer)+"Z");
+    
+    tooltipText.attr("x", tooltipX);
+    if (tipPointer.y < - (tipYoffset)){ 
+      // is a rectangle w/ no tip
+      
+      tooltipPath.attr("d", 
+        "M" + (tooltipX - halfLength - textBuffer) + "," + svgTopBound +
+        " H" + (tooltipX + halfLength + textBuffer) +
+        " v" + (textHeight+textBuffer) +
+        " H" + (tooltipX - halfLength - textBuffer)+"Z");
+        
+      tooltipText.attr("y", svgTopBound + (textHeight+textBuffer) / 2);  
+    } else { 
+      // is a normal tip w/ a triangle tip to it
+      
+      tooltipPath.attr("d", 
+        "M" + (svgPoint.x - tipPointer.x) + "," + (svgPoint.y-tipPointer.y) +
+        " l" + tipPointer.x + "," + (tipPointer.y + tipYoffset) +
+        " l" + tipPointer.x + ",-" + (tipPointer.y + tipYoffset) +
+        " H" + (tooltipX + halfLength + textBuffer) +
+        " v-" + (textHeight + textBuffer) +
+        " H" + (tooltipX - halfLength - textBuffer) +
+        " v" + (textHeight + textBuffer) + "Z");
+        
+      tooltipText.attr("y", svgPoint.y-tipPointer.y - (textHeight+textBuffer) / 2);
+    }
+    
     
     if(hoverTimer){
       clearTimeout(hoverTimer);
