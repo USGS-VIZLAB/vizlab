@@ -13,10 +13,10 @@ validateVizYaml <- function() {
       parsed <- tryCatch(
         parse(text=id),
         error=function(e) {
-          stop(paste0("unparseable viz item id: ", id))
+          warning(paste0("unparseable viz item id: ", id))
         })
       if(length(parsed[[1]]) > 1) {
-        stop(paste0("viz item id parses to >1 R variable name: ", id))  
+        warning(paste0("viz item id parses to >1 R variable name: ", id))  
       }
     }
   }
