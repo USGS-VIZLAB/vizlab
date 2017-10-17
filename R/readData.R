@@ -195,7 +195,7 @@ readData.inline <- function(viz) {
 #' @export
 readData.json <- function(viz) {
   
-  has_jsonlite <- suppressMessages(suppressWarnings(require(jsonlite)))
+  has_jsonlite <- requireNamespace('jsonlite', quietly=TRUE)
   if(!has_jsonlite) { 
     stop("jsonlite package is required to read JSON data (mimetype='application/javascript', reader='json')")
   }

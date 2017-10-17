@@ -5,6 +5,8 @@
 language: r
 sudo: required
 cache: packages
+env:
+  - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 repos:
   CRAN: https://cloud.r-project.org
