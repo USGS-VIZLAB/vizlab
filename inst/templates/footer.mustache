@@ -31,7 +31,7 @@
         <div class="relatedItemContainer">
           {{#vizzies}}
         		<div class="relatedItem">
-        		  <a href="{{url}}" target="_blank">
+        		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related vizzy')">
         		    <div class="footerThumbnail">
         					<img src="{{thumbLoc}}" alt=""/>
         				</div>
@@ -50,7 +50,7 @@
           <div class="relatedItemContainer">
           	{{#blogs}}
           		<div class="relatedItem">
-          		  <a href="{{url}}" target="_blank">
+          		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related blog')">
           				<div class="footerThumbnail blog">
           					<img src="{{thumbLoc}}" alt=""/>
           				</div>
