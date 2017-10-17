@@ -308,6 +308,18 @@ publish.footer <- function(viz) {
 publish.social <- function(viz) {
 
   template <- template(viz[['template']])
+  if("depends" %in% names(viz)){
+    if("social-links" %in% viz[["depends"]]){
+      links <- readDepends(viz)[["social-links"]]
+      viz[["facebookLink"]] <- links[["facebook"]]
+      viz[["twitterLink"]] <- links[["twitter"]]
+      viz[["githubLink"]] <- links[["github"]]
+      
+      viz[['depends']] <- viz[['depends']][viz[['depends']] != "social-links"]
+      template[["depends"]] <- template[["depends"]][names(template[["depends"]]) != "social-links"]
+    }
+  }
+  
   dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
   
   context <- replaceOrAppend(template[['context']], viz[['context']])

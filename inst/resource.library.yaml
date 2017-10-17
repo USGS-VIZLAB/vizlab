@@ -58,6 +58,7 @@
     facebook-logo: lib-facebook-logo
     embed-logo: lib-embed-logo
     css: lib-social-media-css
+    social-links:
   context:
     id: social
     github-logo: github-logo
