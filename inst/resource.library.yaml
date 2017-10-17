@@ -214,8 +214,8 @@
   id: lib-usgs-logo
   location: images/usgsLogo.png
   mimetype: image/png
-  title: "USGS"
-  alttext: "USGS"
+  title: "U.S. Geological Survey"
+  alttext: "U.S. Geological Survey"
   publisher: resource
 -
   id: lib-vizlab-javascript
