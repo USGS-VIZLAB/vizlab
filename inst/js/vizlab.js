@@ -93,7 +93,7 @@ if (typeof $ === "undefined") {
   };
 
   vizlab.clicklink = function(url) {
-    gtag('event', 'event outbound click', url);
+
     gtag('event', 'outbound', {
         'click': url,
         'transport': 'beacon',
