@@ -88,6 +88,12 @@ fetch:
     mimetype: text/csv
     reader: folder
     scripts:
+  -
+    id: exampleSVG
+    location: data/Example.svg
+    mimetype: image/svg+xml
+    fetcher: 
+    reader: svg
 process:
   -
     id: CuyahogaShort
