@@ -37,7 +37,10 @@ if (typeof $ === "undefined") {
     $.each(vizlab.analytics.chapters, function(index, value) {
       if (!triggers[value] && vizlab.analytics.inview($(value)[0])) {
         triggers[value] = true; // trigger
-        gtag('event', 'event chapter scrolled to', value);
+        gtag('event', 'chapter', {
+            'scrolled to': value
+        });
+
       }
     });
   };
@@ -90,10 +93,12 @@ if (typeof $ === "undefined") {
   };
 
   vizlab.clicklink = function(url) {
-    ga('send', 'event', 'outbound', 'click', url, {
-       'transport': 'beacon',
-       'hitCallback': function(){document.location = url;}
-     });
+    gtag('event', 'event outbound click', url);
+    gtag('event', 'outbound', {
+        'click': url,
+        'transport': 'beacon',
+        'hitCallback': function(){document.location = url;}
+      });
   };
 
   vizlab.ready = function(callback) {
