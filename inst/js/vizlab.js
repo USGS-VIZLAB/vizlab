@@ -37,7 +37,7 @@ if (typeof $ === "undefined") {
     $.each(vizlab.analytics.chapters, function(index, value) {
       if (!triggers[value] && vizlab.analytics.inview($(value)[0])) {
         triggers[value] = true; // trigger
-        ga('send', 'event', 'chapter', 'scrolled to ' + value);
+        gtag('event', 'event chapter scrolled to', value);
       }
     });
   };
