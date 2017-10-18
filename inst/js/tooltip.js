@@ -63,7 +63,7 @@ function hovertext(text, evt){
       clearTimeout(hoverTimer);
     }
     hoverTimer = setTimeout(function(){
-      ga("send", "event", "figure", evt.target.id);
+      gtag('event', "figure", evt.target.id);
     }, hoverDelay);
   }
 }
