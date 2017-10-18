@@ -43,7 +43,7 @@ test_that('vizmake creates makefile and runs make', {
   unlink('remake.yaml')
   
   # the target should have been attempted, with warnings and errors and messages
-  expect_error(regexp="Some packages are missing: wateRuse, crazy",
+  expect_error(regexp="Some packages are missing:",
     expect_message(regexp="load",
       expect_message(regexp='Starting build at',
         expect_warning(vizmake('plot-info')))))
