@@ -21,6 +21,28 @@ createRemakefile <- function() {
     script.files
   )))
   
+  # create special targets for combined and subsetted script files so there can
+  # be 0 or 1 source dependency per viz item
+  viz.items <- lapply(viz.items, function(viz.item) {
+    needs.psource <- length(viz.item$scripts) > 1 || (length(viz.item$scripts) == 1 && length(viz.item$functions) > 0)
+    if(needs.psource) {
+      psource_name <- sprintf("vizlab/remake/scripts/%s.R", viz.item$id)
+      viz.item$psource <- list(
+        target_name = psource_name,
+        command = sprintf(
+          "prepSources(outfile=target_name, %s%s)", 
+          paste(paste0("'", viz.item$scripts, "'"), collapse=", "),
+          if(length(viz.item$functions) > 0) sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=",")) else ""),
+        # depends = as.list(viz.item$scripts), # not necessary because captured in command
+        has_depends = FALSE
+      )           
+    }
+    viz.item
+  })
+  # extract the special targets
+  source.preps <- lapply(viz.items, `[[`, 'psource')
+  source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
+  
   # create the main list of targets, one per viz item. I thought we'd need to
   # wrap filenames in quotes sometimes, but spaces in filenames seem to be no
   # problem, so leaving everything unwrapped unless/until we hit a snag
@@ -48,10 +70,12 @@ createRemakefile <- function() {
       recipe <- list(
         id = item$id, # just copy for fun, or maybe we'll use this as a comment in the makefile...
         target_name = item$target,
-        depends = lapply(unname(item$depends), function(dep) {
-          dep.item <- viz.targets[[names(item.ids[item.ids == dep])]]
-          dep.item$target
-        }),
+        depends = c(
+          as.list(if(exists('psource', item)) item$psource$target_name else item$scripts),
+          lapply(unname(item$depends), function(dep) {
+            dep.item <- viz.targets[[names(item.ids[item.ids == dep])]]
+            dep.item$target
+          })),
         command = paste0(
           if(item$block == 'resource') 'publish' else item$block, # except for resource, the block name is the function name
           "(I('", item$id, "'))")
@@ -86,6 +110,9 @@ createRemakefile <- function() {
   resource.recipes <- resource.recipes[sapply(resource.recipes, function(item) item$target_name %in% resource.deps)]
   # replace the list in blocks with this shortened list
   blocks[[resource.block.index]]$recipes <- resource.recipes
+  
+  # append the prepped source targets to the blocks
+  blocks[[length(blocks) + 1]] <- list(block='scripts', recipes=source.preps)
   
   # create the list of grouped targets (one for each block, one for the entire
   # viz). can't just make the entire-viz group depend on the block groups
@@ -128,5 +155,5 @@ createRemakefile <- function() {
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
-  return()
+  invisible()
 }
