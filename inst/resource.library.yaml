@@ -56,13 +56,20 @@
     github-logo: lib-github-logo
     twitter-logo: lib-twitter-logo
     facebook-logo: lib-facebook-logo
+    embed-logo: lib-embed-logo
     css: lib-social-media-css
+    social-links:
   context:
     id: social
     github-logo: github-logo
     twitter-logo: twitter-logo
     facebook-logo: facebook-logo
+    embed-logo: embed-logo
     resources: [ "css" ]
+    facebookLink: 
+    twitterLink: 
+    githubLink: 
+    embedLink: 
 -
   id: vertical-social-media-template
   location: templates/verticalSocialMedia.mustache
@@ -72,13 +79,19 @@
     github-logo: lib-github-logo
     twitter-logo: lib-twitter-logo
     facebook-logo: lib-facebook-logo
+    embed-logo: lib-embed-logo
     css: lib-social-media-css
   context:
     id: social
     github-logo: github-logo
     twitter-logo: twitter-logo
     facebook-logo: facebook-logo
+    embed-logo: embed-logo
     resources: [ "css" ]
+    facebookLink: 
+    twitterLink: 
+    githubLink: 
+    embedLink: 
 -
   id: fullpage
   location: templates/fullPage.mustache
@@ -106,9 +119,13 @@
   publisher: template
   mimetype: text/mustache
   depends:
+    jquery-js: lib-jquery-js
+    vizlab-js: lib-vizlab-javascript
+    svg-injector-js: lib-svg-injector-js
+    favicon: lib-vizlab-favicon
   context:
     info:
-    resources: [ favicon, vizlab-js ]
+    resources: [ favicon, jquery-js, vizlab-js, svg-injector-js ]
     embed:
   partials:
     brandcomment: brandcomment
@@ -195,6 +212,20 @@
   mimetype: image/svg+xml
   title: "Twitter Logo"
   alttext: "Twitter Logo"
+  publisher: resource
+-
+  id: lib-embed-logo
+  location: images/embed.svg
+  mimetype: image/svg+xml
+  title: "Embed Logo"
+  alttext: "Embed Logo"
+  publisher: resource
+-
+  id: lib-blackEmbed-logo
+  location: images/blackEmbed.svg
+  mimetype: image/svg+xml
+  title: "Embed Logo"
+  alttext: "Embed Logo"
   publisher: resource
 -
   id: lib-facebook-logo
