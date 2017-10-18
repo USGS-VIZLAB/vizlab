@@ -21,16 +21,16 @@ createRemakefile <- function() {
     script.files
   )))
   
-  # create the main list of targets, one per viz item
+  # create the main list of targets, one per viz item. I thought we'd need to
+  # wrap filenames in quotes sometimes, but spaces in filenames seem to be no
+  # problem, so leaving everything unwrapped unless/until we hit a snag
   viz.targets <- lapply(viz.items, function(viz.item) {
     # if there is no location, that means this is an R object target
     viz.item$target <- if(viz.item$block == 'resource') {
       destloc <- file.path("target", viz.item$location)
-      destloc <- gsub('js/third-party', 'js', destloc)
-      paste0("'", destloc, "'")
+      gsub('js/third-party', 'js', destloc)
     } else if(exists('location', viz.item)) {
-      # if the target is a file, surround it in quotes in case the filename has spaces, etc.
-      paste0("'", viz.item$location, "'")
+      viz.item$location
     } else {
       # if the target is an R object, use the id as the variable (target) name
       viz.item$id
@@ -93,11 +93,19 @@ createRemakefile <- function() {
   final.targets <- viz.targets[sapply(viz.targets, function(item) {
     item$block != 'resource' || item$target %in% resource.deps
   })]
-  final.target_names <- unname(unlist(lapply(final.targets, `[[`, 'target')))
-  job_groups <- list(
-    list(
+  final.target_names <- setNames(
+    unlist(lapply(final.targets, `[[`, 'target')),
+    unlist(lapply(final.targets, `[[`, 'block')))
+  job_groups <- c(
+    list(list(
       target_name='viz',
-      depends=as.list(final.target_names))
+      depends=as.list(unname(final.target_names)))),
+    lapply(unique(block.names), function(block.name) {
+      targets <- unname(final.target_names[names(final.target_names) == block.name])
+      list(
+        target_name=block.name,
+        depends=as.list(targets))
+    })
   )
   
   # combine and prepare the information for templating. add some booleans
@@ -113,10 +121,9 @@ createRemakefile <- function() {
   )
   
   # create the remake.yml from the template
-  template <- readLines('../vizlab/inst/remake/remake.mustache') #system.file('remake/remake.mustache', package='vizlab')
+  template <- readLines(system.file('remake/remake.mustache', package='vizlab'))
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
-  #cat(readLines('remake.yaml'), sep='\n')
   return()
 }
