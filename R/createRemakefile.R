@@ -90,6 +90,9 @@ createRemakefile <- function() {
   # create the list of grouped targets (one for each block, one for the entire
   # viz). can't just make the entire-viz group depend on the block groups
   # because https://github.com/richfitz/remake/issues/129
+  uppercase <- function(name) {
+    gsub("(^[[:alpha:]])", "\\U\\1", name, perl=TRUE)
+  }
   final.targets <- viz.targets[sapply(viz.targets, function(item) {
     item$block != 'resource' || item$target %in% resource.deps
   })]
@@ -98,12 +101,12 @@ createRemakefile <- function() {
     unlist(lapply(final.targets, `[[`, 'block')))
   job_groups <- c(
     list(list(
-      target_name='viz',
+      target_name='Viz',
       depends=as.list(unname(final.target_names)))),
     lapply(unique(block.names), function(block.name) {
       targets <- unname(final.target_names[names(final.target_names) == block.name])
       list(
-        target_name=block.name,
+        target_name=uppercase(block.name),
         depends=as.list(targets))
     })
   )
