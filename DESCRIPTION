@@ -25,6 +25,7 @@ Imports:
     markdown,
     methods,
     remotes,
+    rgdal,
     tools,
     whisker,
     xml2,
