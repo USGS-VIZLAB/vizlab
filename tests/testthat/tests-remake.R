@@ -39,4 +39,17 @@ test_that('prepSources can combine and subset scripts', {
   expect_false(any(grepl('fetchTimestamp\\.mayflyNymph', prep2)))
 })
 
+test_that('vizmake creates makefile and runs make', {
+  unlink('remake.yaml')
+  
+  # the target should have been attempted, with warnings and errors and messages
+  expect_error(regexp="Some packages are missing: wateRuse, crazy",
+    expect_message(regexp="load",
+      expect_message(regexp='Starting build at',
+        expect_warning(vizmake('plot-info')))))
+  
+  # the remake file should have been made
+  expect_true(file.exists('remake.yaml'))
+})
+
 cleanup(oldwd, testtmp)
