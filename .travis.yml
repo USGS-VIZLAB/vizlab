@@ -3,6 +3,7 @@
 # https://github.com/craigcitro/r-travis/wiki/Porting-to-native-R-support-in-Travis
 
 language: r
+dist: trusty
 sudo: required
 cache: packages
 env:
