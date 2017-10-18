@@ -17,7 +17,7 @@ createRemakefile <- function() {
     stop('missing scripts: ', paste0(script.missing, collapse=', '))
   }
   sources <- sort(unique(c(
-    dir(script.dirs, full.names=TRUE),
+    dir(c('scripts/read', script.dirs), full.names=TRUE),
     script.files
   )))
   
