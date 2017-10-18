@@ -308,33 +308,42 @@ publish.footer <- function(viz) {
 publish.social <- function(viz) {
 
   template <- template(viz[['template']])
+  
+  context <- replaceOrAppend(template[['context']], viz[['context']])
+  
   if("depends" %in% names(viz)){
     if("social-links" %in% viz[["depends"]]){
       links <- readDepends(viz)[["social-links"]]
-      viz[["facebookLink"]] <- links[["facebook"]]
-      viz[["twitterLink"]] <- links[["twitter"]]
-      viz[["githubLink"]] <- links[["github"]]
       
+      if(any(c("facebook","facebookLink") %in% names(links))){
+        names(links)[names(links) == "facebookLink"] <- "facebook"
+        context[["facebookLink"]] <- links[["facebook"]]
+      }
+      if(any(c("twitter","twitterLink") %in% names(links))){
+        names(links)[names(links) == "twitterLink"] <- "twitter"
+        context[["twitterLink"]] <- links[["twitter"]]
+      }      
+      if(any(c("github","githubLink") %in% names(links))){
+        names(links)[names(links) == "githubLink"] <- "github"
+        context[["githubLink"]] <- links[["github"]]
+      }
+      if(any(c("embed","embedLink") %in% names(links))){
+        names(links)[names(links) == "embedLink"] <- "embed"
+        context[["embedLink"]] <- links[["embed"]]
+      } 
+
       viz[['depends']] <- viz[['depends']][viz[['depends']] != "social-links"]
       template[["depends"]] <- template[["depends"]][names(template[["depends"]]) != "social-links"]
     }
   }
   
   dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
-  
-  context <- replaceOrAppend(template[['context']], viz[['context']])
-  
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
   
   context <- buildContext(context, dependencies)
+  context[["mainEmbed"]] <- "embedLink" %in% names(context)
   
-  context[['mainEmbed']] <- viz$mainEmbed
-  context[['facebookLink']] <- viz$facebookLink
-  context[['twitterLink']] <- viz$twitterLink
-  context[['githubLink']] <- viz$githubLink
-  context[['embedLink']] <- viz$embedLink
-
   viz[['output']] <- render(template, data = context)
   if (!is.null(viz[['analytics']])) {
     viz <- analytics(viz)
