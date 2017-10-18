@@ -94,6 +94,12 @@ fetch:
     mimetype: image/svg+xml
     fetcher: 
     reader: svg
+  - 
+    id: lakeLoc
+    location: data/lakeLocations.zip
+    mimetype: application/zip
+    fetcher:
+    reader: shp
 process:
   -
     id: CuyahogaShort
