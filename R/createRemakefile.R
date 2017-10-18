@@ -24,16 +24,17 @@ createRemakefile <- function() {
   # create special targets for combined and subsetted script files so there can
   # be 0 or 1 source dependency per viz item
   viz.items <- lapply(viz.items, function(viz.item) {
-    needs.psource <- length(viz.item$scripts) > 1 || (length(viz.item$scripts) == 1 && length(viz.item$functions) > 0)
+    needs.psource <- length(viz.item$scripts) > 0
     if(needs.psource) {
       psource_name <- sprintf("vizlab/remake/scripts/%s.R", viz.item$id)
+      scripts <- unlist(lapply(viz.item$scripts, function(script) if(dir.exists(script)) dir(script, full.names=TRUE) else script))
       viz.item$psource <- list(
         target_name = psource_name,
         command = sprintf(
           "prepSources(outfile=target_name, %s%s)", 
-          paste(paste0("'", viz.item$scripts, "'"), collapse=", "),
+          paste(paste0("'", scripts, "'"), collapse=", "),
           if(length(viz.item$functions) > 0) sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=",")) else ""),
-        # depends = as.list(viz.item$scripts), # not necessary because captured in command
+        # depends = as.list(scripts), # not necessary because captured in command
         has_depends = FALSE
       )           
     }
