@@ -16,6 +16,14 @@ r_github_packages:
  - jimhester/covr
  - USGS-R/grithub
 
+addons:
+  apt:
+    packages:
+      - gdal-bin
+      - libgdal-dev
+      - libgdal1-dev
+      - libproj-dev
+
 after_success:
   - Rscript -e 'covr::coveralls()'
 
