@@ -38,14 +38,6 @@ nav ul a li {
   position:relative;
 }
 
-#owiLogoSmall{
-    position:absolute;
-    left:10px;
-    top:3px;
-    display:block;
-    width:47px;
-}
-
 #menu{
     background:#003366;
     width:80px;
@@ -122,12 +114,6 @@ nav ul a li {
     width: 768px;
     height: 40px;
     margin: 0 auto;
-  }
-  #owiLogoSmall {
-    display: block;
-    width: 47px;
-    position: absolute;
-    top: 3px;
   }
   
 /*========usgs-footer========*/
