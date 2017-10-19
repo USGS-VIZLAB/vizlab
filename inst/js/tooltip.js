@@ -72,7 +72,7 @@ function hovertext(text, evt){
       tooltipPath.attr("d", 
         "M" + (tooltipX - halfLength - textBuffer) + "," + svgTopBound +
         " H" + (tooltipX + halfLength + textBuffer) +
-        " v" + (textHeight+textBuffer) +
+        " v" + (textHeight + textBuffer) +
         " H" + (tooltipX - halfLength - textBuffer)+"Z");
         
       tooltipText.attr("y", svgTopBound + (textHeight+textBuffer) / 2);  
