@@ -16,14 +16,6 @@ visualize.character <- function(viz) {
   viz <- as.viz(viz)
   viz <- as.visualizer(viz)
 
-  # collect the user args and autopopulate if appropriate
-  #user.args <- list(...)
-  #if(missing(outfile) || (length(user.args) == 0 && length(data.info$args) > 0)) {
-  #  all.args <- getAutoargs(data.info, fun='write')
-  #} else {
-  #  all.args <- c(list(viz.id=viz.id), user.args, list(outfile=outfile))
-  #}
-
   # call the visualize method applicable to this fetcher
   visualize(viz)
 }

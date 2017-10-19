@@ -15,12 +15,7 @@ fetch <- function(viz) UseMethod("fetch")
 fetch.character <- function(viz) {
   # get the fetching information for this data ID from viz.yaml
   viz <- as.viz(viz)
-
-  # Figure out if we need to bring this back
-  # all.args <- getAutoargs(data.info, fun='write')
-
   viz <- as.fetcher(viz)
-
   fetch(viz)
 }
 
