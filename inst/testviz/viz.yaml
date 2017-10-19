@@ -96,7 +96,7 @@ fetch:
     reader: svg
   - 
     id: lakeLoc
-    location: data/lakeLocations.zip
+    location: data/LakeLocations.zip
     mimetype: application/zip
     fetcher:
     reader: shp
