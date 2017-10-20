@@ -78,7 +78,7 @@ fetch.url <- function(viz) {
   invisible()
 }
 
-#' \code{fetch.usgs_watermark} grabs the USGS watermark from the 
+#' \code{fetch.usgs_watermark} grabs the USGS watermark 
 #' 
 #' @rdname fetch
 #' @export
