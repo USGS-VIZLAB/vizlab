@@ -76,7 +76,7 @@ fetch:
     mimetype: text/csv
   -
     id: usgs-watermark 
-    location: data/images/usgs-watermark.xml
+    location: images/usgs-watermark.xml
     mimetype: image/svg+xml
     fetcher: usgs_watermark 
     scripts: 
