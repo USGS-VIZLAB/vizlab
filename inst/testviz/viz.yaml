@@ -75,6 +75,12 @@ fetch:
     remoteFilename: CuyahogaTDS.csv
     mimetype: text/csv
   -
+    id: usgs-watermark 
+    location: data/images/usgs-watermark.xml
+    mimetype: image/svg+xml
+    fetcher: usgs_watermark 
+    scripts: 
+  -
     id: MayflyNymph
     location: data/MayflyNymph.csv
     fetcher: mayflyNymph
