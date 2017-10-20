@@ -103,36 +103,7 @@ fetchTimestamp.file <- function(viz) {
   invisible()
 }
 
-#' `fetchTimestamp.usgs_watermark` creates a timestamp file once, with file metadata and
-#' file contents that both match the timestamp of the viz data file. If the
-#' timestamp file already exists, it is only modified if the data file is
-#' updated.
-#' 
-#' @rdname fetchTimestamp
-#' @export
-fetchTimestamp.usgs_watermark <- function(viz) {
-  # get the old timestamp
-  old.timestamp <- readTimestamp(viz)
-  new.timestamp <- if(file.exists(viz$location)) file.mtime(viz$location) else NA
-  
-  if(!is.na(new.timestamp)) {
-    if(is.na(old.timestamp) || (new.timestamp > old.timestamp)) {
-      # write the new timestamp to match the timestamp of the data file. also
-      # write the file metadata for the timestamp file so its timestamp matches
-      # the data file's timestamp
-      writeTimestamp(new.timestamp, viz, timestamp.mtime=new.timestamp)
-    }
-  } else if(!is.na(old.timestamp)) {
-    # if the data file is now missing, make sure the timestamp file is missing,
-    # too. this is not terribly important, because a missing data file is always
-    # refetched, but this keeps the timestamp file honest
-    file.remove(locateTimestampFile(viz$id))
-  }
-  
-  # return nothing
-  invisible()
-  
-}
+fetchTimestamp.usgs_watermark <- fetchTimestamp.file
 
 #' `fetchTimestamp.url` checks a URL for a timestamp. The URL headers must
 #' include a 'last-modified' field; otherwise, this method breaks and you should
