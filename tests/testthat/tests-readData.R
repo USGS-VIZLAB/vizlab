@@ -6,6 +6,7 @@ testtmp <- setup(copyTestViz=TRUE)
 viz <- as.viz(list(
   depends = c("MayflyNymph", "carData","plot-info")
 ))
+sourceScripts('scripts/read')
 
 context("readData")
 

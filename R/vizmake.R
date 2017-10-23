@@ -14,7 +14,7 @@ vizmake <- function(target_names=NULL, ...) {
   validateVizYaml()
   
   # decide whether createRemakefile needs to be rerun
-  if(file.mtime('remake.yaml') < file.mtime('viz.yaml')) {
+  if(!file.exists('remake.yaml') || file.mtime('remake.yaml') < file.mtime('viz.yaml')) {
     createRemakefile()
   }
   

@@ -29,7 +29,6 @@ readData.viz <- function(viz) {
     readData.filepath(viz) # default
   } else {
     viz[['_stop_recursion_']] <- TRUE
-    sourceScripts('scripts/read')
     # call the readData method applicable to this item
     readData(viz)
   }
