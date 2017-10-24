@@ -190,8 +190,7 @@ createRemakefile <- function() {
   )
   
   # create the remake.yml from the template
-  template <- readLines('../vizlab/inst/remake/remake.mustache')
-  # template <- readLines(system.file('remake/remake.mustache', package='vizlab'))
+  template <- readLines(system.file('remake/remake.mustache', package='vizlab'))
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
