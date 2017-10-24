@@ -35,7 +35,10 @@ createRemakefile <- function() {
           paste(paste0("'", scripts, "'"), collapse=", "),
           if(length(viz.item$functions) > 0) sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=",")) else ""),
         # depends = as.list(scripts), # not necessary because captured in command
-        has_depends = FALSE
+        has_command = TRUE,
+        has_depends = FALSE,
+        depends_one = FALSE,
+        depends_more = FALSE
       )           
     }
     viz.item
