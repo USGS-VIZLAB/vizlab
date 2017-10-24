@@ -199,6 +199,14 @@ createRemakefile <- function() {
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
+  # create any directories that have been mentioned but don't yet exist
+  dirs <- unique(c(
+    dirname(unlist(lapply(unname(viz.targets), `[[`, 'location'))),
+    'vizlab/remake/scripts', 'vizlab/remake/timestamps'))
+  for(d in dirs) {
+    if(!dir.exists(d)) dir.create(d, recursive=TRUE)
+  }
+  
   # package up some info that will be useful to vizmake, which is the main
   # client of this function
   vizmake.info <- dplyr::bind_rows(lapply(viz.targets, function(vt) {
