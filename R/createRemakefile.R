@@ -61,6 +61,14 @@ createRemakefile <- function() {
       # if the target is an R object, use the id as the variable (target) name
       viz.item$id
     }
+    # add info on whether a fetchTimestamp recipe is needed
+    viz.item$fetch_timestamp <- if(viz.item$block == 'fetch') {
+      ts.fetcher <- tryCatch({get(paste0('fetchTimestamp.',viz.item$fetcher))}, error=function(e) NULL)
+      is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
+      !is.always.current
+    } else {
+      FALSE
+    }
     return(viz.item)
   })
   # extract vectors of item IDs and block names corresponding to the elements of viz.targets
@@ -81,21 +89,15 @@ createRemakefile <- function() {
         )
         recipes$id <- id_recipe
       }
-      # add a placeholder for recipes$main so it appears in the right order even
-      # if we add a timestamp recipe
-      recipes$main <- list()
       # possibly make a timestamp fetching recipe for this item
-      if(block.name == 'fetch') {
-        # don't bother making a timestamp recipe if the item is always current
-        ts.fetcher <- tryCatch({get(paste0('fetchTimestamp.',item$fetcher))}, error=function(e) NULL)
-        is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
-        if(!is.always.current) {
-          timestamp_recipe <- list(
-            target_name = sprintf('%s_timestamp', item$id),
-            command = sprintf("fetchTimestamp(I('%s'))", item$id)
-          )
-          recipes$timestamp <- timestamp_recipe
-        }
+      if(item$fetch_timestamp) {
+        # add a placeholder for recipes$main so this one comes second
+        recipes$main <- list()
+        timestamp_recipe <- list(
+          target_name = sprintf('%s_timestamp', item$id),
+          command = sprintf("fetchTimestamp(I('%s'))", item$id)
+        )
+        recipes$timestamp <- timestamp_recipe
       }
       # always make a main_recipe (braces are just for indentation to match id_recipe, timestamp_recipe)
       {
@@ -103,7 +105,7 @@ createRemakefile <- function() {
           target_name = item$target,
           depends = c(
             as.list(if(exists('psource', item)) item$psource$target_name else item$scripts),
-            if(exists('timestamp', recipes)) list(recipes$timestamp$target_name) else list(),
+            if(item$fetch_timestamp) list(recipes$timestamp$target_name) else list(),
             lapply(unname(item$depends), function(dep) {
               dep.item <- viz.targets[[names(item.ids[item.ids == dep])]]
               dep.item$target
@@ -199,8 +201,11 @@ createRemakefile <- function() {
   
   # package up some info that will be useful to vizmake, which is the main
   # client of this function
-  vizmake.info <- bind_rows(lapply(viz.targets, function(vt) {
-    data_frame(id=vt$id, location=if(exists('location',vt)) vt$location else NA)
+  vizmake.info <- dplyr::bind_rows(lapply(viz.targets, function(vt) {
+    dplyr::data_frame(
+      id=vt$id,
+      location=if(exists('location',vt)) vt$location else NA,
+      tsfetcher=vt$fetch_timestamp)
   }))
   
   invisible(vizmake.info)
