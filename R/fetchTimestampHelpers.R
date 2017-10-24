@@ -146,7 +146,7 @@ formatTimestamp <- function(timestamp) {
 #' @md
 #' @export
 locateTimestampFile <- function(id) {
-  timestampFile <- file.path("./vizlab/make/timestamps", id)
+  timestampFile <- file.path("./vizlab/remake/timestamps", id)
   return(timestampFile)
 }
 
