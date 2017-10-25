@@ -40,13 +40,11 @@ test_that('prepSources can combine and subset scripts', {
 })
 
 test_that('vizmake creates makefile and runs make', {
-  unlink('remake.yaml')
+  try(unlink('remake.yaml'), silent=TRUE)
   
   # the target should have been attempted, with warnings and errors and messages
-  expect_error(regexp="Some packages are missing:",
-    expect_message(regexp="load",
-      expect_message(regexp='Starting build at',
-        expect_warning(vizmake('plot-info')))))
+  expect_message(regexp='Starting build at',
+    expect_warning(vizmake('plot-info'), 'these packages are newer than required'))
   
   # the remake file should have been made
   expect_true(file.exists('remake.yaml'))
