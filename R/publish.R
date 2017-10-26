@@ -496,15 +496,15 @@ checkThumbCompliance <- function(file, maxSize,
   width <- imager::width(im)
   height <- imager::height(im)
   
-  if(width > maxWidth | height > maxHeight) {
+  if(width > maxWidth || height > maxHeight) {
     stop(paste("Thumbnail", file, "is too big"))
   }
   
-  if(width < minWidth | height < minHeight) {
+  if(width < minWidth || height < minHeight) {
     stop(paste("Thumbnail", file, "is too small"))
   }
   
-  if(width == exactWidth & height == exactHeight) {
+  if(width == exactWidth && height == exactHeight) {
     stop(paste("Thumbnail", file, "is too small"))
   }
   
