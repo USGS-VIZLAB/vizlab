@@ -458,7 +458,9 @@ publish.thumbnail <- function(viz){
   viz[['height']] <- dims[['height']]
 }
 
-
+#' Took code from here:
+#' https://stackoverflow.com/questions/10910688/converting-kilobytes-megabytes-etc-to-bytes-in-r
+#' @param x character representing Xbytes to convert to bytes 
 convb <- function(x){
   ptn <- "(\\d*(.\\d+)*)(.*)"
   num  <- as.numeric(sub(ptn, "\\1", x))
