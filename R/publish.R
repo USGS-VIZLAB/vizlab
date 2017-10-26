@@ -300,11 +300,10 @@ publish.footer <- function(viz) {
   return(viz[['output']])
 }
 
-#' Footer publishing
+#' Social icons
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
-
 publish.social <- function(viz) {
 
   template <- template(viz[['template']])
@@ -405,21 +404,53 @@ publish.thumbnail <- function(viz){
   checkRequired(viz, required = c("for", "location"))
   #compliance
   #dimensions in pixels, file sizes in bytes!
+  minHeight <- NA
+  minWidth <- NA
+  maxSize <- NA
+  maxHeight <- NA
+  maxWidth <- NA
+  exactHeight <- NA
+  exactWidth <- NA
+  
   if(tolower(viz[['for']]) == "facebook") {
-    maxSize <- 8388608
-    checkHeight <- 820
-    checkWidth <- 1560
+    # On 10/26/2017:
+    # Use images that are at least 1200 x 630 pixels for the best 
+    #display on high resolution devices. At the minimum, you should
+    #use images that are 600 x 315 pixels to display link page posts
+    #with larger images. Images can be up to 8MB in size.
+    #https://developers.facebook.com/docs/sharing/best-practices
+    maxSize <- convb("8M")
+    minHeight <- 630
+    minWidth <- 1200
   } else if(tolower(viz[['for']]) == "twitter") {
-    maxSize <- 1048576
-    checkHeight <- 300
-    checkWidth <- 560
+    # On 10/26/2017:
+    #A URL to a unique image representing the content of the page. 
+    #You should not use a generic image such as your website logo, 
+    #author photo, or other image that spans multiple pages. Images 
+    #for this Card support an aspect ratio of 2:1 with minimum 
+    #dimensions of 300x157 or maximum of 4096x4096 pixels. 
+    #Images must be less than 5MB in size. JPG, PNG, WEBP and GIF 
+    #formats are supported. Only the first frame of an animated GIF 
+    #will be used. SVG is not supported.
+    # https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
+    maxSize <- convb("5M")
+    maxHeight <- 4096
+    maxWidth <- 4096
+    minHeight <- 157
+    minWidth <- 300
   } else { #landing
     maxSize <- 1048576
-    checkHeight <- 400
-    checkWidth <- 400
+    exactHeight <- 400
+    exactWidth <- 400
   }
-  dims <- checkThumbCompliance(file = viz[['location']], maxSize = maxSize,
-                       checkHeight = checkHeight, checkWidth = checkWidth)
+  dims <- checkThumbCompliance(file = viz[['location']], 
+                               maxSize = maxSize,
+                               minHeight = minHeight, 
+                               minWidth = minWidth,
+                               maxHeight = maxHeight, 
+                               maxWidth = maxWidth,
+                               exactHeight = exactHeight, 
+                               exactWidth = exactWidth)
   #send to other publishers if all ok
   viz <- NextMethod()
   viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
@@ -427,21 +458,54 @@ publish.thumbnail <- function(viz){
   viz[['height']] <- dims[['height']]
 }
 
+
+convb <- function(x){
+  ptn <- "(\\d*(.\\d+)*)(.*)"
+  num  <- as.numeric(sub(ptn, "\\1", x))
+  unit <- sub(ptn, "\\3", x)             
+  unit[unit==""] <- "1" 
+  unit <- gsub(" ","", unit)
+  unit <- toupper(unit)
+  mult <- c("1"=1, "KB"=1024, "M"=1024^2, "G"=1024^3)
+  num * unname(mult[unit])
+}
+
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
 #' @param file char Name of thumbnail file
 #' @param maxSize numeric Max size in bytes
-#' @param checkHeight numeric Height in pixels to enforce
-#' @param checkWidth numeric Width in pixels to enforce
-checkThumbCompliance <- function(file, maxSize, checkHeight, checkWidth) {
+#' @param minHeight numeric Minimum height in pixels to enforce
+#' @param minWidth numeric Minimum width in pixels to enforce
+#' @param maxHeight numeric Max height in pixels to enforce
+#' @param maxWidth numeric Max width in pixels to enforce
+#' @param exactHeight numeric Exact height in pixels to enforce
+#' @param exactWidth numeric Exact width in pixels to enforce
+checkThumbCompliance <- function(file, maxSize, 
+                                 minHeight, minWidth, 
+                                 maxHeight, maxWidth, 
+                                 exactHeight, exactWidth) {
   fileSize <- file.info(file)
+
+  if(fileSize > maxSize) {
+    stop(paste("Thumbnail", file, "is too big"))
+  }
+
   im <- imager::load.image(file)
   width <- imager::width(im)
   height <- imager::height(im)
-  if(fileSize > maxSize || width != checkWidth || height != checkHeight) {
-    stop(paste("Thumbnail", file, "does not meet site requirements"))
+  
+  if(width > maxWidth | height > maxHeight) {
+    stop(paste("Thumbnail", file, "is too big"))
   }
-
+  
+  if(width < minWidth | height < minHeight) {
+    stop(paste("Thumbnail", file, "is too small"))
+  }
+  
+  if(width == exactWidth & height == exactHeight) {
+    stop(paste("Thumbnail", file, "is too small"))
+  }
+  
   return(c(width = width, height = height))
 }
 

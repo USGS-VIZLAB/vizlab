@@ -89,7 +89,7 @@ from here on out will use svg-inject to get svg to dom
 
 Footer publishing
 
-Footer publishing
+Social icons
 
 Header publishing
 
