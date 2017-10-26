@@ -486,7 +486,7 @@ checkThumbCompliance <- function(file, maxSize,
                                  exactHeight, exactWidth) {
   fileSize <- file.info(file)
 
-  if(fileSize > maxSize) {
+  if(fileSize$size > maxSize) {
     stop(paste("Thumbnail", file, "is too big"))
   }
 
