@@ -9,5 +9,5 @@ fetch.mayflyNymph <- function(viz) {
 }
 
 #' The quickest way to implement a fetchTimestamp method for a local file is by
-#' copying fetchTimestamp.file
-fetchTimestamp.mayflyNymph <- vizlab:::fetchTimestamp.file
+#' copying alwaysCurrent
+fetchTimestamp.mayflyNymph <- alwaysCurrent
