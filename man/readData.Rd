@@ -15,6 +15,8 @@
 \alias{readData.md}
 \alias{readData.inline}
 \alias{readData.json}
+\alias{readData.shp}
+\alias{readData.svg}
 \title{Ensure data is on the local file system}
 \usage{
 readData(viz)
@@ -44,6 +46,10 @@ readData(viz)
 \method{readData}{inline}(viz)
 
 \method{readData}{json}(viz)
+
+\method{readData}{shp}(viz)
+
+\method{readData}{svg}(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
@@ -83,6 +89,10 @@ or markdown contained in yaml with mimetype: text/yaml
 \code{readData.inline} reads data directly from inline yaml
 
 \code{readData.json} reads json files
+
+assumes only one .shp file in zip folder
+
+\code{readData.svg_map} reads svg
 }
 \details{
 If simple markdown is used, return will be the rendered html, otherwise it
