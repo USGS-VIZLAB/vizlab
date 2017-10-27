@@ -122,7 +122,7 @@ export.resource <- function(viz) {
 export.thumbnail <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, FALSE)) {
+  if (doExport(viz, TRUE)) {
     file <- paste0(exportLocation(), "images/", basename(location))
   }
   return(file)
