@@ -501,10 +501,13 @@ checkThumbCompliance <- function(file, thumbType) {
   if(isTRUE(width < minWidth || height < minHeight)){
     stop(paste("Thumbnail", file, "is too small"))
   }
-
-  if(!isTRUE(width == exactWidth && height == exactHeight)){
-    stop(paste("Thumbnail", file, "is too small"))
+  
+  if(!is.na(exactWidth) & !is.na(exactHeight)){
+    if(!isTRUE(width == exactWidth && height == exactHeight)){
+      stop(paste("Thumbnail", file, "is too small"))
+    }    
   }
+
   
   return(c(width = width, height = height))
 }
