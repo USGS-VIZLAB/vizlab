@@ -401,61 +401,21 @@ publish.template <- function(viz) {
 #' @rdname publish
 #' @export
 publish.thumbnail <- function(viz){
-  checkRequired(viz, required = c("for", "location"))
-  #compliance
-  #dimensions in pixels, file sizes in bytes!
-  minHeight <- NA
-  minWidth <- NA
-  maxSize <- NA
-  maxHeight <- NA
-  maxWidth <- NA
-  exactHeight <- NA
-  exactWidth <- NA
   
-  if(tolower(viz[['for']]) == "facebook") {
-    # On 10/26/2017:
-    # Use images that are at least 1200 x 630 pixels for the best 
-    #display on high resolution devices. At the minimum, you should
-    #use images that are 600 x 315 pixels to display link page posts
-    #with larger images. Images can be up to 8MB in size.
-    #https://developers.facebook.com/docs/sharing/best-practices
-    maxSize <- convb("8M")
-    minHeight <- 630
-    minWidth <- 1200
-  } else if(tolower(viz[['for']]) == "twitter") {
-    # On 10/26/2017:
-    #A URL to a unique image representing the content of the page. 
-    #You should not use a generic image such as your website logo, 
-    #author photo, or other image that spans multiple pages. Images 
-    #for this Card support an aspect ratio of 2:1 with minimum 
-    #dimensions of 300x157 or maximum of 4096x4096 pixels. 
-    #Images must be less than 5MB in size. JPG, PNG, WEBP and GIF 
-    #formats are supported. Only the first frame of an animated GIF 
-    #will be used. SVG is not supported.
-    # https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
-    maxSize <- convb("5M")
-    maxHeight <- 4096
-    maxWidth <- 4096
-    minHeight <- 157
-    minWidth <- 300
-  } else { #landing
-    maxSize <- 1048576
-    exactHeight <- 400
-    exactWidth <- 400
-  }
-  dims <- checkThumbCompliance(file = viz[['location']], 
-                               maxSize = maxSize,
-                               minHeight = minHeight, 
-                               minWidth = minWidth,
-                               maxHeight = maxHeight, 
-                               maxWidth = maxWidth,
-                               exactHeight = exactHeight, 
-                               exactWidth = exactWidth)
-  #send to other publishers if all ok
+  required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
+  checkRequired(viz, required)
+
+  for(thumbType in unique(viz[['thumbType']])){
+    dims <- checkThumbCompliance(file = viz[['location']], thumbType)
+  }
+
   viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
   viz[['width']] <- dims[['width']]
   viz[['height']] <- dims[['height']]
+  
+  return(viz)
+  
 }
 
 #' Took code from here:
@@ -475,19 +435,57 @@ convb <- function(x){
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
 #' @param file char Name of thumbnail file
-#' @param maxSize numeric Max size in bytes
-#' @param minHeight numeric Minimum height in pixels to enforce
-#' @param minWidth numeric Minimum width in pixels to enforce
-#' @param maxHeight numeric Max height in pixels to enforce
-#' @param maxWidth numeric Max width in pixels to enforce
-#' @param exactHeight numeric Exact height in pixels to enforce
-#' @param exactWidth numeric Exact width in pixels to enforce
-checkThumbCompliance <- function(file, maxSize, 
-                                 minHeight, minWidth, 
-                                 maxHeight, maxWidth, 
-                                 exactHeight, exactWidth) {
+#' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
+checkThumbCompliance <- function(file, thumbType) {
   fileSize <- file.info(file)
-
+  
+  #dimensions in pixels, file sizes in bytes!
+  match.arg(thumbType, c("facebook","twitter","main","landing"))
+  
+  minHeight <- NA
+  minWidth <- NA
+  maxSize <- NA
+  maxHeight <- NA
+  maxWidth <- NA
+  exactHeight <- NA
+  exactWidth <- NA
+  
+  if(thumbType == "facebook") {
+    # On 10/26/2017:
+    # Use images that are at least 1200 x 630 pixels for the best 
+    #display on high resolution devices. At the minimum, you should
+    #use images that are 600 x 315 pixels to display link page posts
+    #with larger images. Images can be up to 8MB in size.
+    #https://developers.facebook.com/docs/sharing/best-practices
+    maxSize <- convb("8M")
+    minHeight <- 630
+    minWidth <- 1200
+  } else if(thumbType == "twitter") {
+    # On 10/26/2017:
+    #A URL to a unique image representing the content of the page. 
+    #You should not use a generic image such as your website logo, 
+    #author photo, or other image that spans multiple pages. Images 
+    #for this Card support an aspect ratio of 2:1 with minimum 
+    #dimensions of 300x157 or maximum of 4096x4096 pixels. 
+    #Images must be less than 5MB in size. JPG, PNG, WEBP and GIF 
+    #formats are supported. Only the first frame of an animated GIF 
+    #will be used. SVG is not supported.
+    # https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
+    maxSize <- convb("5M")
+    maxHeight <- 4096
+    maxWidth <- 4096
+    minHeight <- 157
+    minWidth <- 300
+  } else if (thumbType == 'landing') { #landing
+    maxSize <- 1048576
+    exactHeight <- 400
+    exactWidth <- 400
+  } else {
+    maxSize <- 1048576
+    exactHeight <- 400
+    exactWidth <- 400    
+  }
+  
   if(fileSize$size > maxSize) {
     stop(paste("Thumbnail", file, "is too big"))
   }
@@ -496,15 +494,15 @@ checkThumbCompliance <- function(file, maxSize,
   width <- imager::width(im)
   height <- imager::height(im)
   
-  if(width > maxWidth || height > maxHeight) {
+  if(isTRUE(width > maxWidth || height > maxHeight)){
     stop(paste("Thumbnail", file, "is too big"))
   }
-  
-  if(width < minWidth || height < minHeight) {
+
+  if(isTRUE(width < minWidth || height < minHeight)){
     stop(paste("Thumbnail", file, "is too small"))
   }
-  
-  if(width == exactWidth && height == exactHeight) {
+
+  if(isTRUE(width == exactWidth && height == exactHeight)){
     stop(paste("Thumbnail", file, "is too small"))
   }
   
