@@ -47,66 +47,66 @@ info:
       name: USGS-VIZLAB/vizlab
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
     remake:
-      repo: github
+      repo: remake
       version: 0.3.0
       name: richfitz/remake
       ref: e29028b548950a3132ea2d045b7f67344ce22a6b
 parameter:
   -
-    id: plot-info
+    id: plot_info
     width: 4
     height: 4
 fetch:
   -
-    id: siteTextData
-    location: data/siteText.yaml
+    id: site_text_data
+    location: data/site_text.yaml
     mimetype: text/yaml
     scripts:
   -
-    id: Cuyahoga
-    location: cache/fetch/CuyahogaTDS.csv
-    fetcher: sciencebase
-    scripts:
-    remoteItemId: 575d839ee4b04f417c2a03fe
-    remoteFilename: CuyahogaTDS.csv
+    id: cuyahoga
+    location: cache/fetch/cuyahoga.csv
+    fetchargs:
+      sourceloc: data/pretend_remote/cuyahoga.csv
+    fetcher: cuyahoga
+    scripts: scripts/fetch/cuyahoga.R
     mimetype: text/csv
   -
-    id: MayflyNymph
-    location: data/MayflyNymph.csv
-    fetcher: mayflyNymph
-    scripts: scripts/fetch/mayflyNymph.R
-    reader: myCsvReader
+    id: mayfly_nymph
+    location: data/mayfly_nymph.csv
+    fetcher: mayfly_nymph
+    scripts: scripts/fetch/mayfly_nymph.R
+    reader: my_csv_reader
     mimetype: text/csv
     export: true
   -
-    id: carData
+    id: car_data
     location: data/car_info
     mimetype: text/csv
     reader: folder
     scripts:
 process:
   -
-    id: CuyahogaShort
-    location: cache/process/CuyahogaShort.tsv
+    id: cuyahoga_short
+    location: cache/process/cuyahoga_short.tsv
     mimetype: text/tab-separated-values
     scripts: scripts/process/cuyahoga.R
     depends:
-      - Cuyahoga
+      - cuyahoga
     processor: cuyahoga
 visualize:
   -
-    id: relativeAbundanceFig
+    id: relative_abundance_fig
     title: Relative Abundance
     alttext: Relative abundance of mayflies, above vs below
-    location: figures/relativeAbundanceFig.svg
+    location: figures/relative_abundance_fig.svg
     depends:
-        cuyahoga: CuyahogaShort
-        mayfly: MayflyNymph
-        sizes: plot-info
-    visualizer: relativeAbundance
+        cuyahoga: cuyahoga_short
+        mayfly: mayfly_nymph
+        sizes: plot_info
+    visualizer: relative_abundance
     mimetype: image/svg+xml
     export: true
-    scripts: scripts/visualize/relativeAbundance.R
+    scripts: scripts/visualize/relative_abundance.R
 publish:
   -
     id: mainCSS
@@ -123,7 +123,7 @@ publish:
     name: index
     template: fullPage
     depends:
-      relativeAbundance: "relativeAbundance"
+      relative_abundance: "relative_abundance"
       mainCSS: "mainCSS"
       normalizeCSS: "normalizeCSS"
       footer-style: "footer-style"
@@ -132,18 +132,18 @@ publish:
     publisher: page
     context:
       title: testViz
-      sections: [ "relativeAbundance" ]
+      sections: [ "relative_abundance" ]
       resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
   -
-    id: relativeAbundance
+    id: relative_abundance
     template: simplefigure
     context:
-      id: relativeAbundance
-      figure: relativeAbundanceFig
+      id: relative_abundance
+      figure: relative_abundance_fig
       caption: "Relative Abundance"
     depends:
-      relativeAbundanceFig: "relativeAbundanceFig"
+      relative_abundance_fig: "relative_abundance_fig"
     publisher: section
   -
     id: facebook-thumb

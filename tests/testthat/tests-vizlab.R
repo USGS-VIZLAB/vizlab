@@ -13,12 +13,12 @@ test_that("coercion to vizlab object works", {
 })
 
 test_that("viz.yaml can be loaded", {
-  viz <- as.viz("siteTextData")
+  viz <- as.viz("site_text_data")
   expect_true(!is.null(viz))
 })
 
 test_that("file fetcher has correct components", {
-  viz <- as.viz("siteTextData")
+  viz <- as.viz("site_text_data")
   viz <- as.fetcher(viz)
   expect_is(object = viz, class = "file")
   expect_is(object = viz, class = "fetcher")
@@ -26,14 +26,14 @@ test_that("file fetcher has correct components", {
 })
 
 test_that("parameter has correct components", {
-  viz <- as.viz("plot-info")
+  viz <- as.viz("plot_info")
   viz <- as.parameter(viz)
   expect_is(object = viz, class = "parameter")
   
 })
 
 test_that("mimetype selects correct reader from default yaml", {
-  viz <- as.viz("siteTextData")
+  viz <- as.viz("site_text_data")
   viz <- as.fetcher(viz)
   viz <- as.reader(viz)
   expect_is(object = viz, class = "yaml")
@@ -53,19 +53,13 @@ test_that("mimetype can select reader from user yaml", {
 })
 
 test_that("directories can be read", {
-  viz <- as.viz("carData")
+  viz <- as.viz("car_data")
   viz <- as.fetcher(viz)
   viz <- as.reader(viz)
   viz_data <- readData(viz)
 })
 
 context("sciencebase")
-test_that("sciencebase item has fields", {
-  viz <- as.fetcher(as.viz("Cuyahoga"))
-  expect_equal(viz[['remoteItemId']], "575d839ee4b04f417c2a03fe")
-  expect_equal(viz[['remoteFilename']], "CuyahogaTDS.csv")
-})
-
 test_that("sciencebase validator works", {
   viz <- as.fetcher(list(
     id = "badsb",
