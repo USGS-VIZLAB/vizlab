@@ -135,6 +135,7 @@ writeTimestamp <- function(new.timestamp, viz, timestamp.mtime=NA) {
 #' @param timestamp POSIXct timestamp to format into a character string
 #' @export
 formatTimestamp <- function(timestamp) {
+  if(!('POSIXct' %in% class(timestamp))) stop('timestamp must be POSIXct')
   attr(timestamp, 'tzone') <- 'UTC'
   format(timestamp, "%Y-%m-%d %H:%M:%S %Z") # presents UTC even though that info will technically be ignored on readTimestamp
 }
