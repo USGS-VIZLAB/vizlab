@@ -502,7 +502,7 @@ checkThumbCompliance <- function(file, thumbType) {
     stop(paste("Thumbnail", file, "is too small"))
   }
 
-  if(isTRUE(width == exactWidth && height == exactHeight)){
+  if(!isTRUE(width == exactWidth && height == exactHeight)){
     stop(paste("Thumbnail", file, "is too small"))
   }
   
