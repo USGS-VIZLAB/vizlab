@@ -94,7 +94,7 @@ createRemakefile <- function() {
         # add a placeholder for recipes$main so this one comes second
         recipes$main <- list()
         timestamp_recipe <- list(
-          target_name = sprintf('%s_timestamp', item$id),
+          target_name = locateTimestampFile(item$id),
           command = sprintf("fetchTimestamp(I('%s'))", item$id)
         )
         recipes$timestamp <- timestamp_recipe

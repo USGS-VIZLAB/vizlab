@@ -23,9 +23,10 @@ vizmake <- function(target_names=NULL, ...) {
   # read in the remake file
   remake.yaml <- yaml::yaml.load_file('remake.yaml')
   
-  # remake::delete any timestamps or fetch items whose time is up
-  timestamp.targets <- grep('_timestamp$', names(remake.yaml$targets), value=TRUE)
-  timestamped.items <- gsub('_timestamp$', '', timestamp.targets)
+  # remake::delete any timestamps whose time is up
+  timestamp.pattern <- 'vizlab/remake/timestamps/'
+  timestamp.targets <- grep(timestamp.pattern, names(remake.yaml$targets), value=TRUE)
+  timestamped.items <- tools::file_path_sans_ext(basename(timestamp.targets))
   for(i in seq_along(timestamped.items)) {
     if(exceededTimeToLive(timestamped.items[i])) {
       remake::delete(timestamp.targets[i], remake_file='remake.yaml')
@@ -41,6 +42,9 @@ vizmake <- function(target_names=NULL, ...) {
   
   # run remake::make(target_name, ..., remake_file='remake.yaml')
   message('Starting build at ', Sys.time())
-  remake::make(target_names=target_names, ..., remake_file='remake.yaml')
+  out <- remake::make(target_names=target_names, ..., remake_file='remake.yaml')
   message('Finished build at ', Sys.time())
+  
+  # return whatever remake returned
+  return(out)
 }
