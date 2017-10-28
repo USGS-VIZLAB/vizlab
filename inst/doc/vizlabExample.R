@@ -6,5 +6,5 @@ library(rmarkdown)
 #  devtools::install_github('USGS-VIZLAB/vizlab')
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  as.viz('cars_data')
+#  as.viz('cars-data')
 

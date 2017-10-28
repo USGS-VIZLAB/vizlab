@@ -12,7 +12,7 @@
 
 <meta name="author" content="Laura DeCicco" />
 
-<meta name="date" content="2017-10-28" />
+<meta name="date" content="2017-09-15" />
 
 <title>Collaboration Example</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Collaboration Example</h1>
 <h4 class="author"><em>Laura DeCicco</em></h4>
-<h4 class="date"><em>2017-10-28</em></h4>
+<h4 class="date"><em>2017-09-15</em></h4>
 
 
 
@@ -52,22 +52,24 @@
 <p>Let’s use this project to create a fictional task, and walk through the process of contributing to the project. Our fictional task is to change the way we “clean”&quot; the national water use data. When we were first were given the data, we had no consistent Industrial or Thermoelectric values of water use data before 1960. However, in our fictional example, let’s say we were provided with a csv file with 1955 Thermoelectric water use data by state. So now our fictional project lead has created two tasks, and assigned these tasks to us:</p>
 <p>Task #1. Pull in the data file thermoelectric_1955.csv</p>
 <p>Task #2. Merge that data into the existing cleaned national state data.</p>
-<p>The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the <code>vizlab</code> package:</p>
-<pre><code>library(vizlab)</code></pre>
-<p>You can build the visualization using the <code>vizmake</code> function:</p>
-<pre><code>vizmake()</code></pre>
+<p>The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the <code>vizlab</code> package and creating your make files:</p>
+<pre><code>library(vizlab)
+createProfile()
+createMakefiles() </code></pre>
 </div>
 <div id="task-1-pull-in-new-data" class="section level2">
 <h2>Task 1: Pull in new data</h2>
-<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required. See the <code>dssecrets</code> package README for details (you may need to talk with a DS team member to get access). We established a service account for ScienceBase that should be used if at all possible, otherwise AD login is supported.</p>
+<p>Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase <a href="https://www.sciencebase.gov" class="uri">https://www.sciencebase.gov</a>, and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required, this is done by running:</p>
+<pre><code>storeSBcreds()</code></pre>
+<p>and type username and password. We established a service account for ScienceBase that should be used if at all possible, otherwise AD login is supported.</p>
 <p>Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.</p>
 <p>The whole <code>vizlab</code> process is coordinated by the <code>viz.yaml</code> file. Since we are “fetching” new data, we add a new job in the fetch section:</p>
 <pre><code>fetch:
   -
   *************bunch of stuff already there************
   -
-    id: old_thermo_data
-    location: cache/fetch/thermoelectric_1955.csv
+    id: oldThermoData
+    location: cache/thermoelectric_1955.csv
     fetcher: sciencebase
     remoteItemId: &quot;XXX123&quot;
     remoteFilename: &quot;thermoelectric_1955.csv&quot;
@@ -76,7 +78,7 @@
 </code></pre>
 <p>What is this? We’ve added a new fetch job, and given it some information:</p>
 <ul>
-<li>A unique id “old_thermo_data”. Downstream parts of this project that depend on this data will need to refer to this step by the unique id.</li>
+<li>A unique id “oldThermoData”. Downstream parts of this project that depend on this data will need to refer to this step by the unique id.</li>
 <li>A “location”, which is the relative path where the file that is produced from this job will be stored.</li>
 <li>The “fetcher” field indicates to <code>vizlab</code> to go to ScienceBase, look for the ScienceBase’s ID “XXX123”, and pull down the file “thermoelectric_1955.csv” from that ID.</li>
 <li>An optional field “mimetype”, this allows future jobs that depends on this data to know how to open the data.<br />
@@ -90,35 +92,35 @@
 <p>Since we are starting a new task, it’s a good idea to start a new branch. This task is to merge this new data from our csv into the data that is already available. This will be a task where we edit an existing process. Here is the original “process”&quot; field in the viz.yaml:</p>
 <pre><code>process:
   -
-    id: calc_national_data
-    location: cache/process/national_clean.rds
-    processor: national_clean
-    scripts: scripts/process/national_clean.R
+    id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
     reader: rds
     depends:
-      state_data: calc_hist_water_data
+      stateData: calc-histWaterData
 </code></pre>
 <p>We need to add a new dependency, and fiddle with the script itself. So, let’s add the new data to depends like this:</p>
 <pre><code>process:
   -
-    id: calc_national_data
-    location: cache/process/national_clean.rds
-    processor: national_clean
-    scripts: scripts/process/national_clean.R
+    id: calc-nationalData
+    location: cache/nationalClean.rds
+    processor: nationalClean
+    scripts: scripts/process/nationalClean.R
     reader: rds
     depends:
-      state_data: calc_hist_water_data
-      old_data: old_thermo_data</code></pre>
-<p>So in this processing job, we’ve added a new entry in the “depends” field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The <code>state_data</code> is the 1960-2015 state data, and the <code>old_thermo_data</code> is our recent addition.</p>
-<p>Now, let’s look at the original script in: scripts/process/national_clean.R:</p>
-<pre><code>process.national_clean &lt;- function(viz = getContentInfo(viz.id = &quot;calc_national_data&quot;)){
+      stateData: calc-histWaterData
+      oldData: oldThermoData</code></pre>
+<p>So in this processing job, we’ve added a new entry in the “depends” field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The <code>stateData</code> is the 1960-2015 state data, and the <code>oldThermoData</code> is our recent addition.</p>
+<p>Now, let’s look at the original script in: scripts/process/nationalClean.R:</p>
+<pre><code>process.nationalClean &lt;- function(viz = getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
   library(tidyr)
   library(dplyr)
   
   viz.data &lt;- readDepends(viz)
-  state_data &lt;- viz.data[['state_data']]
+  stateData &lt;- viz.data[['stateData']]
   
-  national &lt;- state_data %&gt;%
+  national &lt;- stateData %&gt;%
     group_by(year, category) %&gt;%
     summarise(value = sum(value)) %&gt;%
     data.frame()
@@ -131,16 +133,16 @@
   saveRDS(national, file=viz[[&quot;location&quot;]])
 }</code></pre>
 <p>We need to add the data and merge:</p>
-<pre><code>process.national_clean &lt;- function(viz = getContentInfo(viz.id = &quot;calc_national_data&quot;)){
+<pre><code>process.nationalClean &lt;- function(viz = getContentInfo(viz.id = &quot;calc-nationalData&quot;)){
   library(tidyr)
   library(dplyr)
   
   viz.data &lt;- readDepends(viz)
-  state_data &lt;- viz.data[['state_data']]
-  old_data &lt;- viz.data[['old_data']]
+  stateData &lt;- viz.data[['stateData']]
+  oldData &lt;- viz.data[['oldData']]
 
-  national &lt;- state_data %&gt;%
-    left_join(old_data, by=year) %&gt;%
+  national &lt;- stateData %&gt;%
+    left_join(oldData, by=year) %&gt;%
     group_by(year, category) %&gt;%
     summarise(value = sum(value)) %&gt;%
     data.frame()
@@ -154,41 +156,39 @@
   saveRDS(national, file=viz[[&quot;location&quot;]])
 }</code></pre>
 <p>Notice how the <code>depends</code> and <code>location</code> work.</p>
-<p>Seems about right, but we should probably test. What’s the easiest way to jump into your custom process task? You can load the <code>viz</code> object like this:</p>
-<pre><code>viz &lt;- as.viz(&quot;calc_national_data&quot;)
-
-viz
+<p>Seems about right, but we should probably test. What’s the easiest way to jump into your custom process task? Unfortunately, using <code>make</code> and RStudio (a common practice on our team), we can’t simply add breakpoints to the script.</p>
+<p>You can load the <code>viz</code> object like this:</p>
+<pre><code>viz &lt;- getContentInfo(viz.id = &quot;calc-nationalData&quot;)</code></pre>
+<p>and step through our function line-by-line.</p>
+<p>For fewer keystrokes, you can run <code>process.nationalClean</code> in <code>debug</code> mode, since <code>viz</code> is defined by default using <code>getContentInfo</code>.</p>
+<pre><code>viz
 $id
-[1] &quot;calc_national_data&quot;
+[1] &quot;calc-nationalData&quot;
 
 $location
-[1] &quot;cache/national_clean.rds&quot;
+[1] &quot;cache/nationalClean.rds&quot;
 
 $processor
-[1] &quot;national_clean&quot;
+[1] &quot;nationalClean&quot;
 
 $scripts
-[1] &quot;scripts/process/national_clean.R&quot;
+[1] &quot;scripts/process/nationalClean.R&quot;
 
 $reader
 [1] &quot;rds&quot;
 
 $depends
-$depends$state_data
-[1] &quot;calc_hist_water_data&quot;
-$depends$old_data
-[1] &quot;old_thermo_data&quot;
+$depends$stateData
+[1] &quot;calc-histWaterData&quot;
+$depends$oldData
+[1] &quot;oldThermoData&quot;
 
 $block
 [1] &quot;process&quot;
 
 $export
 [1] FALSE</code></pre>
-<p>and step through our function line-by-line.</p>
-<p>For fewer keystrokes, you can run <code>process.national_clean</code> in <code>debug</code> mode.</p>
-<pre><code>debug(process.national_clean)
-process(&quot;calc_national_data&quot;)</code></pre>
-<p>Once we’ve verified that our job works as expected, and doesn’t break anything in the <code>vizmake()</code> build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.</p>
+<p>Once we’ve verified that our job works as expected, and doesn’t break anything in the <code>make</code> build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.</p>
 </div>
 </div>
 
