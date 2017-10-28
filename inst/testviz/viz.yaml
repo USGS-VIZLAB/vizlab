@@ -46,6 +46,9 @@ info:
       version: 0.2.0
       name: USGS-VIZLAB/vizlab
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
+    dplyr:
+      repo: CRAN
+      version: 0.7.0
 parameter:
   -
     id: plot_info
@@ -64,6 +67,17 @@ fetch:
       sourceloc: data/pretend_remote/cuyahoga.csv
     fetcher: cuyahoga
     scripts: scripts/fetch/cuyahoga.R
+    mimetype: text/csv
+  -
+    id: cuyahoga_diff
+    comment: difference between cuyahoga_short and cuyahoga, to show this can be done
+    location: cache/fetch/cuyahoga_diff.csv
+    depends:
+      cuyahoga_raw: cuyahoga
+      cuyahoga_processed: cuyahoga_short
+    fetcher: cuyahoga_diff
+    scripts: scripts/fetch/cuyahoga.R
+    function: fetch.cuyahoga_diff
     mimetype: text/csv
   -
     id: mayfly_nymph

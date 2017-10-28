@@ -18,3 +18,17 @@ fetchTimestamp.cuyahoga <- function(viz) {
     writeTimestamp(new.timestamp, viz)
   }
 }
+
+fetch.cuyahoga_diff <- function(viz) {
+  # show that a fetch item can depend on a process item now
+  deps <- readDepends(viz)
+  checkRequired(deps, c('cuyahoga_raw','cuyahoga_processed'))
+  stopifnot(is.data.frame(deps$cuyahoga_raw))
+  stopifnot(is.data.frame(deps$cuyahoga_processed))
+  cuyahoga_diff <- dplyr::anti_join(deps$cuyahoga_raw, deps$cuyahoga_processed)
+  
+  write.table(cuyahoga_diff, viz$location, row.names=FALSE, sep='\t')
+
+}
+
+fetchTimestamp.cuyahoga_diff <- alwaysCurrent

@@ -50,4 +50,19 @@ test_that('vizmake creates makefile and runs make', {
   expect_true(file.exists('remake.yaml'))
 })
 
+test_that('fetch item can now depend on process item', {
+  # the meat of this test is in viz.yaml and fetch/cuyahoga.R, where
+  # cuyahoga_diff is made to depend on process/cuyahoga_short. even though this
+  # dependency bucks the general trend for data to flow from fetch to process to
+  # beyond, it works! we know because there's no error here.
+  
+    # capture the warnings and messages
+  expect_message(regexp='Starting build at',
+                 expect_warning(regexp='these packages are newer than required',
+                                vizmake('cuyahoga_diff')))
+  cuyahoga_diff <- readData('cuyahoga_diff')
+  expect_is(cuyahoga_diff, 'data.frame')
+  expect_equal(nrow(cuyahoga_diff), nrow(readData('cuyahoga')) - nrow(readData('cuyahoga_short')))
+})
+
 cleanup(oldwd, testtmp)
