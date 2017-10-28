@@ -29,9 +29,8 @@ all dependency data from files into R format.
 wd <- getwd()
 setwd(system.file(package = 'vizlab','testviz'))
 #Read dependencies from list or viz object:
-viz.data <- readDepends(list(depends = 'MayflyNymph'))
-viz.data[["MayflyNymph"]]
-
+viz.data <- readDepends(list(depends = 'mayfly_nymph'))
+viz.data[["mayfly_nymph"]]
 setwd(wd)
 }
 \seealso{

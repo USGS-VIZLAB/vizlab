@@ -7,6 +7,6 @@ visualize.relative_abundance <- function(viz) {
   data <- readDepends(viz)
   sizes <- data[["sizes"]]
   svg(outfile, height=sizes$height, width=sizes$width)
-  plot(Above ~ Below, data[["MayflyNymph"]])
+  plot(Above ~ Below, data[["mayfly_nymph"]])
   dev.off()
 }

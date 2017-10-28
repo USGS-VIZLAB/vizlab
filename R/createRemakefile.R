@@ -209,11 +209,12 @@ createRemakefile <- function() {
   
   # package up some info that will be useful to vizmake, which is the main
   # client of this function
-  vizmake.info <- dplyr::bind_rows(lapply(viz.targets, function(vt) {
-    dplyr::data_frame(
+  vizmake.info <- do.call(rbind, lapply(viz.targets, function(vt) {
+    data.frame(
       id=vt$id,
-      location=if(exists('location',vt)) vt$location else NA,
-      tsfetcher=vt$fetch_timestamp)
+      location=if(exists('location', vt)) vt$location else NA,
+      tsfetcher=vt$fetch_timestamp,
+      stringsAsFactors=FALSE)
   }))
   
   invisible(vizmake.info)
