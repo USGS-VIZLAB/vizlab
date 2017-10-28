@@ -85,18 +85,10 @@ fetchTimestamp.file <- function(viz) {
   old.timestamp <- readTimestamp(viz)
   new.timestamp <- if(file.exists(viz$location)) file.mtime(viz$location) else NA
   
-  if(!is.na(new.timestamp)) {
-    if(is.na(old.timestamp) || (new.timestamp > old.timestamp)) {
-    # write the new timestamp to match the timestamp of the data file. also
-    # write the file metadata for the timestamp file so its timestamp matches
-    # the data file's timestamp
+  # pretty much always write something, unless both old and new timestamps exist
+  # and they're equal
+  if(is.na(old.timestamp) || is.na(new.timestamp) || (new.timestamp > old.timestamp)) {
     writeTimestamp(new.timestamp, viz, timestamp.mtime=new.timestamp)
-    }
-  } else if(!is.na(old.timestamp)) {
-    # if the data file is now missing, make sure the timestamp file is missing,
-    # too. this is not terribly important, because a missing data file is always
-    # refetched, but this keeps the timestamp file honest
-    file.remove(locateTimestampFile(viz$id))
   }
   
   # return nothing
