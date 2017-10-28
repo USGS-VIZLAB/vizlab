@@ -5,7 +5,8 @@
 #' (though it's not necessarily a great idea)
 fetch.mayfly_nymph <- function(viz) {
   # this function doesn't actually do, or need to do, anything
-  message("Great! MayflyNymph.csv is already at ", viz[['location']])
+  message("fetching mayfly_nymph from ", viz[['location']], " to ", viz[['location']])
+  message("a mayfly is a kind of ", viz$info)
 }
 
 #' The quickest way to implement a fetchTimestamp method for a local file is by

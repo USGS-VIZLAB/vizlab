@@ -70,7 +70,7 @@ fetch:
     mimetype: text/csv
   -
     id: cuyahoga_diff
-    comment: difference between cuyahoga_short and cuyahoga, to show this can be done
+    comment: shows that fetch can depend on process
     location: cache/fetch/cuyahoga_diff.csv
     depends:
       cuyahoga_raw: cuyahoga
@@ -83,6 +83,7 @@ fetch:
     id: mayfly_nymph
     location: data/mayfly_nymph.csv
     fetcher: mayfly_nymph
+    info: insect
     scripts: scripts/fetch/mayfly_nymph.R
     reader: my_csv_reader
     mimetype: text/csv
@@ -93,6 +94,13 @@ fetch:
     mimetype: text/csv
     reader: folder
     scripts:
+  -
+    id: never_current
+    location: cache/fetch/never_current.txt
+    mimetype: text/plain
+    fetcher: never_current
+    datasource: data/pretend_remote/never_current.txt
+    scripts: scripts/fetch/never_current.R
 process:
   -
     id: cuyahoga_short
