@@ -25,10 +25,11 @@ fetch.cuyahoga_diff <- function(viz) {
   checkRequired(deps, c('cuyahoga_raw','cuyahoga_processed'))
   stopifnot(is.data.frame(deps$cuyahoga_raw))
   stopifnot(is.data.frame(deps$cuyahoga_processed))
-  cuyahoga_diff <- dplyr::anti_join(deps$cuyahoga_raw, deps$cuyahoga_processed)
-  
+  cuy_proc <- deps$cuyahoga_processed
+  cuy_proc$in_proc <- TRUE
+  cuy_merged <- merge(deps$cuyahoga_raw, cuy_proc, all.x=TRUE)
+  cuyahoga_diff <- cuy_merged[is.na(cuy_merged$in_proc),1:4]
   write.table(cuyahoga_diff, viz$location, row.names=FALSE, sep='\t')
-
 }
 
 fetchTimestamp.cuyahoga_diff <- alwaysCurrent

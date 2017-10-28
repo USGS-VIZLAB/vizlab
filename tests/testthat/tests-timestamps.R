@@ -12,10 +12,10 @@ test_that("alwaysCurrent doesn't get rebuilt unless missing", {
   expect_equal(fetchTimestamp.mayfly_nymph, alwaysCurrent)
   
   # first time: fetches
-  suppressWarnings(expect_message(vizmake('mayfly_nymph'), 'fetching mayfly_nymph'))
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[ BUILD ] data/mayfly_nymph.csv', fixed=TRUE))
   
   # after that: doesn't fetch
-  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '\\[ ----- \\] mayfly_nymph'))
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[ ----- ] mayfly_nymph', fixed=TRUE))
 })
 
 test_that("locally outdated always gets built", {

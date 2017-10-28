@@ -46,9 +46,9 @@ info:
       version: 0.2.0
       name: USGS-VIZLAB/vizlab
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
-    dplyr:
+    yaml:
       repo: CRAN
-      version: 0.7.0
+      version: 2.1.14
 parameter:
   -
     id: plot_info
