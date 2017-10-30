@@ -39,7 +39,7 @@ publish.page <- function(viz) {
   # also manually put resources into context
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
-
+  context[['info']] <- update_thumbnails(context[['info']], context[['thumbnails']])
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
@@ -49,6 +49,40 @@ publish.page <- function(viz) {
   file <- export(viz)
   render(template, context, file)
   return(relativePath(file))
+}
+
+#' Get thumbnail info for sematics
+#' @param context list, should be just info section
+#' @param thumbnails list, taken from full context
+update_thumbnails <- function(context, thumbnails){
+  
+  #TODO: The landing page publisher looks at the viz.yaml info section
+  # We need to make it backwards compatible
+  # but also to look in the index target context.
+  thumb_names <- names(thumbnails)
+  if("twitter" %in% thumb_names){
+    twitter_thumb <- publish(thumbnails[["twitter"]])
+    context[["thumbnail-twitter"]][["url"]] <- twitter_thumb[["url"]]
+    context[["thumbnail-twitter"]][["alttext"]] <- twitter_thumb[["alttext"]]
+  }
+  
+  if("facebook" %in% thumb_names){
+    face_thumb <- publish(thumbnails[["facebook"]])
+    context[["thumbnail-facebook"]][["url"]] <- face_thumb[["url"]]
+    context[["thumbnail-facebook"]][["height"]] <- face_thumb[["height"]]
+    context[["thumbnail-facebook"]][["width"]] <- face_thumb[["width"]]
+    context[["thumbnail-facebook"]][["type"]] <- face_thumb[["mimetype"]]
+  }
+  
+  if("main" %in% thumb_names){
+    main_thumb <- publish(thumbnails[["main"]])
+    context[["thumbnail"]][["url"]] <- main_thumb[["url"]]
+    context[["thumbnail"]][["height"]] <- main_thumb[["height"]]
+    context[["thumbnail"]][["width"]] <- main_thumb[["width"]]
+    context[["thumbnail"]][["alttext"]] <- main_thumb[["alttext"]]
+  }
+  
+  return(context)
 }
 
 #' publish a section
