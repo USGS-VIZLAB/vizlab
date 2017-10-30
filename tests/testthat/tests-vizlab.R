@@ -63,6 +63,12 @@ test_that("directories can be read", {
   viz_data <- readData(viz)
 })
 
+test_that("watermark fetcher works", {
+  viz <- as.viz("usgs-watermark")
+  viz <- as.fetcher(viz)
+  viz_watermark <- fetch(viz)
+})
+
 context("sciencebase")
 test_that("sciencebase item has fields", {
   viz <- as.fetcher(as.viz("Cuyahoga"))

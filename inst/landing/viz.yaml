@@ -58,12 +58,6 @@ publish:
     alttext: USGS banner
     title: USGS banner
   -
-    id: owiLogo
-    location: img/small-blue.png
-    mimetype: image/png
-    alttext: OWI Logo
-    title: OWI Logo
-  -
     id: mobileBurger
     location: img/mobileburger.png
     mimetype: image/png
@@ -103,7 +97,7 @@ publish:
     id: owiNav
     template: templates/owiNav.mustache
     publisher: section
-    depends: [owiLogo, mobileBurger]
+    depends: [mobileBurger]
   -
     id: usgsFooter
     template: templates/usgsFooter.mustache

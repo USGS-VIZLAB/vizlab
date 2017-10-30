@@ -6,6 +6,7 @@
 \alias{fetch.file}
 \alias{fetch.sciencebase}
 \alias{fetch.url}
+\alias{fetch.usgs_watermark}
 \alias{fetch.none}
 \alias{fetchTimestamp.none}
 \title{Ensure data is on the local file system}
@@ -19,6 +20,8 @@ fetch(viz)
 \method{fetch}{sciencebase}(viz)
 
 \method{fetch}{url}(viz)
+
+\method{fetch}{usgs_watermark}(viz)
 
 \method{fetch}{none}(viz)
 
@@ -39,6 +42,8 @@ the .file type is an option for data items.
 \code{fetch.sciencebase} downloads a file from ScienceBase.
 
 \code{fetch.url} downloads a file from the specified URL.
+
+\code{fetch.usgs_watermark} grabs the USGS watermark
 
 \code{fetch.none} skips this fetch
 

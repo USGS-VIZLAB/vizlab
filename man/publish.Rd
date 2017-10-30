@@ -14,6 +14,8 @@
 \alias{publish.css}
 \alias{publish.svg}
 \alias{publish.footer}
+\alias{publish.social}
+\alias{publish.header}
 \alias{publish.landing}
 \alias{publish.template}
 \alias{publish.thumbnail}
@@ -44,6 +46,10 @@ publish(viz)
 \method{publish}{svg}(viz)
 
 \method{publish}{footer}(viz)
+
+\method{publish}{social}(viz)
+
+\method{publish}{header}(viz)
 
 \method{publish}{landing}(viz)
 
@@ -82,6 +88,10 @@ css publishing
 from here on out will use svg-inject to get svg to dom
 
 Footer publishing
+
+Social icons
+
+Header publishing
 
 publish landing page
 

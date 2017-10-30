@@ -4,16 +4,25 @@
 \alias{checkThumbCompliance}
 \title{helper to check thumbnail compliance}
 \usage{
-checkThumbCompliance(file, maxSize, checkHeight, checkWidth)
+checkThumbCompliance(file, maxSize, minHeight, minWidth, maxHeight, maxWidth,
+  exactHeight, exactWidth)
 }
 \arguments{
 \item{file}{char Name of thumbnail file}
 
 \item{maxSize}{numeric Max size in bytes}
 
-\item{checkHeight}{numeric Height in pixels to enforce}
+\item{minHeight}{numeric Minimum height in pixels to enforce}
 
-\item{checkWidth}{numeric Width in pixels to enforce}
+\item{minWidth}{numeric Minimum width in pixels to enforce}
+
+\item{maxHeight}{numeric Max height in pixels to enforce}
+
+\item{maxWidth}{numeric Max width in pixels to enforce}
+
+\item{exactHeight}{numeric Exact height in pixels to enforce}
+
+\item{exactWidth}{numeric Exact width in pixels to enforce}
 }
 \description{
 helper to check thumbnail compliance
