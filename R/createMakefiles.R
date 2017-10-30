@@ -340,7 +340,7 @@ createMakeItem.fetch <- function(item.info, ...) {
   }
     
   # timestamp rules
-  needs.timestamp <- needsTimestamp(item.info)
+  needs.timestamp <- needsTimestampOld(item.info)
   if(needs.timestamp) {
     squote <- function(x) paste0("'", x, "'")
     timestamp.id <- paste0(item.info$id, '_timestamp')
@@ -395,7 +395,7 @@ createMakeItem.fetch <- function(item.info, ...) {
 #' @importFrom utils getS3method
 #' @md
 #' @keywords internal
-needsTimestamp <- function(item.info) {
+needsTimestampOld <- function(item.info) {
   
   # look for a fetchTimestamp method appropriate to this item's fetcher. this
   # code is a bit fragile, because we're not quite doing our darndest to
