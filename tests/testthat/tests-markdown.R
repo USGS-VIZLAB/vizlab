@@ -5,7 +5,7 @@ testtmp <- setup(TRUE)
 test_that("markdown from yaml becomes proper html fragments", {
   viz <- as.viz(list(
     id = "test_markdown_yaml",
-    location = "data/siteText.yaml",
+    location = "data/site_text.yaml",
     reader = "md",
     mimetype = "text/yaml"
   ))

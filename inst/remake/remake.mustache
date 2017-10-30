@@ -13,28 +13,23 @@ sources:
 {{#sources}}
   - {{.}}
 {{/sources}}
-{{/has_sources}}
-{{#has_file_extensions}}
+{{/has_sources}}{{#has_file_extensions}}
 file_extensions:
 {{#file_extensions}}
   - "{{.}}"
 {{/file_extensions}}
 {{/has_file_extensions}}
 targets:
-
 {{#blocks}}
-  # --- {{block}} --- #
   
+  # --- {{block}} --- #
+{{#items}}
 {{#recipes}}
-  {{target_name}}:
-    command: {{command}}
-{{#has_depends}}
-    depends:
-{{#depends}}
-      - {{.}}
-{{/depends}}
-{{/has_depends}}
-{{/recipes}}
+  {{target_name}}:{{#has_command}}
+    command: {{command}}{{/has_command}}{{#has_depends}}
+    depends: {{#depends_one}}{{#depends}}{{.}}{{/depends}}{{/depends_one}}{{#depends_more}}{{#depends}}
+      - {{.}}{{/depends}}{{/depends_more}}{{/has_depends}}{{/recipes}}
+{{/items}}
 {{/blocks}}
   # --- Job groups --- #
 
