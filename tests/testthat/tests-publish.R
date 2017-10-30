@@ -34,7 +34,7 @@ test_that("publish footer works", {
   expect_false(any(grepl('blog|Blogs', output)))
 })
 test_that("Thumb publisher works", {
-  expect_error(publish("facebook-thumb")) #incorrect dimensions
+  expect_error(publish("twitter-thumb")) #incorrect dimensions
   publish('landing-thumb')
   expect_true(file.exists('target/images/landing-thumb.png'))
 })

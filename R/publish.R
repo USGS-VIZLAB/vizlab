@@ -60,10 +60,15 @@ update_thumbnails <- function(context, thumbnails){
   # We need to make it backwards compatible
   # but also to look in the index target context.
   thumb_names <- names(thumbnails)
+  
   if("twitter" %in% thumb_names){
     twitter_thumb <- publish(thumbnails[["twitter"]])
     context[["thumbnail-twitter"]][["url"]] <- twitter_thumb[["url"]]
     context[["thumbnail-twitter"]][["alttext"]] <- twitter_thumb[["alttext"]]
+    checkThumbCompliance(twitter_thumb[["width"]], 
+                         twitter_thumb[["height"]], 
+                         twitter_thumb[["size"]], 
+                         "twitter")    
   }
   
   if("facebook" %in% thumb_names){
@@ -72,6 +77,11 @@ update_thumbnails <- function(context, thumbnails){
     context[["thumbnail-facebook"]][["height"]] <- face_thumb[["height"]]
     context[["thumbnail-facebook"]][["width"]] <- face_thumb[["width"]]
     context[["thumbnail-facebook"]][["type"]] <- face_thumb[["mimetype"]]
+    
+    checkThumbCompliance(face_thumb[["width"]], 
+                         face_thumb[["height"]], 
+                         face_thumb[["size"]], 
+                         "facebook")
   }
   
   if("main" %in% thumb_names){
@@ -80,6 +90,19 @@ update_thumbnails <- function(context, thumbnails){
     context[["thumbnail"]][["height"]] <- main_thumb[["height"]]
     context[["thumbnail"]][["width"]] <- main_thumb[["width"]]
     context[["thumbnail"]][["alttext"]] <- main_thumb[["alttext"]]
+    
+    checkThumbCompliance(main_thumb[["width"]], 
+                         main_thumb[["height"]], 
+                         main_thumb[["size"]], "main")
+  }
+
+  
+  if("landing" %in% thumb_names){
+    landing_thumb <- publish(thumbnails[["landing"]])
+    # TODO: figure out way to get landing page working...
+    checkThumbCompliance(landing_thumb[["width"]], 
+                         landing_thumb[["height"]], 
+                         landing_thumb[["size"]], "landing")
   }
   
   return(context)
@@ -124,8 +147,6 @@ publish.section <- function(viz) {
                                      replacement = '\\1../\\2')
     render(embedTmpl, data = context, file = file)
 
-    # viz[['output']] <- wrapEmbed(viz[['output']])
-    # wrap or add embed links to page
   }
   return(viz[['output']])
 }
@@ -439,14 +460,20 @@ publish.thumbnail <- function(viz){
   required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
   checkRequired(viz, required)
-
+  
+  im <- imager::load.image(viz[['location']])
+  width <- imager::width(im)
+  height <- imager::height(im)
+  file_size  <- file.info(viz[['location']])
+  
   for(thumbType in unique(viz[['thumbType']])){
-    dims <- checkThumbCompliance(file = viz[['location']], thumbType)
+    dims <- checkThumbCompliance(width, height, file_size$size, thumbType)
   }
 
   viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
   viz[['width']] <- dims[['width']]
   viz[['height']] <- dims[['height']]
+  viz[['size']] <- dims[['size']]
   
   return(viz)
   
@@ -470,10 +497,7 @@ convb <- function(x){
 #' @importFrom imager load.image width height
 #' @param file char Name of thumbnail file
 #' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
-checkThumbCompliance <- function(file, thumbType) {
-  fileSize <- file.info(file)
-  
-  #dimensions in pixels, file sizes in bytes!
+checkThumbCompliance <- function(width, height, size, thumbType){
   match.arg(thumbType, c("facebook","twitter","main","landing"))
   
   minHeight <- NA
@@ -514,36 +538,27 @@ checkThumbCompliance <- function(file, thumbType) {
     maxSize <- 1048576
     exactHeight <- 400
     exactWidth <- 400
-  } else {
-    maxSize <- 1048576
-    exactHeight <- 400
-    exactWidth <- 400    
-  }
+  } # didn't specify "main"....want to leave that flexible
   
-  if(fileSize$size > maxSize) {
-    stop(paste("Thumbnail", file, "is too big"))
+  if(isTRUE(size > maxSize)){
+    stop(paste("Thumbnail is too big"))
   }
-
-  im <- imager::load.image(file)
-  width <- imager::width(im)
-  height <- imager::height(im)
   
   if(isTRUE(width > maxWidth || height > maxHeight)){
-    stop(paste("Thumbnail", file, "is too big"))
+    stop(paste("Thumbnail is too big"))
   }
-
+  
   if(isTRUE(width < minWidth || height < minHeight)){
-    stop(paste("Thumbnail", file, "is too small"))
+    stop(paste("Thumbnail is too small"))
   }
   
   if(!is.na(exactWidth) & !is.na(exactHeight)){
     if(!isTRUE(width == exactWidth && height == exactHeight)){
-      stop(paste("Thumbnail", file, "is too small"))
+      stop(paste("Thumbnail is too small"))
     }    
   }
-
   
-  return(c(width = width, height = height))
+  return(c(width = width, height = height, size=size))
 }
 
 #' coerce to a publisher

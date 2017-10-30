@@ -4,12 +4,12 @@
 \alias{checkThumbCompliance}
 \title{helper to check thumbnail compliance}
 \usage{
-checkThumbCompliance(file, thumbType)
+checkThumbCompliance(width, height, size, thumbType)
 }
 \arguments{
-\item{file}{char Name of thumbnail file}
-
 \item{thumbType}{char Type of thumbnail, could be "facebook", "twitter", "landing", "main"}
+
+\item{file}{char Name of thumbnail file}
 }
 \description{
 helper to check thumbnail compliance
