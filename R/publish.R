@@ -471,9 +471,9 @@ publish.thumbnail <- function(viz){
   }
 
   viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
-  viz[['width']] <- dims[['width']]
-  viz[['height']] <- dims[['height']]
-  viz[['size']] <- dims[['size']]
+  viz[['width']] <- width
+  viz[['height']] <- height
+  viz[['size']] <- file_size$size
   
   return(viz)
   
