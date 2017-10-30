@@ -20,7 +20,7 @@ The vignette "Vizlab Example" gives a good overview on the complete process for 
 
 ## Github
 
-During our collaboration "sprints", we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. The scope of this vignette is not to give a complete picture of this git workflow. To briefly summarize however, we have a canonical "upstream" repository that each member forks off. Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github's Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.
+During our collaboration "sprints", we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. Much more detail is available on our [Version Control training page](https://owi.usgs.gov/R/training-curriculum/r-package-dev/git/). To summarize, we have a canonical "upstream" repository that each member forks Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github's Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.
 
 ## Assign a Task
 
