@@ -1,17 +1,32 @@
-<div id="socialHolder">
-  <a href="#" target="_blank">
-    <div class="socialMediaOption github">
-      <img src="images/github.svg" alt="github social icon"/>
+<div class="socialHolder">
+  <div class="socialMediaOption" id="github">
+    <div class="socialMediaImage">
+      <a href="{{ githubLink }}" target="_blank">
+        {{{github-logo}}}
+      </a>
     </div>
-  </a>
-  <a href="#" target="_blank">
-    <div class="socialMediaOption twitter">
-      <img src="images/twitter.svg" alt="twitter icon"/>
+  </div>
+  <div class="socialMediaOption" id="twitter">
+    <div class="socialMediaImage">
+      <a href="{{ twitterLink }}" target="_blank">
+        {{{twitter-logo}}}
+      </a>
     </div>
-  </a>
-  <a href="#" target="_blank">
-    <div class="socialMediaOption facebook">
-      <img src="images/facebook.svg" alt="facebook icon"/>
+  </div>
+  <div class="socialMediaOption" id="facebook">
+    <div class="socialMediaImage">
+      <a href="{{ facebookLink }}" target="_blank">
+        {{{facebook-logo}}}
+      </a>
     </div>
-  </a>
+  </div>
+  {{#mainEmbed}}
+  <div class="socialMediaOption" id="embed">
+    <div class="socialMediaImage">
+      <a href="{{ embedLink }}" target="_blank">
+        {{{embed-logo}}}
+      </a>
+    </div>
+  </div>
+  {{/mainEmbed}}
 </div>

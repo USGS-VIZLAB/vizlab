@@ -10,7 +10,7 @@
     </div>
 
     <div id="github-contact">
-      <a class="githublink" href="{{ github-url }}" target="_blank" onclick="ga('send', 'event', 'outbound', 'clicked on repo')">
+      <a class="githublink" href="{{ github-url }}" target="_blank" onclick="gtag('event','outbound', 'clicked on repo')">
         <img src="images/github.svg" alt="github icon"/>
       	<p>Get the Code</p>
       </a>
@@ -18,6 +18,10 @@
       <a href="mailto:vizlab@usgs.gov">
     	  Contact Us
     	</a>
+    	<span>|</span>
+      <a href="https://www.usgs.gov/" target="_blank" onclick="gtag('event','outbound', 'clicked on USGS.gov')">
+    	  U.S. Geological Survey
+    	</a> 
     </div>
 
     <div id="relatedItems">
@@ -27,7 +31,7 @@
         <div class="relatedItemContainer">
           {{#vizzies}}
         		<div class="relatedItem">
-        		  <a href="{{url}}" target="_blank">
+        		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related vizzy')">
         		    <div class="footerThumbnail">
         					<img src="{{thumbLoc}}" alt=""/>
         				</div>
@@ -46,7 +50,7 @@
           <div class="relatedItemContainer">
           	{{#blogs}}
           		<div class="relatedItem">
-          		  <a href="{{url}}" target="_blank">
+          		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related blog')">
           				<div class="footerThumbnail blog">
           					<img src="{{thumbLoc}}" alt=""/>
           				</div>
