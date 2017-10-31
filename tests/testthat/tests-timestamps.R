@@ -15,18 +15,15 @@ test_that("alwaysCurrent doesn't get rebuilt unless missing", {
   suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[ BUILD ] data/mayfly_nymph.csv', fixed=TRUE))
   
   # after that: doesn't fetch
-  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[ ----- ] mayfly_nymph', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[    OK ] mayfly_nymph', fixed=TRUE))
 })
 
 test_that("locally outdated always gets built", {
-  # TODO this won't work until we resolve #287
-  # unless an argument changes
-  # viz.yaml <- readLines('viz.yaml')
-  # viz.yaml <- gsub('info: insect', 'info: aquatic insect', viz.yaml)
-  # writeLines(viz.yaml, 'viz.yaml')
-  # suppressWarnings(expect_message(vizmake('mayfly_nymph'), 'a mayfly is a kind of aquatic insect'))
-  
-  # 
+  # even alwaysCurrent builds if an argument changes
+  viz.yaml <- readLines('viz.yaml')
+  viz.yaml <- gsub('info: insect', 'info: aquatic insect', viz.yaml)
+  writeLines(viz.yaml, 'viz.yaml')
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), 'a mayfly is a kind of aquatic insect'))
 })
 
 test_that("before time to live, even neverCurrent doesn't get rebuilt", {
