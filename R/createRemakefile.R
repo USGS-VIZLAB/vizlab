@@ -257,7 +257,7 @@ createResourceBlock <- function(resource.block, resource.deps) {
 # Create group targets (one for each block, one for the entire viz). Can't just
 # make the entire-viz group depend on the block groups because
 # https://github.com/richfitz/remake/issues/129
-createJobGroups <- function(viz.items, resource.deps, block.names) {
+createJobGroups <- function(blocks) {
   # create the list of grouped targets
   block.targets <- lapply(blocks, function(block) {
     lapply(block$items, function(item) item$main_target)
