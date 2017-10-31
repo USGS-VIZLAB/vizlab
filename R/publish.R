@@ -57,9 +57,6 @@ publish.page <- function(viz, ...) {
 #' @param thumbnails list, taken from full context
 update_thumbnails <- function(context, thumbnails){
   
-  #TODO: The landing page publisher looks at the viz.yaml info section
-  # We need to make it backwards compatible
-  # but also to look in the index target context.
   thumb_names <- names(thumbnails)
   
   if("twitter" %in% thumb_names){
@@ -100,7 +97,7 @@ update_thumbnails <- function(context, thumbnails){
   
   if("landing" %in% thumb_names){
     landing_thumb <- publish(thumbnails[["landing"]])
-    # TODO: figure out way to get landing page working...
+
     checkThumbCompliance(landing_thumb[["width"]], 
                          landing_thumb[["height"]], 
                          landing_thumb[["size"]], "landing")
