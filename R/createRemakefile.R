@@ -9,6 +9,7 @@ createRemakefile <- function() {
     viz.item$psource <- createPreppedSourceRecipe(viz.item)
     viz.item$target <- selectTarget(viz.item)
     viz.item$fetch_timestamp <- needsTimestamp(viz.item)
+    viz.item$arguments <- createArgumentRecipe(viz.item)
     viz.item
   })
   # loop a second time to look up the main-recipe target names for dependencies
@@ -75,6 +76,10 @@ createRemakefile <- function() {
   # amend the resource block to only include resources that get used
   resource.deps <- listActiveResources(viz.items)
   blocks[['resources']] <- createResourceBlock(blocks[['resources']], resource.deps)
+  
+  # append the content information targets (1 shared among all for speed, 1
+  # specific to each viz item)
+  blocks[['arguments']] <- createArgumentsBlock(viz.items)
   
   # append the prepped source targets to the blocks
   blocks[['scripts']] <- createScriptsBlock(viz.items)
@@ -160,6 +165,20 @@ createPreppedSourceRecipe <- function(viz.item) {
   }
 }
 
+# Create special targets for subsets of the viz.yaml arguments list, one target
+# for each viz item. Allows remake to recognize items as out of date when any of
+# their arguments in the viz.yaml change.
+createArgumentRecipe <- function(item) {
+  if(item$block == 'resource') {
+    return(NULL)
+  } else {
+    list(
+      target_name = sprintf('arguments_%s', item$id),
+      command = sprintf("getElement(arguments_all, I('%s'))", item$id)
+    )
+  }
+}
+
 # Identify the main target for a viz.item, which may be a file, an R object, or
 # a resource (a special kind of file).
 selectTarget <- function(viz.item) {
@@ -198,29 +217,29 @@ createSymbolicRecipe <- function(item) {
   )
 }
 
-# Create a recipe for a timestamp for a viz fetch item
-createTimestampRecipe <- function(item) {
-  list(
-    target_name = locateTimestampFile(item$id),
-    command = sprintf("fetchTimestamp(I('%s'))", item$id)
-  )
-}
-
 # Create the main recipe for a viz item
-createMainRecipe <- function(item, timestamp_recipe, viz.items) {
+createMainRecipe <- function(item) {
   list(
     target_name = item$target,
     
-    # 3 kinds of dependencies: scripts, timestamps, and other viz items
-    depends = c(
-      as.list(if(length(item$psource) > 0) item$psource$target_name else item$scripts),
-      if(item$fetch_timestamp) list(timestamp_recipe$target_name) else list(),
-      as.list(item$item_deps)),
+    # 4 kinds of dependencies: viz.yaml arguments, scripts, timestamps, and
+    # other viz items
+    depends = as.list(c(
+      item$arguments$target_name,
+      if(!is.null(item$psource)) item$psource$target_name else item$scripts,
+      item$timestamp$target_name,
+      item$item_deps)),
     
-    # command is always verb(viz)
-    command = paste0(
-      if(item$block == 'resource') 'publish' else item$block, # except for resource, block == function name
-      "(I('", item$id, "'))")
+    # command is always verb(viz) except for resources, which have no command
+    # (use c() as placeholder)
+    command = sprintf("%s(I('%s'))", if(item$block == 'resource') 'c' else item$block, item$id)
+  )
+}
+
+  list(
+    
+    depends = c(
+    
   )
 }
 
@@ -240,6 +259,26 @@ createScriptsBlock <- function(viz.items) {
   source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
   sp_list <- lapply(source.preps, function(sprep) list(main_target=sprep$target_name, recipes=list(sprep)))
   list(block='scripts', items=sp_list)
+}
+
+# Create a recipe block describing how to pull out arguments for each viz item
+createArgumentsBlock <- function(viz.items) {
+  arg.preps <- lapply(viz.items, `[[`, 'arguments')
+  arg.preps <- unname(arg.preps[!sapply(arg.preps, is.null)])
+  arg_list <- c(
+    # shared target
+    list(list(
+      main_target = 'arguments_all',
+      recipes=list(list(
+        target_name = 'arguments_all',
+        command = "collectItemArguments('viz.yaml')"
+      ))
+    )),
+    lapply(arg.preps, function(prep) {
+      list(main_target=prep$target_name, recipes=list(prep))
+    })
+  )
+  list(block='arguments', items=arg_list)
 }
 
 # Determine which resource targets actually get used
