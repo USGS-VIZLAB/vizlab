@@ -137,9 +137,7 @@ fetchTimestamp.url <- function(viz) {
 #' @export
 fetchTimestamp.fetcher <- function(viz){
   # require the availability of a fetcher-specific method by giving an error if
-  # we arrive here. this error is complemented by a near-identical error in
-  # needsTimestamp (beneath createMakefiles); we're minimizing time to
-  # failure+understanding by giving this error in both places
+  # we arrive here
   stop(paste0("fetchTimestamp.", viz$fetcher, " must be implemented for ",
               viz$id, ", probably in an R file in 'scripts:'"))
 }
