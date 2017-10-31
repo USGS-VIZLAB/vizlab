@@ -235,7 +235,8 @@ createSourcesVector <- function(viz.items) {
 createScriptsBlock <- function(viz.items) {
   source.preps <- lapply(viz.items, `[[`, 'psource')
   source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
-  list(block='scripts', recipes=source.preps)
+  sp_list <- lapply(source.preps, function(sprep) list(main_target=sprep$target_name, recipes=list(sprep)))
+  list(block='scripts', items=sp_list)
 }
 
 # Determine which resource targets actually get used
