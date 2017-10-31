@@ -32,7 +32,6 @@ createRemakefile <- function() {
   # define sources and scripts sections of remake
   sources <- createSourcesVector(viz.items)
   
-  
   #### prep the remake.yaml recipes ####
   
   # extract vectors of item IDs and block names corresponding to the elements of viz.items
@@ -98,10 +97,11 @@ createRemakefile <- function() {
     job_groups = job_groups
   )
   
-  # create the remake.yml from the template
+  # apply the template
   template <- readLines(system.file('remake/remake.mustache', package='vizlab'))
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
+  
   
   #### create directories ####
   
@@ -112,6 +112,9 @@ createRemakefile <- function() {
   for(d in dirs) {
     if(!dir.exists(d)) dir.create(d, recursive=TRUE)
   }
+  
+  # return
+  invisible()
 }
 
 
