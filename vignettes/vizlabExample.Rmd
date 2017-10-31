@@ -71,7 +71,7 @@ $export
 attr(,"class")
 [1] "viz"
 ```
-The viz object will inherit additional classes as it passes through different functions.  For further information on how vizlab interacts with scripts, see the --------- vignette.
+The viz object will inherit additional classes as it passes through different functions. Most importantly, defaults will be assigned for some items if you leave them unspecified (e.g., `export` above) - see [viz.defaults.yaml](https://github.com/USGS-VIZLAB/vizlab/blob/master/inst/viz.defaults.yaml) for all defined defaults.
 
 Here we will examine the `viz.yaml` included in the example viz:
 
