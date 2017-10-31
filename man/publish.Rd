@@ -21,44 +21,46 @@
 \alias{publish.thumbnail}
 \title{Peform the publish step to ready the viz for hosting}
 \usage{
-publish(viz)
+publish(viz, ...)
 
-\method{publish}{character}(viz)
+\method{publish}{character}(viz, ...)
 
-\method{publish}{list}(viz)
+\method{publish}{list}(viz, ...)
 
-\method{publish}{page}(viz)
+\method{publish}{page}(viz, ...)
 
-\method{publish}{section}(viz)
+\method{publish}{section}(viz, ...)
 
-\method{publish}{resource}(viz)
+\method{publish}{resource}(viz, ...)
 
-\method{publish}{img}(viz)
+\method{publish}{img}(viz, ...)
 
-\method{publish}{ico}(viz)
+\method{publish}{ico}(viz, ...)
 
-\method{publish}{googlefont}(viz)
+\method{publish}{googlefont}(viz, ...)
 
-\method{publish}{js}(viz)
+\method{publish}{js}(viz, ...)
 
-\method{publish}{css}(viz)
+\method{publish}{css}(viz, ...)
 
-\method{publish}{svg}(viz)
+\method{publish}{svg}(viz, ...)
 
-\method{publish}{footer}(viz)
+\method{publish}{footer}(viz, ...)
 
 \method{publish}{social}(viz)
 
-\method{publish}{header}(viz)
+\method{publish}{header}(viz, ...)
 
-\method{publish}{landing}(viz)
+\method{publish}{landing}(viz, dev, ...)
 
-\method{publish}{template}(viz)
+\method{publish}{template}(viz, ...)
 
-\method{publish}{thumbnail}(viz)
+\method{publish}{thumbnail}(viz, ...)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
+
+\item{...}{\dots}
 }
 \description{
 Determine the type and dispatch to that method to produce
