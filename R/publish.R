@@ -413,7 +413,6 @@ publish.header <- function(viz) {
 #' publish landing page
 #'
 #' @rdname publish
-#' @param dev logical whether or not to publish development version of landing page
 #' @export
 publish.landing <- function(viz){
 

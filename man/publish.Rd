@@ -59,8 +59,6 @@ publish(viz)
 }
 \arguments{
 \item{viz}{vizlab object or identifier}
-
-\item{dev}{logical whether or not to publish development version of landing page}
 }
 \description{
 Determine the type and dispatch to that method to produce
