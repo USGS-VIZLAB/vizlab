@@ -1,122 +1,65 @@
 createRemakefile <- function() {
   
-  # get header information
+  #### munge the viz.yaml info ####
+  
+  # retrieve the content info list from the viz.yaml and fortify with expanded
+  # script list, prepped source file recipe, main target
+  viz.items <- lapply(getContentInfos(), function(viz.item) {
+    viz.item$script_files <- unpackScripts(viz.item)
+    viz.item$psource <- createPreppedSourceRecipe(viz.item)
+    viz.item$target <- selectTarget(viz.item)
+    viz.item$fetch_timestamp <- needsTimestamp(viz.item)
+    viz.item
+  })
+  # loop a second time to look up the main-recipe target names for dependencies
+  # that are referenced by viz id in the viz.yaml
+  item.ids <- unlist(lapply(viz.items, `[[`, 'id'))
+  viz.items <- lapply(viz.items, function(viz.item) {
+    viz.item$item_deps <- unlist(lapply(unname(viz.item$depends), function(dep) {
+      dep.item <- viz.items[[names(item.ids[item.ids == dep])]]
+      dep.item$target
+    }))
+    viz.item
+  })
+  
+  #### prep the remake.yaml header ####
+  
+  # define file.extensions and packages section of remake
   info.yml <- getBlocks('info', FALSE)[[1]]
   file.extensions <- info.yml$'file-extensions' # will often be NULL, which is fine
   packages <- names(info.yml$'required-packages')
   
-  # read all the viz item info, which we'll use a few times below
-  viz.items <- getContentInfos()
+  # define sources and scripts sections of remake
+  sources <- createSourcesVector(viz.items)
   
-  # pull sources (scripts) from all vizyaml items
-  script.deps <- unique(unlist(lapply(unname(viz.items), `[[`, 'scripts')))
-  script.dirs <- script.deps[sapply(script.deps, dir.exists)]
-  script.files <- script.deps[sapply(script.deps, function(dep) { !dir.exists(dep) && file.exists(dep) })]
-  script.missing <- setdiff(script.deps, c(script.dirs, script.files))
-  if(length(script.missing) > 0) {
-    stop('missing scripts: ', paste0(script.missing, collapse=', '))
-  }
-  sources <- sort(unique(c(
-    dir(c('scripts/read', script.dirs), full.names=TRUE),
-    script.files
-  )))
   
-  # create special targets for combined and subsetted script files so there can
-  # be 0 or 1 source dependency per viz item
-  viz.items <- lapply(viz.items, function(viz.item) {
-    needs.psource <- length(viz.item$scripts) > 0
-    if(needs.psource) {
-      psource_name <- sprintf("vizlab/remake/scripts/%s.R", viz.item$id)
-      scripts <- unlist(lapply(viz.item$scripts, function(script) if(dir.exists(script)) dir(script, full.names=TRUE) else script))
-      viz.item$psource <- list(
-        target_name = psource_name,
-        command = sprintf(
-          "prepSources(outfile=target_name, %s%s)", 
-          paste(paste0("'", scripts, "'"), collapse=", "),
-          if(length(viz.item$functions) > 0) sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=",")) else ""),
-        # depends = as.list(scripts), # not necessary because captured in command
-        has_command = TRUE,
-        has_depends = FALSE,
-        depends_one = FALSE,
-        depends_more = FALSE
-      )           
-    }
-    viz.item
-  })
-  # extract the special targets
-  source.preps <- lapply(viz.items, `[[`, 'psource')
-  source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
+  #### prep the remake.yaml recipes ####
   
-  # create the main list of targets, one per viz item. I thought we'd need to
-  # wrap filenames in quotes sometimes, but spaces in filenames seem to be no
-  # problem, so leaving everything unwrapped unless/until we hit a snag
-  viz.targets <- lapply(viz.items, function(viz.item) {
-    # if there is no location, that means this is an R object target
-    viz.item$target <- if(viz.item$block == 'resource') {
-      destloc <- file.path("target", viz.item$location)
-      gsub('js/third-party', 'js', destloc)
-    } else if(exists('location', viz.item)) {
-      viz.item$location
-    } else {
-      # if the target is an R object, use the id as the variable (target) name
-      viz.item$id
-    }
-    # add info on whether a fetchTimestamp recipe is needed
-    viz.item$fetch_timestamp <- if(viz.item$block == 'fetch') {
-      ts.fetcher <- tryCatch({get(paste0('fetchTimestamp.',viz.item$fetcher))}, error=function(e) NULL)
-      is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
-      !is.always.current
-    } else {
-      FALSE
-    }
-    return(viz.item)
-  })
-  # extract vectors of item IDs and block names corresponding to the elements of viz.targets
-  item.ids <- unlist(lapply(viz.targets, `[[`, 'id'))
-  block.names <- unlist(lapply(viz.targets, `[[`, 'block'))
-  # create a nested list of items (targets) within each block. the unname()
+  # extract vectors of item IDs and block names corresponding to the elements of viz.items
+  block.names <- unlist(lapply(viz.items, `[[`, 'block'))
+  
+  # create a nested list of item recipe sets within each block, where each
+  # recipe set corresponds to 1 viz item and has 1 or more recipes. the unname()
   # calls are important for whisker::whisker.render
-  blocks <- lapply(unique(block.names), function(block.name) {
-    items <- viz.targets[names(block.names[block.names == block.name])]
+  blocks <- lapply(setNames(nm=unique(block.names)), function(block.name) {
+    items <- viz.items[names(block.names[block.names == block.name])]
     recipe_sets <- lapply(unname(items), function(item) {
-      recipes <- list()
+      # define an ~empty recipe list with placeholders to control the ordering
+      recipes <- list() 
       # make a symbolic target so you can run vizmake('item-id'). unlike make,
       # remake doesn't remake symbolic targets unless their dependencies change
       if(item$id != item$target) {
-        id_recipe <- list(
-          target_name = item$id,
-          depends = item$target
-        )
-        recipes$id <- id_recipe
+        recipes$id <- createSymbolicRecipe(item)
       }
       # possibly make a timestamp fetching recipe for this item
       if(item$fetch_timestamp) {
-        # add a placeholder for recipes$main so this one comes second
-        recipes$main <- list()
-        timestamp_recipe <- list(
-          target_name = locateTimestampFile(item$id),
-          command = sprintf("fetchTimestamp(I('%s'))", item$id)
-        )
-        recipes$timestamp <- timestamp_recipe
+        recipes$main <- NA # placeholder so timestamp goes last, after main
+        recipes$timestamp <- createTimestampRecipe(item)
       }
-      # always make a main_recipe (braces are just for indentation to match id_recipe, timestamp_recipe)
-      {
-        main_recipe <- list(
-          target_name = item$target,
-          depends = c(
-            as.list(if(exists('psource', item)) item$psource$target_name else item$scripts),
-            if(item$fetch_timestamp) list(recipes$timestamp$target_name) else list(),
-            lapply(unname(item$depends), function(dep) {
-              dep.item <- viz.targets[[names(item.ids[item.ids == dep])]]
-              dep.item$target
-            })),
-          command = paste0(
-            if(item$block == 'resource') 'publish' else item$block, # except for resource, the block name is the function name
-            "(I('", item$id, "'))")
-        )
-        recipes$main <- main_recipe
-      }
-      # clean up and add logicals for whisker::render
+      # always make a main_recipe
+      recipes$main <- createMainRecipe(item, recipes$timestamp, viz.items)
+      
+      # add logicals for whisker::render
       recipes <- lapply(recipes, function(recipe) {
         recipe$has_command <- length(recipe$command) > 0
         recipe$has_depends <- length(recipe$depends) > 0
@@ -124,64 +67,25 @@ createRemakefile <- function() {
         recipe$depends_more <- length(recipe$depends) > 1
         recipe
       })
-      return(list(recipes=unname(recipes)))
+      return(list(main_target=recipes$main$target, recipes=unname(recipes)))
     })
     block <- list(block=block.name, items=recipe_sets)
     return(block)
   })
   
-  # amend the resource block to have special commands and only include those
-  # resources that actually get used. first determine which resource targets
-  # actually get used
-  all.deps <- unlist(lapply(blocks, function(block) {
-    if(block$block == 'resource') {
-      NULL
-    } else {
-      lapply(block$items, function(item) {
-        recipe <- item$recipes[[length(item$recipes)]]
-        recipe$depends
-      })
-    }
-  }), recursive=TRUE)
-  all.resources <- viz.targets[sapply(viz.targets, function(item) item$block == 'resource')]
-  resource.targets <- sapply(unname(all.resources), `[[`, 'target')
-  resource.deps <- intersect(all.deps, resource.targets)
-  # extract, amend, and replace the resource block
-  resource.block.index <- which(sapply(blocks, function(block) block$block == 'resource'))
-  resource.items <- blocks[[resource.block.index]]$items
-  # filter to just those that are used
-  resource.items <- resource.items[sapply(resource.items, function(item) item$recipes[[length(item$recipes)]]$target_name %in% resource.deps)]
-  # replace the list in blocks with this shortened list
-  blocks[[resource.block.index]]$items <- resource.items
+  # amend the resource block to only include resources that get used
+  resource.deps <- listActiveResources(viz.items)
+  blocks[['resources']] <- createResourceBlock(blocks[['resources']], resource.deps)
   
   # append the prepped source targets to the blocks
-  script.items <- lapply(source.preps, function(sp) list(recipes=list(sp)))
-  blocks[[length(blocks) + 1]] <- list(block='scripts', items=script.items)
+  blocks[['scripts']] <- createScriptsBlock(viz.items)
   
-  # create the list of grouped targets (one for each block, one for the entire
-  # viz). can't just make the entire-viz group depend on the block groups
-  # because https://github.com/richfitz/remake/issues/129
-  uppercase <- function(name) {
-    gsub("(^[[:alpha:]])", "\\U\\1", name, perl=TRUE)
-  }
-  final.targets <- viz.targets[sapply(viz.targets, function(item) {
-    item$block != 'resource' || item$target %in% resource.deps
-  })]
-  final.target_names <- setNames(
-    unlist(lapply(final.targets, `[[`, 'target')),
-    unlist(lapply(final.targets, `[[`, 'block')))
-  job_groups <- c(
-    list(list(
-      target_name='Viz',
-      depends=as.list(unname(final.target_names)))),
-    lapply(unique(block.names), function(block.name) {
-      targets <- unname(final.target_names[names(final.target_names) == block.name])
-      list(
-        target_name=uppercase(block.name),
-        depends=as.list(targets))
-    })
-  )
+  # create the list of grouped targets (one per block, one for the whole viz)
+  job_groups <- createJobGroups(blocks)
   
+  
+  #### create remake.yaml from template ####
+
   # combine and prepare the information for templating. add some booleans
   # (has_xxx) to turn entire remake.yml sections on or off
   viz <- list(
@@ -190,7 +94,7 @@ createRemakefile <- function() {
     packages = as.list(packages),
     sources = as.list(sources),
     has_sources = length(sources) > 0,
-    blocks = blocks,
+    blocks = unname(blocks),
     job_groups = job_groups
   )
   
@@ -199,23 +103,176 @@ createRemakefile <- function() {
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
+  #### create directories ####
+  
   # create any directories that have been mentioned but don't yet exist
   dirs <- unique(c(
-    dirname(unlist(lapply(unname(viz.targets), `[[`, 'location'))),
+    dirname(unlist(lapply(unname(viz.items), `[[`, 'location'))),
     'vizlab/remake/scripts', 'vizlab/remake/timestamps'))
   for(d in dirs) {
     if(!dir.exists(d)) dir.create(d, recursive=TRUE)
   }
+}
+
+
+# Expand a viz item's `scripts` argument into a vector of scripts (never just
+# script folders) whose existence has been confirmed
+unpackScripts <- function(viz.item) {
+  item.scripts <- viz.item$scripts
+  if(length(item.scripts) == 0) return(c())
+  # pull sources (scripts) from all vizyaml items
+  script.dirs <- item.scripts[dir.exists(item.scripts)]
+  script.files <- item.scripts[!dir.exists(item.scripts) && file.exists(item.scripts)]
+  script.missing <- setdiff(item.scripts, c(script.dirs, script.files))
+  if(length(script.missing) > 0) {
+    stop('missing scripts: ', paste0(script.missing, collapse=', '))
+  }
+  all.scripts <- c(dir(script.dirs, recursive=TRUE, full.names=TRUE), script.files)
+  return(all.scripts)
+}
+
+# Create special targets for combined and subsetted script files so there can be
+# 0 or 1 source dependency per viz item, never more, and optionally with only
+# those functions called out in the viz.yaml.
+createPreppedSourceRecipe <- function(viz.item) {
+  needs.psource <- length(viz.item$script_files) > 0
+  if(needs.psource) {
+    list(
+      target_name = sprintf("vizlab/remake/scripts/%s.R", viz.item$id),
+      command = sprintf(
+        "prepSources(outfile=target_name, %s%s)", 
+        paste(paste0("'", viz.item$script_files, "'"), collapse=", "),
+        if(length(viz.item$functions) > 0) {
+          sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=","))
+        } else {
+          ""
+        }),
+      has_command = TRUE,
+      has_depends = FALSE,
+      depends_one = FALSE,
+      depends_more = FALSE
+    )
+  } else {
+    NULL
+  }
+}
+
+# Identify the main target for a viz.item, which may be a file, an R object, or
+# a resource (a special kind of file).
+selectTarget <- function(viz.item) {
+  if(viz.item$block == 'resource') {
+    # look up the resource target
+    destloc <- file.path("target", viz.item$location)
+    gsub('js/third-party', 'js', destloc)
+  } else if(exists('location', viz.item)) {
+    # a common case: the item has a file target
+    viz.item$location
+  } else {
+    # if the target is an R object, use the id as the variable (target) name
+    viz.item$id
+  }
+}
+
+# Determine whether a fetchTimestamp recipe is needed; return T/F
+needsTimestamp <- function(viz.item) {
+  if(viz.item$block == 'fetch') {
+    ts.fetcher <- tryCatch({
+      get(paste0('fetchTimestamp.',viz.item$fetcher))
+    }, error=function(e) NULL)
+    is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
+    return(!is.always.current)
+  } else {
+    return(FALSE)
+  }
+}
+
+# Create a recipe whose target is a viz id and whose dependency is the
+# corresponding file
+createSymbolicRecipe <- function(item) {
+  list(
+    target_name = item$id,
+    depends = item$target
+  )
+}
+
+# Create a recipe for a timestamp for a viz fetch item
+createTimestampRecipe <- function(item) {
+  list(
+    target_name = locateTimestampFile(item$id),
+    command = sprintf("fetchTimestamp(I('%s'))", item$id)
+  )
+}
+
+# Create the main recipe for a viz item
+createMainRecipe <- function(item, timestamp_recipe, viz.items) {
+  list(
+    target_name = item$target,
+    
+    # 3 kinds of dependencies: scripts, timestamps, and other viz items
+    depends = c(
+      as.list(if(length(item$psource) > 0) item$psource$target_name else item$scripts),
+      if(item$fetch_timestamp) list(timestamp_recipe$target_name) else list(),
+      as.list(item$item_deps)),
+    
+    # command is always verb(viz)
+    command = paste0(
+      if(item$block == 'resource') 'publish' else item$block, # except for resource, block == function name
+      "(I('", item$id, "'))")
+  )
+}
+
+# Create a vector of all sources to formally depend on in the remake.yaml
+createSourcesVector <- function(viz.items) {
+  script.files <- unlist(lapply(viz.items, `[[`, 'script_files'))
+  sort(unique(c(
+    dir('scripts/read', full.names=TRUE),
+    script.files
+  )))
+}
+
+# Create a recipe block describing how to prepare each combined/filtered R
+# script on which items will depend
+createScriptsBlock <- function(viz.items) {
+  source.preps <- lapply(viz.items, `[[`, 'psource')
+  source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
+  list(block='scripts', recipes=source.preps)
+}
+
+# Determine which resource targets actually get used
+listActiveResources <- function(viz.items) {
+  all.deps <- unique(unlist(lapply(viz.items, `[[`, 'item_deps')))
+  all.resources <- viz.items[sapply(viz.items, function(item) item$block == 'resource')]
+  resource.targets <- sapply(unname(all.resources), `[[`, 'target')
+  intersect(all.deps, resource.targets)
+}
+
+# Create an amended resource block that only includes those resources that
+# actually get used
+createResourceBlock <- function(resource.block, resource.deps) {
+  resources.used <- sapply(resource.block$recipes, function(item) item$target_name %in% resource.deps)
+  resource.block$recipes <- resource.block$recipes[resources.used]
+  return(resource.block)
+}
+
+# Create group targets (one for each block, one for the entire viz). Can't just
+# make the entire-viz group depend on the block groups because
+# https://github.com/richfitz/remake/issues/129
+createJobGroups <- function(viz.items, resource.deps, block.names) {
+  # create the list of grouped targets
+  block.targets <- lapply(blocks, function(block) {
+    lapply(block$items, function(item) item$main_target)
+  })
+  target.groups <- c(block.targets, list('Viz'=as.list(unname(unlist(block.targets)))))
   
-  # package up some info that will be useful to vizmake, which is the main
-  # client of this function
-  vizmake.info <- do.call(rbind, lapply(viz.targets, function(vt) {
-    data.frame(
-      id=vt$id,
-      location=if(exists('location', vt)) vt$location else NA,
-      tsfetcher=vt$fetch_timestamp,
-      stringsAsFactors=FALSE)
-  }))
-  
-  invisible(vizmake.info)
+  # create the recipes. use uppercase so not to collide with function names
+  uppercase <- function(name) {
+    gsub("(^[[:alpha:]])", "\\U\\1", name, perl=TRUE)
+  }
+  job_groups <- lapply(names(target.groups), function(group.name) {
+    list(
+      target_name = uppercase(group.name),
+      depends = target.groups[[group.name]]
+    )
+  })
+  return(job_groups)
 }
