@@ -13,8 +13,6 @@ setup <- function(copyTestViz = FALSE) {
   if (copyTestViz){
     file.copy(Sys.glob(paste0(system.file('testviz', package = 'vizlab'),"/*")),
               testtmp, recursive = TRUE)
-    #create timestamp folder
-    dir.create('vizlab/make/timestamps', recursive = TRUE, showWarnings = FALSE)
   }
   return(testtmp)
 }
