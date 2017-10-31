@@ -7,9 +7,13 @@
 checkThumbCompliance(width, height, size, thumbType)
 }
 \arguments{
-\item{thumbType}{char Type of thumbnail, could be "facebook", "twitter", "landing", "main"}
+\item{width}{numeric pixal width of image}
 
-\item{file}{char Name of thumbnail file}
+\item{height}{numeric pixal height of image}
+
+\item{size}{numeric file size in bytes}
+
+\item{thumbType}{char Type of thumbnail, could be "facebook", "twitter", "landing", "main"}
 }
 \description{
 helper to check thumbnail compliance

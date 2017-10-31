@@ -360,7 +360,7 @@ publish.footer <- function(viz, ...) {
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
-publish.social <- function(viz) {
+publish.social <- function(viz, ...) {
 
   template <- template(viz[['template']])
   
@@ -417,6 +417,7 @@ publish.header <- function(viz, ...) {
 #' publish landing page
 #'
 #' @rdname publish
+#' @param dev logical whether or not to publish development version of landing page
 #' @export
 publish.landing <- function(viz, dev, ...){
 
@@ -506,7 +507,9 @@ convb <- function(x){
 
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
-#' @param file char Name of thumbnail file
+#' @param width numeric pixal width of image
+#' @param height numeric pixal height of image
+#' @param size numeric file size in bytes
 #' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
 checkThumbCompliance <- function(width, height, size, thumbType){
   match.arg(thumbType, c("facebook","twitter","main","landing"))

@@ -47,7 +47,7 @@ publish(viz, ...)
 
 \method{publish}{footer}(viz, ...)
 
-\method{publish}{social}(viz)
+\method{publish}{social}(viz, ...)
 
 \method{publish}{header}(viz, ...)
 
@@ -61,6 +61,8 @@ publish(viz, ...)
 \item{viz}{vizlab object or identifier}
 
 \item{...}{\dots}
+
+\item{dev}{logical whether or not to publish development version of landing page}
 }
 \description{
 Determine the type and dispatch to that method to produce
