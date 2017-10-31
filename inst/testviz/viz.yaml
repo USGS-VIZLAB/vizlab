@@ -35,11 +35,6 @@ info:
       name: Marty Wernimont
       email: mwernimont@usgs.gov
       affiliation: U.S. Geological Survey
-  thumbnail:
-    url: images/thumbnail.png
-    width: 250
-    height: 250
-    alttext: Test for vizlab
   required-packages:
     vizlab:
       repo: github
@@ -151,12 +146,19 @@ publish:
       footer-style: "footer-style"
       footer: "footer"
       font: "pagefonts"
+      thumb-facebook: facebook-thumb
+      thumb-landing: landing-thumb
     publisher: page
     context:
       title: testViz
       sections: [ "relativeAbundance" ]
       resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
+      thumbnails: 
+        twitter: thumb-twitter
+        facebook: thumb-twitter
+        landing: thumb-landing
+        main: thumb-facebook
   -
     id: relativeAbundance
     template: simplefigure
@@ -171,16 +173,26 @@ publish:
     id: facebook-thumb
     location: images/facebook-thumb.png
     publisher: thumbnail
-    for: facebook
+    thumbType: facebook
+    title: "Other thumbnail"
+    alttext: "Alt text thumbnail"
     mimetype: image/png
-    export: TRUE
+  -
+    id: twitter-thumb
+    location: images/facebook-thumb.png
+    publisher: thumbnail
+    thumbType: twitter
+    title: "Other thumbnail"
+    alttext: "Alt text thumbnail"
+    mimetype: image/png
   -
     id: landing-thumb
     location: images/landing-thumb.png
     publisher: thumbnail
-    for: landing
+    thumbType: landing
+    title: "Landing thumbnail"
+    alttext: "Alt text thumbnail"
     mimetype: image/png
-    export: TRUE
   -
     id: footer
     publisher: footer
@@ -208,4 +220,5 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
+
 

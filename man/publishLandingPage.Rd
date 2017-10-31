@@ -4,7 +4,10 @@
 \alias{publishLandingPage}
 \title{Get information about other visualizations from VIZLAB to generate the landing page}
 \usage{
-publishLandingPage()
+publishLandingPage(dev = FALSE)
+}
+\arguments{
+\item{dev}{logical create development version of landing page}
 }
 \description{
 the github package from the GitHub repo rgithub (https://github.com/cscheid/rgithub)

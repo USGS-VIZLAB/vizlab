@@ -4,12 +4,14 @@
 \alias{getVizInfo}
 \title{Load yamls and find if the published date has passed yet}
 \usage{
-getVizInfo(org, repo)
+getVizInfo(org, repo, dev)
 }
 \arguments{
 \item{org}{character, name of GitHub organization in which to look for a repository}
 
 \item{repo}{character, name of the repository to find the viz.yaml}
+
+\item{dev}{logical create development version of landing page}
 }
 \description{
 Load yamls and find if the published date has passed yet

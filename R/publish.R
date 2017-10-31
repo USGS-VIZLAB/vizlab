@@ -39,7 +39,7 @@ publish.page <- function(viz) {
   # also manually put resources into context
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
-
+  context[['info']] <- updateThumbnails(context[['info']], context[['thumbnails']])
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
@@ -49,6 +49,60 @@ publish.page <- function(viz) {
   file <- export(viz)
   render(template, context, file)
   return(relativePath(file))
+}
+
+#' Get thumbnail info for sematics
+#' @param context list, should be just info section
+#' @param thumbnails list, taken from full context
+updateThumbnails <- function(context, thumbnails){
+  
+  thumb_names <- names(thumbnails)
+  
+  if("twitter" %in% thumb_names){
+    twitter_thumb <- publish(thumbnails[["twitter"]])
+    context[["thumbnail-twitter"]][["url"]] <- twitter_thumb[["url"]]
+    context[["thumbnail-twitter"]][["alttext"]] <- twitter_thumb[["alttext"]]
+    checkThumbCompliance(twitter_thumb[["width"]], 
+                         twitter_thumb[["height"]], 
+                         twitter_thumb[["size"]], 
+                         "twitter")    
+  }
+  
+  if("facebook" %in% thumb_names){
+    face_thumb <- publish(thumbnails[["facebook"]])
+    context[["thumbnail-facebook"]][["url"]] <- face_thumb[["url"]]
+    context[["thumbnail-facebook"]][["height"]] <- face_thumb[["height"]]
+    context[["thumbnail-facebook"]][["width"]] <- face_thumb[["width"]]
+    context[["thumbnail-facebook"]][["type"]] <- face_thumb[["mimetype"]]
+    
+    checkThumbCompliance(face_thumb[["width"]], 
+                         face_thumb[["height"]], 
+                         face_thumb[["size"]], 
+                         "facebook")
+  }
+  
+  if("main" %in% thumb_names){
+    main_thumb <- publish(thumbnails[["main"]])
+    context[["thumbnail"]][["url"]] <- main_thumb[["url"]]
+    context[["thumbnail"]][["height"]] <- main_thumb[["height"]]
+    context[["thumbnail"]][["width"]] <- main_thumb[["width"]]
+    context[["thumbnail"]][["alttext"]] <- main_thumb[["alttext"]]
+    
+    checkThumbCompliance(main_thumb[["width"]], 
+                         main_thumb[["height"]], 
+                         main_thumb[["size"]], "main")
+  }
+
+  
+  if("landing" %in% thumb_names){
+    landing_thumb <- publish(thumbnails[["landing"]])
+
+    checkThumbCompliance(landing_thumb[["width"]], 
+                         landing_thumb[["height"]], 
+                         landing_thumb[["size"]], "landing")
+  }
+  
+  return(context)
 }
 
 #' publish a section
@@ -90,8 +144,6 @@ publish.section <- function(viz) {
                                      replacement = '\\1../\\2')
     render(embedTmpl, data = context, file = file)
 
-    # viz[['output']] <- wrapEmbed(viz[['output']])
-    # wrap or add embed links to page
   }
   return(viz[['output']])
 }
@@ -274,7 +326,7 @@ publish.footer <- function(viz) {
   #add info from viz.yaml to context to inject into template
   vizzies <- viz$vizzies
   for(v in 1:length(vizzies)){
-    info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org)
+    info <- getVizInfo(repo=vizzies[[v]]$repo, org=vizzies[[v]]$org, dev=FALSE)
     if (is.null(vizzies[[v]]$name)){ # don't replace it if it is already set
       vizzies[[v]]$name <- info$context$name
     }
@@ -365,7 +417,7 @@ publish.header <- function(viz) {
 publish.landing <- function(viz){
 
   repos <- getRepoNames(viz[['org']])
-  viz_info <- lapply(repos, getVizInfo, org=viz[['org']])
+  viz_info <- lapply(repos, getVizInfo, org=viz[['org']], viz[['dev']])
   names(viz_info) <- repos
   # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
@@ -401,61 +453,37 @@ publish.template <- function(viz) {
 #' @rdname publish
 #' @export
 publish.thumbnail <- function(viz){
-  checkRequired(viz, required = c("for", "location"))
-  #compliance
-  #dimensions in pixels, file sizes in bytes!
-  minHeight <- NA
-  minWidth <- NA
-  maxSize <- NA
-  maxHeight <- NA
-  maxWidth <- NA
-  exactHeight <- NA
-  exactWidth <- NA
   
-  if(tolower(viz[['for']]) == "facebook") {
-    # On 10/26/2017:
-    # Use images that are at least 1200 x 630 pixels for the best 
-    #display on high resolution devices. At the minimum, you should
-    #use images that are 600 x 315 pixels to display link page posts
-    #with larger images. Images can be up to 8MB in size.
-    #https://developers.facebook.com/docs/sharing/best-practices
-    maxSize <- convb("8M")
-    minHeight <- 630
-    minWidth <- 1200
-  } else if(tolower(viz[['for']]) == "twitter") {
-    # On 10/26/2017:
-    #A URL to a unique image representing the content of the page. 
-    #You should not use a generic image such as your website logo, 
-    #author photo, or other image that spans multiple pages. Images 
-    #for this Card support an aspect ratio of 2:1 with minimum 
-    #dimensions of 300x157 or maximum of 4096x4096 pixels. 
-    #Images must be less than 5MB in size. JPG, PNG, WEBP and GIF 
-    #formats are supported. Only the first frame of an animated GIF 
-    #will be used. SVG is not supported.
-    # https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
-    maxSize <- convb("5M")
-    maxHeight <- 4096
-    maxWidth <- 4096
-    minHeight <- 157
-    minWidth <- 300
-  } else { #landing
-    maxSize <- 1048576
-    exactHeight <- 400
-    exactWidth <- 400
-  }
-  dims <- checkThumbCompliance(file = viz[['location']], 
-                               maxSize = maxSize,
-                               minHeight = minHeight, 
-                               minWidth = minWidth,
-                               maxHeight = maxHeight, 
-                               maxWidth = maxWidth,
-                               exactHeight = exactHeight, 
-                               exactWidth = exactWidth)
-  #send to other publishers if all ok
+  required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
-  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
-  viz[['width']] <- dims[['width']]
-  viz[['height']] <- dims[['height']]
+  checkRequired(viz, required)
+  
+  im <- tryCatch({
+    imager::load.image(viz[['location']])
+  },
+  error=function(cond){
+    return(imager::load.image(system.file("testviz/images/landing-thumb.png", package = "vizlab")))
+  })
+  
+  width <- imager::width(im)
+  height <- imager::height(im)
+  file_size  <- tryCatch({
+    file.info(viz[['location']])
+  },
+  error=function(cond){
+    return(file.info(system.file("testviz/images/landing-thumb.png", package = "vizlab")))
+  })
+  for(thumbType in unique(viz[['thumbType']])){
+    dims <- checkThumbCompliance(width, height, file_size$size, thumbType)
+  }
+
+  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])
+  viz[['width']] <- width
+  viz[['height']] <- height
+  viz[['size']] <- file_size$size
+  
+  return(viz)
+  
 }
 
 #' Took code from here:
@@ -474,48 +502,79 @@ convb <- function(x){
 
 #' helper to check thumbnail compliance
 #' @importFrom imager load.image width height
-#' @param file char Name of thumbnail file
-#' @param maxSize numeric Max size in bytes
-#' @param minHeight numeric Minimum height in pixels to enforce
-#' @param minWidth numeric Minimum width in pixels to enforce
-#' @param maxHeight numeric Max height in pixels to enforce
-#' @param maxWidth numeric Max width in pixels to enforce
-#' @param exactHeight numeric Exact height in pixels to enforce
-#' @param exactWidth numeric Exact width in pixels to enforce
-checkThumbCompliance <- function(file, maxSize, 
-                                 minHeight, minWidth, 
-                                 maxHeight, maxWidth, 
-                                 exactHeight, exactWidth) {
-  fileSize <- file.info(file)
-
-  if(fileSize$size > maxSize) {
-    stop(paste("Thumbnail", file, "is too big"))
-  }
-
-  im <- imager::load.image(file)
-  width <- imager::width(im)
-  height <- imager::height(im)
+#' @param width numeric pixal width of image
+#' @param height numeric pixal height of image
+#' @param size numeric file size in bytes
+#' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
+checkThumbCompliance <- function(width, height, size, thumbType){
   
-  if(width > maxWidth || height > maxHeight) {
-    stop(paste("Thumbnail", file, "is too big"))
+  stopifnot(all(thumbType %in% c("facebook","twitter","main","landing")))
+  
+  minHeight <- NA
+  minWidth <- NA
+  maxSize <- NA
+  maxHeight <- NA
+  maxWidth <- NA
+  exactHeight <- NA
+  exactWidth <- NA
+  
+  if(thumbType == "facebook") {
+    # On 10/26/2017:
+    # Use images that are at least 1200 x 630 pixels for the best 
+    #display on high resolution devices. At the minimum, you should
+    #use images that are 600 x 315 pixels to display link page posts
+    #with larger images. Images can be up to 8MB in size.
+    #https://developers.facebook.com/docs/sharing/best-practices
+    maxSize <- convb("8M")
+    minHeight <- 630
+    minWidth <- 1200
+  } else if(thumbType == "twitter") {
+    # On 10/26/2017:
+    #A URL to a unique image representing the content of the page. 
+    #You should not use a generic image such as your website logo, 
+    #author photo, or other image that spans multiple pages. Images 
+    #for this Card support an aspect ratio of 2:1 with minimum 
+    #dimensions of 300x157 or maximum of 4096x4096 pixels. 
+    #Images must be less than 5MB in size. JPG, PNG, WEBP and GIF 
+    #formats are supported. Only the first frame of an animated GIF 
+    #will be used. SVG is not supported.
+    # https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
+    maxSize <- convb("5M")
+    maxHeight <- 4096
+    maxWidth <- 4096
+    minHeight <- 157
+    minWidth <- 300
+  } else if (thumbType == 'landing') { #landing
+    maxSize <- 1048576
+    exactHeight <- 400
+    exactWidth <- 400
+  } # didn't specify "main"....want to leave that flexible
+  
+  if(isTRUE(size > maxSize)){
+    stop(paste("Thumbnail is too big"))
   }
   
-  if(width < minWidth || height < minHeight) {
-    stop(paste("Thumbnail", file, "is too small"))
+  if(isTRUE(width > maxWidth || height > maxHeight)){
+    stop(paste("Thumbnail is too big"))
   }
   
-  if(width == exactWidth && height == exactHeight) {
-    stop(paste("Thumbnail", file, "is too small"))
+  if(isTRUE(width < minWidth || height < minHeight)){
+    stop(paste("Thumbnail is too small"))
   }
   
-  return(c(width = width, height = height))
+  if(!is.na(exactWidth) & !is.na(exactHeight)){
+    if(!isTRUE(width == exactWidth && height == exactHeight)){
+      stop(paste("Thumbnail is too small"))
+    }    
+  }
+  
+  return(c(width = width, height = height, size=size))
 }
 
 #' coerce to a publisher
 #' @param viz object describing publisher
-#' @param ... not used, just for consistency
 #' @export
-as.publisher <- function(viz, ...) {
+as.publisher <- function(viz) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
   class(viz) <- c("publisher", class(viz))
@@ -531,10 +590,9 @@ as.publisher <- function(viz, ...) {
 
 #' coerce to resource
 #' @param viz vizlab object
-#' @param ... not used, following convention
 #' @importFrom utils packageName
 #' @export
-as.resource <- function(viz, ...) {
+as.resource <- function(viz) {
   required <- c("mimetype", "location")
   checkRequired(viz, required)
 
