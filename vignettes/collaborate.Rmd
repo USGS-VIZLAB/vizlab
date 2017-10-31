@@ -20,7 +20,7 @@ The vignette "Vizlab Example" gives a good overview on the complete process for 
 
 ## Github
 
-During our collaboration "sprints", we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. The scope of this vignette is not to give a complete picture of this git workflow. To briefly summarize however, we have a canonical "upstream" repository that each member forks off. Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github's Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.
+During our collaboration "sprints", we first assume all contributors are not only comfortable with git, but also the specific git-workflow that our team uses. Much more detail is available on our [Version Control training page](https://owi.usgs.gov/R/training-curriculum/r-package-dev/git/). To summarize, we have a canonical "upstream" repository that each member forks Team members are encouraged to create a branch off their fork for each distinct task. When a task is complete, they submit a pull request to the canonical repository. A different team member should review the pull request before merging onto the master branch. We tend to heavily take advantage of Github's Issues and project task management. Ideally, one pull request should correspond to one Issue, and that Issue can be closed with the merged pull request.
 
 ## Assign a Task
 
@@ -38,23 +38,20 @@ Task #1. Pull in the data file thermoelectric_1955.csv
 
 Task #2. Merge that data into the existing cleaned national state data.
 
-The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the `vizlab` package and creating your make files:
+The following sections describe the workflow for submitting code to include in the water-use project to complete these tasks. It is assumed we have already forked the repository and checked it out locally. Assuming the project is already fully in-swing, you should be able to jump in after loading the `vizlab` package:
 
 ```
 library(vizlab)
-createProfile()
-createMakefiles() 
+```
+
+You can build the visualization using the `vizmake` function:
+```
+vizmake()
 ```
 
 ## Task 1: Pull in new data
 
-Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required, this is done by running:
-
-```
-storeSBcreds()
-```
-
-and type username and password.  We established a service account for ScienceBase that should be used if at all possible, otherwise AD login is supported.
+Our first task was to add new (fictional) data to the project. Perhaps the data is sensitive, therefore, we have created a space on ScienceBase [https://www.sciencebase.gov](https://www.sciencebase.gov), and managed the permissions so only our team has read/write abilities. Because of the sensitive data, authentication with sciencebase is required. See the `dssecrets` package README for details (you may need to talk with a DS team member to get access). We established a service account for ScienceBase that should be used if at all possible, otherwise AD login is supported.
 
 Before adding/changing any code to the project, we create a branch on our fork dedicated to this task.
 
@@ -65,8 +62,8 @@ fetch:
   -
   *************bunch of stuff already there************
   -
-    id: oldThermoData
-    location: cache/thermoelectric_1955.csv
+    id: old_thermo_data
+    location: cache/fetch/thermoelectric_1955.csv
     fetcher: sciencebase
     remoteItemId: "XXX123"
     remoteFilename: "thermoelectric_1955.csv"
@@ -77,7 +74,7 @@ fetch:
 
 What is this? We've added a new fetch job, and given it some information:
 
-* A unique id "oldThermoData". Downstream parts of this project that depend on this data will need to refer to this step by the unique id.
+* A unique id "old_thermo_data". Downstream parts of this project that depend on this data will need to refer to this step by the unique id.
 * A "location", which is the relative path where the file that is produced from this job will be stored. 
 * The "fetcher" field indicates to `vizlab` to go to ScienceBase, look for the ScienceBase's ID "XXX123", and pull down the file "thermoelectric_1955.csv" from that ID. 
 * An optional field "mimetype", this allows future jobs that depends on this data to know how to open the data.  
@@ -92,13 +89,13 @@ Since we are starting a new task, it's a good idea to start a new branch. This t
 ```
 process:
   -
-    id: calc-nationalData
-    location: cache/nationalClean.rds
-    processor: nationalClean
-    scripts: scripts/process/nationalClean.R
+    id: calc_national_data
+    location: cache/process/national_clean.rds
+    processor: national_clean
+    scripts: scripts/process/national_clean.R
     reader: rds
     depends:
-      stateData: calc-histWaterData
+      state_data: calc_hist_water_data
 
 ```
 
@@ -107,29 +104,29 @@ We need to add a new dependency, and fiddle with the script itself. So, let's ad
 ```
 process:
   -
-    id: calc-nationalData
-    location: cache/nationalClean.rds
-    processor: nationalClean
-    scripts: scripts/process/nationalClean.R
+    id: calc_national_data
+    location: cache/process/national_clean.rds
+    processor: national_clean
+    scripts: scripts/process/national_clean.R
     reader: rds
     depends:
-      stateData: calc-histWaterData
-      oldData: oldThermoData
+      state_data: calc_hist_water_data
+      old_data: old_thermo_data
 ```
 
-So in this processing job, we've added a new entry in the "depends" field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The `stateData` is the 1960-2015 state data, and the `oldThermoData` is our recent addition. 
+So in this processing job, we've added a new entry in the "depends" field, which is the unique id for the job we completed in Task 1. What that means is that this processing job will have 2 dependent data sources. The `state_data` is the 1960-2015 state data, and the `old_thermo_data` is our recent addition. 
 
-Now, let's look at the original script in: scripts/process/nationalClean.R:
+Now, let's look at the original script in: scripts/process/national_clean.R:
 
 ```
-process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalData")){
+process.national_clean <- function(viz = getContentInfo(viz.id = "calc_national_data")){
   library(tidyr)
   library(dplyr)
   
   viz.data <- readDepends(viz)
-  stateData <- viz.data[['stateData']]
+  state_data <- viz.data[['state_data']]
   
-  national <- stateData %>%
+  national <- state_data %>%
     group_by(year, category) %>%
     summarise(value = sum(value)) %>%
     data.frame()
@@ -146,16 +143,16 @@ process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalDa
 We need to add the data and merge:
 
 ```
-process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalData")){
+process.national_clean <- function(viz = getContentInfo(viz.id = "calc_national_data")){
   library(tidyr)
   library(dplyr)
   
   viz.data <- readDepends(viz)
-  stateData <- viz.data[['stateData']]
-  oldData <- viz.data[['oldData']]
+  state_data <- viz.data[['state_data']]
+  old_data <- viz.data[['old_data']]
 
-  national <- stateData %>%
-    left_join(oldData, by=year) %>%
+  national <- state_data %>%
+    left_join(old_data, by=year) %>%
     group_by(year, category) %>%
     summarise(value = sum(value)) %>%
     data.frame()
@@ -172,40 +169,32 @@ process.nationalClean <- function(viz = getContentInfo(viz.id = "calc-nationalDa
 
 Notice how the `depends` and `location` work.
 
-Seems about right, but we should probably test. What's the easiest way to jump into your custom process task? Unfortunately, using `make` and RStudio (a common practice on our team), we can't simply add breakpoints to the script.
-
-You can load the `viz` object like this:
+Seems about right, but we should probably test. What's the easiest way to jump into your custom process task? You can load the `viz` object like this:
 
 ```
-viz <- getContentInfo(viz.id = "calc-nationalData")
-```
+viz <- as.viz("calc_national_data")
 
-and step through our function line-by-line.
-
-For fewer keystrokes, you can run `process.nationalClean` in `debug` mode, since `viz` is defined by default using `getContentInfo`.
-
-```
 viz
 $id
-[1] "calc-nationalData"
+[1] "calc_national_data"
 
 $location
-[1] "cache/nationalClean.rds"
+[1] "cache/national_clean.rds"
 
 $processor
-[1] "nationalClean"
+[1] "national_clean"
 
 $scripts
-[1] "scripts/process/nationalClean.R"
+[1] "scripts/process/national_clean.R"
 
 $reader
 [1] "rds"
 
 $depends
-$depends$stateData
-[1] "calc-histWaterData"
-$depends$oldData
-[1] "oldThermoData"
+$depends$state_data
+[1] "calc_hist_water_data"
+$depends$old_data
+[1] "old_thermo_data"
 
 $block
 [1] "process"
@@ -214,6 +203,14 @@ $export
 [1] FALSE
 ```
 
+and step through our function line-by-line.
 
-Once we've verified that our job works as expected, and doesn't break anything in the `make` build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.
+For fewer keystrokes, you can run `process.national_clean` in `debug` mode.
+
+```
+debug(process.national_clean)
+process("calc_national_data")
+```
+
+Once we've verified that our job works as expected, and doesn't break anything in the `vizmake()` build, we can submit our next pull request on this branch, and patiently wait for our project leader to assign us a new task.
 
