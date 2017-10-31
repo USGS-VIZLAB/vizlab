@@ -1,14 +1,14 @@
-createRemakefile <- function() {
+createRemakefile <- function(viz.items=getContentInfos()) {
   
   #### munge the viz.yaml info ####
   
   # retrieve the content info list from the viz.yaml and fortify with expanded
   # script list, prepped source file recipe, main target
-  viz.items <- lapply(getContentInfos(), function(viz.item) {
+  viz.items <- lapply(viz.items, function(viz.item) {
     viz.item$script_files <- unpackScripts(viz.item)
     viz.item$psource <- createPreppedSourceRecipe(viz.item)
     viz.item$target <- selectTarget(viz.item)
-    viz.item$fetch_timestamp <- needsTimestamp(viz.item)
+    viz.item$timestamp <- createTimestampRecipe(viz.item)
     viz.item$arguments <- createArgumentRecipe(viz.item)
     viz.item
   })
@@ -46,27 +46,22 @@ createRemakefile <- function() {
     recipe_sets <- lapply(unname(items), function(item) {
       # define an ~empty recipe list with placeholders to control the ordering
       recipes <- list() 
-      # make a symbolic target so you can run vizmake('item-id'). unlike make,
-      # remake doesn't remake symbolic targets unless their dependencies change
-      if(item$id != item$target) {
-        recipes$id <- createSymbolicRecipe(item)
+      if(item$block != 'resource') {
+        # make a symbolic target so you can run vizmake('item-id'). unlike make,
+        # remake doesn't remake symbolic targets unless their dependencies change
+        if(item$id != item$target) {
+          recipes$id <- createSymbolicRecipe(item)
+        }
+        # all non-resource items have a main_recipe
+        recipes$main <- createMainRecipe(item)
+        # possibly make a timestamp fetching recipe for this item
+        if(!is.null(item$timestamp)) {
+          recipes$timestamp <- item$timestamp
+        }
+      } else { # item$block == 'resource'
+        recipes$main <- createResourceRecipe(item)
       }
-      # possibly make a timestamp fetching recipe for this item
-      if(item$fetch_timestamp) {
-        recipes$main <- NA # placeholder so timestamp goes last, after main
-        recipes$timestamp <- createTimestampRecipe(item)
-      }
-      # always make a main_recipe
-      recipes$main <- createMainRecipe(item, recipes$timestamp, viz.items)
       
-      # add logicals for whisker::render
-      recipes <- lapply(recipes, function(recipe) {
-        recipe$has_command <- length(recipe$command) > 0
-        recipe$has_depends <- length(recipe$depends) > 0
-        recipe$depends_one <- length(recipe$depends) == 1
-        recipe$depends_more <- length(recipe$depends) > 1
-        recipe
-      })
       return(list(main_target=recipes$main$target, recipes=unname(recipes)))
     })
     block <- list(block=block.name, items=recipe_sets)
@@ -84,9 +79,23 @@ createRemakefile <- function() {
   # append the prepped source targets to the blocks
   blocks[['scripts']] <- createScriptsBlock(viz.items)
   
+  # add logicals for whisker::render to all recipes in blocks
+  blocks <- lapply(blocks, function(block) {
+    block$items <- lapply(block$items, function(item) {
+      item$recipes <- lapply(item$recipes, function(recipe) {
+        recipe$has_command <- length(recipe$command) > 0
+        recipe$has_depends <- length(recipe$depends) > 0
+        recipe$depends_one <- length(recipe$depends) == 1
+        recipe$depends_more <- length(recipe$depends) > 1
+        recipe
+      })
+      item
+    })
+    block
+  })
+  
   # create the list of grouped targets (one per block, one for the whole viz)
   job_groups <- createJobGroups(blocks)
-  
   
   #### create remake.yaml from template ####
 
@@ -107,16 +116,6 @@ createRemakefile <- function() {
   remake.yml <- whisker::whisker.render(template=template, data=viz)
   writeLines(remake.yml, 'remake.yaml') # use .yaml to stay consistent with vizlab
   
-  
-  #### create directories ####
-  
-  # create any directories that have been mentioned but don't yet exist
-  dirs <- unique(c(
-    dirname(unlist(lapply(unname(viz.items), `[[`, 'location'))),
-    'vizlab/remake/scripts', 'vizlab/remake/timestamps'))
-  for(d in dirs) {
-    if(!dir.exists(d)) dir.create(d, recursive=TRUE)
-  }
   
   # return
   invisible()
@@ -154,11 +153,7 @@ createPreppedSourceRecipe <- function(viz.item) {
           sprintf(", functions=I('%s')", paste(viz.item$functions, collapse=","))
         } else {
           ""
-        }),
-      has_command = TRUE,
-      has_depends = FALSE,
-      depends_one = FALSE,
-      depends_more = FALSE
+        })
     )
   } else {
     NULL
@@ -184,8 +179,14 @@ createArgumentRecipe <- function(item) {
 selectTarget <- function(viz.item) {
   if(viz.item$block == 'resource') {
     # look up the resource target
-    destloc <- file.path("target", viz.item$location)
-    gsub('js/third-party', 'js', destloc)
+    loc <- viz.item$location
+    if(!file.exists(loc)) {
+      loc <- system.file(loc, package='vizlab')
+      if(!file.exists(loc)) {
+        warning("couldn't find resource file for viz item '", viz.item$id, "'")
+      }
+    }
+    loc
   } else if(exists('location', viz.item)) {
     # a common case: the item has a file target
     viz.item$location
@@ -195,17 +196,30 @@ selectTarget <- function(viz.item) {
   }
 }
 
-# Determine whether a fetchTimestamp recipe is needed; return T/F
-needsTimestamp <- function(viz.item) {
+# Create a recipe for a timestamp for a viz fetch item, or return NULL if a
+# fetchTimestamp recipe is not needed
+createTimestampRecipe <- function(viz.item) {
+  # determine whether a timestamp check recipe is needed
   if(viz.item$block == 'fetch') {
     ts.fetcher <- tryCatch({
       get(paste0('fetchTimestamp.',viz.item$fetcher))
     }, error=function(e) NULL)
     is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
-    return(!is.always.current)
+    needs.timestamp <- !is.always.current
   } else {
-    return(FALSE)
+    needs.timestamp <- FALSE
   }
+  
+  # create the recipe or return NULL
+  if(needs.timestamp) {
+    list(
+      target_name = locateTimestampFile(viz.item$id),
+      command = sprintf("fetchTimestamp(I('%s'))", viz.item$id)
+    )
+  } else {
+    NULL
+  }
+  
 }
 
 # Create a recipe whose target is a viz id and whose dependency is the
@@ -213,7 +227,8 @@ needsTimestamp <- function(viz.item) {
 createSymbolicRecipe <- function(item) {
   list(
     target_name = item$id,
-    depends = item$target
+    depends = item$target,
+    command = sprintf("readData(I('%s'))", item$id) # readData returns the filepath if it can't read the file
   )
 }
 
@@ -236,10 +251,23 @@ createMainRecipe <- function(item) {
   )
 }
 
+# Create a resource item recipe, which is a hybrid of the symbolic and main
+# recipes for other item types
+createResourceRecipe <- function(item) {
   list(
+    # use a symbolic/variable target because (1) we're not creating the file and
+    # (2) the full file paths are awkwardly long to include in the remake::make
+    # output
+    target_name = item$id,
     
+    # depends: combine both the target and the item dependencies because they're
+    # all just files that we can't make
     depends = c(
+      item$item_deps),
     
+    # command: readData is spotty for resources, so just return the filepath
+    # consistently
+    command = sprintf("c('%s')", item$target)
   )
 }
 
@@ -257,7 +285,9 @@ createSourcesVector <- function(viz.items) {
 createScriptsBlock <- function(viz.items) {
   source.preps <- lapply(viz.items, `[[`, 'psource')
   source.preps <- unname(source.preps[!sapply(source.preps, is.null)])
-  sp_list <- lapply(source.preps, function(sprep) list(main_target=sprep$target_name, recipes=list(sprep)))
+  sp_list <- lapply(source.preps, function(prep) {
+    list(main_target=prep$target_name, recipes=list(prep))
+  })
   list(block='scripts', items=sp_list)
 }
 
@@ -303,7 +333,9 @@ createResourceBlock <- function(resource.block, resource.deps) {
 createJobGroups <- function(blocks) {
   # create the list of grouped targets
   block.targets <- lapply(blocks, function(block) {
-    lapply(block$items, function(item) item$main_target)
+    as.list(unlist( # get rid of NULLs from items without main_target
+      lapply(block$items, function(item) item$main_target)
+    ))
   })
   target.groups <- c(block.targets, list('Viz'=as.list(unname(unlist(block.targets)))))
   
@@ -318,4 +350,25 @@ createJobGroups <- function(blocks) {
     )
   })
   return(job_groups)
+}
+
+# Create directories that will be needed to build the vizzy
+createDirectories <- function(viz.items=getContentInfos()) {
+  # filter to items from those blocks where we could reasonably be creating
+  # files in new directories
+  viz.items <- viz.items[sapply(viz.items, function(item) {
+    item$block %in% c("parameter", "fetch", "process", "visualize")
+  })]
+  
+  # collect a vector of directories from the above viz.items and known
+  # vizlab/remake needs
+  dirs <- unique(c(
+    dirname(unlist(lapply(viz.items, `[[`, 'location'))),
+    'vizlab/remake/scripts', 'vizlab/remake/timestamps'
+  ))
+  
+  # create the directories as needed
+  for(d in dirs) {
+    if(!dir.exists(d)) dir.create(d, recursive=TRUE)
+  }
 }
