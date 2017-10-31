@@ -4,12 +4,10 @@
 \alias{as.resource}
 \title{coerce to resource}
 \usage{
-as.resource(viz, ...)
+as.resource(viz)
 }
 \arguments{
 \item{viz}{vizlab object}
-
-\item{...}{not used, following convention}
 }
 \description{
 coerce to resource

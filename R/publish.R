@@ -4,32 +4,31 @@
 #' files to serve up as the final viz
 #'
 #' @param viz vizlab object or identifier
-#' @param ... \dots
 #' @export
-publish <- function(viz, ...) UseMethod("publish")
+publish <- function(viz) UseMethod("publish")
 
 #' publish a given id
 #' @rdname publish
 #' @export
-publish.character <- function(viz, ...) {
+publish.character <- function(viz) {
   viz <- as.viz(viz)
   viz <- as.publisher(viz)
-  publish(viz, ...)
+  publish(viz)
 }
 
 #' publish a list representing a viz
 #' @rdname publish
 #' @export
-publish.list <- function(viz, ...) {
+publish.list <- function(viz) {
   viz <- as.viz(viz)
   viz <- as.publisher(viz)
-  publish(viz, ...)
+  publish(viz)
 }
 
 #' publish a page
 #' @rdname publish
 #' @export
-publish.page <- function(viz, ...) {
+publish.page <- function(viz) {
   required <- c("template", "context")
   checkRequired(viz, required)
 
@@ -40,7 +39,7 @@ publish.page <- function(viz, ...) {
   # also manually put resources into context
   context <- replaceOrAppend(template[['context']], viz[['context']])
   context[['info']] <- replaceOrAppend(getBlocks("info", keep.block=F)[[1]], context[['info']])
-  context[['info']] <- update_thumbnails(context[['info']], context[['thumbnails']])
+  context[['info']] <- updateThumbnails(context[['info']], context[['thumbnails']])
   # flatten dependencies before lookups
   dependencies <- c(dependencies, recursive = TRUE)
 
@@ -55,7 +54,7 @@ publish.page <- function(viz, ...) {
 #' Get thumbnail info for sematics
 #' @param context list, should be just info section
 #' @param thumbnails list, taken from full context
-update_thumbnails <- function(context, thumbnails){
+updateThumbnails <- function(context, thumbnails){
   
   thumb_names <- names(thumbnails)
   
@@ -114,7 +113,7 @@ update_thumbnails <- function(context, thumbnails){
 #' @importFrom whisker whisker.render
 #' @rdname publish
 #' @export
-publish.section <- function(viz, ...) {
+publish.section <- function(viz) {
   required <- c("template")
   checkRequired(viz, required)
 
@@ -161,7 +160,7 @@ publish.section <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.resource <- function(viz, ...) {
+publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
   # going to start out with simple images
   destFile <- export(viz)
@@ -183,7 +182,7 @@ publish.resource <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.img <- function(viz, ...) {
+publish.img <- function(viz) {
   required <- c("alttext", "relpath", "title")
   viz <- NextMethod()
   checkRequired(viz, required)
@@ -207,7 +206,7 @@ publish.img <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.ico <- function(viz, ...) {
+publish.ico <- function(viz) {
   required <- c("relpath")
   viz <- NextMethod()
   checkRequired(viz, required)
@@ -226,7 +225,7 @@ publish.ico <- function(viz, ...) {
 #' @rdname publish
 #' @importFrom utils URLencode
 #' @export
-publish.googlefont <- function(viz, ...) {
+publish.googlefont <- function(viz) {
   required <- c("family", "weight")
   checkRequired(viz, required)
 
@@ -243,7 +242,7 @@ publish.googlefont <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.js <- function(viz, ...) {
+publish.js <- function(viz) {
   required <- c("relpath", "mimetype")
   viz <- NextMethod()
   checkRequired(viz, required)
@@ -260,7 +259,7 @@ publish.js <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.css <- function(viz, ...) {
+publish.css <- function(viz) {
   required <- c("relpath", "mimetype")
   viz <- NextMethod()
   checkRequired(viz, required)
@@ -281,7 +280,7 @@ publish.css <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.svg <- function(viz, ...) {
+publish.svg <- function(viz) {
   required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
   checkRequired(viz, required)
@@ -310,7 +309,7 @@ publish.svg <- function(viz, ...) {
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
-publish.footer <- function(viz, ...) {
+publish.footer <- function(viz) {
   #should also check blogs?  Or one or the other?
   checkRequired(viz, required = "vizzies")
 
@@ -357,7 +356,7 @@ publish.footer <- function(viz, ...) {
 #' @importFrom utils download.file
 #' @rdname publish
 #' @export
-publish.social <- function(viz, ...) {
+publish.social <- function(viz) {
 
   template <- template(viz[['template']])
   
@@ -406,7 +405,7 @@ publish.social <- function(viz, ...) {
 #' Header publishing
 #' @rdname publish
 #' @export
-publish.header <- function(viz, ...) {
+publish.header <- function(viz) {
   
   return(publish.section(viz))
 }
@@ -416,10 +415,10 @@ publish.header <- function(viz, ...) {
 #' @rdname publish
 #' @param dev logical whether or not to publish development version of landing page
 #' @export
-publish.landing <- function(viz, dev, ...){
+publish.landing <- function(viz){
 
   repos <- getRepoNames(viz[['org']])
-  viz_info <- lapply(repos, getVizInfo, org=viz[['org']], dev)
+  viz_info <- lapply(repos, getVizInfo, org=viz[['org']], viz[['dev']])
   names(viz_info) <- repos
   # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
@@ -446,7 +445,7 @@ publish.landing <- function(viz, dev, ...){
 #'
 #' @rdname publish
 #' @export
-publish.template <- function(viz, ...) {
+publish.template <- function(viz) {
   # nothing for now
 }
 
@@ -454,7 +453,7 @@ publish.template <- function(viz, ...) {
 #'
 #' @rdname publish
 #' @export
-publish.thumbnail <- function(viz, ...){
+publish.thumbnail <- function(viz){
   
   required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
@@ -479,7 +478,7 @@ publish.thumbnail <- function(viz, ...){
     dims <- checkThumbCompliance(width, height, file_size$size, thumbType)
   }
 
-  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])#need to add slash between?
+  viz[['url']] <- pastePaths(getVizURL(), viz[['relpath']])
   viz[['width']] <- width
   viz[['height']] <- height
   viz[['size']] <- file_size$size
@@ -509,7 +508,8 @@ convb <- function(x){
 #' @param size numeric file size in bytes
 #' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
 checkThumbCompliance <- function(width, height, size, thumbType){
-  match.arg(thumbType, c("facebook","twitter","main","landing"))
+  
+  stopifnot(all(thumbType %in% c("facebook","twitter","main","landing")))
   
   minHeight <- NA
   minWidth <- NA
@@ -574,9 +574,8 @@ checkThumbCompliance <- function(width, height, size, thumbType){
 
 #' coerce to a publisher
 #' @param viz object describing publisher
-#' @param ... not used, just for consistency
 #' @export
-as.publisher <- function(viz, ...) {
+as.publisher <- function(viz) {
   # default to a resource
   publisher <- ifelse(exists("publisher", viz), viz[['publisher']], "resource")
   class(viz) <- c("publisher", class(viz))
@@ -592,10 +591,9 @@ as.publisher <- function(viz, ...) {
 
 #' coerce to resource
 #' @param viz vizlab object
-#' @param ... not used, following convention
 #' @importFrom utils packageName
 #' @export
-as.resource <- function(viz, ...) {
+as.resource <- function(viz) {
   required <- c("mimetype", "location")
   checkRequired(viz, required)
 

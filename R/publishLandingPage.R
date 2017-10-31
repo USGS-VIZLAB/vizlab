@@ -12,7 +12,10 @@ publishLandingPage <- function(dev = FALSE){
   setwd('landing')
   on.exit(setwd(oldwd))
   
-  publish('landing', dev=dev)
+  viz <- as.viz('landing')
+  viz <- as.publisher(viz)
+  viz$dev <- dev
+  publish(viz)
 }
 
 #' Get a vector a repository names for a specific organization

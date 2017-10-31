@@ -4,12 +4,10 @@
 \alias{as.publisher}
 \title{coerce to a publisher}
 \usage{
-as.publisher(viz, ...)
+as.publisher(viz)
 }
 \arguments{
 \item{viz}{object describing publisher}
-
-\item{...}{not used, just for consistency}
 }
 \description{
 coerce to a publisher
