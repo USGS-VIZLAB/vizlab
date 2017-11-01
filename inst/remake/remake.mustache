@@ -1,0 +1,44 @@
+# Do not edit - automatically generated
+# from the vizlab remake.mustache template
+
+target_default: Viz
+
+packages:
+{{#packages}}
+  - {{.}}
+{{/packages}}
+
+{{#has_sources}}
+sources:
+{{#sources}}
+  - {{.}}
+{{/sources}}
+{{/has_sources}}{{#has_file_extensions}}
+file_extensions:
+{{#file_extensions}}
+  - "{{.}}"
+{{/file_extensions}}
+{{/has_file_extensions}}
+targets:
+{{#blocks}}
+  
+  # --- {{block}} --- #
+{{#items}}
+{{#recipes}}
+  {{target_name}}:{{#has_command}}
+    command: {{command}}{{/has_command}}{{#has_depends}}
+    depends: {{#depends_one}}{{#depends}}{{.}}{{/depends}}{{/depends_one}}{{#depends_more}}{{#depends}}
+      - {{.}}{{/depends}}{{/depends_more}}{{/has_depends}}{{/recipes}}
+{{/items}}
+{{/blocks}}
+  # --- Job groups --- #
+
+{{#job_groups}}
+  {{target_name}}:
+    depends: 
+{{#depends}}
+      - {{.}}
+{{/depends}}
+
+
+{{/job_groups}}

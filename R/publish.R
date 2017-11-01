@@ -167,9 +167,6 @@ publish.resource <- function(viz) {
   if (!is.null(destFile)) {
     dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
     srcFile <- viz[['location']]
-    if (!is.null(viz[['packaging']]) && viz[['packaging']] == "vizlab") {
-      srcFile <- system.file(srcFile, package = "vizlab")
-    }
     file.copy(srcFile, destFile, overwrite = TRUE)
     viz[['relpath']] <- relativePath(destFile)
   } else {
