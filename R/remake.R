@@ -12,6 +12,6 @@
 #' @export
 collectItemArguments <- function(viz.yaml) {
   stopifnot(viz.yaml == 'viz.yaml')
-  cis <- getContentInfos(block=c("parameter", "fetch", "process", "visualize", "publish"))
-  setNames(cis, sapply(cis, `[[`, 'id'))
+  content.infos <- getContentInfos(block=c("parameter", "fetch", "process", "visualize", "publish"))
+  setNames(content.infos, sapply(content.infos, `[[`, 'id'))
 }
