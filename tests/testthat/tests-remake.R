@@ -17,7 +17,7 @@ test_that('createRemakefile makes remake.yaml', {
   # the file should contain typical vizlab concepts and phases
   expect_equal(
     grep('# --- (.*) --- #', readLines('remake.yaml'), value=TRUE), 
-    paste0('  # --- ', c('parameter','fetch','process','visualize','publish','resource','scripts','Job groups'), ' --- #'))
+    paste0('  # --- ', c('parameter','fetch','process','visualize','publish','resource','arguments','scripts','Job groups'), ' --- #'))
 })
 
 test_that('prepSources can combine and subset scripts', {

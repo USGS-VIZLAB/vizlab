@@ -106,6 +106,10 @@
   publisher: template
   mimetype: text/mustache
   depends:
+    brandcomment: brandcomment
+    semantics: semantics
+    favicon: lib-vizlab-favicon
+    vizlab-js: lib-vizlab-javascript
   context:
     info:
     resources: [ favicon, vizlab-js ]

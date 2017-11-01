@@ -16,9 +16,15 @@ vizmake <- function(target_names=NULL, ...) {
   # check whether the right packages are installed
   checkVizPackages()
   
-  # decide whether createRemakefile needs to be rerun
-  if(!file.exists('remake.yaml') || file.mtime('remake.yaml') < file.mtime('viz.yaml')) {
-    createRemakefile()
+  # run createRemakefile and createDirectories if needed
+  if(!file.exists('remake.yaml') ||
+     file.mtime('remake.yaml') < file.mtime('viz.yaml') ||
+     file.mtime('remake.yaml') < file.mtime(system.file('DESCRIPTION', package='vizlab'))) {
+    
+    viz.items <- getContentInfos()
+    createRemakefile(viz.items)
+    createDirectories(viz.items)
+    
   }
   # read in the remake file
   remake.yaml <- yaml::yaml.load_file('remake.yaml')
@@ -45,6 +51,6 @@ vizmake <- function(target_names=NULL, ...) {
   out <- remake::make(target_names=target_names, ..., remake_file='remake.yaml')
   message('Finished build at ', Sys.time())
   
-  # return whatever remake returned
+  # return whatever remake returned unless we can do even better
   return(out)
 }
