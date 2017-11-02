@@ -17,8 +17,13 @@ createRemakefile <- function(viz.items=getContentInfos()) {
   item.ids <- unlist(lapply(viz.items, `[[`, 'id'))
   viz.items <- lapply(viz.items, function(viz.item) {
     viz.item$item_deps <- unlist(lapply(unname(viz.item$depends), function(dep) {
-      dep.item <- viz.items[[names(item.ids[item.ids == dep])]]
-      dep.item$target
+      if(is.null(dep) || !(dep %in% item.ids)) {
+        warning("cannot find dependency '", dep, "' of viz item '", viz.item$id, "' so cannot include the dependency in remake.yaml")
+        return(NULL)
+      } else { # the usual case
+        dep.item <- viz.items[[names(item.ids[item.ids == dep])]]
+        return(dep.item$target)
+      }
     }))
     viz.item
   })

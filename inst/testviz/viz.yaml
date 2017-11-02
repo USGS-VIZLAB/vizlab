@@ -43,7 +43,7 @@ info:
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
     yaml:
       repo: CRAN
-      version: 2.1.14
+      version: 2.1.0
 parameter:
   -
     id: plot_info
@@ -168,8 +168,8 @@ publish:
       resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
       thumbnails: 
-        twitter: thumb-twitter
-        facebook: thumb-twitter
+        twitter: thumb-facebook
+        facebook: thumb-facebook
         landing: thumb-landing
         main: thumb-facebook
   -
@@ -187,14 +187,6 @@ publish:
     location: images/facebook-thumb.png
     publisher: thumbnail
     thumbType: facebook
-    title: "Other thumbnail"
-    alttext: "Alt text thumbnail"
-    mimetype: image/png
-  -
-    id: twitter-thumb
-    location: images/facebook-thumb.png
-    publisher: thumbnail
-    thumbType: twitter
     title: "Other thumbnail"
     alttext: "Alt text thumbnail"
     mimetype: image/png
