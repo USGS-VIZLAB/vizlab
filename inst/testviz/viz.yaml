@@ -75,8 +75,8 @@ fetch:
     function: fetch.cuyahoga_diff
     mimetype: text/csv
   -
-    id: usgs-watermark 
-    location: images/usgs-watermark.xml
+    id: usgs_watermark 
+    location: images/usgs_watermark.xml
     mimetype: image/svg+xml
     fetcher: usgs_watermark 
     scripts: 
@@ -96,16 +96,15 @@ fetch:
     reader: folder
     scripts:
   -
-    id: exampleSVG
-    location: data/Example.svg
+    id: example_svg
+    location: data/example.svg
     mimetype: image/svg+xml
-    fetcher: 
     reader: svg
   - 
-    id: lakeLoc
-    location: data/LakeLocations.zip
+    id: railroad_stations
+    location: data/rstatp_usa.zip
+    comment: downloaded from https://www.sciencebase.gov/catalog/item/581d052ce4b08da350d524d7
     mimetype: application/zip
-    fetcher:
     reader: shp
   -
     id: never_current

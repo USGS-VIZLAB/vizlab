@@ -60,7 +60,7 @@ test_that("directories can be read", {
 })
 
 test_that("watermark fetcher works", {
-  viz <- as.viz("usgs-watermark")
+  viz <- as.viz("usgs_watermark")
   viz <- as.fetcher(viz)
   viz_watermark <- fetch(viz)
 })

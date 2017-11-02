@@ -2,25 +2,25 @@ oldwd <- getwd()
 #these tests need to use the test viz
 testtmp <- setup(copyTestViz=TRUE)
 viz <- as.viz(list(
-  depends = c("mayfly_nymph", "car_data","plot_info", "exampleSVG", "lakeLoc")
+  depends = c("mayfly_nymph", "car_data","plot_info", "example_svg", "railroad_stations")
 ))
 sourceScripts('scripts/read', verbose=FALSE)
 
 context("readData")
 
 test_that("readData works as expected", {
-  mayfly <<- readData(viz[['depends']][1])
-  car_data <<- readData(viz[['depends']][2])
-  plot_data <<- readData(viz[['depends']][3])
-  svg_example <- readData(viz[['depends']][4])
-  lakeLoc <- readData(viz[['depends']][5])
+  mayfly <<- readData('mayfly_nymph')
+  car_data <<- readData('car_data')
+  plot_data <<- readData('plot_info')
+  svg_example <- readData('example_svg')
+  rail_stations <- readData('railroad_stations')
   expect_is(mayfly, 'data.frame')
   expect_is(car_data, 'list')
   expect_is(car_data[[1]], 'data.frame')
   expect_is(car_data[[2]], 'data.frame')
   expect_is(plot_data, 'list')
   expect_is(svg_example, c('xml_document', 'xml_node'))
-  expect_is(lakeLoc, c('SpatialPolygonsDataFrame', 'sp'))
+  expect_is(rail_stations, c('SpatialPointsDataFrame', 'sp'))
   expect_true(all(names(plot_data) %in% c("width","height")) )
 })
 
