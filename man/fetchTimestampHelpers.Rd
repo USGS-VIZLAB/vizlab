@@ -42,9 +42,9 @@ function)}
 metadata (using Sys.setFileTime - sets the mtime=modified time property);
 NA leaves the metadata alone}
 
-\item{timestamp}{POSIXct timestamp to format into a character string}
+\item{verbose}{logical to pass on to \code{remake::make()}}
 
-\item{viz}{a viz item}
+\item{timestamp}{POSIXct timestamp to format into a character string}
 }
 \description{
 These functions are used within vizlab \code{\link[=fetchTimestamp]{fetchTimestamp()}} methods and may be

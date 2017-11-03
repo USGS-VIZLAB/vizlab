@@ -138,7 +138,7 @@ writeTimestamp <- function(new.timestamp, viz, timestamp.mtime=NA) {
 #'
 #' @rdname fetchTimestampHelpers
 #' @md
-#' @param viz a viz item
+#' @param verbose logical to pass on to `remake::make()`
 #' @export
 updateTimestamp <- function(viz, verbose=FALSE) {
   timestampTarget <- locateTimestampFile(viz$id)
