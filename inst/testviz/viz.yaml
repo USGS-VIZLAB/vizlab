@@ -1,9 +1,9 @@
-vizlab: "0.2.0"
+vizlab: "0.2.2.9006"
 info:
   id: testviz
   name: Example visualization project
-  date: 2016-06-09
-  publish-date: 2016-06-09
+  date: 2017-11-01
+  publish-date: 2017-11-01
   path: /notsure
   description: >-
     Bare-bones example visualization project directory for testing vizlab
@@ -38,36 +38,41 @@ info:
   required-packages:
     vizlab:
       repo: github
-      version: 0.2.0
+      version: 0.2.2.9006
       name: USGS-VIZLAB/vizlab
       ref: f685369086a4d9f890ad8ce837dfa582586aaba3
-    dplyr:
+    yaml:
       repo: CRAN
-      version: 0.5.0
-    wateRuse:
-      repo: GRAN
-      version: 1.0.4
-    crazy:
-      repo: CRAN
-      version: 20.11.45
+      version: 2.1.0
 parameter:
   -
-    id: plot-info
+    id: plot_info
     width: 4
     height: 4
 fetch:
   -
-    id: siteTextData
-    location: data/siteText.yaml
+    id: site_text_data
+    location: data/site_text.yaml
     mimetype: text/yaml
     scripts:
   -
-    id: Cuyahoga
-    location: cache/fetch/CuyahogaTDS.csv
-    fetcher: sciencebase
-    scripts:
-    remoteItemId: 575d839ee4b04f417c2a03fe
-    remoteFilename: CuyahogaTDS.csv
+    id: cuyahoga
+    location: cache/fetch/cuyahoga.csv
+    fetchargs:
+      sourceloc: data/pretend_remote/cuyahoga.csv
+    fetcher: cuyahoga
+    scripts: scripts/fetch/cuyahoga.R
+    mimetype: text/csv
+  -
+    id: cuyahoga_diff
+    comment: shows that fetch can depend on process
+    location: cache/fetch/cuyahoga_diff.csv
+    depends:
+      cuyahoga_raw: cuyahoga
+      cuyahoga_processed: cuyahoga_short
+    fetcher: cuyahoga_diff
+    scripts: scripts/fetch/cuyahoga.R
+    function: fetch.cuyahoga_diff
     mimetype: text/csv
   -
     id: usgs-watermark 
@@ -76,15 +81,16 @@ fetch:
     fetcher: usgs_watermark 
     scripts: 
   -
-    id: MayflyNymph
-    location: data/MayflyNymph.csv
-    fetcher: mayflyNymph
-    scripts: scripts/fetch/mayflyNymph.R
-    reader: myCsvReader
+    id: mayfly_nymph
+    location: data/mayfly_nymph.csv
+    fetcher: mayfly_nymph
+    info: insect
+    scripts: scripts/fetch/mayfly_nymph.R
+    reader: my_csv_reader
     mimetype: text/csv
     export: true
   -
-    id: carData
+    id: car_data
     location: data/car_info
     mimetype: text/csv
     reader: folder
@@ -101,29 +107,36 @@ fetch:
     mimetype: application/zip
     fetcher:
     reader: shp
+  -
+    id: never_current
+    location: cache/fetch/never_current.txt
+    mimetype: text/plain
+    fetcher: never_current
+    datasource: data/pretend_remote/never_current.txt
+    scripts: scripts/fetch/never_current.R
 process:
   -
-    id: CuyahogaShort
-    location: cache/process/CuyahogaShort.tsv
+    id: cuyahoga_short
+    location: cache/process/cuyahoga_short.tsv
     mimetype: text/tab-separated-values
     scripts: scripts/process/cuyahoga.R
     depends:
-      - Cuyahoga
+      - cuyahoga
     processor: cuyahoga
 visualize:
   -
-    id: relativeAbundanceFig
+    id: relative_abundance_fig
     title: Relative Abundance
     alttext: Relative abundance of mayflies, above vs below
-    location: figures/relativeAbundanceFig.svg
+    location: figures/relative_abundance_fig.svg
     depends:
-        cuyahoga: CuyahogaShort
-        mayfly: MayflyNymph
-        sizes: plot-info
-    visualizer: relativeAbundance
+        cuyahoga: cuyahoga_short
+        mayfly: mayfly_nymph
+        sizes: plot_info
+    visualizer: relative_abundance
     mimetype: image/svg+xml
     export: true
-    scripts: scripts/visualize/relativeAbundance.R
+    scripts: scripts/visualize/relative_abundance.R
 publish:
   -
     id: mainCSS
@@ -140,7 +153,7 @@ publish:
     name: index
     template: fullPage
     depends:
-      relativeAbundance: "relativeAbundance"
+      relative_abundance: "relative_abundance"
       mainCSS: "mainCSS"
       normalizeCSS: "normalizeCSS"
       footer-style: "footer-style"
@@ -151,37 +164,29 @@ publish:
     publisher: page
     context:
       title: testViz
-      sections: [ "relativeAbundance" ]
+      sections: [ "relative_abundance" ]
       resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
       footer: [ "footer" ]
       thumbnails: 
-        twitter: thumb-twitter
-        facebook: thumb-twitter
+        twitter: thumb-facebook
+        facebook: thumb-facebook
         landing: thumb-landing
         main: thumb-facebook
   -
-    id: relativeAbundance
+    id: relative_abundance
     template: simplefigure
     context:
-      id: relativeAbundance
-      figure: relativeAbundanceFig
+      id: relative_abundance
+      figure: relative_abundance_fig
       caption: "Relative Abundance"
     depends:
-      relativeAbundanceFig: "relativeAbundanceFig"
+      relative_abundance_fig: "relative_abundance_fig"
     publisher: section
   -
     id: facebook-thumb
     location: images/facebook-thumb.png
     publisher: thumbnail
     thumbType: facebook
-    title: "Other thumbnail"
-    alttext: "Alt text thumbnail"
-    mimetype: image/png
-  -
-    id: twitter-thumb
-    location: images/facebook-thumb.png
-    publisher: thumbnail
-    thumbType: twitter
     title: "Other thumbnail"
     alttext: "Alt text thumbnail"
     mimetype: image/png
@@ -220,5 +225,3 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
-
-

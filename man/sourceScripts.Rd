@@ -4,14 +4,17 @@
 \alias{sourceScripts}
 \title{Source R scripts}
 \usage{
-sourceScripts(scripts, verbose = TRUE)
+sourceScripts(scripts, verbose = TRUE, recursive = TRUE)
 }
 \arguments{
 \item{scripts}{character or character vectory. If an element of scripts is a
 directory, sources the contents of that directory. Otherwise sources the
-script.}
+script. If missing, all scripts in the 'scripts' directory will be sourced}
 
 \item{verbose}{logical. Declare which scripts are being sourced via messages?}
+
+\item{recursive}{logical. If sourcing a directory, should scripts in
+subdirectories be included?}
 }
 \description{
 Sources the script or scripts indicated.

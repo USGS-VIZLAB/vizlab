@@ -85,18 +85,10 @@ fetchTimestamp.file <- function(viz) {
   old.timestamp <- readTimestamp(viz)
   new.timestamp <- if(file.exists(viz$location)) file.mtime(viz$location) else NA
   
-  if(!is.na(new.timestamp)) {
-    if(is.na(old.timestamp) || (new.timestamp > old.timestamp)) {
-    # write the new timestamp to match the timestamp of the data file. also
-    # write the file metadata for the timestamp file so its timestamp matches
-    # the data file's timestamp
+  # pretty much always write something, unless both old and new timestamps exist
+  # and they're equal
+  if(is.na(old.timestamp) || is.na(new.timestamp) || (new.timestamp > old.timestamp)) {
     writeTimestamp(new.timestamp, viz, timestamp.mtime=new.timestamp)
-    }
-  } else if(!is.na(old.timestamp)) {
-    # if the data file is now missing, make sure the timestamp file is missing,
-    # too. this is not terribly important, because a missing data file is always
-    # refetched, but this keeps the timestamp file honest
-    file.remove(locateTimestampFile(viz$id))
   }
   
   # return nothing
@@ -147,9 +139,7 @@ fetchTimestamp.url <- function(viz) {
 #' @export
 fetchTimestamp.fetcher <- function(viz){
   # require the availability of a fetcher-specific method by giving an error if
-  # we arrive here. this error is complemented by a near-identical error in
-  # needsTimestamp (beneath createMakefiles); we're minimizing time to
-  # failure+understanding by giving this error in both places
+  # we arrive here
   stop(paste0("fetchTimestamp.", viz$fetcher, " must be implemented for ",
               viz$id, ", probably in an R file in 'scripts:'"))
 }

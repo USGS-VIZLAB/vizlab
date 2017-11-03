@@ -12,7 +12,7 @@
 
 <meta name="author" content="David Watkins" />
 
-<meta name="date" content="2017-09-15" />
+<meta name="date" content="2017-10-31" />
 
 <title>Vizlab Example</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Vizlab Example</h1>
 <h4 class="author"><em>David Watkins</em></h4>
-<h4 class="date"><em>2017-09-15</em></h4>
+<h4 class="date"><em>2017-10-31</em></h4>
 
 
 
@@ -92,18 +92,18 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <div id="viz-design-the-viz.yaml" class="section level3">
 <h3>Viz design: the viz.yaml</h3>
 <p>The <code>viz.yaml</code> file manages all the different components of the viz, and is used to generate the <code>make</code> files that build the final published product. <code>viz.yaml</code> contains sections for each of the fetch, process, visualize, and publish steps, as well as general information about the viz. For each individual step, information is read from the <code>viz.yaml</code> and passed to the appropriate internal or external function as a <code>viz</code> object. This is simply a list with elements for each field of that yaml section. For example, this yaml section:</p>
-<pre><code>id: cars-data
-    location: cache/cars.csv
+<pre><code>id: cars_data
+    location: cache/fetch/cars.csv
     fetcher: cars
     mimetype: text/csv
     scripts: scripts/fetch/cars.R</code></pre>
 <p>becomes this R list object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.viz</span>(<span class="st">'cars-data'</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.viz</span>(<span class="st">'cars_data'</span>)</code></pre></div>
 <pre><code>$id
-[1] &quot;cars-data&quot;
+[1] &quot;cars_data&quot;
 
 $location
-[1] &quot;cache/cars.csv&quot;
+[1] &quot;cache/fetch/cars.csv&quot;
 
 $fetcher
 [1] &quot;cars&quot;
@@ -122,7 +122,7 @@ $export
 
 attr(,&quot;class&quot;)
 [1] &quot;viz&quot;</code></pre>
-<p>The viz object will inherit additional classes as it passes through different functions. For further information on how vizlab interacts with scripts, see the ——— vignette.</p>
+<p>The viz object will inherit additional classes as it passes through different functions. Most importantly, defaults will be assigned for some items if you leave them unspecified (e.g., <code>export</code> above) - see <a href="https://github.com/USGS-VIZLAB/vizlab/blob/master/inst/viz.defaults.yaml">viz.defaults.yaml</a> for all defined defaults.</p>
 <p>Here we will examine the <code>viz.yaml</code> included in the example viz:</p>
 </div>
 <div id="info" class="section level3">
@@ -145,138 +145,117 @@ info:
 <h3>Fetch</h3>
 <pre><code>fetch:
   -
-    id: iris-data
+    id: iris_data
     location: data/iris.csv
     mimetype: text/csv
     scripts:
   -
-    id: cars-data
-    location: cache/cars.csv
-    fetcher: cars
+    id: car_data
+    location: data/car_info
     mimetype: text/csv
-    scripts: scripts/fetch/cars.R
-  -
-    id: Cuyahoga
-    location: cache/fetch/CuyahogaTDS.csv
-    fetcher: sciencebase
+    reader: folder
     scripts:
-    remoteItemId: 575d839ee4b04f417c2a03fe
-    remoteFilename: CuyahogaTDS.csv
+  -
+    id: cuyahoga
+    location: cache/fetch/cuyahoga.csv
+    fetchargs:
+      sourceloc: data/pretend_remote/cuyahoga.csv
+    fetcher: cuyahoga
+    scripts: scripts/fetch/cuyahoga.R
     mimetype: text/csv</code></pre>
 <p>Each individual piece in each section of the <code>viz.yaml</code> should have it’s own unique ID, so they can be referenced by the suceeding sections. Following sections will look in the <code>location</code> field to find the corresponding file. <code>mimetype</code> specifies file type, and is a required field unless a custom <code>reader</code> is specified.</p>
-<p>Three possibilites for fetchers are utilized here. <code>iris-data</code> is a local file already located in the <code>data</code> folder, and so does not need to be fetched. <code>cars-data</code> is a custom fetcher, located in <code>scripts/fetch/cars.R</code>. It will retrieve the cars data (by reading in the default cars dataset) and save it to <code>cache/cars.csv</code>. <code>Cuyahoga</code> uses the built-in USGS ScienceBase fetcher, and will save the retrieved file to <code>cache/fetch/CuyahogaTDS.csv</code>.</p>
+<p>Two possibilites for fetchers are used here. <code>iris_data</code> and <code>car_data</code> are local files/folders already located in the <code>data</code> folder, and so do not need to be fetched. They use the default fetcher, <code>file</code>. Additional built-in fetchers, for ScienceBase and URLs, are defined in <code>vizlab</code> and can also be used. <code>cuyahoga</code> is a custom fetcher, located in <code>scripts/fetch/cars.R</code>. It will retrieve the cars data (by reading in the default cars dataset) and save it to <code>cache/fetch/cars.csv</code>.</p>
+<p>The <code>reader</code> specified will be used to read in the data for other steps. See <code>methods('readData')</code> for a list of the readers included in the vizlab package. If not specified, the appropriate reader is inferred from <code>mimetype</code>. Alternatively, a specific or custom reader can be specified. For example, the <code>car_data</code> step indicates a specific <code>folder</code> reader. If the reader is a custom reader written for this vizzy, the code should be stored in the <code>scripts/process</code> directory.</p>
 </div>
 <div id="process" class="section level3">
 <h3>Process</h3>
 <pre><code>process:
   -
-    id: calc-cars
-    location: cache/car-loess.rds
-    processor: cars
-    scripts: scripts/process/cars.R
-    reader: rds
-    depends: [ &quot;cars-data&quot; ]
-  -
-    id: CuyahogaShort
-    location: cache/process/CuyahogaShort.tsv
+    id: cuyahoga_short
+    location: cache/process/cuyahoga_short.tsv
     mimetype: text/tab-separated-values
-    depends: Cuyahoga
-    processor: cuyahoga
-    scripts: scripts/process/cuyahoga.R</code></pre>
-<p><code>depends</code> references the IDs in the fetch section. All processors must be supplied by the user. Just as the custom fetchers are stored in <code>scripts/fetch</code>, processors are stored in <code>scripts/process</code>. The output of each processor is stored in the directory specified by the <code>location</code> field. The <code>reader</code> specified will be used to read in the data for the visualize step. Note the <code>calc-cars</code> step indicates a specific .Rds reader, rather than a mimetype. The readers included in the vizlab package are located in the <code>readData</code> S3 method. Alternatively, a custom reader could be specified, that should be located in the <code>scripts/process</code> directory.</p>
-<p>A processing step is not mandatory — the <code>iris-data</code> plot uses only the raw data, so it has no section here.</p>
+    scripts: scripts/process/cuyahoga.R
+    depends:
+      - cuyahoga
+    processor: cuyahoga</code></pre>
+<p><code>depends</code> references the IDs in the fetch section. All processors must be supplied by the user. Just as the custom fetchers are stored in <code>scripts/fetch</code>, processors are stored in <code>scripts/process</code>. The output of each processor is stored in the directory specified by the <code>location</code> field.<br />
+A processing step is not mandatory — the <code>iris_data</code> plot uses only the raw data, so it has no section here.</p>
 </div>
 <div id="visualize" class="section level3">
 <h3>Visualize</h3>
 <pre><code>visualize:
   -
-    id: plot-cars
-    location: figures/cars.png
-    scripts: scripts/visualize/visualize.R
-    visualizer: cars
-    depends: [ &quot;calc-cars&quot;, &quot;cars-data&quot; ]
-    mimetype: image/png
-    title: &quot;Speed vs. Braking Distance&quot;
-    alttext: &quot;plot of ratio of speed to braking distance&quot;
-  -
-    id: plot-iris
-    location: figures/iris.png
-    scripts: scripts/visualize/visualize.R
-    visualizer: iris
-    depends: [ &quot;iris-data&quot; ]
-    mimetype: image/png
-    title: &quot;Sepal length vs. pedal length&quot;
-    alttext: &quot;plot of iris sepal length to pedal length&quot;
-  -
-    id: cuyahogaFig
-    location: figures/cuyahogaFig.svg
-    depends: &quot;CuyahogaShort&quot;
-    scripts: scripts/visualize/visualize.R
-    visualizer: qTDS
+    id: relative_abundance_fig
+    title: Relative Abundance
+    alttext: Relative abundance of mayflies, above vs below
+    location: figures/relative_abundance_fig.svg
+    depends:
+        cuyahoga: cuyahoga_short
+        mayfly: mayfly_nymph
+        sizes: plot_info
+    visualizer: relative_abundance
     mimetype: image/svg+xml
-    title: &quot;Cuyahoga figure&quot;
-    alttext: &quot;figure displaying total dissovled solids vs. discharge of Cuyahoga river&quot;</code></pre>
-<p>In the visualize step, <code>location</code> specifies the location of the figure being output by each step. Visualizers are R functions stored in <code>scripts/visualize/visualize.R</code>. <code>title</code> and <code>alttext</code> become part of the finished viz, as a figure title and alt text that appears when the figure is hovered over. Note that there can be multiple dependencies — <code>plot-cars</code> depends on both the processing step <code>calc-cars</code>, which produces a regression, and the raw <code>cars-data</code> from the fetch step, since they are both directly used in the visualizer. Also note that <code>cuyahogaFig</code> still has an indirect dependency on its fetch step, through the dependency of the process step <code>CuyahogaShort</code>, so it will be run and the figure updated if the cached <code>cache/fetch/CuyahogaTDS.csv</code> were to change.</p>
+    export: true
+    scripts: scripts/visualize/relative_abundance.R</code></pre>
+<p>In the visualize step, <code>location</code> specifies the location of the figure being output by each step. Visualizers are R functions stored in <code>scripts/visualize/</code>. <code>title</code> and <code>alttext</code> become part of the finished viz, as a figure title and alt text that appears when the figure is hovered over. Note that there can be multiple dependencies – <code>relative_abundance_fig</code> depends on the processing step <code>cuyahoga_short</code>, the raw data <code>mayfly_nymph</code> from the fetch step, and plot parameters <code>plot_info</code>. If any of these dependencies change, visualize_relative_abundance will be rerun and the figure updated.</p>
 </div>
 <div id="publish" class="section level3">
 <h3>Publish</h3>
-<pre><code>publish:
+<pre><code>  -
+    id: mainCSS
+    location: layout/css/main.css
+    mimetype: text/css
+    publisher: resource
+  -
+    id: normalizeCSS
+    location: layout/css/normalize.css
+    mimetype: text/css
+    publisher: resource
   -
     id: index
     name: index
-    publisher: page
     template: fullPage
-    depends: [ &quot;cars-section&quot;, &quot;figure-style&quot;, &quot;text-section&quot;,&quot;iris-section&quot;, &quot;Cuyahoga-section&quot;]
+    depends:
+      relative_abundance: &quot;relative_abundance&quot;
+      mainCSS: &quot;mainCSS&quot;
+      normalizeCSS: &quot;normalizeCSS&quot;
+      footer-style: &quot;footer-style&quot;
+      footer: &quot;footer&quot;
+      font: &quot;pagefonts&quot;
+    publisher: page
     context:
-      title: Testing
-      sections: [ &quot;cars-section&quot;, &quot;text-section&quot;,&quot;iris-section&quot;, &quot;Cuyahoga-section&quot;]
-      resources: [ &quot;figure-style&quot; ]
+      title: testViz
+      sections: [ &quot;relative_abundance&quot; ]
+      resources: [ &quot;font&quot;, &quot;mainCSS&quot;, &quot;normalizeCSS&quot;, &quot;footer-style&quot;]
+      footer: [ &quot;footer&quot; ]
   -
-    id: cars-section
-    publisher: section
+    id: relative_abundance
     template: simplefigure
-    depends: [ &quot;plot-cars&quot; ]
     context:
-      id: carsFig
-      figure: &quot;plot-cars&quot;
-      caption: Relationship between speed and stopping distance on several cars
-  -
-    id: text-section
-    template: printall
+      id: relative_abundance
+      figure: relative_abundance_fig
+      caption: &quot;Relative Abundance&quot;
+    depends:
+      relative_abundance_fig: &quot;relative_abundance_fig&quot;
     publisher: section
-    context: 
-      text: 
-        This is a text section in the viz.yaml.  Since it is only
-        text, it doesn't need be referenced anywhere outside of the publish
-        section.  Text wrapping in the viz should be handled automatically.
-        Follow YAML conventions to change formatting.  
   -
-    id: iris-section
-    publisher: section
-    template: simplefigure
-    depends: [ &quot;plot-iris&quot; ]
-    context:
-      id: irisFig
-      figure: &quot;plot-iris&quot;
-      caption: Relationship between iris sepal length to pedal length
+    id: facebook-thumb
+    location: images/facebook-thumb.png
+    publisher: thumbnail
+    for: facebook
+    mimetype: image/png
+    export: TRUE
   -
-    id: Cuyahoga-section
-    template: simplefigure
-    depends: cuyahogaFig
-    publisher: section
-    context:
-      id: cuyahoga-fig
-      figure: cuyahogaFig
-      caption: Total dissolved solids vs discharge
-  -
-    id: figure-style
-    location: layout/css/main.css
-    publisher: resource
-    mimetype: text/css
+    id: landing-thumb
+    location: images/landing-thumb.png
+    publisher: thumbnail
+    for: landing
+    mimetype: image/png
+    export: TRUE
   -
     id: footer
     publisher: footer
-    template: footer
+    template: footer-template
     depends: footer-style
     blogsInFooter: TRUE
     vizzies:
@@ -286,11 +265,20 @@ info:
       - name: Climate Change and Freshwater Fish
         org: USGS-VIZLAB
         repo: climate-fish-habitat
-    blogs: 
+    blogs:
       - name: Using the dataRetrieval Stats Service
         url: https://owi.usgs.gov/blog/stats-service-map/
         thumbLoc: https://owi.usgs.gov/blog/images/owi-mobile.png
-  </code></pre>
+  -
+    id: footer-style
+    location: layout/css/footer.css
+    publisher: resource
+    mimetype: text/css
+  -
+    id: pagefonts
+    publisher: googlefont
+    family: &quot;Source Sans Pro&quot;
+    weight: [300, 400, 700]</code></pre>
 <p>The publish step creates the finished viz product. The first section applies to the viz as a whole. It is dependent on all the other publish sections for each figure and the text. <code>name</code> will be the name of the finished viz HTML file. Each section with a figure depends on the corresponding visualize section. Publishers and templates are used in each section of process, and correspond to the sections’s content. Default publisher R functions are stored in <code>publish.R</code> in the <code>vizlab</code> package, and default templates inside the vizlab package in <code>inst/templates</code>. Templates are <a href="https://mustache.github.io/">mustache files</a> that define how the text or image content is displayed in the final HTML. For the example viz, the <code>section</code> publisher is used for every individual section, and <code>fullPage</code> publishes the full viz. Each section, including <code>index</code>, has a context section that defines the actual material to be used. For figures it includes the caption. Note that text-only sections can be included here as well, using the <code>printall</code> template (<code>text-section</code> above). The <code>figure-style</code> section references CSS included with the example viz package. The <code>footer</code> section builds a footer for the web page which may contain links to other visualizations or footers. The <code>footer</code> publisher gets viz information from theirGithub repos, while blog information is specified directly.</p>
 </div>
 <div id="setup" class="section level3">
@@ -299,117 +287,45 @@ info:
 <ol style="list-style-type: decimal">
 <li><p><em>Create the skeleton</em>: First the visualization directory structure should be created, using the <code>vizSkeleton</code> function. This is unnecessary for the example viz, since the directories are already set up in the repo. You can run this function in a dummy directory to see what happens.</p></li>
 <li><p><em>Fill in the viz.yaml</em>: As described above, <code>viz.yaml</code> needs to be filled out in order to guide the creation of the various <code>make</code> files. An empty skeleton <code>viz.yaml</code> is created by the <code>vizSkeleton</code> fuction. The complete <code>viz.yaml</code> in the example viz repository can also be a useful reference.</p></li>
-<li><p><em>Create the profile</em>: Next, run <code>createProfile()</code>. This will create a <code>profile.yaml</code> in your home directory which stores the location of your R installation and some other information. See <code>?createProfile</code> for options and special instructions by operating system. The profile will be filled in automatically, unless your operating system is unrecognized. Once run, this step only needs to be repeated when R is updated.</p></li>
-<li><p><em>Create the Makefiles</em>: Create the <code>make</code> files using the <code>createMakeFiles</code> function. This will create a <code>vizlab</code> directory that will contain the makefiles, timestamps for fetched files, and output logs that can used for debugging.</p></li>
-<li><p><em>Authentication (if needed)</em>: This step is only required if there are fetchers utilized that retrieve restricted-access data, for instance on USGS ScienceBase. Generally, credentials will need to be stored in the <code>~/.vizlab</code> folder so they can be accessed by scripts within the R sessions that are started by the make files. The <code>sbAuthenticate</code> function tests and stores credentials for ScienceBase access. The example viz accesses ScienceBase, so this function can be tested here, but it is not required since the data is public. For security, it is strongly reccommended to use a ScienceBase account that does not utilize personal credentials.</p></li>
+<li><p><em>Authentication (if needed)</em>: The <code>dssecrets</code> package or a personal <code>secret</code> vault can be used for authentication. Check with a DS team member for details. For security, it is strongly reccommended to use a ScienceBase account that does not utilize personal credentials.</p></li>
 </ol>
 </div>
 </div>
-<div id="make" class="section level2">
-<h2>make</h2>
-<p>Finally, execute all the created make files by running <code>make</code> from the terminal in the main example viz directory:</p>
-<pre><code>&lt;terminal prompt&gt;:~/Documents/R/example_viz$ make
-$ make
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='fetch',outfile='vizlab/make/fetch.make')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/make/fetch.Rout
-make -f vizlab/make/fetch.make
-make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetchTimestamp funargs=list(viz='iris-data')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/iris-data_timestamp.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetch funargs=list(viz='iris-data')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/iris-data.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetchTimestamp funargs=list(viz='cars-data') scripts=c('scripts/fetch/cars.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data_timestamp.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetch funargs=list(viz='cars-data') scripts=c('scripts/fetch/cars.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/cars-data.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetchTimestamp funargs=list(viz='Cuyahoga')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga_timestamp.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=fetch funargs=list(viz='Cuyahoga')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/fetch/Cuyahoga.Rout
-
-fetch.make looks OK!
-
-make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='process',outfile='vizlab/make/process.make')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/make/process.Rout
-make -f vizlab/make/process.make
-make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=process funargs=list(viz='calc-cars') scripts=c('scripts/process/cars.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/process/calc-cars.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=process funargs=list(viz='CuyahogaShort') scripts=c('scripts/process/cuyahoga.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/process/CuyahogaShort.Rout
-
-process.make looks OK!
-
-make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='visualize',outfile='vizlab/make/visualize.make')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/make/visualize.Rout
-make -f vizlab/make/visualize.make
-make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=visualize funargs=list(viz='plot-cars') scripts=c('scripts/visualize/visualize.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/visualize/plot-cars.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=visualize funargs=list(viz='plot-iris') scripts=c('scripts/visualize/visualize.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/visualize/plot-iris.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=visualize funargs=list(viz='cuyahogaFig') scripts=c('scripts/visualize/visualize.R')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/visualize/cuyahogaFig.Rout
-
-visualize.make looks OK!
-
-make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=createBlockMakefile funargs=list(block='publish',outfile='vizlab/make/publish.make')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/make/publish.Rout
-make -f vizlab/make/publish.make
-make[1]: Entering directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='index')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/publish/index.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='cars-section')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/publish/cars-section.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='text-section')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/publish/text-section.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='iris-section')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/publish/iris-section.Rout
-export R_LIBS_USER=&quot;C:/Users/aappling/Documents/R/win-library/3.3&quot;;\
-&quot;C:/Program Files/R/R-3.3.2/bin/x64/R.exe&quot; CMD BATCH --no-timing --quiet --no-save --no-restore &quot;--args fun=publish funargs=list(viz='Cuyahoga-section')&quot; \
-vizlab/make/callFunction.R vizlab/make/log/publish/Cuyahoga-section.Rout
-
-publish.make looks OK!
-
-make[1]: Leaving directory `/cygdrive/c/Users/aappling/Documents/GitHub/DS Vizzies/vizlab-example'</code></pre>
-<p>This will call the main makefile, which in turn calls the makefile for each section. The finished HTML will be created in the <code>target</code> directory, along with its corresponding CSS and images for each figure.</p>
-<div id="debugging" class="section level3">
-<h3>Debugging</h3>
-<p>Because all R commands are executed by the makefiles, the output does not print to the console, but can be viewed in the various <code>.Rout</code> text files in <code>vizlab/make/log/</code> for each section. The names are printed to the console when the makefile is executed, as seen above.</p>
-</div>
+<div id="build" class="section level2">
+<h2>Build</h2>
+<p>Finally, execute all the created make files by running <code>vizmake()</code> from the console:</p>
+<pre><code>vizmake()
+&gt; vizmake()
+[  LOAD ] 
+(       ) vizlab/remake/timestamps/cuyahoga.txt
+(       ) vizlab/remake/timestamps/never_current.txt
+Starting build at 2017-10-28 10:23:39
+[  READ ]                                                |  # loading sources
+&lt;  MAKE &gt; Viz
+[ BUILD ] plot_info                                      |  plot_info &lt;- parameter(&quot;plot_info&quot;)
+[  READ ]                                                |  # loading packages
+[ BUILD ] data/site_text.yaml                            |  fetch(&quot;site_text_data&quot;)
+[ BUILD ] vizlab/remake/timestamps/cuyahoga.txt          |  fetchTimestamp(&quot;cuyahoga&quot;)
+[ BUILD ] data/car_info                                  |  fetch(&quot;car_data&quot;)
+[ BUILD ] vizlab/remake/timestamps/never_current.txt     |  fetchTimestamp(&quot;never_current&quot;)
+[ BUILD ] layout/css/main.css                            |  publish(&quot;mainCSS&quot;)
+[ BUILD ] layout/css/normalize.css                       |  publish(&quot;normalizeCSS&quot;)
+[ BUILD ] images/facebook-thumb.png                      |  publish(&quot;facebook-thumb&quot;)
+# etc</code></pre>
+<p>The finished HTML will be created in the <code>target</code> directory, along with its corresponding CSS and images for each figure.</p>
 <div id="controlling-the-fetch-section" class="section level3">
 <h3>Controlling the fetch section</h3>
-<p>Every fetch item has a <code>fetcher</code>, either implemented by <code>vizlab</code> or within your code. There must be methods for both <code>fetch</code> and <code>fetchTimestamp</code> for every fetcher. By default, timestamps are checked (using <code>fetchTimestamp</code>) every time you build a <code>fetch</code> item with <code>make</code>. You can slow down the frequency of timestamp checks or eliminate checks altogether by placing a line in a file called preferences.yaml in your main project directory. For example:</p>
+<p>Every fetch item has a <code>fetcher</code>, either implemented by <code>vizlab</code> or within your code. There must be methods for both <code>fetch</code> and <code>fetchTimestamp</code> for every fetcher. Consider setting your custom <code>fetchTimestamp.xxx</code> method to <code>alwaysCurrent</code> or <code>neverCurrent</code> if appropriate - these function names describe the currency of the local information relative to the remote information only, because dependencies on local information are taken care of elsewhere.</p>
+<p>Timestamps are potentially checked (using <code>fetchTimestamp</code>) every time you build a <code>fetch</code> item with <code>vizmake</code>. You can slow down the frequency of timestamp checks or eliminate checks altogether by placing a line in a file called preferences.yaml in your main project directory. For example:</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">timetolive:</span>
-  <span class="fu">iris-data:</span><span class="at"> Inf days</span>
-  <span class="fu">Cuyahoga:</span><span class="at"> 6 hours</span></code></pre></div>
-<p>means that the <code>iris-data</code> item will never have its timestamp checked, while <code>Cuyahoga</code> will have its timestamp checked on any build occuring more than 6 hours after the timestamp noted in <code>Cuyahoga</code>’s timestamp file. The default (for unmentioned fetch items) is “0 days”. If the timestamp is checked and has changed, the item with be re-fetched. Edits to the viz.yaml chunk for the fetch item will also trigger re-fetches, regardless of the timestamp’s value or whether it has exceeded its timetolive.</p>
+  <span class="fu">iris_data:</span><span class="at"> Inf days</span>
+  <span class="fu">cuyahoga:</span><span class="at"> 6 hours</span></code></pre></div>
+<p>means that the <code>iris_data</code> item will never have its timestamp checked, while <code>cuyahoga</code> will have its timestamp checked on any build occuring more than 6 hours after the last time the timestamp was checked. The default (for unmentioned fetch items) is “0 days”. If the timestamp is checked and has changed, the item with be re-fetched.</p>
+<p>Edits to the viz.yaml chunk for the fetch item will also trigger re-fetches, regardless of the timestamp’s value or whether it has exceeded its timetolive. Similarly, a fetch item that hasn’t yet been built will always be built.</p>
 </div>
 <div id="dependencies" class="section level3">
 <h3>Dependencies</h3>
-<p>R package dependencies are stored in the <code>required-packages</code> section of the <code>viz.yaml</code>, with a repository (CRAN or GRAN generally) and version number.</p>
+<p>R package dependencies are stored in the <code>required-packages</code> section of the <code>viz.yaml</code>, with a repository (CRAN or GRAN generally) and version number. Don’t include <code>remake</code> on the <code>required-packages</code> list.</p>
 </div>
 </div>
 

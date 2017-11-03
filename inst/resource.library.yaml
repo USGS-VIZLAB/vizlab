@@ -123,6 +123,8 @@
     vizlab-js: lib-vizlab-javascript
     svg-injector-js: lib-svg-injector-js
     favicon: lib-vizlab-favicon
+    brandcomment: brandcomment
+    semantics: semantics
   context:
     info:
     resources: [ favicon, jquery-js, vizlab-js, svg-injector-js ]

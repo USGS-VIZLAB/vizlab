@@ -135,8 +135,10 @@ writeTimestamp <- function(new.timestamp, viz, timestamp.mtime=NA) {
 #' @param timestamp POSIXct timestamp to format into a character string
 #' @export
 formatTimestamp <- function(timestamp) {
+  if(is.na(timestamp)) return('NA')
+  if(!('POSIXct' %in% class(timestamp))) stop('timestamp must be POSIXct')
   attr(timestamp, 'tzone') <- 'UTC'
-  format(timestamp, "%Y-%m-%d %H:%M:%S %Z") # presents UTC even though that info will technically be ignored on readTimestamp
+  format(timestamp, "%Y-%m-%d %H:%M:%OS5 %Z") # presents UTC even though that info will technically be ignored on readTimestamp
 }
 
 #' `locateTimestampFile` returns a relative file path to the timestamp file for
@@ -146,7 +148,7 @@ formatTimestamp <- function(timestamp) {
 #' @md
 #' @export
 locateTimestampFile <- function(id) {
-  timestampFile <- file.path("./vizlab/make/timestamps", id)
+  timestampFile <- file.path("vizlab/remake/timestamps", sprintf('%s.txt', id))
   return(timestampFile)
 }
 
@@ -166,7 +168,7 @@ readTimestamp <- function(viz) {
   old.timestamp <- if(file.exists(timestamp.file)) {
     tryCatch({
       old.timestamp.chr <- readLines(timestamp.file)
-      as.POSIXct(old.timestamp.chr, format="%Y-%m-%d %H:%M:%S", tz="UTC") # assumes UTC; overrides anything written in the file
+      as.POSIXct(old.timestamp.chr, format="%Y-%m-%d %H:%M:%OS", tz="UTC") # assumes UTC; overrides anything written in the file
     }, error=function(e) stop('could not parse the timestamp at ', timestamp.file))
   } else {
     NA
