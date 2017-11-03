@@ -126,6 +126,26 @@ writeTimestamp <- function(new.timestamp, viz, timestamp.mtime=NA) {
   }
 }
 
+#' `updateTimestamp` can be called from within a `fetch` method (at the end of
+#' that method) to update the item's timestamp. This function should rarely be
+#' necessary - really only when the timestamp recorded in the `fetchTimestamp()`
+#' call just before this `fetch()` call is made to go out of date by this
+#' `fetch()` call, e.g., if the timestamp value acquired by `fetchTimestamp()`
+#' is based on the modified time of the fetched file. If that's the case, then
+#' calling this function should let remake avoid trying to make the fetched item
+#' again right away. This function uses the recipe defined in remake.yaml to
+#' update the timestamp.
+#'
+#' @rdname fetchTimestampHelpers
+#' @md
+#' @param viz a viz item
+#' @export
+updateTimestamp <- function(viz, verbose=FALSE) {
+  timestampTarget <- locateTimestampFile(viz$id)
+  remake::delete(target_names = timestampTarget, remake_file='remake.yaml', verbose=verbose)
+  remake::make(target_names = timestampTarget, remake_file='remake.yaml', verbose=verbose)
+}
+
 #' `formatTimestamp` formats a POSIXct timestamp according to vizlab timestamp
 #' conventions - converts a timestamp to UTC and creates a character string with
 #' format '%Y-%m-%d %H:%M:%S UTC'.
