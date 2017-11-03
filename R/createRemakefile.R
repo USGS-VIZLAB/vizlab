@@ -2,6 +2,11 @@ createRemakefile <- function(viz.items=getContentInfos()) {
   
   #### munge the viz.yaml info ####
   
+  # we'll be calling source() within this function (see createTimestampRecipe),
+  # and viz scripts might depend on vizlab without saying so, so library(vizlab)
+  # is needed if vizlab::vizmake() was called without loading vizlab first
+  library(vizlab)
+  
   # retrieve the content info list from the viz.yaml and fortify with expanded
   # script list, prepped source file recipe, main target
   viz.items <- lapply(viz.items, function(viz.item) {
@@ -207,8 +212,17 @@ createTimestampRecipe <- function(viz.item) {
   # determine whether a timestamp check recipe is needed
   if(viz.item$block == 'fetch') {
     ts.fetcher <- tryCatch({
+      # search the future environment for the fetchTimestamp method. The source
+      # calls won't be needed if the viz functions are already loaded into the R
+      # session, but they will be when calling vizmake() from a fresh session
+      for(i in seq_along(viz.item$script_files)) {
+        # source the scripts that should define the fetchTimestamp method
+        source(viz.item$script_files[i], local=TRUE, verbose=FALSE)
+      }
       get(paste0('fetchTimestamp.',viz.item$fetcher))
-    }, error=function(e) NULL)
+    }, error=function(e) {
+      stop(paste0('could not find fetchTimestamp.', viz.item$fetcher,' method'))
+    })
     is.always.current <- isTRUE(all.equal(ts.fetcher, alwaysCurrent))
     needs.timestamp <- !is.always.current
   } else {

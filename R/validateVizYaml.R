@@ -9,7 +9,7 @@ validateVizYaml <- function() {
     id <- viz.items[[i]]$id
     if(is.null(id)) {
       stop(paste0("missing or null viz item id in ", i, "th item"))
-    } else {
+    } else if(viz.items[[i]]$block != 'resource'){
       parsed <- tryCatch(
         parse(text=id),
         error=function(e) {
