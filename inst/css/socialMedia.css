@@ -1,17 +1,17 @@
-#socialHolder,
-#verticalSocialHolder{
+.socialHolder,
+.verticalSocialHolder{
   text-align: center;
   height: 30px;
   margin: 10px 0;
 }
 
-#socialHolder a,
-#verticalSocialHolder a{
+.socialHolder a,
+.verticalSocialHolder a{
   display:inline-block;
   height:30px;
 }
 
-.socialMediaOption {
+.socialMediaOption{
     width: 30px;
     height: 30px;
     margin: 0 2px 0 2px;
@@ -29,28 +29,16 @@
   filter: alpha(opacity=100); /* For IE8 and earlier */
 }
 
-@media screen and (min-width:600px){
-  #verticalSocialHolder{
-    width:30px;
-    height:100px;
-    position:absolute;
-    right:10px;
-  }
-}
-
-.socialHolder{
-  width:100%;
-  height:30px;
-  text-align:center;
-  margin:15px 0px 30px 0px;
-}
-
 .socialMediaImage{
   width:25px;
   height:25px;
   position:absolute;
   margin:auto;
   top:0; bottom:0; right:0; left:0;
+}
+
+.socialMediaImage img{
+  width: 100%;
 }
 
 #github{
@@ -73,9 +61,13 @@
   padding:10px;
 }
 
-.responsiveGrid{
-  padding:15px 40px;
-  margin-top:10px;
+@media screen and (min-width:600px){
+  .verticalSocialHolder{
+    width:30px;
+    height:100px;
+    position:absolute;
+    right:10px;
+  }
 }
 
 @media screen and (min-width:768px){
