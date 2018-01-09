@@ -295,3 +295,9 @@
   version: 4.11.0
   mimetype: text/javascript
   publisher: resource
+-
+  id: lib-d3-scale-js
+  location: js/third-party/d3-scale-chromatic-1.1.1.min.js
+  version: 1.1.1
+  mimetype: text/javascript
+  publisher: resource
