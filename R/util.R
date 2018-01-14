@@ -34,11 +34,15 @@ buildContext <- function(context, dependencies) {
   if (is.null(data)) {
     data <- list()
   }
-  else if (is.character(data)) {
-    data <- readData(data)
-  }
+  # It may be Alison's lack of imagination, but it sure looks like we should be
+  # able to guarantee before this call that context is always a list or NULL. If we have
+  # to bring back the next few lines, so be it, but I want a use case.
+  # else if (is.character(data)) {
+  #   data <- readData(data)
+  # }
 
-  # replace dependencies with contents
+  # replace dependencies (context names) with contents (usually html tags for
+  # script, link, etc.)
   data <- rapply(data, function(x) {
     dep.ids <- x %in% names(dependencies)
     if (any(dep.ids)) {
