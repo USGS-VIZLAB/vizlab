@@ -54,17 +54,27 @@ buildContext <- function(context, dependencies) {
   return(data)
 }
 
-#' Private function to expand dependencies by appropriately publishing
-#' or reading
+#' Private function to publish a dependency. Returns either the output of
+#' publish or the result of readData on the output of publish
+#'
+#' Cases when you'd want to return the output of publish(): dependency x is a
+#' javascript library or css file to be referenced in a <script> or <link> tag
+#' in <head>
+#'
+#' Cases when you'd want to return the output of readData(publish()): ???.
+#' Alison can't guess the use case and so is going to take out this option on
+#' 1/13/18. If we encounter a case when we need the reading option, we will
+#' change this function back and document the use case here. And if we last a
+#' long time without needing this option, we should delete expandDependencies()
+#' and just use publish() directly in the call from gatherDependencyList().
 #'
 #' @param x item to expand
 expandDependencies <- function(x) {
-  expanded.dep <- NULL
   expanded.dep <- publish(x)
-  if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
-    expanded.dep <- as.reader(expanded.dep)
-    expanded.dep <- readData(expanded.dep)
-  }
+  # if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+  #   expanded.dep <- as.reader(expanded.dep)
+  #   expanded.dep <- readData(expanded.dep)
+  # }
   return(expanded.dep)
 }
 
