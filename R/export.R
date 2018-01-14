@@ -103,14 +103,15 @@ export.css <- function(viz) {
   return(file)
 }
 
-#' Default export, defaults to not export
+#' Default export. Used to default to not export, but Alison couldn't think of
+#' when that would be useful so changed the default to TRUE.
 #'
 #' @rdname export
 #' @export
 export.resource <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, FALSE)) {
+  if (doExport(viz, TRUE)) {
     file <- paste0(exportLocation(), "data/", basename(location))
   }
   return(file)

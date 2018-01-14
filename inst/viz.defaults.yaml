@@ -1,16 +1,11 @@
 images:
-  -
-    export: false
 fetch:
   -
     fetcher: file
     scripts: scripts/fetch
-    export: false
 process:
   -
     scripts: scripts/process
-    export: false
 visualize:
   -
     scripts: scripts/visualize
-    export: true
