@@ -28,7 +28,7 @@ export.page <- function(viz) {
   }
 
   file <- NULL
-  if (doExport(viz, default = TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), name, ".html")
   }
 
@@ -45,7 +45,7 @@ export.section <- function(viz) {
   }
   
   file <- NULL
-  if (doExport(viz, default = TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "embed/", name, ".html")
   }
   
@@ -57,7 +57,7 @@ export.section <- function(viz) {
 export.img <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "images/", basename(location))
   }
   return(file)
@@ -68,7 +68,7 @@ export.img <- function(viz) {
 export.ico <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "images/", basename(location))
   }
   return(file)
@@ -86,7 +86,7 @@ export.svg <- function(viz) {
 export.js <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "js/", basename(location))
   }
   return(file)
@@ -97,20 +97,21 @@ export.js <- function(viz) {
 export.css <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "css/", basename(location))
   }
   return(file)
 }
 
-#' Default export, defaults to not export
+#' Default export. Used to default to not export, but Alison couldn't think of
+#' when that would be useful so changed the default to TRUE.
 #'
 #' @rdname export
 #' @export
 export.resource <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, FALSE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "data/", basename(location))
   }
   return(file)
@@ -122,7 +123,7 @@ export.resource <- function(viz) {
 export.thumbnail <- function(viz) {
   location <- viz[['location']]
   file <- NULL
-  if (doExport(viz, TRUE)) {
+  if (doExport(viz)) {
     file <- paste0(exportLocation(), "images/", basename(location))
   }
   return(file)
@@ -141,15 +142,16 @@ exportLocation <- function() {
 
 ### Private functions used to help in exporting
 
-#' Should export be performed
+#' Return logical declaring whether file export (copying to target) should be
+#' performed
 #'
-#'@param viz vizlab object
-#'@param default logical for default export if not specified
-#'@return logical should this object be exported
-doExport <- function(viz, default){
-  do.export <- default
+#' @param viz vizlab object
+#' @param default logical for default export if not specified
+#' @return logical should this object be exported
+doExport <- function(viz, default=TRUE){
   if ("export" %in% names(viz)) {
-    do.export <- viz[['export']]
+    viz[['export']]
+  } else {
+    default
   }
-  return(do.export)
 }

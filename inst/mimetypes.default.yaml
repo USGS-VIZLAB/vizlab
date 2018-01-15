@@ -25,5 +25,6 @@ js:
   - "text/javascript"
 json:
   - "application/json"
+  - "application/geo+json"
 css:
   - "text/css"

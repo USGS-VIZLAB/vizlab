@@ -34,6 +34,7 @@ publish.page <- function(viz) {
 
   template <- template(viz[['template']])
 
+  # gather a list of dependencies and IDs, publishing each dependency on the way
   dependencies <- gatherDependencyList(c(viz[['depends']], template[['depends']]))
 
   # also manually put resources into context
@@ -148,21 +149,22 @@ publish.section <- function(viz) {
   return(viz[['output']])
 }
 
-#' publish a resource
+#' Publish a resource: determine whether a file should be exported (i.e., copied
+#' to target/something/), copy the file, and update the viz item with the
+#' relative path
 #'
-#' @details This copies static resources to the target directory, and invisibly
-#' will return the preferred usage.
+#' @details This copies static resources to the target directory, and attaches
+#'   the relative path to the file if a file was copied in.
 #'
-#' The job of minification or css precompiling could also be added here, but
-#' currently this is not handled.
+#'   The job of minification or css precompiling could also be added here, but
+#'   currently this is not handled.
 #'
-#' Also, templating the resources that make sense would be useful
+#'   Also, templating the resources that make sense would be useful
 #'
 #' @rdname publish
 #' @export
 publish.resource <- function(viz) {
   # figure out resource type and hand to resource handler
-  # going to start out with simple images
   destFile <- export(viz)
   if (!is.null(destFile)) {
     dir.create(dirname(destFile), recursive = TRUE, showWarnings = FALSE)
@@ -173,6 +175,48 @@ publish.resource <- function(viz) {
     viz[['relpath']] <- NA
   }
   return(viz)
+}
+
+#' JSON data publishing (json, geojson)
+#'
+#' @rdname publish
+#' @export
+publish.json <- function(viz) {
+  required <- c("relpath", "mimetype")
+  viz <- NextMethod()
+  checkRequired(viz, required)
+  
+  # data should be read using AJAX or similar, with d3/jquery calls that
+  # reference the data file and may be nested in a function chain or buried
+  # within a multi-file queue. Because the code can vary widely by application,
+  # we may often choose to hand-code the relative path, but this function
+  # returns that string in case it can be templated in sometimes.
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    html <- viz[['relpath']]
+  }
+  return(html)
+}
+
+#' Tabular data publishing (csv, tsv, etc.)
+#'
+#' @rdname publish
+#' @export
+publish.tabular <- function(viz) {
+  required <- c("relpath", "mimetype")
+  viz <- NextMethod()
+  checkRequired(viz, required)
+  
+  # data should be read using AJAX or similar, with d3/jquery calls that
+  # reference the data file and may be nested in a function chain or buried
+  # within a multi-file queue. Because the code can vary widely by application,
+  # we may often choose to hand-code the relative path, but this function
+  # returns that string in case it can be templated in sometimes.
+  html <- NULL
+  if (!is.na(viz[['relpath']])) {
+    html <- viz[['relpath']]
+  }
+  return(html)
 }
 
 #' Image publishing
@@ -603,7 +647,7 @@ as.resource <- function(viz) {
     }
   }
   if(length(resource) == 0){
-    warning(mimetype, " will be treated as data: ", viz[['id']])
+    warning(mimetype, " is unknown and will be treated as data: ", viz[['id']])
     resource <- "data"
   }
   if ("publisher" %in% names(viz) && viz[['publisher']] == "thumbnail") {
