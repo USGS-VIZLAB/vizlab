@@ -33,13 +33,9 @@ buildContext <- function(context, dependencies) {
 
   if (is.null(data)) {
     data <- list()
+  } else if (is.character(data)) {
+    data <- readData(data)
   }
-  # It may be Alison's lack of imagination, but it sure looks like we should be
-  # able to guarantee before this call that context is always a list or NULL. If we have
-  # to bring back the next few lines, so be it, but I want a use case.
-  # else if (is.character(data)) {
-  #   data <- readData(data)
-  # }
 
   # replace dependencies (context names) with contents (usually html tags for
   # script, link, etc.)
@@ -61,20 +57,20 @@ buildContext <- function(context, dependencies) {
 #' javascript library or css file to be referenced in a <script> or <link> tag
 #' in <head>
 #'
-#' Cases when you'd want to return the output of readData(publish()): ???.
-#' Alison can't guess the use case and so is going to take out this option on
-#' 1/13/18. If we encounter a case when we need the reading option, we will
-#' change this function back and document the use case here. And if we last a
-#' long time without needing this option, we should delete expandDependencies()
-#' and just use publish() directly in the call from gatherDependencyList().
+#' Cases when you'd want to return the output of readData(publish()): when the
+#' context for rendering a mustache template includes named viz items whose
+#' contents we want to include. For example: a page section's template has a
+#' {{{text-before}}} field, and the context for that section includes
+#' `text-before: page_text.section3_text_before`, and section3_text_before is a
+#' named item in page_text.yaml.
 #'
 #' @param x item to expand
 expandDependencies <- function(x) {
   expanded.dep <- publish(x)
-  # if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
-  #   expanded.dep <- as.reader(expanded.dep)
-  #   expanded.dep <- readData(expanded.dep)
-  # }
+  if (is.list(expanded.dep) && !is.null(expanded.dep[['reader']])) {
+    expanded.dep <- as.reader(expanded.dep)
+    expanded.dep <- readData(expanded.dep)
+  }
   return(expanded.dep)
 }
 
