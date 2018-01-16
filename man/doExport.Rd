@@ -2,9 +2,10 @@
 % Please edit documentation in R/export.R
 \name{doExport}
 \alias{doExport}
-\title{Should export be performed}
+\title{Return logical declaring whether file export (copying to target) should be
+performed}
 \usage{
-doExport(viz, default)
+doExport(viz, default = TRUE)
 }
 \arguments{
 \item{viz}{vizlab object}
@@ -15,5 +16,6 @@ doExport(viz, default)
 logical should this object be exported
 }
 \description{
-Should export be performed
+Return logical declaring whether file export (copying to target) should be
+performed
 }

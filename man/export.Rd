@@ -45,7 +45,8 @@ its current form this is a single page, but may result in
 a list of pages named according to different formats
 (tags, media type, language, etc.)
 
-Default export, defaults to not export
+Default export. Used to default to not export, but Alison couldn't think of
+when that would be useful so changed the default to TRUE.
 
 export thumbnail class to images
 }
