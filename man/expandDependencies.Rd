@@ -2,8 +2,8 @@
 % Please edit documentation in R/util.R
 \name{expandDependencies}
 \alias{expandDependencies}
-\title{Private function to expand dependencies by appropriately publishing
-or reading}
+\title{Private function to publish a dependency. Returns either the output of
+publish or the result of readData on the output of publish}
 \usage{
 expandDependencies(x)
 }
@@ -11,6 +11,15 @@ expandDependencies(x)
 \item{x}{item to expand}
 }
 \description{
-Private function to expand dependencies by appropriately publishing
-or reading
+Cases when you'd want to return the output of publish(): dependency x is a
+javascript library or css file to be referenced in a <script> or <link> tag
+in <head>
+}
+\details{
+Cases when you'd want to return the output of readData(publish()): when the
+context for rendering a mustache template includes named viz items whose
+contents we want to include. For example: a page section's template has a
+{{{text-before}}} field, and the context for that section includes
+`text-before: page_text.section3_text_before`, and section3_text_before is a
+named item in page_text.yaml.
 }

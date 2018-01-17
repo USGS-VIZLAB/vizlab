@@ -7,6 +7,8 @@
 \alias{publish.page}
 \alias{publish.section}
 \alias{publish.resource}
+\alias{publish.json}
+\alias{publish.tabular}
 \alias{publish.img}
 \alias{publish.ico}
 \alias{publish.googlefont}
@@ -32,6 +34,10 @@ publish(viz)
 \method{publish}{section}(viz)
 
 \method{publish}{resource}(viz)
+
+\method{publish}{json}(viz)
+
+\method{publish}{tabular}(viz)
 
 \method{publish}{img}(viz)
 
@@ -72,7 +78,13 @@ publish a page
 
 publish a section
 
-publish a resource
+Publish a resource: determine whether a file should be exported (i.e., copied
+to target/something/), copy the file, and update the viz item with the
+relative path
+
+JSON data publishing (json, geojson)
+
+Tabular data publishing (csv, tsv, etc.)
 
 Image publishing
 
@@ -103,13 +115,13 @@ check dimensions and size, publish thumbnail
 Sections are published individually but are returned invisibly
 as text to be used directly.
 
-This copies static resources to the target directory, and invisibly
-will return the preferred usage.
+This copies static resources to the target directory, and attaches
+  the relative path to the file if a file was copied in.
 
-The job of minification or css precompiling could also be added here, but
-currently this is not handled.
+  The job of minification or css precompiling could also be added here, but
+  currently this is not handled.
 
-Also, templating the resources that make sense would be useful
+  Also, templating the resources that make sense would be useful
 
 also, svg will support landscape or portrait for mobile support
 }
