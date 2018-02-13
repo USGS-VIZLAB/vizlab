@@ -102,7 +102,7 @@ test_that("sciencebase works",{
     id='cuyahoga_sb',
     location='cache/fetch/cuyahoga_sb.csv',
     fetcher='sciencebase',
-    remoteItemId='575d839ee4b04f417c2a03fe',
+    remoteItemId='5a8309a7e4b00f54eb32959f',
     remoteFilename='CuyahogaTDS.csv',
     mimetype='text/csv')
   writeLines(yaml::as.yaml(viz.yaml), 'viz.yaml')  
