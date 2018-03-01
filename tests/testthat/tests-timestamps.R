@@ -115,7 +115,7 @@ test_that("sciencebase works",{
   expect_true(file.exists(tsfile))
   ts1 <- readTimestamp('cuyahoga_sb')
   # check against the known timestamp for the cuyahoga_sb file
-  expect_equal(ts1, as.POSIXct("2016-06-12 15:50:15", tz="UTC"))
+  expect_equal(ts1, as.POSIXct("2018-02-13 16:08:48", tz="UTC"))
   
   # fetch timestamp and expect the mtime and the ts contents to stay the same
   mt1 <- file.mtime(tsfile)
