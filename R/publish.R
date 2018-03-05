@@ -381,10 +381,10 @@ publish.footer <- function(viz) {
     }
 
   }
-  context[['blogsInFooter']] <- viz$blogsInFooter
-  context[['blogs']] <- viz$blogs
+  context[['blogsInFooter']] <- viz[["blogsInFooter"]]
+  context[['blogs']] <- viz[["blogs"]]
   context[['vizzies']] <- vizzies
-
+  context[['github-url']] <- viz[["github-url"]]
 
   viz[['output']] <- render(template, data = context)
   if (!is.null(viz[['analytics']])) {
