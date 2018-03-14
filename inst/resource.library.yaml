@@ -104,10 +104,10 @@
     vizlab-js: lib-vizlab-javascript
     svg-injector-js: lib-svg-injector-js
     favicon: lib-vizlab-favicon
-    content-CSS: lib-content-css
+    content-css: lib-content-css
   context:
     info:
-    resources: [ favicon, content-CSS, jquery-js, vizlab-js, svg-injector-js ]
+    resources: [ favicon, content-css, jquery-js, vizlab-js, svg-injector-js ]
     sections: []
     footer: footer
     header: header
