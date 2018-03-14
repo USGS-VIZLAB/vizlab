@@ -33,22 +33,22 @@ footer a:active{
   padding:0 10px;
 }
 
-#vizlabPromo{
+#vizlab-promo{
   height:30px;
   margin:15px 0 0 0;
 }
 
-#vizlabPromo a{
+#vizlab-promo a{
   cursor:pointer;
 }
 
-#vizlabPromo p{
+#vizlab-promo p{
   font-weight:300;
   font-size:.75em;
   margin:0;
 }
 
-#vizlabPromo img{
+#vizlab-promo img{
   width:20px;
   max-height:20px;
   margin-left:5px;
@@ -183,12 +183,12 @@ footer a:active{
     margin-top:10px;
   }
   
-  #vizlabPromo p,
+  #vizlab-promo p,
   #github-contact p{
     font-size:1em;
   }
   
-  #vizlabPromo img{
+  #vizlab-promo img{
     width:30px;
   }
 }
