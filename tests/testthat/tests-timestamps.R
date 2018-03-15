@@ -78,7 +78,7 @@ cleanup(oldwd, testtmp)
 test_that(".url works", {
   testtmp <- setup(copyTestViz=TRUE)
   dir.create('vizlab/remake/timestamps', recursive=TRUE, showWarnings=FALSE)
-
+  
   tsfile <- locateTimestampFile('foo')
   expect_false(file.exists(tsfile))
   
