@@ -12,10 +12,10 @@ test_that("alwaysCurrent doesn't get rebuilt unless missing", {
   expect_equal(fetchTimestamp.mayfly_nymph, alwaysCurrent)
   
   # first time: fetches
-  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[ BUILD ] data/mayfly_nymph.csv', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '\\[ .*BUILD.* \\] data/mayfly_nymph.csv'))
   
   # after that: doesn't fetch
-  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '[    OK ] mayfly_nymph', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('mayfly_nymph'), '\\[ .*OK.* \\] mayfly_nymph'))
 })
 
 test_that("locally outdated always gets built", {
@@ -28,15 +28,16 @@ test_that("locally outdated always gets built", {
 
 test_that("before time to live, even neverCurrent doesn't get rebuilt", {
   # first time: fetches
-  suppressWarnings(expect_message(vizmake('never_current'), '[ BUILD ] cache/fetch/never_current.txt', fixed=TRUE))
-  suppressWarnings(expect_message(vizmake('cuyahoga'), '[ BUILD ] cache/fetch/cuyahoga.csv', fixed=TRUE))
+  # the .* is needed in the following expect_message calls because of crayon package
+  suppressWarnings(expect_message(vizmake('never_current'), '\\[ .*BUILD.* \\] cache/fetch/never_current.txt'))
+  suppressWarnings(expect_message(vizmake('cuyahoga'), '\\[ .*BUILD.* \\] cache/fetch/cuyahoga.csv'))
   
   # put these fetch items within their timetolive intervals
   writeLines(yaml::as.yaml(list(timetolive=list(never_current='5 hours', cuyahoga='5 hours'))), 'preferences.yaml')
   
   # immediately after: doesn't fetch
-  suppressWarnings(expect_message(vizmake('never_current'), '[    OK ] cache/fetch/never_current.txt', fixed=TRUE))
-  suppressWarnings(expect_message(vizmake('cuyahoga'), '[    OK ] cache/fetch/cuyahoga.csv', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('never_current'), '\\[ .*OK.* \\] cache/fetch/never_current.txt'))
+  suppressWarnings(expect_message(vizmake('cuyahoga'), '\\[ .*OK.* \\] cache/fetch/cuyahoga.csv'))
 })
 
 test_that("after time to live, timestamp gets checked", {
@@ -50,23 +51,23 @@ test_that("after time to live, timestamp gets checked", {
   # never-current should have its timestamp refetched, and the new timestamp
   # should be different (iff we've waited at least 1 second)
   Sys.sleep(0.02)
-  suppressWarnings(expect_message(vizmake('never_current'), '[ BUILD ] vizlab/remake/timestamps/never_current.txt', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('never_current'), '\\[ .*BUILD.* \\] vizlab/remake/timestamps/never_current.txt'))
   expect_gt(as.numeric(readTimestamp('never_current')), as.numeric(nc_ts1))
   # after ttl expires, neverCurrent always fetches, even right (>1 sec) after it just fetched
   Sys.sleep(0.02)
-  suppressWarnings(expect_message(vizmake('never_current'), '[ BUILD ] cache/fetch/never_current.txt', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('never_current'), '\\[ .*BUILD.* \\] cache/fetch/never_current.txt'))
   
   # sometimes-current should have its timestamps refetched. here the new
   # timestamp should be the same (because of how we defined
   # fetchTimestamp.cuyahoga), so cuyahoga isn't refetched
-  suppressWarnings(expect_message(vizmake('cuyahoga'), '[ BUILD ] vizlab/remake/timestamps/cuyahoga.txt', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('cuyahoga'), '\\[ .*BUILD.* \\] vizlab/remake/timestamps/cuyahoga.txt'))
   expect_equal(readTimestamp('cuyahoga'), cy_ts1)
-  suppressWarnings(expect_message(vizmake('cuyahoga'), '[    OK ] cache/fetch/cuyahoga.csv', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('cuyahoga'), '\\[ .*OK.* \\] cache/fetch/cuyahoga.csv'))
   
   # if we change the remote timestamp for cuyahoga, the new timestamp should be
   # different and the item should get refetched
   Sys.setFileTime('data/pretend_remote/cuyahoga.csv', cy_ts1 + as.difftime(2, units='secs'))
-  suppressWarnings(expect_message(vizmake('cuyahoga'), '[ BUILD ] cache/fetch/cuyahoga.csv', fixed=TRUE))
+  suppressWarnings(expect_message(vizmake('cuyahoga'), '\\[ .*BUILD.* \\] cache/fetch/cuyahoga.csv'))
   expect_gt(as.numeric(readTimestamp('cuyahoga')), as.numeric(cy_ts1))
 })
 
@@ -77,7 +78,7 @@ cleanup(oldwd, testtmp)
 test_that(".url works", {
   testtmp <- setup(copyTestViz=TRUE)
   dir.create('vizlab/remake/timestamps', recursive=TRUE, showWarnings=FALSE)
-
+  
   tsfile <- locateTimestampFile('foo')
   expect_false(file.exists(tsfile))
   
