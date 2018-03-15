@@ -94,20 +94,21 @@ footer a:active{
   padding:10px;
 }
 
-#relatedItems{
+#related-items{
   min-height:20px;
 }
 
-#relatedItems h3,
-#relatedItems h4{
+.related-items-title,
+.related-items-caption{
   font-weight:400;
 }
 
-#relatedItems h3{
+.related-items-title{
   margin-bottom:10px;
+  font-size:1.17em;
 }
 
-#relatedItems h4{
+.related-items-caption h4{
   font-size:.9em;
 }
 
@@ -117,12 +118,12 @@ footer a:active{
   margin-bottom:10px;
 }
 
-.relatedItem{
+.related-item{
   min-height:20px;
   margin-bottom:20px;
 }
 
-.relatedItem a{
+.related-item a{
   display:inline-block;
   width:100%;
   height:100%;
@@ -150,7 +151,7 @@ footer a:active{
 }
 
 @media screen and (min-width:500px){
-  #relatedItems{
+  #related-items{
     display:flex;
     flex-direction:row;
     flex-wrap:wrap;
@@ -165,12 +166,12 @@ footer a:active{
     margin-right:5%;
   }
   
-  .relatedItemContainer{
+  .related-items-container{
     display:flex;
     flex-wrap:wrap;
   }
   
-  .relatedItem{
+  .related-item{
     flex: 47.5%;
     margin-right:10px;
   }

@@ -28,19 +28,19 @@
     	</p>
     </div>
 
-    <div id="relatedItems">
+    <div id="related-items">
 
       <div id="relatedVizzies">
-        <h3>Related Visualizations:</h3>
-        <div class="relatedItemContainer">
+        <a class="related-items-title">Related Visualizations:</a>
+        <div class="related-items-container">
           {{#vizzies}}
-        		<div class="relatedItem">
+        		<div class="related-item">
         		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related vizzy')">
         		    <div class="footerThumbnail">
         					<img src="{{thumbLoc}}" alt=""/>
         				</div>
         			  <div class="titleHandler">
-        				  <h4>{{name}}</h4>
+        				  <a class="related-items-caption">{{name}}</a>
         				</div>
         			</a>
         		</div>
@@ -51,9 +51,9 @@
       {{#blogsInFooter}}
         <div id="relatedBlogs">
           <h3>Related Blogs:</h3>
-          <div class="relatedItemContainer">
+          <div class="related-items-container">
           	{{#blogs}}
-          		<div class="relatedItem">
+          		<div class="related-item">
           		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related blog')">
           				<div class="footerThumbnail blog">
           					<img src="{{thumbLoc}}" alt=""/>
