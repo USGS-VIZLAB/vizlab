@@ -5,7 +5,10 @@ setuptmp <- setup()
 
 test_that("publishLandingPage works", {
 
-  publishLandingPage()
+  with_mock(
+    'vizlab:::getRepoNames' = function(org) { c("example", "great-lakes-microplastics", "climate-fish-habitat", "vizlab") },
+    publishLandingPage()
+  )
   index <- readLines('landing/target/index.html', warn = FALSE)
 
   expect_true(any(grepl('microplastics', index)))
