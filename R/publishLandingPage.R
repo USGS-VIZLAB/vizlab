@@ -34,7 +34,6 @@ getRepoNames <- function(org){
 #' @importFrom grithub get.repository.path
 getVizYamlUrl <- function(org, repo){
   p <- get.repository.path(org, repo, "viz.yaml")
-  if(!p$ok) stop("grithub::get.repository.path was unsuccessful")
   viz.yaml_url <- p$content$html_url
   viz.yaml_url <- gsub(pattern = "github.com", replacement = "raw.githubusercontent.com", viz.yaml_url)
   viz.yaml_url <- gsub(pattern = "blob/", replacement = "", viz.yaml_url)
@@ -54,6 +53,9 @@ getVizInfo <- function(org, repo, dev){
     return()
   }
   
+  # the warning "NAs introduced by coercion: . is not a real" can be avoided by
+  # not setting any value to .; for example, in hurricane-harvey's data-sources
+  # item, we have "line6: .", which introduces this error.
   viz.yaml <- yaml.load_file(viz.yaml_url)
   
   has_publish_date <- !is.null(viz.yaml$info$`publish-date`)
