@@ -6,7 +6,8 @@ setuptmp <- setup()
 test_that("publishLandingPage works", {
 
   with_mock(
-    'vizlab:::getRepoNames' = function(org) { c("example", "great-lakes-microplastics", "climate-fish-habitat", "vizlab") },
+    `grithub::get.repository.path` = mock.get.repository.path, 
+    `vizlab:::getRepoNames` = function(org) { c("example", "great-lakes-microplastics", "climate-fish-habitat", "vizlab") },
     publishLandingPage()
   )
   index <- readLines('landing/target/index.html', warn = FALSE)
