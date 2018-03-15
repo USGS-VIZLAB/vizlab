@@ -98,16 +98,17 @@ footer a:active{
   min-height:20px;
 }
 
-#relatedItems h3,
-#relatedItems h4{
+.relatedItemsTitle,
+.relatedItemCaption{
   font-weight:400;
 }
 
-#relatedItems h3{
+.relatedItemsTitle{
   margin-bottom:10px;
+  font-size:1.17em;
 }
 
-#relatedItems h4{
+.relatedItemCaption h4{
   font-size:.9em;
 }
 
