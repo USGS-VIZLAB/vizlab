@@ -104,9 +104,10 @@
     vizlab-js: lib-vizlab-javascript
     svg-injector-js: lib-svg-injector-js
     favicon: lib-vizlab-favicon
+    content-css: lib-content-css
   context:
     info:
-    resources: [ favicon, jquery-js, vizlab-js, svg-injector-js ]
+    resources: [ favicon, content-css, jquery-js, vizlab-js, svg-injector-js ]
     sections: []
     footer: footer
     header: header
@@ -245,8 +246,8 @@
   publisher: resource
 -
   id: lib-usgs-logo
-  location: images/usgsLogo.png
-  mimetype: image/png
+  location: images/usgsLogo.svg
+  mimetype: image/svg
   title: "U.S. Geological Survey"
   alttext: "U.S. Geological Survey"
   publisher: resource
@@ -273,6 +274,11 @@
 -
   id: lib-social-media-css
   location: css/socialMedia.css
+  mimetype: text/css
+  publisher: resource
+-
+  id: lib-content-css
+  location: css/content.css
   mimetype: text/css
   publisher: resource
 

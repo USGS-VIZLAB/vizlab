@@ -33,35 +33,61 @@ footer a:active{
   padding:0 10px;
 }
 
+#vizlab-promo{
+  height:30px;
+  margin:15px 0 0 0;
+}
+
+#vizlab-promo a{
+  cursor:pointer;
+}
+
+#vizlab-promo p{
+  font-weight:300;
+  font-size:.75em;
+  margin:0;
+}
+
+#vizlab-promo img{
+  width:20px;
+  max-height:20px;
+  margin-left:5px;
+}
+
 .githublink{
   display:inline-block;
   height: 25px;
-  width:125px;
 }
 
 #github-contact{
   width:100%;
-  margin:10px 0 15px 0;
+  margin:5px 0 15px 0;
 }
 
 #github-contact img{
   max-height: 25px;
-  float: left;
   width: 25px;
   margin: 0 10px 0 0;
+  float:left;
 }
 
 #github-contact a{
   font-weight:300;
+  margin-right:2.5px;
 }
 
 #github-contact p{
   line-height:25px;
-  font-size: 1em;
+  margin:0;
+  font-size: .9em;
 }
 
 #github-contact span{
-  margin-right:5px;
+  margin-right:2.5px;
+}
+
+#github-contact span:nth-child(3){
+  margin-left:5px;
 }
 
 .usgsLogoFooterArea{
@@ -123,28 +149,6 @@ footer a:active{
   object-fit: scale-down;
 }
 
-#vizlabPromo{
-  min-height:20px;
-  margin:15px 0 20px 0;
-}
-
-#vizlabPromo a{
-  cursor:pointer;
-}
-
-#vizlabPromo p{
-  font-weight:300;
-  font-size:.75em;
-  float:left;
-  margin-right:10px;
-}
-
-#vizlabPromo img{
-  width:20px;
-  max-height:20px;
-  float:left;
-}
-
 @media screen and (min-width:500px){
   #relatedItems{
     display:flex;
@@ -175,11 +179,16 @@ footer a:active{
     max-width:396px;
   }
   
-  #vizlabPromo p{
+  #github-contact{
+    margin-top:10px;
+  }
+  
+  #vizlab-promo p,
+  #github-contact p{
     font-size:1em;
   }
   
-  #vizlabPromo img{
+  #vizlab-promo img{
     width:30px;
   }
 }
