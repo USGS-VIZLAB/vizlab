@@ -34,6 +34,7 @@ getRepoNames <- function(org){
 #' @importFrom grithub get.repository.path
 getVizYamlUrl <- function(org, repo){
   p <- get.repository.path(org, repo, "viz.yaml")
+  if(!p$ok) stop("grithub::get.repository.path was unsuccessful")
   viz.yaml_url <- p$content$html_url
   viz.yaml_url <- gsub(pattern = "github.com", replacement = "raw.githubusercontent.com", viz.yaml_url)
   viz.yaml_url <- gsub(pattern = "blob/", replacement = "", viz.yaml_url)
