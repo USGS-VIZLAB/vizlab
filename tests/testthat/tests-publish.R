@@ -19,7 +19,13 @@ test_that("googlefont publisher is dispatched to", {
 })
 
 test_that("publish footer works", {
-  output <- publish('footer')
+  mock.get.repository.path <- function(org, repo, file) {
+    list(ok=TRUE, content=list(html_url=paste0('https://github.com/', org, '/', repo, '/blob/master/', file)))
+  }
+  with_mock(
+    `grithub::get.repository.path` = mock.get.repository.path, 
+    output <- publish('footer')
+  )
   expect_true(any(grepl('microplastics', output)))
   expect_true(any(grepl('https://owi.usgs.gov/blog/stats-service-map/', output)))
   expect_true(any(grepl('climate-change-walleye-bass', output)))
@@ -29,7 +35,10 @@ test_that("publish footer works", {
   fakeViz <- list(id="footer", publisher="footer", template = "footer-template", blogsInFooter=FALSE,
                   vizzies=list(list(name = "Microplastics in the Great Lakes", org="USGS-VIZLAB",
                                     repo = "great-lakes-microplastics")))
-  output <- publish(fakeViz)
+  with_mock(
+    `grithub::get.repository.path` = mock.get.repository.path, 
+    output <- publish(fakeViz)
+  )
   expect_true(any(grepl('microplastics', output)))
   expect_false(any(grepl('blog|Blogs', output)))
 })
