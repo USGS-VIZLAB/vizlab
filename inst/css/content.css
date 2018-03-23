@@ -2,6 +2,31 @@ body {
   font-family: sans-serif;
 }
 
+
+.viz-text a{
+  color:#003366;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.viz-text a:hover{
+  text-decoration:underline;
+}
+
+.viz-text{
+  padding:0 10px;
+  margin-top:20px;
+}
+
+.viz-text h2{
+  margin:10px 0 5px 0;
+}
+
+.viz-text p{
+  line-height:1.5em;
+}
+
+
 /*IE SVG Width Fix*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none){
     .svg-container svg{
@@ -11,8 +36,17 @@ body {
 }
 
 @media screen and (min-width: 1024px){
-  .svg-container{
+  .svg-container,
+  .viz-text{
     width:960px;
+  }
+  
+  .svg-container{
     margin:0 auto;
   }
+  
+  .viz-text{
+    margin:10px auto 0 auto;
+  }
+  
 }
