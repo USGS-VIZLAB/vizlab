@@ -1,7 +1,7 @@
 #header{
 	background:rgb(0,51,102);
 	color:#fff;
-	height:auto;
+	height:32px;
 	padding:8px  0 0 10px;
 	border-bottom:5px solid rgb(210,210,210);
 	font-family:"Source Sans Pro", sans-serif;
@@ -24,3 +24,8 @@
 	width:80px;
 	}
 	
+@media screen and (max-width: 768px) {
+  #header h1 {
+    font-size:1em;
+  }
+}
