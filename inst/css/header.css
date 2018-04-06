@@ -7,13 +7,14 @@
 	font-family:"Source Sans Pro", sans-serif;
 	}
 	
-p {
+#header p {
   font-size:1.2em;
   line-height:1.5em;
 }
-#header h3{
-	padding-top:3px;
-	font-size:0.9em;
+
+#header h1{
+	padding-top:0px;
+	font-size:1.2em;
 	font-weight:400;
 	}
 	
@@ -23,3 +24,8 @@ p {
 	width:80px;
 	}
 	
+@media screen and (max-width: 768px) {
+  #header h1 {
+    font-size:1em;
+  }
+}

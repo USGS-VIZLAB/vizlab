@@ -6,7 +6,11 @@ language: r
 sudo: required
 cache: packages
 env:
-  - _R_CHECK_FORCE_SUGGESTS_=FALSE
+  global:
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual --as-cran"
+    - NOT_CRAN="true"
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 repos:
   CRAN: https://cloud.r-project.org
@@ -24,6 +28,12 @@ addons:
       - libgdal-dev
       - libgdal1-dev
       - libproj-dev
+
+script:
+  - |
+    R CMD build ${R_BUILD_ARGS} .
+    PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+    travis_wait 20 R CMD check ${R_CHECK_ARGS} "${PKG_FILE_NAME}"
 
 after_success:
   - Rscript -e 'covr::coveralls()'

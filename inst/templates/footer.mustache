@@ -1,42 +1,46 @@
 
 <div class="footerContentAligner">
 
-    <div id="vizlabPromo">
-      <p>This interactive data visualization was created by
-      <a href="https://owi.usgs.gov/vizlab/" target="_blank">
-        <strong>USGS VIZLAB</strong></p>
-      	<img src="images/atom.svg" alt="atom icon"/>
-    	</a>
+    <div id="vizlab-promo">
+      <p>
+        This interactive data visualization was created by
+        <a href="https://owi.usgs.gov/vizlab/" target="_blank">
+          <strong>USGS VIZLAB</strong> 
+          <img src="images/atom.svg" alt="atom icon"/>
+    	  </a>
+    	</p>
     </div>
 
     <div id="github-contact">
-      <a class="githublink" href="{{ github-url }}" target="_blank" onclick="gtag('event','outbound', 'clicked on repo')">
-        <img src="images/github.svg" alt="github icon"/>
-      	<p>Get the Code</p>
-      </a>
-      <span>|</span>
-      <a href="mailto:vizlab@usgs.gov">
-    	  Contact Us
-    	</a>
-    	<span>|</span>
-      <a href="https://www.usgs.gov/" target="_blank" onclick="gtag('event','outbound', 'clicked on USGS.gov')">
-    	  U.S. Geological Survey
-    	</a> 
+      <p>
+        <a class="githublink" href="{{ github-url }}" target="_blank" onclick="gtag('event','outbound', 'clicked on repo')">
+          <img src="images/github.svg" alt="github icon"/>
+        	<span>Get the Code</span>
+        </a>
+        <span>|</span>
+        <a href="mailto:vizlab@usgs.gov">
+      	  Contact Us
+      	</a>
+      	<span>|</span>
+        <a href="https://www.usgs.gov/" target="_blank" onclick="gtag('event','outbound', 'clicked on USGS.gov')">
+      	  U.S. Geological Survey
+      	</a> 
+    	</p>
     </div>
 
-    <div id="relatedItems">
+    <div id="related-items">
 
       <div id="relatedVizzies">
-        <h3>Related Visualizations:</h3>
-        <div class="relatedItemContainer">
+        <p class="related-items-title">Related Visualizations:</p>
+        <div class="related-items-container">
           {{#vizzies}}
-        		<div class="relatedItem">
+        		<div class="related-item">
         		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related vizzy')">
         		    <div class="footerThumbnail">
         					<img src="{{thumbLoc}}" alt=""/>
         				</div>
         			  <div class="titleHandler">
-        				  <h4>{{name}}</h4>
+        				  <a href="{{url}}" class="related-items-caption">{{name}}</a>
         				</div>
         			</a>
         		</div>
@@ -47,9 +51,9 @@
       {{#blogsInFooter}}
         <div id="relatedBlogs">
           <h3>Related Blogs:</h3>
-          <div class="relatedItemContainer">
+          <div class="related-items-container">
           	{{#blogs}}
-          		<div class="relatedItem">
+          		<div class="related-item">
           		  <a href="{{url}}" target="_blank" onclick="gtag('event','outbound', 'clicked on related blog')">
           				<div class="footerThumbnail blog">
           					<img src="{{thumbLoc}}" alt=""/>

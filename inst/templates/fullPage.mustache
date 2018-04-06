@@ -12,15 +12,8 @@
   <!-- ################################################# -->
   {{#info}}
     {{>semantics}}
-  {{/info}}
-  <title>{{ info.name }}</title>
-  {{#resources }}
-    {{{ . }}}
-  {{/resources }}
-  <noscript>Javascript is not enabled</noscript>
-  {{#info}}
-    {{#analytics-id}}
-    <script async type="application/javascript" src="https://www2.usgs.gov/scripts/analytics/usgs-analytics.js"></script>
+        {{#analytics-id}}
+    <script type="application/javascript" async src="https://www2.usgs.gov/scripts/analytics/usgs-analytics.js"></script>
    
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
     <script>
@@ -32,6 +25,12 @@
     </script>
     {{/analytics-id}}
   {{/info}}
+  <title>{{ info.name }}</title>
+  {{#resources }}
+    {{{ . }}}
+  {{/resources }}
+  <noscript>Javascript is not enabled</noscript>
+
 </head>
 <body>
 

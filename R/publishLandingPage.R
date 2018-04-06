@@ -53,6 +53,9 @@ getVizInfo <- function(org, repo, dev){
     return()
   }
   
+  # the warning "NAs introduced by coercion: . is not a real" can be avoided by
+  # not setting any value to .; for example, in hurricane-harvey's data-sources
+  # item, we have "line6: .", which introduces this error.
   viz.yaml <- yaml.load_file(viz.yaml_url)
   
   has_publish_date <- !is.null(viz.yaml$info$`publish-date`)

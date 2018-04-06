@@ -203,6 +203,7 @@ publish:
     template: footer-template
     depends: footer-style
     blogsInFooter: TRUE
+    github-url: https://github.com/USGS-VIZLAB/example
     vizzies:
       - name: Microplastics in the Great Lakes
         org: USGS-VIZLAB
