@@ -30,7 +30,7 @@ body {
 /*IE SVG Width Fix*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none){
     .main-svg svg{
-      width: 100%;
+      width:100%;
       height:600px;
     }
     
