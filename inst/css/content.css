@@ -29,19 +29,24 @@ body {
 
 /*IE SVG Width Fix*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none){
-    .svg-container svg{
+    .main-svg svg{
       width:100%;
-      height:608px;
+      height:600px;
     }
+    
+    .secondary-svg{
+      height:400px;
+    }
+
 }
 
 @media screen and (min-width: 1024px){
-  .svg-container,
+  .main-svg,
   .viz-text{
     width:960px;
   }
   
-  .svg-container{
+  .main-svg{
     margin:0 auto;
   }
   
