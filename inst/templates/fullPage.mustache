@@ -21,7 +21,13 @@
       function gtag(){dataLayer.push(arguments)};
       gtag('js', new Date());
     
-      gtag('config', '{{ . }}');
+      gtag('config', '{{ . }}', {
+        'custom_map': {
+          'dimension1': 'clientId',
+          'dimension2': 'sessionId',
+          'dimension3': 'timestamp' 
+        }
+      });
     </script>
     {{/analytics-id}}
   {{/info}}
