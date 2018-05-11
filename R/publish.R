@@ -233,12 +233,16 @@ publish.img <- function(viz) {
     alt.text <- viz[['alttext']]
     relative.path <- viz[['relpath']]
     title.text <- viz[['title']]
+    img.datasrc <- ifelse(is.null(viz[['data-src']]), "",
+                         paste0(" data-src=\"",
+                                paste0(viz[['data-src']], collapse=" "),
+                                "\""))
     img.class <- ifelse(is.null(viz[['class']]), "",
                         paste0(" class=\"",
                           paste0(viz[['class']], collapse=" "),
                         "\""))
-    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s"%s />', relative.path, uniqueness(),
-                    alt.text, title.text, img.class)
+    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s"%s%s />', relative.path, uniqueness(),
+                    alt.text, title.text, img.datasrc, img.class)
   }
   return(html)
 }
