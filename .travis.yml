@@ -14,7 +14,9 @@ env:
 
 repos:
   CRAN: https://cloud.r-project.org
-  GRAN: http://owi.usgs.gov/R
+  GRAN: https://owi.usgs.gov/R
+
+r_packages: devtools
 
 r_github_packages:
  - jimhester/covr
