@@ -1,14 +1,15 @@
 footer{
-	background:#414042;
-	min-height:200px;
-	color:#fff;
-	border-top:5px solid rgb(210,210,210);
-	margin-top:20px;
-	font-family:"Source Sans Pro", sans-serif;
-	padding-bottom: 10px;
-	}
+  background:#414042;
+  min-height:200px;
+  color:#fff;
+  border-top:5px solid rgb(210,210,210);
+  margin-top:20px;
+  font-family:"Source Sans Pro", sans-serif;
+  padding-bottom: 10px;
+}
 	
 footer a{
+  background:#414042;
   text-decoration:none;
 }
 	
