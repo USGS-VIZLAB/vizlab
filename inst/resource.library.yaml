@@ -299,7 +299,7 @@
 ### D3 LIBRARIES ###
 -
   id: lib-d3-js
-  location: js/third-party/d3-4.11.0.min.js
+  location: js/d3-modules/d3-4.11.0.min.js
   version: 4.11.0
   mimetype: text/javascript
   publisher: resource
