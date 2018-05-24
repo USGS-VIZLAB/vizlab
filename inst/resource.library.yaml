@@ -295,15 +295,107 @@
   version: 3.2.1
   mimetype: text/javascript
   publisher: resource
+
+### D3 LIBRARIES ###
 -
   id: lib-d3-js
   location: js/third-party/d3-4.11.0.min.js
   version: 4.11.0
   mimetype: text/javascript
   publisher: resource
+- 
+  id: lib-d3-array-js
+  location: js/d3-modules/d3-array.v1.min.js
+  version: 1.2.1
+  mimetype: text/javascript
+  publisher: resource
 -
+  id: lib-d3-collection-js
+  location: js/d3-modules/d3-collection.v1.min.js
+  version: 1.0.4
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-color-js
+  location: js/d3-modules/d3-color.v1.min.js
+  version: 1.2.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-dispatch-js
+  location: js/d3-modules/d3-dispatch.v1.min.js
+  version: 1.0.3
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-dsv-js
+  location: js/d3-modules/d3-dsv.v1.min.js
+  version: 1.0.8
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-ease-js
+  location: js/d3-modules/d3-ease.v1.min.js
+  version: 1.0.3
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-dsv
+  id: lib-d3-fetch-js
+  location: js/d3-modules/d3-fetch.v1.min.js
+  version: 1.1.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-format-js
+  location: js/d3-modules/d3-format.v1.min.js
+  version: 1.3.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-array
+  id: lib-d3-geo-js
+  location: js/d3-modules/d3-geo.v1.min.js
+  version: 1.10.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-color
+  id: lib-d3-interpolate-js
+  location: js/d3-modules/d3-interpolate.v1.min.js
+  version: 1.2.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-format, d3-array, d3-collection, d3-interpolate
   id: lib-d3-scale-js
-  location: js/third-party/d3-scale-chromatic-1.1.1.min.js
+  location: js/d3-modules/d3-scale.v2.min.js
+  version: 2.0.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-interpolate
+  id: lib-d3-scale-chromatic-js
+  location: js/d3-modules/d3-scale-chromatic-1.1.1.min.js
+  version: 1.1.1
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-selection-js
+  location: js/d3-modules/d3-selection.v1.min.js
+  version: 1.3.0
+  mimetype: text/javascript
+  publisher: resource
+-
+  id: lib-d3-timer-js
+  location: js/d3-modules/d3-timer.v1.min.js
+  version: 1.0.7
+  mimetype: text/javascript
+  publisher: resource
+-
+  # depends: d3-interpolate, d3-selection, d3-timer, d3-ease, d3-dispatch
+  id: lib-d3-transition-js
+  location: js/d3-modules/d3-transition.v1.min.js
   version: 1.1.1
   mimetype: text/javascript
   publisher: resource
