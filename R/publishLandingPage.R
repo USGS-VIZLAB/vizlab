@@ -59,23 +59,24 @@ getVizInfo <- function(org, repo, dev){
   viz.yaml <- yaml.load_file(url(viz.yaml_url))
   
   has_publish_date <- !is.null(viz.yaml$info$`publish-date`)
-  if(!dev){
-    if(has_publish_date){
-      publish_date <- as.Date(viz.yaml$info$`publish-date`)
+  if(has_publish_date) {
+    publish_date <- as.Date(viz.yaml$info$`publish-date`)
+    if(!dev){
+      # for prod, verify that the publish date is today or already past
       is_published <- publish_date <= Sys.Date()  
-      if(!is_published){
-        return()
-      } 
     } else {
-      return()
+      # for dev, publish anything that actually has a date in the field
+      is_published <- TRUE
     }
   } else {
-    publish_date <- as.Date(viz.yaml$info$`publish-date`)
-    is_published <- TRUE
-    if(is.null(publish_date) | is.na(publish_date)){
-      publish_date <- Sys.Date()
-    }
+    is_published <- FALSE
   }
+  
+  if(!is_published){
+    # if it is not going to be published, jump out of this function
+    return()
+  }
+  
   viz_info <- viz.yaml$info
   
   viz_url <- viz_info$url
