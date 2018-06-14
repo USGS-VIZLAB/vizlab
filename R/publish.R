@@ -460,12 +460,13 @@ publish.header <- function(viz) {
 #' @rdname publish
 #' @export
 publish.landing <- function(viz){
-
+  
   repos <- setdiff(getRepoNames(viz[['org']]), c('vizlab', 'D3Learners', 'viz-scratch')) # we know some aren't vizzies
   viz_info <- lapply(setNames(nm=repos), function(repo) {
     tryCatch(getVizInfo(repo, org=viz[['org']], viz[['dev']]),
-             error=function(e) message(paste0("in getVizInfo(", repo, "): ", e$message), appendLF=TRUE),
-             warning=function(w) if(grepl("\\. is not a real", w$message)) return() else warning(w))
+             error=function(e) message(paste0("in getVizInfo(", repo, "): ", e$message), appendLF=TRUE)
+             # warning=function(w) if(grepl("\\. is not a real", w$message)) return() else warning(w)
+             )
   })
   # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
