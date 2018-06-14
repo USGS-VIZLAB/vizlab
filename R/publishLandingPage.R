@@ -60,18 +60,20 @@ getVizInfo <- function(org, repo, dev){
   
   has_publish_date <- !is.null(viz.yaml$info$`publish-date`)
   if(has_publish_date) {
+    publish_date <- as.Date(viz.yaml$info$`publish-date`)
     if(!dev){
       # for prod, verify that the publish date is today or already past
-      publish_date <- as.Date(viz.yaml$info$`publish-date`)
       is_published <- publish_date <= Sys.Date()  
-      if(!is_published){
-        return()
-      } 
     } else {
       # for dev, publish anything that actually has a date in the field
       is_published <- TRUE
     }
   } else {
+    is_published <- FALSE
+  }
+  
+  if(!is_published){
+    # if it is not going to be published, jump out of this function
     return()
   }
   
