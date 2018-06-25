@@ -202,6 +202,14 @@
   publisher: template
   mimetype: text/mustache
   context:
+-
+  id: simpleSVG
+  location: templates/simpleSVG.mustache
+  publisher: template
+  mimetype: text/mustache
+  context:
+    script:
+    div_id:
 
 ### RESOURCES ###
 -
