@@ -489,6 +489,54 @@ publish.landing <- function(viz){
   publish(pageviz)
 }
 
+#' publish webpack
+#'
+#' @rdname publish
+#' @export
+publish.webpack <- function(viz) {
+  
+  webpack.config <- getWebpackConfig()
+  resulting_file <- file.path("dist", webpack.config[["context"]][["output"]])
+  
+  oldwd <- getwd()
+  setwd(exportLocation())
+  system("npm run start") # actually run webpack
+  setwd(oldwd)
+  
+  # now use new file and publish to get script tag
+  html <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
+                  resulting_file, uniqueness())
+  return(html)
+}
+
+#' publish webpack main js file
+#'
+#' @rdname publish
+#' @export
+publish.webpackmain <- function(viz) {
+  checkRequired(viz, "location")
+  destFile <- export(viz)
+  if(!dir.exists(dirname(destFile))) { stop("webpack dirs not setup properly") }
+  srcFile <- viz[['location']]
+  file.copy(srcFile, destFile, overwrite = TRUE)
+  viz[['relpath']] <- relativePath(destFile)
+  return(viz)
+}
+
+#' publish webpack modules
+#'
+#' @rdname publish
+#' @export
+publish.webpackmodule <- function(viz) {
+  checkRequired(viz, "location")
+  destFile <- export(viz)
+  if(!dir.exists(dirname(destFile))) { stop("webpack dirs not setup properly") }
+  srcFile <- viz[['location']]
+  file.copy(srcFile, destFile, overwrite = TRUE)
+  viz[['relpath']] <- relativePath(destFile)
+  return(viz)
+}
+
 #' publish template
 #'
 #' @rdname publish

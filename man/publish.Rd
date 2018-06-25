@@ -19,6 +19,9 @@
 \alias{publish.social}
 \alias{publish.header}
 \alias{publish.landing}
+\alias{publish.webpack}
+\alias{publish.webpackmain}
+\alias{publish.webpackmodule}
 \alias{publish.template}
 \alias{publish.thumbnail}
 \title{Peform the publish step to ready the viz for hosting}
@@ -58,6 +61,12 @@ publish(viz)
 \method{publish}{header}(viz)
 
 \method{publish}{landing}(viz)
+
+\method{publish}{webpack}(viz)
+
+\method{publish}{webpackmain}(viz)
+
+\method{publish}{webpackmodule}(viz)
 
 \method{publish}{template}(viz)
 
@@ -106,6 +115,12 @@ Social icons
 Header publishing
 
 publish landing page
+
+publish webpack
+
+publish webpack main js file
+
+publish webpack modules
 
 publish template
 
