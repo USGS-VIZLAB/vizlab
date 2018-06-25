@@ -3,3 +3,5 @@ figures
 Makefile
 vizlab
 target
+.remake
+remake.yaml
