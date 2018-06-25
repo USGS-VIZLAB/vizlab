@@ -161,10 +161,11 @@ publish:
       footer: "footer"
       header: "header"
       font: "pagefonts"
+      svg: "svg_fig"
       thumb_facebook: thumb_facebook
       thumb_landing: thumb_landing
     context:
-      sections: [ "relative_abundance" ]
+      sections: [ "relative_abundance", "svg"]
       resources: [ "font", "mainCSS", "normalizeCSS", "footer_css", "header_css"]
       thumbnails: 
         twitter: thumb_facebook
@@ -226,3 +227,32 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
+  - 
+    id: app_js
+    location: js/app.js
+    mimetype: application/javascript
+    publisher: webpackmain
+  - 
+    id: circles_js
+    location: js/circles.js
+    mimetype: application/javascript
+    publisher: webpackmodule
+  - 
+    id: bundle_js
+    mimetype: application/javascript
+    depends: [app_js, circles_js]
+    publisher: webpack
+  - 
+    id: svg_fig
+    template: simpleSVG
+    publisher: section
+    depends:
+      script: bundle_js
+    context: 
+      script: script
+      div_id: "circle_fig"
+
+webpack:
+  context:
+    input: "app.js"
+    output: "bundle.js"
