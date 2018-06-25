@@ -1,0 +1,13 @@
+const webpack = require("webpack");
+
+module.exports = {
+    entry: './src/{{input}}',
+    output: {
+        filename: './{{output}}'
+    },
+    plugins: [
+      new webpack.ProvidePlugin({
+          d3: 'd3'
+      })
+    ]
+};
