@@ -47,7 +47,7 @@ vizmake <- function(target_names=NULL, ...) {
   }
   
   webpack.config <- getWebpackConfig()
-  if(!is.null(webpack.config)) {
+  if(length(webpack.config) > 0) {
     # run webpack
     message('Setting up webpack configs ', Sys.time())
     webpacker(webpack.config)
