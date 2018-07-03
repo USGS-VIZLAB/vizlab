@@ -6,6 +6,9 @@
 \usage{
 checkInstalled(name)
 }
+\arguments{
+\item{name}{string of the system library to look for}
+}
 \description{
 Check that a system library is installed
 }
