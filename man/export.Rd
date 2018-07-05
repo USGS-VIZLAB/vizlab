@@ -10,8 +10,6 @@
 \alias{export.css}
 \alias{export.resource}
 \alias{export.thumbnail}
-\alias{export.webpackmodule}
-\alias{export.webpackmain}
 \title{Export content to target}
 \usage{
 export(viz)
@@ -31,10 +29,6 @@ export(viz)
 \method{export}{resource}(viz)
 
 \method{export}{thumbnail}(viz)
-
-\method{export}{webpackmodule}(viz)
-
-\method{export}{webpackmain}(viz)
 }
 \arguments{
 \item{viz}{object to export}
@@ -55,10 +49,6 @@ Default export. Used to default to not export, but Alison couldn't think of
 when that would be useful so changed the default to TRUE.
 
 export thumbnail class to images
-
-export webpack modules to the src/modules folder so webpack can find them
-
-export the input webpack js file to the src folder so webpack can find it
 }
 \details{
 Currently the publish phase is responsible for exporting,

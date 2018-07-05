@@ -46,12 +46,11 @@ vizmake <- function(target_names=NULL, ...) {
     source(remake.yaml$sources[i])
   }
   
-  webpack.config <- getWebpackConfig()
-  if(length(webpack.config) > 0) {
+  if(file.exists('webpack.config.js')) {
     # run webpack
-    message('Setting up webpack configs ', Sys.time())
-    webpacker(webpack.config)
-    message('Finishing webpack configs ', Sys.time())
+    message('Running webpack ', Sys.time())
+    webpacker()
+    message('Finished webpack ', Sys.time())
   }
   
   # run remake::make(target_name, ..., remake_file='remake.yaml')

@@ -129,30 +129,6 @@ export.thumbnail <- function(viz) {
   return(file)
 }
 
-#' export webpack modules to the src/modules folder so webpack can find them
-#' @rdname export
-#' @export
-export.webpackmodule <- function(viz) {
-  location <- viz[['location']]
-  file <- NULL
-  if (doExport(viz)) {
-    file <- paste0(exportLocation(), "src/modules/", basename(location))
-  }
-  return(file)
-}
-
-#' export the input webpack js file to the src folder so webpack can find it
-#' @rdname export
-#' @export
-export.webpackmain <- function(viz) {
-  location <- viz[['location']]
-  file <- NULL
-  if (doExport(viz)) {
-    file <- paste0(exportLocation(), "src/", basename(location))
-  }
-  return(file)
-}
-
 ### Utility functions provided by export
 
 #' Set where exports should be placed

@@ -183,8 +183,8 @@ publish:
     publisher: section
   -
     id: thumb_facebook
-    location: "images/facebook-thumb2.png"
-    relpath: "images/facebook-thumb2.png"
+    location: "images/facebook-thumb.png"
+    relpath: "images/facebook-thumb.png"
     publisher: thumbnail
     title: "Other thumbnail"
     alttext: "Alt text thumbnail"
@@ -227,32 +227,25 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
-  - 
-    id: app_js
-    location: js/app.js
-    mimetype: application/javascript
-    publisher: webpackmain
-  - 
-    id: circles_js
-    location: js/circles.js
-    mimetype: application/javascript
-    publisher: webpackmodule
-  - 
-    id: bundle_js
-    mimetype: application/javascript
-    depends: [app_js, circles_js]
-    publisher: webpack
+#  - 
+#    id: app_js
+#    location: js/app.js
+#    mimetype: application/javascript
+#  - 
+#    id: circles_js
+#    location: js/circles.js
+#    mimetype: application/javascript
+#  - 
+#    id: bundle_js
+#    location: js/bundle.js
+#    mimetype: application/javascript
+#    depends: [app_js, circles_js]
   - 
     id: svg_fig
     template: simpleSVG
     publisher: section
     depends:
-      script: bundle_js
+      script: #bundle_js
     context: 
       script: script
       div_id: "circle_fig"
-
-webpack:
-  context:
-    input: "app.js"
-    output: "bundle.js"

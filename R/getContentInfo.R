@@ -78,14 +78,6 @@ getVizlabVersion <- function() {
   return(getBlocks('vizlab')[['vizlab']][[1]][[1]])
 }
 
-#' Read the content of the webpack config block
-#'
-#' @export
-getWebpackConfig <- function() {
-  # version block is unnamed list with version at first index
-  return(getBlocks('webpack')[['webpack']])
-}
-
 #' Read vizlab config document and return specific blocks
 #'
 #' @param block character vector of blocks to read

@@ -509,34 +509,6 @@ publish.webpack <- function(viz) {
   return(html)
 }
 
-#' publish webpack main js file
-#'
-#' @rdname publish
-#' @export
-publish.webpackmain <- function(viz) {
-  checkRequired(viz, "location")
-  destFile <- export(viz)
-  if(!dir.exists(dirname(destFile))) { stop("webpack dirs not setup properly") }
-  srcFile <- viz[['location']]
-  file.copy(srcFile, destFile, overwrite = TRUE)
-  viz[['relpath']] <- relativePath(destFile)
-  return(viz)
-}
-
-#' publish webpack modules
-#'
-#' @rdname publish
-#' @export
-publish.webpackmodule <- function(viz) {
-  checkRequired(viz, "location")
-  destFile <- export(viz)
-  if(!dir.exists(dirname(destFile))) { stop("webpack dirs not setup properly") }
-  srcFile <- viz[['location']]
-  file.copy(srcFile, destFile, overwrite = TRUE)
-  viz[['relpath']] <- relativePath(destFile)
-  return(viz)
-}
-
 #' publish template
 #'
 #' @rdname publish

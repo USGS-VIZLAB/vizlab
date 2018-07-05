@@ -4,7 +4,7 @@
 \alias{webpacker}
 \title{Run webpack for the project}
 \usage{
-webpacker(webpack.config)
+webpacker()
 }
 \arguments{
 \item{webpack.config}{list containing at least an input and output element that contain a

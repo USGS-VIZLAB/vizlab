@@ -4,11 +4,12 @@
     "description": "",
     "main": "webpack.config.js",
     "scripts": {
-        "start": "webpack --mode development"
+        "start": "webpack --mode development",
+        "dev": "webpack --mode development --watch"
     },
     "dependencies": {
         "d3": "^5.5.0",
-        "webpack": "^4.12.0"
+        "webpack": "^4.12.1"
     },
     "devDependencies": {
         "webpack-cli": "^3.0.8"

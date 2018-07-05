@@ -189,20 +189,6 @@
     figure:
     caption:
 -
-  id: webpackconfig
-  location: templates/webpackconfig.mustache
-  publisher: template
-  mimetype: text/mustache
-  context:
-    input:
-    output:
--
-  id: packagejson
-  location: templates/packagejson.mustache
-  publisher: template
-  mimetype: text/mustache
-  context:
--
   id: simpleSVG
   location: templates/simpleSVG.mustache
   publisher: template
