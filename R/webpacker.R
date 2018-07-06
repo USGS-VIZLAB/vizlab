@@ -23,7 +23,7 @@ webpacker <- function() {
 #' @param name string of the system library to look for
 #' 
 checkInstalled <- function(name) {
-  tryCatch(system(paste(name, "-v")), 
+  tryCatch(system(paste(name, "-v"), show.output.on.console = FALSE), 
            warning = function(w) { 
              stop(paste(name, "not installed:", w)) 
            })
