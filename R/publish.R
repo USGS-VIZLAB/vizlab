@@ -498,8 +498,7 @@ publish.webpack <- function(viz) {
   checkRequired(viz, "relpath")
   
   # webpacked js file is already saved to `target/js/`
-  
-  # now use new file and publish to get script tag
+  # just need to get a script tag
   html <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
                   viz[["relpath"]], uniqueness())
   return(html)
