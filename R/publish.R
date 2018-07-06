@@ -495,17 +495,13 @@ publish.landing <- function(viz){
 #' @export
 publish.webpack <- function(viz) {
   
-  webpack.config <- getWebpackConfig()
-  resulting_file <- file.path("dist", webpack.config[["context"]][["output"]])
+  checkRequired(viz, "relpath")
   
-  oldwd <- getwd()
-  setwd(exportLocation())
-  system("npm run start") # actually run webpack
-  setwd(oldwd)
+  # webpacked js file is already saved to `target/js/`
   
   # now use new file and publish to get script tag
   html <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
-                  resulting_file, uniqueness())
+                  viz[["relpath"]], uniqueness())
   return(html)
 }
 

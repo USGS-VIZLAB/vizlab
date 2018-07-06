@@ -227,25 +227,17 @@ publish:
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
-#  - 
-#    id: app_js
-#    location: js/app.js
-#    mimetype: application/javascript
-#  - 
-#    id: circles_js
-#    location: js/circles.js
-#    mimetype: application/javascript
-#  - 
-#    id: bundle_js
-#    location: js/bundle.js
-#    mimetype: application/javascript
-#    depends: [app_js, circles_js]
+  - 
+    id: bundle_js
+    relpath: js/bundle.js
+    mimetype: application/javascript
+    publisher: webpack
   - 
     id: svg_fig
     template: simpleSVG
     publisher: section
     depends:
-      script: #bundle_js
+      script: bundle_js
     context: 
       script: script
       div_id: "circle_fig"
