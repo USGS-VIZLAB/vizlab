@@ -233,12 +233,16 @@ publish.img <- function(viz) {
     alt.text <- viz[['alttext']]
     relative.path <- viz[['relpath']]
     title.text <- viz[['title']]
+    img.datasrc <- ifelse(is.null(viz[['data-src']]), "",
+                         paste0(" data-src=\"",
+                                paste0(viz[['data-src']], collapse=" "),
+                                "\""))
     img.class <- ifelse(is.null(viz[['class']]), "",
                         paste0(" class=\"",
                           paste0(viz[['class']], collapse=" "),
                         "\""))
-    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s"%s />', relative.path, uniqueness(),
-                    alt.text, title.text, img.class)
+    html <- sprintf('<img src="%s?_c=%s" alt="%s" title="%s"%s%s />', relative.path, uniqueness(),
+                    alt.text, title.text, img.datasrc, img.class)
   }
   return(html)
 }
@@ -456,12 +460,13 @@ publish.header <- function(viz) {
 #' @rdname publish
 #' @export
 publish.landing <- function(viz){
-
+  
   repos <- setdiff(getRepoNames(viz[['org']]), c('vizlab', 'D3Learners', 'viz-scratch')) # we know some aren't vizzies
   viz_info <- lapply(setNames(nm=repos), function(repo) {
     tryCatch(getVizInfo(repo, org=viz[['org']], viz[['dev']]),
-             error=function(e) message(paste0("in getVizInfo(", repo, "): ", e$message), appendLF=TRUE),
-             warning=function(w) if(grepl("\\. is not a real", w$message)) return() else warning(w))
+             error=function(e) message(paste0("in getVizInfo(", repo, "): ", e$message), appendLF=TRUE)
+             # warning=function(w) if(grepl("\\. is not a real", w$message)) return() else warning(w)
+             )
   })
   # rm null
   viz_info <- viz_info[!sapply(viz_info, is.null)]
