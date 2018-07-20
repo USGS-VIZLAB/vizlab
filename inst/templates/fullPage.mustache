@@ -19,13 +19,18 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments)};
       gtag('js', new Date());
-    
+      function getTimestamp() {return new Date().getTime().toString()}
+      function getSessionId() {return new Date().getTime() + '.' + Math.random().toString(36).substring(5)}
+      var sessionId = getSessionId();
+      var timestamp = getTimestamp();
       gtag('config', '{{ . }}', {
         'custom_map': {
           'dimension1': 'clientId',
           'dimension2': 'sessionId',
           'dimension3': 'timestamp' 
-        }
+        },
+        'sessionId': sessionId,
+        'timestamp': timestamp
       });
     </script>
     {{/analytics-id}}
