@@ -19,18 +19,19 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments)};
       gtag('js', new Date());
-      function getTimestamp() {return new Date().getTime().toString()}
-      function getSessionId() {return new Date().getTime() + '.' + Math.random().toString(36).substring(5)}
-      var sessionId = getSessionId();
-      var timestamp = getTimestamp();
+      var analytics = {
+        sessionId: (new Date().getTime() + '.' + Math.random().toString(36).substring(5)),
+        getTimestamp: function(){return new Date().getTime().toString()}
+      }
+      
       gtag('config', '{{ . }}', {
         'custom_map': {
           'dimension1': 'clientId',
           'dimension2': 'sessionId',
           'dimension3': 'timestamp' 
         },
-        'sessionId': sessionId,
-        'timestamp': timestamp
+        'sessionId': analytics.sessionId,
+        'timestamp': analytics.getTimestamp()
       });
     </script>
     {{/analytics-id}}
