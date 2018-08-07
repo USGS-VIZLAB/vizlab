@@ -1,4 +1,4 @@
-vizlab: "0.2.2.9006"
+vizlab: "0.3.7"
 info:
   id: testviz
   name: Example visualization project
@@ -150,27 +150,27 @@ publish:
   -
     id: index
     name: index
-    template: fullPage
+    template: fullpage
+    publisher: page
     depends:
       relative_abundance: "relative_abundance"
       mainCSS: "mainCSS"
       normalizeCSS: "normalizeCSS"
-      footer-style: "footer-style"
+      footer_css: "lib-footer-css"
+      header_css: "lib-header-css"
       footer: "footer"
+      header: "header"
       font: "pagefonts"
-      thumb-facebook: facebook-thumb
-      thumb-landing: landing-thumb
-    publisher: page
+      svg: "svg_fig"
+      thumb_facebook: thumb_facebook
+      thumb_landing: thumb_landing
     context:
-      title: testViz
-      sections: [ "relative_abundance" ]
-      resources: [ "font", "mainCSS", "normalizeCSS", "footer-style"]
-      footer: [ "footer" ]
+      sections: [ "relative_abundance", "svg"]
+      resources: [ "font", "mainCSS", "normalizeCSS", "footer_css", "header_css"]
       thumbnails: 
-        twitter: thumb-facebook
-        facebook: thumb-facebook
-        landing: thumb-landing
-        main: thumb-facebook
+        twitter: thumb_facebook
+        facebook: thumb_facebook
+        main: thumb_landing
   -
     id: relative_abundance
     template: simplefigure
@@ -182,26 +182,33 @@ publish:
       relative_abundance_fig: "relative_abundance_fig"
     publisher: section
   -
-    id: facebook-thumb
-    location: images/facebook-thumb.png
+    id: thumb_facebook
+    location: "images/facebook-thumb.png"
+    relpath: "images/facebook-thumb.png"
     publisher: thumbnail
-    thumbType: facebook
     title: "Other thumbnail"
     alttext: "Alt text thumbnail"
     mimetype: image/png
   -
-    id: landing-thumb
-    location: images/landing-thumb.png
+    id: thumb_landing
+    location: "images/landing-thumb.png"
+    relpath: "images/landing-thumb.png"
     publisher: thumbnail
-    thumbType: landing
     title: "Landing thumbnail"
     alttext: "Alt text thumbnail"
     mimetype: image/png
   -
+    id: header
+    template: header-template
+    publisher: header
+    depends: lib-header-css
+    context:
+      title: "Test viz"
+  -
     id: footer
-    publisher: footer
+    publisher: section
     template: footer-template
-    depends: footer-style
+    depends: lib-footer-css
     blogsInFooter: TRUE
     github-url: https://github.com/USGS-VIZLAB/example
     vizzies:
@@ -216,12 +223,21 @@ publish:
         url: https://owi.usgs.gov/blog/stats-service-map/
         thumbLoc: https://owi.usgs.gov/blog/images/owi-mobile.png
   -
-    id: footer-style
-    location: layout/css/footer.css
-    publisher: resource
-    mimetype: text/css
-  -
     id: pagefonts
     publisher: googlefont
     family: "Source Sans Pro"
     weight: [300, 400, 700]
+  - 
+    id: bundle_js
+    relpath: js/bundle.js
+    mimetype: application/javascript
+    publisher: webpack
+  - 
+    id: svg_fig
+    template: simpleSVG
+    publisher: section
+    depends:
+      script: bundle_js
+    context: 
+      script: script
+      div_id: "circle_fig"

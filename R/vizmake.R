@@ -46,6 +46,13 @@ vizmake <- function(target_names=NULL, ...) {
     source(remake.yaml$sources[i])
   }
   
+  if(file.exists('webpack.config.js')) {
+    # run webpack
+    message('Running webpack ', Sys.time())
+    webpacker()
+    message('Finished webpack ', Sys.time())
+  }
+  
   # run remake::make(target_name, ..., remake_file='remake.yaml')
   message('Starting build at ', Sys.time())
   out <- remake::make(target_names=target_names, ..., remake_file='remake.yaml')

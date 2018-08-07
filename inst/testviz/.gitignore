@@ -3,3 +3,6 @@ figures
 Makefile
 vizlab
 target
+.remake
+remake.yaml
+node_modules
