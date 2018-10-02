@@ -4,12 +4,15 @@
 #' a visualization.
 #' @param target_names names of targets to build, or NULL for the default, as
 #'   passed to `remake::make()`
+#' @param webpack_build_cfg character string indicating which script to run from the
+#'   webpack package.json file, e.g. "dev", "prod", "watch", etc. Must exist in 
+#'   the package.json file for your viz. Defaults to `start`.
 #' @param ... arguments passed to `remake::make()` (besides `target_names`,
 #'   above, or `remake_file`, which is fixed at 'remake.yaml')
 #' @md
 #' @export
-vizmake <- function(target_names=NULL, ...) {
-  
+vizmake <- function(target_names=NULL, webpack_build_cfg = "start", ...) {
+   
   # check the format of the viz.yaml (limited checks so far)
   validateVizYaml()
   
@@ -49,7 +52,7 @@ vizmake <- function(target_names=NULL, ...) {
   if(file.exists('webpack.config.js')) {
     # run webpack
     message('Running webpack ', Sys.time())
-    webpacker()
+    webpacker(webpack_build_cfg)
     message('Finished webpack ', Sys.time())
   }
   

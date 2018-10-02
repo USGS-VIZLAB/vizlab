@@ -1,11 +1,13 @@
 #' Run webpack for the project
 #'
 #' This is called at the very end of `vizmake()` if you have a webpack block in your `viz.yaml`.
-#' @param webpack.config list containing at least an input and output element that contain a
-#' filepath for the javasript file going into webpack, and the name for the bundled file that results.
+#' @param webpack_cfg character string indicating which script to run from the
+#'   webpack package.json file, e.g. "dev", "prod", "watch", etc. Must exist in 
+#'   the package.json file for your viz. Defaults to `start`.
+#'   
 #' @md
 #' @export
-webpacker <- function() {
+webpacker <- function(webpack_build_cfg) {
   
   # check if node, npm are installed
   checkInstalled("node")
@@ -15,7 +17,7 @@ webpacker <- function() {
   checkAndInstallNodeModule("webpack-cli")
   
   ## have a way to fail if `start` is not the default?
-  system("npm run start")
+  system(paste("npm run", webpack_build_cfg))
 }
 
 #' Check that a system library is installed
