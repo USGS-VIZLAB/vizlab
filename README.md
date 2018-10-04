@@ -1,4 +1,4 @@
-# vizlab <img src="inst/images/logo.png" alt="toxEval" height="150px" align="right" />
+# vizlab <img src="inst/images/logo.png" alt="vizlab" height="150px" align="right" />
 
 [![Build Status](https://travis-ci.org/USGS-VIZLAB/vizlab.svg)](https://travis-ci.org/USGS-VIZLAB/vizlab)
 [![Coverage Status](https://coveralls.io/repos/github/USGS-VIZLAB/vizlab/badge.svg?branch=master)](https://coveralls.io/github/USGS-VIZLAB/vizlab?branch=master)
