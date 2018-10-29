@@ -506,16 +506,17 @@ publish.thumbnail <- function(viz){
   required <- c("relpath", "title", "alttext")
   viz <- NextMethod()
   checkRequired(viz, required)
+  stopifnot(tools::file_ext(viz[['location']]) == "png")
   
   im <- tryCatch({
-    imager::load.image(viz[['location']])
+    png::readPNG(viz[['location']])
   },
   error=function(cond){
-    return(imager::load.image(system.file("testviz/images/landing-thumb.png", package = "vizlab")))
+    return(png::readPNG(system.file("testviz/images/landing-thumb.png", package = "vizlab")))
   })
   
-  width <- imager::width(im)
-  height <- imager::height(im)
+  width <- dim(im)[2]
+  height <- dim(im)[1]
   file_size  <- tryCatch({
     file.info(viz[['location']])
   },
@@ -550,11 +551,13 @@ convb <- function(x){
 }
 
 #' helper to check thumbnail compliance
-#' @importFrom imager load.image width height
+#' @importFrom png readPNG
+#' @importFrom tools file_ext
 #' @param width numeric pixal width of image
 #' @param height numeric pixal height of image
 #' @param size numeric file size in bytes
 #' @param thumbType char Type of thumbnail, could be "facebook", "twitter", "landing", "main"
+
 checkThumbCompliance <- function(width, height, size, thumbType){
   
   stopifnot(all(thumbType %in% c("facebook","twitter","main","landing")))

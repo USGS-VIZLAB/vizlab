@@ -42,4 +42,4 @@ Suggests:
     sbtools (>= 0.19.3),
     secret,
     testthat
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
