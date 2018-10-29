@@ -489,6 +489,21 @@ publish.landing <- function(viz){
   publish(pageviz)
 }
 
+#' publish webpack
+#'
+#' @rdname publish
+#' @export
+publish.webpack <- function(viz) {
+  
+  checkRequired(viz, "relpath")
+  
+  # webpacked js file is already saved to `target/js/`
+  # just need to get a script tag
+  html <- sprintf('<script src="%s?_c=%s" type="text/javascript"></script>',
+                  viz[["relpath"]], uniqueness())
+  return(html)
+}
+
 #' publish template
 #'
 #' @rdname publish

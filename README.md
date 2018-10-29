@@ -1,27 +1,29 @@
-# vizlab
-Package with utilities for building vizlab pages
+# vizlab <img src="inst/images/logo.png" alt="vizlab" height="150px" align="right" />
+
 [![Build Status](https://travis-ci.org/USGS-VIZLAB/vizlab.svg)](https://travis-ci.org/USGS-VIZLAB/vizlab)
 [![Coverage Status](https://coveralls.io/repos/github/USGS-VIZLAB/vizlab/badge.svg?branch=master)](https://coveralls.io/github/USGS-VIZLAB/vizlab?branch=master)
 
+Package with utilities for building vizlab pages
+
 ## Installation
 
-The most stable+current version of this package can be installed with this R command:
+The most recent versions of `vizlab` require the `remake` package. The `devtools` package (available on CRAN) is needed to install:
+
 ```r
-install.packages("vizlab", dependencies=TRUE, 
-  repos=c("http://owi.usgs.gov/R","https://cran.rstudio.com"))
-```
-and updated with this command:
-```r
-update.packages(oldPkgs=c("vizlab"),
-  dependencies=TRUE, repos=c("http://owi.usgs.gov/R", "https://cran.rstudio.com"))
+devtools::install_github("richfitz/remake")
 ```
 
-The most cutting edge version of the package can be installed if you have the `devtools` package:
+The most cutting edge version of the package can be installed also with the `devtools` package:
 ```r
 devtools::install_github("USGS-VIZLAB/vizlab")
 ```
+It's often preferred to use a tagged release. For instance, if the current tagged release is "v0.3.1.0", you could install like this:
 
-Some packages are only suggested and will need to be installed manually to open up that functionality.  One example is sbtools which can be used if project data is stored on sciencebase.
+```r
+devtools::install_github("USGS-VIZLAB/vizlab",  ref = "v0.3.1.0")
+```
+
+Some packages are only suggested and will need to be installed manually to open up that functionality.  One example is `sbtools` which can be used if project data is stored on sciencebase.
 
 ## Using this package
 
