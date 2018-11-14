@@ -21,7 +21,6 @@ Imports:
     digest,
     grithub,
     httr,
-    imager,
     markdown,
     methods,
     remake,
