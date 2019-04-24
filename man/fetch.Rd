@@ -35,17 +35,4 @@ This function should be called from the generic, \code{fetch()}. Fetch
 data from remote locations and/or identify a copy on the local file system.
 These functions assume that downloading must be attempted if the raw data
 file is remote; the makefile is where caching occurs if possible.
-
-\code{fetch.file} currently does nothing. It exists to communicate that
-the .file type is an option for data items.
-
-\code{fetch.sciencebase} downloads a file from ScienceBase.
-
-\code{fetch.url} downloads a file from the specified URL.
-
-\code{fetch.usgs_watermark} grabs the USGS watermark
-
-\code{fetch.none} skips this fetch
-
-\code{fetchTimestamp.none} skips this fetchTimestamp
 }

@@ -20,6 +20,4 @@ process(viz)
 This function should be called from the generic, \code{process()}.
 Process raw or intermediate data products into intermediate or final data
 products
-
-\code{process.unzip} unzip a zip file
 }

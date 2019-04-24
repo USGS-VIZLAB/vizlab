@@ -4,11 +4,12 @@
 \alias{webpacker}
 \title{Run webpack for the project}
 \usage{
-webpacker()
+webpacker(webpack_build_cfg)
 }
 \arguments{
-\item{webpack.config}{list containing at least an input and output element that contain a
-filepath for the javasript file going into webpack, and the name for the bundled file that results.}
+\item{webpack_cfg}{character string indicating which script to run from the
+webpack package.json file, e.g. "dev", "prod", "watch", etc. Must exist in
+the package.json file for your viz. Defaults to \code{start}.}
 }
 \description{
 This is called at the very end of \code{vizmake()} if you have a webpack block in your \code{viz.yaml}.

@@ -4,11 +4,15 @@
 \alias{vizmake}
 \title{Build a visualization project}
 \usage{
-vizmake(target_names = NULL, ...)
+vizmake(target_names = NULL, webpack_build_cfg = "start", ...)
 }
 \arguments{
 \item{target_names}{names of targets to build, or NULL for the default, as
 passed to \code{remake::make()}}
+
+\item{webpack_build_cfg}{character string indicating which script to run from the
+webpack package.json file, e.g. "dev", "prod", "watch", etc. Must exist in
+the package.json file for your viz. Defaults to \code{start}.}
 
 \item{...}{arguments passed to \code{remake::make()} (besides \code{target_names},
 above, or \code{remake_file}, which is fixed at 'remake.yaml')}

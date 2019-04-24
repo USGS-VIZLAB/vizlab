@@ -5,8 +5,9 @@
 \title{Initialize the GitHub repo for a new viz.}
 \usage{
 initializeVizRepo(repo_name, description, org = "USGS-VIZLAB",
-  issue_json = system.file("issuetemplates.json", package = packageName()),
-  label_json = system.file("labeltemplates.json", package = packageName()))
+  issue_json = system.file("issuetemplates.json", package =
+  packageName()), label_json = system.file("labeltemplates.json", package
+  = packageName()))
 }
 \arguments{
 \item{repo_name}{string, name for the new repository}
