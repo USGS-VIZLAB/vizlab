@@ -1,0 +1,116 @@
+---
+title: "Using vizlab with Docker"
+author: "David Watkins"
+date: "4/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+  Docker allows us to standardize our development and build environments.  It can be easily installed from the [Docker website](https://docs.docker.com/install/). 
+  
+  This vignette shows the basic steps to get up and running with Docker. We will build the docker **image** , start up the docker **container**, and then set up the git repository and Rstudio project, so you would be ready to start development.  As a test case, we will use the [2015 Water Use visualization](https://github.com/USGS-VIZLAB/water-use-15). All the files shown here are located in that repo as of this writing.   
+ 
+## Docker basics
+  The Dockerfile is a text file that contains the instructions to build the docker **image** --- a layered binary file that contains everything you installed. The `dockerfile` for this visualization is shown here:
+```{bash, eval=FALSE}
+# tagged version, not latest! 
+FROM rocker/geospatial:3.5.0 
+
+# install node and npm (see https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions)
+RUN sudo apt-get install -y curl &&\
+  sudo apt-get install -y gnupg &&\
+  sudo apt-get update 
+
+#bring in DOI root cert.  Remove this statement for non-USGS persons
+RUN /usr/bin/wget -O /usr/lib/ssl/certs/DOIRootCA.crt http://sslhelp.doi.net/docs/DOIRootCA2.cer && \
+ln -sf /usr/lib/ssl/certs/DOIRootCA.crt /usr/lib/ssl/certs/`openssl x509 -hash -noout -in /usr/lib/ssl/certs/DOIRootCA.crt`.0 && \
+echo "\\n\\nca-certificate = /usr/lib/ssl/certs/DOIRootCA.crt" >> /etc/wgetrc; 
+WORKDIR /home/rstudio/ 
+RUN Rscript -e 'installed.packages()'
+#Note that version rocker images are already set up to use the MRAN mirror corresponding to the 
+#date of the R version, so package dates are already set (unless forcing another repo)
+RUN Rscript -e  'devtools::install_github("richfitz/remake@e29028b")' && \
+    Rscript -e  'devtools::install_github("USGS-R/grithub@0.10.0")' && \
+    Rscript -e 	'devtools::install_github("USGS-VIZLAB/vizlab@v0.3.7")' 
+    #note that most packages will already be installed as part of the geospatial image	
+RUN    install2.r --error \
+	aws.s3 \
+	aws.signature \
+	sbtools \
+	geojsonio \
+	js\
+	dataRetrieval
+	 		                    
+RUN mkdir -p water-use-15 &&\
+    chown rstudio water-use-15
+WORKDIR water-use-15 
+```  
+  The image has everything needed for docker to start up a docker **container**, inside of which you run the commands/programs you want to use.
+  Once a container is created and has run what you need it to, you can stop the container, and either remove it or restart it later.  Containers are meant to be ephemeral --- anything you create in the container that is important should either be scripted so it can be recreated, or saved to a **volume**.  Volumes are docker storage centers on your hard drive that persist beyond the life of a container, but they are _not_ normal directories that you can access outside of docker.  
+  
+  Docker commands all either start with `docker` or `docker-compose`.  They can generally do the same things, but `docker` accepts command-line flags (e.g. `docker run -t tag`) while `docker-compose` uses the `docker-compose.yml` for options.  We mostly use `docker-compose` here so the options can be easily source-controlled. The `docker-compose.yml` file for this visualization is show here.  
+```{yaml eval=FALSE, caption="The docker-compose.yml"}
+version: "3"
+services:
+  docker-dev-mode:
+    image: water-use-15
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8787:8787"
+    volumes:
+      - water-use-15-data:/home/rstudio/water-use-15
+    environment:
+      - ROOT=TRUE
+      - PASSWORD=mypass
+
+volumes:
+  water-use-15-data:
+```
+
+## To build/work on a viz
+  First, you need to get the `Dockerfile` and `docker-compose.yml` onto your machine, so the docker image can be built.  You can manually download the files through the github UI, or you can use the script in [this gist](https://gist.github.com/wdwatkins/55d84030bf3e60b513cf1a1d0da76798) to do it programatically. Run the script from terminal in a directory you want to contain the two files with the command `bash get_repo_dockerfiles.sh <repo_name>`, and the two files will be pulled down automatically.  Now, still in your terminal, go into the directory containing the `Dockerfile` and `docker-compose.yml` that was just created, and run `docker-compose build`. (Non-USGS people should first delete or comment out lines 10-12 in the `Dockerfile` where the root certificate is retrieved.) This builds the docker image using the image name and other options specified in `docker-compose.yml`.  Next, run `docker-compose up`.  This creates and starts the docker container and leaves it running, with Rstudio exposed on port 8787.  Go to your web browser and you can log in to Rstudio at `localhost:8787`.  The username is `rstudio`, and password is `mypass`.  Now you can use Rstudio the same as on a native operating system.  Create a new project from the `File` menu, select Version Control and Git, and enter the URL of your fork of the repository.  Note the container does not contain any of your credentials, for Github or elsewhere.  However, the container already contains the DOI root certificate, so HTTPS will work over the network. (Note that you should **not** upload an **image** containing the DOI cert to a public repo.) Files you save in Rstudio will be contained in a docker volume, and will persist beyond the life of the container (unless you delete the volume, of course).  When you are done, log out of Rstudio and run `docker-compose down` in your terminal to stop the docker container.      
+
+##  Package management
+  The Dockerfile has a few Docker-specific commands, but largely consists of shell commands to install packages that you have likely seen before.  The Dockerfile shown above starts with the [rocker geospatial image](https://hub.docker.com/r/rocker/geospatial), which already has R/Rstudio, geospatial libraries, and many standard packages already installed, so we really only need to add vizlab-specific packages on top of it.  You can go look at the Dockerfiles for the various rocker images to see exactly what is installed and from where.  Note that in the `Dockerfile` we are using a specific tagged version, `rocker/geospatial:3.5.0` rather than `rocker/geospatial:latest`, so that this image stays with a fixed version of R and other dependencies.  
+  R packages that come installed in the rocker images come from [MRAN's daily CRAN snapshots](https://mran.microsoft.com/documents/rro/reproducibility#snapshots),  corresponding to the date the rocker image was updated.  The `repos` option in R is already set to that same snapshot, so any package you install with `install.packages` without setting a repo will come from the same snapshot.  This obviously isn't the case for packages that are only on GRAN or other repositories, so any non-CRAN packages should be installed from GitHub with a release or commit specified.  Note that any package _dependencies_ installed by `devtools::install_github` will still come from the same MRAN date (i.e. CRAN clone) as all the other packages.
+
+# Jenkins
+  The same Docker image that we just used can also be used to build on Jenkins, ensuring that the build environment is the same on every platform.  We can use a `Jenkinsfile` to define the build process: 
+```{bash eval=FALSE}
+pipeline {
+    agent none 
+    stages {
+        stage('Checkout repo') {
+            agent any 
+            steps {
+                sh 'wget -O DOIRootCA2.cer http://sslhelp.doi.net/docs/DOIRootCA2.cer'
+                git "https://github.com/wdwatkins/water-use-15"
+            }
+        }
+        stage('build_viz') {
+            agent {
+                dockerfile {
+                    args '-v ${WORKSPACE}:/home/rstudio/water-use-15'
+                } 
+            }
+            steps {
+                sh 'Rscript -e "vizlab::vizmake()"'
+            }
+        }
+        stage('push to S3') {
+            agent any
+            steps { 
+                sh 'aws s3 sync ./target/ s3://dev-owi.usgs.gov/vizlab/water-use-15/ --exclude "*.svg" --exclude "*.json"; \
+                    aws s3 sync ./target/ s3://dev-owi.usgs.gov/vizlab/water-use-15/ --exclude "*" --include "*.svg" --content-type "image/svg+xml"; \
+                    aws s3 sync ./target/ s3://dev-owi.usgs.gov/vizlab/water-use-15/ --exclude "*" --include "*.json" --content-type "application/json"'
+            }
+        }
+    }
+}
+```
+This file defines the steps of the Jenkins build, rather than just defining them through the Jenkins UI.  This allows the Jenkins build process to be source-controlled, changes to be reviewed, etc, and better reproducibility between vizzies.  There is extensive documentation on the [Jenkins website](https://jenkins.io/doc/book/pipeline/jenkinsfile/).
