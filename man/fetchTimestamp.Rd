@@ -35,18 +35,4 @@ not, as required to achieve the desired \code{make} behavior. See
 \link{fetchTimestampMethods} and \link{fetchTimestampHelpers} for assistance in
 defining new fetchTimestamp methods. Also consider preferences.yaml and
 \code{\link[=exceededTimeToLive]{exceededTimeToLive()}} for additional options for managing data fetches.
-
-`fetchTimestamp.sciencebase` gets the file timestamp from ScienceBase.
-
-`fetchTimestamp.file` creates a timestamp file once, with file metadata and
-file contents that both match the timestamp of the viz data file. If the
-timestamp file already exists, it is only modified if the data file is
-updated.
-
-`fetchTimestamp.url` checks a URL for a timestamp. The URL headers must
-include a 'last-modified' field; otherwise, this method breaks and you should
-write your own for the specific URL in question.
-
-\code{fetchTimestamp.fetcher} superclass method catches missing
-implementation
 }

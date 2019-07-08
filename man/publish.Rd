@@ -73,48 +73,7 @@ publish(viz)
 Determine the type and dispatch to that method to produce
 files to serve up as the final viz
 
-publish a given id
-
-publish a list representing a viz
-
-publish a page
-
-publish a section
-
-Publish a resource: determine whether a file should be exported (i.e., copied
-to target/something/), copy the file, and update the viz item with the
-relative path
-
-JSON data publishing (json, geojson)
-
-Tabular data publishing (csv, tsv, etc.)
-
-Image publishing
-
-Favicon resource
-
-Add a font to the page
-
-javascript publishing
-TODO allow for cdn js
-
-css publishing
-
 from here on out will use svg-inject to get svg to dom
-
-Footer publishing
-
-Social icons
-
-Header publishing
-
-publish landing page
-
-publish webpack
-
-publish template
-
-check dimensions and size, publish thumbnail
 }
 \details{
 Sections are published individually but are returned invisibly

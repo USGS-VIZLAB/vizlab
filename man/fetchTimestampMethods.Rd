@@ -18,10 +18,6 @@ These functions serve common use cases for timestamp fetching. See also
 \link{fetchTimestampHelpers}, which allows you to write still more customized
 methods, and pre-defined \code{\link[=fetchTimestamp]{fetchTimestamp()}} methods for several fetchers
 supported by \code{vizlab}.
-
-`neverCurrent` - always writes a timestamp file for the current date and
-time. This means that whenever the timestamp is checked during the make
-process, the data file will be interpreted as out of date.
 }
 \details{
 \code{alwaysCurrent} - writes a timestamp file just once, the first time the data

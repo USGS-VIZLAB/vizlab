@@ -62,37 +62,10 @@ This function should be called from the generic, \code{readData()}. Reads
 data from a file into R format. If you just want the filepath so you can do
 it yourself, specify "customReader: filepath" in the viz.yaml
 
-\code{readData.character} is the standard entry point; from here, viz.id gets
-assigned a class to route it to a more specific reader
-
-\code{readData.viz} reads contents represented by vizlab object
-
-\code{readData.tabular} reads a text file.
-
-\code{readData.yaml} reads a yaml file.
-
-\code{readData.excel} reads the first spreadsheet of an Excel file.
-
-\code{readData.RDS} reads an R object saved as an RDS.
-
-\code{readData.filepath} returns the file path or null if location is not set
-
-\code{readData.parameter} returns the file path or null if location is not set
-
-\code{readData.folder} returns names of files inside a folder
-
-\code{readData.txt} returns contents of file as character
-
 Can either be a single markdown file, specified with mimetype: text/markdown
 or markdown contained in yaml with mimetype: text/yaml
 
-\code{readData.inline} reads data directly from inline yaml
-
-\code{readData.json} reads json files
-
 assumes only one .shp file in zip folder
-
-\code{readData.svg_map} reads svg
 }
 \details{
 If simple markdown is used, return will be the rendered html, otherwise it
