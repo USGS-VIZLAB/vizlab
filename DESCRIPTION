@@ -28,7 +28,8 @@ Imports:
     tools,
     whisker,
     xml2,
-    yaml
+    yaml,
+    png
 Suggests:
     data.table,
     dssecrets,
